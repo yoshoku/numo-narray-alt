@@ -1,0 +1,88 @@
+# The behavior of RuboCop can be controlled via the .rubocop.yml
+# configuration file. It makes it possible to enable/disable
+# certain cops (checks) and to alter their behavior if they accept
+# any parameters. The file can be placed either in your home
+# directory or in some project directory.
+#
+# RuboCop will start looking for the configuration file in the directory
+# where the inspected file is and continue its way up to the root directory.
+#
+# See https://docs.rubocop.org/rubocop/configuration
+
+plugins:
+  - rubocop-performance
+  - rubocop-rake
+
+AllCops:
+  TargetRubyVersion: 2.7
+  NewCops: enable
+  DisplayCopNames: true
+  DisplayStyleGuide: true
+  Exclude:
+    - tmp/**/*
+    - doc/**/*
+    - binder/**/*
+
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 128
+
+Lint/Void:
+  Exclude:
+    - test/narray_test.rb
+    - test/bit_test.rb
+
+Metrics/AbcSize:
+  Max: 64
+
+Metrics/BlockLength:
+  Exclude:
+    - test/**/*
+
+Metrics/BlockNesting:
+  Max: 6
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Max: 18
+
+Metrics/MethodLength:
+  Max: 56
+
+Metrics/PerceivedComplexity:
+  Max: 18
+
+Naming/MethodParameterName:
+  Enabled: false
+
+Rake/Desc:
+  Enabled: false
+
+Style/ClassVars:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/EvalWithLocation:
+  Exclude:
+    - test/narray_test.rb
+
+Style/GlobalVars:
+  Exclude:
+    - ext/numo/narray/extconf.rb
+
+Style/NumericPredicate:
+  Enabled: false
+
+Style/RedundantArgument:
+  Exclude:
+    - test/narray_test.rb
+
+Style/SlicingWithRange:
+  Exclude:
+    - test/narray_test.rb

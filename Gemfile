@@ -1,8 +1,13 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 # Specify your gem's dependencies in narray-devel.gemspec
 gemspec
 
-gem "rake", "~> 13.3"
-gem "test-unit", "~> 3.7"
-gem "rake-compiler", "~> 1.3"
+gem 'rake', '~> 13.3'
+gem 'rake-compiler', '~> 1.3'
+gem 'rubocop', '~> 1.80'
+gem 'rubocop-performance', '~> 1.26'
+gem 'rubocop-rake', '~> 0.7.1'
+gem 'test-unit', '~> 3.7'
