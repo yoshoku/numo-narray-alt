@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.license       = 'BSD-3-Clause'
   spec.required_ruby_version = '>= 2.2'
 
-  spec.files         = `git ls-files Gemfile README.md Rakefile lib ext numo-narray.gemspec spec`.split($INPUT_RECORD_SEPARATOR)
+  spec.files         = `git ls-files Gemfile LICENSE README.md Rakefile lib ext numo-narray.gemspec spec`.split($INPUT_RECORD_SEPARATOR)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
   spec.extensions    = ['ext/numo/narray/extconf.rb']
