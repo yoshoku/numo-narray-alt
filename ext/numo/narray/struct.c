@@ -307,7 +307,7 @@ static VALUE nstruct_add_type(VALUE type, int argc, VALUE* argv, VALUE nst) {
       if (shape) {
         rb_raise(rb_eArgError, "multiple shape in struct definition");
       }
-      ndim = RARRAY_LEN(argv[i]);
+      ndim = (int)RARRAY_LEN(argv[i]);
       if (ndim > NA_MAX_DIMENSION) {
         rb_raise(rb_eArgError, "too large number of dimensions");
       }

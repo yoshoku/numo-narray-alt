@@ -1,4 +1,3 @@
-
 /*
   t_uint64.c
   Ruby/Numo::NArray - Numerical Array class for Ruby
@@ -2372,7 +2371,7 @@ static void iter_uint64_pow(na_loop_t* const lp) {
   for (; i--;) {
     GET_DATA_STRIDE(p1, s1, dtype, x);
     GET_DATA_STRIDE(p2, s2, dtype, y);
-    x = m_pow(x, y);
+    x = (dtype)m_pow((int)x, (int)y);
     SET_DATA_STRIDE(p3, s3, dtype, x);
   }
 }
@@ -5083,7 +5082,7 @@ static VALUE uint64_poly(VALUE self, VALUE args) {
   ndfunc_arg_out_t aout[1] = {{cT, 0}};
   ndfunc_t ndf = {iter_uint64_poly, NO_LOOP, 0, 1, 0, aout};
 
-  argc = RARRAY_LEN(args);
+  argc = (int)RARRAY_LEN(args);
   ndf.nin = argc + 1;
   ndf.ain = ALLOCA_N(ndfunc_arg_in_t, argc + 1);
   for (i = 0; i < argc + 1; i++) {
@@ -5227,7 +5226,7 @@ loop:
     pl = (char*)a;
     pn = (char*)a + (n - 1) * es;
     if (n > 40) {
-      d = (n / 8) * es;
+      d = (int)((n / 8) * es);
       pl = med3(pl, pl + d, pl + 2 * d, cmp);
       pm = med3(pm - d, pm, pm + d, cmp);
       pn = med3(pn - 2 * d, pn - d, pn, cmp);
@@ -5258,12 +5257,12 @@ loop:
     pc -= es;
   }
   pn = (char*)a + n * es;
-  r = Min(pa - (char*)a, pb - pa);
+  r = (int)Min(pa - (char*)a, pb - pa);
   vecswap(a, pb - r, r);
-  r = Min(pd - pc, pn - pd - es);
+  r = (int)Min(pd - pc, pn - pd - es);
   vecswap(pb, pn - r, r);
-  if ((r = pb - pa) > es) uint64_qsort(a, r / es, es);
-  if ((r = pd - pc) > es) {
+  if ((r = (int)(pb - pa)) > es) uint64_qsort(a, r / es, es);
+  if ((r = (int)(pd - pc)) > es) {
     /* Iterate rather than recurse to save stack space */
     a = pn - r;
     n = r / es;
@@ -5434,7 +5433,7 @@ loop:
     pl = (char*)a;
     pn = (char*)a + (n - 1) * es;
     if (n > 40) {
-      d = (n / 8) * es;
+      d = (int)((n / 8) * es);
       pl = med3(pl, pl + d, pl + 2 * d, cmp);
       pm = med3(pm - d, pm, pm + d, cmp);
       pn = med3(pn - 2 * d, pn - d, pn, cmp);
@@ -5465,12 +5464,12 @@ loop:
     pc -= es;
   }
   pn = (char*)a + n * es;
-  r = Min(pa - (char*)a, pb - pa);
+  r = (int)Min(pa - (char*)a, pb - pa);
   vecswap(a, pb - r, r);
-  r = Min(pd - pc, pn - pd - es);
+  r = (int)Min(pd - pc, pn - pd - es);
   vecswap(pb, pn - r, r);
-  if ((r = pb - pa) > es) uint64_index_qsort(a, r / es, es);
-  if ((r = pd - pc) > es) {
+  if ((r = (int)(pb - pa)) > es) uint64_index_qsort(a, r / es, es);
+  if ((r = (int)(pd - pc)) > es) {
     /* Iterate rather than recurse to save stack space */
     a = pn - r;
     n = r / es;

@@ -6175,7 +6175,7 @@ static VALUE dfloat_poly(VALUE self, VALUE args) {
   ndfunc_arg_out_t aout[1] = {{cT, 0}};
   ndfunc_t ndf = {iter_dfloat_poly, NO_LOOP, 0, 1, 0, aout};
 
-  argc = RARRAY_LEN(args);
+  argc = (int)RARRAY_LEN(args);
   ndf.nin = argc + 1;
   ndf.ain = ALLOCA_N(ndfunc_arg_in_t, argc + 1);
   for (i = 0; i < argc + 1; i++) {
@@ -6323,7 +6323,7 @@ loop:
     pl = (char*)a;
     pn = (char*)a + (n - 1) * es;
     if (n > 40) {
-      d = (n / 8) * es;
+      d = (int)((n / 8) * es);
       pl = med3(pl, pl + d, pl + 2 * d, cmp);
       pm = med3(pm - d, pm, pm + d, cmp);
       pn = med3(pn - 2 * d, pn - d, pn, cmp);
@@ -6354,12 +6354,12 @@ loop:
     pc -= es;
   }
   pn = (char*)a + n * es;
-  r = Min(pa - (char*)a, pb - pa);
+  r = (int)Min(pa - (char*)a, pb - pa);
   vecswap(a, pb - r, r);
-  r = Min(pd - pc, pn - pd - es);
+  r = (int)Min(pd - pc, pn - pd - es);
   vecswap(pb, pn - r, r);
-  if ((r = pb - pa) > es) dfloat_qsort_prnan(a, r / es, es);
-  if ((r = pd - pc) > es) {
+  if ((r = (int)(pb - pa)) > es) dfloat_qsort_prnan(a, r / es, es);
+  if ((r = (int)(pd - pc)) > es) {
     /* Iterate rather than recurse to save stack space */
     a = pn - r;
     n = r / es;
@@ -6500,7 +6500,7 @@ loop:
     pl = (char*)a;
     pn = (char*)a + (n - 1) * es;
     if (n > 40) {
-      d = (n / 8) * es;
+      d = (int)((n / 8) * es);
       pl = med3(pl, pl + d, pl + 2 * d, cmp);
       pm = med3(pm - d, pm, pm + d, cmp);
       pn = med3(pn - 2 * d, pn - d, pn, cmp);
@@ -6531,12 +6531,12 @@ loop:
     pc -= es;
   }
   pn = (char*)a + n * es;
-  r = Min(pa - (char*)a, pb - pa);
+  r = (int)Min(pa - (char*)a, pb - pa);
   vecswap(a, pb - r, r);
-  r = Min(pd - pc, pn - pd - es);
+  r = (int)Min(pd - pc, pn - pd - es);
   vecswap(pb, pn - r, r);
-  if ((r = pb - pa) > es) dfloat_qsort_ignan(a, r / es, es);
-  if ((r = pd - pc) > es) {
+  if ((r = (int)(pb - pa)) > es) dfloat_qsort_ignan(a, r / es, es);
+  if ((r = (int)(pd - pc)) > es) {
     /* Iterate rather than recurse to save stack space */
     a = pn - r;
     n = r / es;
@@ -6721,7 +6721,7 @@ loop:
     pl = (char*)a;
     pn = (char*)a + (n - 1) * es;
     if (n > 40) {
-      d = (n / 8) * es;
+      d = (int)((n / 8) * es);
       pl = med3(pl, pl + d, pl + 2 * d, cmp);
       pm = med3(pm - d, pm, pm + d, cmp);
       pn = med3(pn - 2 * d, pn - d, pn, cmp);
@@ -6752,12 +6752,12 @@ loop:
     pc -= es;
   }
   pn = (char*)a + n * es;
-  r = Min(pa - (char*)a, pb - pa);
+  r = (int)Min(pa - (char*)a, pb - pa);
   vecswap(a, pb - r, r);
-  r = Min(pd - pc, pn - pd - es);
+  r = (int)Min(pd - pc, pn - pd - es);
   vecswap(pb, pn - r, r);
-  if ((r = pb - pa) > es) dfloat_index_qsort_prnan(a, r / es, es);
-  if ((r = pd - pc) > es) {
+  if ((r = (int)(pb - pa)) > es) dfloat_index_qsort_prnan(a, r / es, es);
+  if ((r = (int)(pd - pc)) > es) {
     /* Iterate rather than recurse to save stack space */
     a = pn - r;
     n = r / es;
@@ -6898,7 +6898,7 @@ loop:
     pl = (char*)a;
     pn = (char*)a + (n - 1) * es;
     if (n > 40) {
-      d = (n / 8) * es;
+      d = (int)((n / 8) * es);
       pl = med3(pl, pl + d, pl + 2 * d, cmp);
       pm = med3(pm - d, pm, pm + d, cmp);
       pn = med3(pn - 2 * d, pn - d, pn, cmp);
@@ -6929,12 +6929,12 @@ loop:
     pc -= es;
   }
   pn = (char*)a + n * es;
-  r = Min(pa - (char*)a, pb - pa);
+  r = (int)Min(pa - (char*)a, pb - pa);
   vecswap(a, pb - r, r);
-  r = Min(pd - pc, pn - pd - es);
+  r = (int)Min(pd - pc, pn - pd - es);
   vecswap(pb, pn - r, r);
-  if ((r = pb - pa) > es) dfloat_index_qsort_ignan(a, r / es, es);
-  if ((r = pd - pc) > es) {
+  if ((r = (int)(pb - pa)) > es) dfloat_index_qsort_ignan(a, r / es, es);
+  if ((r = (int)(pd - pc)) > es) {
     /* Iterate rather than recurse to save stack space */
     a = pn - r;
     n = r / es;

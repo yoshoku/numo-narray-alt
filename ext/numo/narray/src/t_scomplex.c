@@ -1,4 +1,3 @@
-
 /*
   t_scomplex.c
   Ruby/Numo::NArray - Numerical Array class for Ruby
@@ -4900,7 +4899,7 @@ static VALUE scomplex_poly(VALUE self, VALUE args) {
   ndfunc_arg_out_t aout[1] = {{cT, 0}};
   ndfunc_t ndf = {iter_scomplex_poly, NO_LOOP, 0, 1, 0, aout};
 
-  argc = RARRAY_LEN(args);
+  argc = (int)RARRAY_LEN(args);
   ndf.nin = argc + 1;
   ndf.ain = ALLOCA_N(ndfunc_arg_in_t, argc + 1);
   for (i = 0; i < argc + 1; i++) {

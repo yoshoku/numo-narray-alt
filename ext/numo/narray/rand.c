@@ -29,7 +29,7 @@ static VALUE nary_s_srand(int argc, VALUE* argv, VALUE obj) {
   } else {
     seed = NUM2UINT64(vseed);
   }
-  init_gen_rand(seed);
+  init_gen_rand((uint32_t)seed);
 
   return Qnil;
 }

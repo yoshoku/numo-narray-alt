@@ -144,8 +144,8 @@ is_aligned_step(const ssize_t step, const size_t alignment)
 static inline int
 get_count_of_elements_not_aligned_to_simd_size(const void *ptr, const size_t alignment, const size_t element_size)
 {
-    int cnt = (size_t)(ptr) & ((alignment)-1);
-    return cnt == 0 ?  0 : (alignment - cnt) / element_size;
+    size_t cnt = (size_t)(ptr) & ((alignment)-1);
+    return (int)(cnt == 0 ? 0 : (alignment - cnt) / element_size);
 }
 
 static inline int is_same_aligned2(const void *ptr1, const void *ptr2, const size_t alignment)

@@ -1,4 +1,3 @@
-
 /*
   t_bit.c
   Ruby/Numo::NArray - Numerical Array class for Ruby
@@ -202,12 +201,12 @@ static void iter_bit_store_bit(na_loop_t* const lp) {
     p1 %= NB;
     a3 += p3 / NB;
     p3 %= NB;
-    o1 = p1 - p3;
+    o1 = (int)(p1 - p3);
     l1 = NB + o1;
     r1 = NB - o1;
     if (p3 > 0 || n < NB) {
-      len = NB - p3;
-      if ((int)n < len) len = n;
+      len = (int)(NB - p3);
+      if ((int)n < len) len = (int)n;
       if (o1 >= 0)
         x = *a1 >> o1;
       else
@@ -1430,8 +1429,8 @@ static void iter_bit_fill(na_loop_t* const lp) {
     }
   } else {
     if (p3 > 0 || n < NB) {
-      len = NB - p3;
-      if ((int)n < len) len = n;
+      len = (int)(NB - p3);
+      if ((int)n < len) len = (int)n;
       *a3 = (y & (SLB(len) << p3)) | (*a3 & ~(SLB(len) << p3));
       a3++;
       n -= len;
@@ -1708,12 +1707,12 @@ static void iter_bit_copy(na_loop_t* const lp) {
     p1 %= NB;
     a3 += p3 / NB;
     p3 %= NB;
-    o1 = p1 - p3;
+    o1 = (int)(p1 - p3);
     l1 = NB + o1;
     r1 = NB - o1;
     if (p3 > 0 || n < NB) {
-      len = NB - p3;
-      if ((int)n < len) len = n;
+      len = (int)(NB - p3);
+      if ((int)n < len) len = (int)n;
       if (o1 >= 0)
         x = *a1 >> o1;
       else
@@ -1802,12 +1801,12 @@ static void iter_bit_not(na_loop_t* const lp) {
     p1 %= NB;
     a3 += p3 / NB;
     p3 %= NB;
-    o1 = p1 - p3;
+    o1 = (int)(p1 - p3);
     l1 = NB + o1;
     r1 = NB - o1;
     if (p3 > 0 || n < NB) {
-      len = NB - p3;
-      if ((int)n < len) len = n;
+      len = (int)(NB - p3);
+      if ((int)n < len) len = (int)n;
       if (o1 >= 0)
         x = *a1 >> o1;
       else
@@ -1899,15 +1898,15 @@ static void iter_bit_and(na_loop_t* const lp) {
     p2 %= NB;
     a3 += p3 / NB;
     p3 %= NB;
-    o1 = p1 - p3;
-    o2 = p2 - p3;
+    o1 = (int)(p1 - p3);
+    o2 = (int)(p2 - p3);
     l1 = NB + o1;
     r1 = NB - o1;
     l2 = NB + o2;
     r2 = NB - o2;
     if (p3 > 0 || n < NB) {
-      len = NB - p3;
-      if ((int)n < len) len = n;
+      len = (int)(NB - p3);
+      if ((int)n < len) len = (int)n;
       if (o1 >= 0)
         x = *a1 >> o1;
       else
@@ -2028,15 +2027,15 @@ static void iter_bit_or(na_loop_t* const lp) {
     p2 %= NB;
     a3 += p3 / NB;
     p3 %= NB;
-    o1 = p1 - p3;
-    o2 = p2 - p3;
+    o1 = (int)(p1 - p3);
+    o2 = (int)(p2 - p3);
     l1 = NB + o1;
     r1 = NB - o1;
     l2 = NB + o2;
     r2 = NB - o2;
     if (p3 > 0 || n < NB) {
-      len = NB - p3;
-      if ((int)n < len) len = n;
+      len = (int)(NB - p3);
+      if ((int)n < len) len = (int)n;
       if (o1 >= 0)
         x = *a1 >> o1;
       else
@@ -2157,15 +2156,15 @@ static void iter_bit_xor(na_loop_t* const lp) {
     p2 %= NB;
     a3 += p3 / NB;
     p3 %= NB;
-    o1 = p1 - p3;
-    o2 = p2 - p3;
+    o1 = (int)(p1 - p3);
+    o2 = (int)(p2 - p3);
     l1 = NB + o1;
     r1 = NB - o1;
     l2 = NB + o2;
     r2 = NB - o2;
     if (p3 > 0 || n < NB) {
-      len = NB - p3;
-      if ((int)n < len) len = n;
+      len = (int)(NB - p3);
+      if ((int)n < len) len = (int)n;
       if (o1 >= 0)
         x = *a1 >> o1;
       else
@@ -2286,15 +2285,15 @@ static void iter_bit_eq(na_loop_t* const lp) {
     p2 %= NB;
     a3 += p3 / NB;
     p3 %= NB;
-    o1 = p1 - p3;
-    o2 = p2 - p3;
+    o1 = (int)(p1 - p3);
+    o2 = (int)(p2 - p3);
     l1 = NB + o1;
     r1 = NB - o1;
     l2 = NB + o2;
     r2 = NB - o2;
     if (p3 > 0 || n < NB) {
-      len = NB - p3;
-      if ((int)n < len) len = n;
+      len = (int)(NB - p3);
+      if ((int)n < len) len = (int)n;
       if (o1 >= 0)
         x = *a1 >> o1;
       else

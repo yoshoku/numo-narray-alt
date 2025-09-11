@@ -93,7 +93,7 @@ static inline ssize_t na_range_check(ssize_t pos, ssize_t size, int dim) {
 
 static void na_parse_array(VALUE ary, int orig_dim, ssize_t size, na_index_arg_t* q) {
   int k;
-  int n = RARRAY_LEN(ary);
+  int n = (int)RARRAY_LEN(ary);
   q->idx = ALLOC_N(size_t, n);
   for (k = 0; k < n; k++) {
     q->idx[k] = na_range_check(NUM2SSIZET(RARRAY_AREF(ary, k)), size, orig_dim);
@@ -227,7 +227,7 @@ static void na_parse_range(VALUE range, ssize_t step, int orig_dim, ssize_t size
     rb_raise(rb_eRangeError, "%" SZF "d%s%" SZF "d is out of range for size=%" SZF "d", beg_orig, dot, end_orig, size);
   }
 #endif
-  n = (end - beg) / step + 1;
+  n = (int)((end - beg) / step + 1);
   if (n < 0) n = 0;
   na_index_set_step(q, orig_dim, n, beg, step);
 }
@@ -252,7 +252,7 @@ void na_parse_enumerator_step(VALUE enum_obj, VALUE* pstep) {
     if (TYPE(e->args) != T_ARRAY) {
       rb_raise(rb_eArgError, "no argument for step");
     }
-    len = RARRAY_LEN(e->args);
+    len = (int)RARRAY_LEN(e->args);
     if (len != 1) {
       rb_raise(rb_eArgError, "invalid number of step argument (1 for %d)", len);
     }
@@ -437,7 +437,7 @@ static size_t na_index_parse_args(VALUE args, narray_t* na, na_index_arg_t* q, i
   size_t total = 1;
   VALUE v;
 
-  nidx = RARRAY_LEN(args);
+  nidx = (int)RARRAY_LEN(args);
 
   for (i = j = k = 0; i < nidx; i++) {
     v = RARRAY_AREF(args, i);

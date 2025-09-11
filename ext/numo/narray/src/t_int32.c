@@ -1,4 +1,3 @@
-
 /*
   t_int32.c
   Ruby/Numo::NArray - Numerical Array class for Ruby
@@ -358,13 +357,13 @@ static void iter_int32_store_int64(na_loop_t* const lp) {
     if (idx1) {
       for (; i--;) {
         GET_DATA_INDEX(p2, idx2, int64_t, x);
-        y = m_from_int64(x);
+        y = (dtype)m_from_int64(x);
         SET_DATA_INDEX(p1, idx1, dtype, y);
       }
     } else {
       for (; i--;) {
         GET_DATA_INDEX(p2, idx2, int64_t, x);
-        y = m_from_int64(x);
+        y = (dtype)m_from_int64(x);
         SET_DATA_STRIDE(p1, s1, dtype, y);
       }
     }
@@ -372,13 +371,13 @@ static void iter_int32_store_int64(na_loop_t* const lp) {
     if (idx1) {
       for (; i--;) {
         GET_DATA_STRIDE(p2, s2, int64_t, x);
-        y = m_from_int64(x);
+        y = (dtype)m_from_int64(x);
         SET_DATA_INDEX(p1, idx1, dtype, y);
       }
     } else {
       for (; i--;) {
         GET_DATA_STRIDE(p2, s2, int64_t, x);
-        y = m_from_int64(x);
+        y = (dtype)m_from_int64(x);
         SET_DATA_STRIDE(p1, s1, dtype, y);
       }
     }
@@ -554,13 +553,13 @@ static void iter_int32_store_uint64(na_loop_t* const lp) {
     if (idx1) {
       for (; i--;) {
         GET_DATA_INDEX(p2, idx2, u_int64_t, x);
-        y = m_from_uint64(x);
+        y = (dtype)m_from_uint64(x);
         SET_DATA_INDEX(p1, idx1, dtype, y);
       }
     } else {
       for (; i--;) {
         GET_DATA_INDEX(p2, idx2, u_int64_t, x);
-        y = m_from_uint64(x);
+        y = (dtype)m_from_uint64(x);
         SET_DATA_STRIDE(p1, s1, dtype, y);
       }
     }
@@ -568,13 +567,13 @@ static void iter_int32_store_uint64(na_loop_t* const lp) {
     if (idx1) {
       for (; i--;) {
         GET_DATA_STRIDE(p2, s2, u_int64_t, x);
-        y = m_from_uint64(x);
+        y = (dtype)m_from_uint64(x);
         SET_DATA_INDEX(p1, idx1, dtype, y);
       }
     } else {
       for (; i--;) {
         GET_DATA_STRIDE(p2, s2, u_int64_t, x);
-        y = m_from_uint64(x);
+        y = (dtype)m_from_uint64(x);
         SET_DATA_STRIDE(p1, s1, dtype, y);
       }
     }
@@ -1033,7 +1032,7 @@ static dtype int32_extract_data(VALUE obj) {
     }
 
     if (klass == numo_cInt64) {
-      x = m_from_int64(*(int64_t*)(ptr + pos));
+      x = (dtype)m_from_int64(*(int64_t*)(ptr + pos));
       return x;
     }
 
@@ -1048,7 +1047,7 @@ static dtype int32_extract_data(VALUE obj) {
     }
 
     if (klass == numo_cUInt64) {
-      x = m_from_uint64(*(u_int64_t*)(ptr + pos));
+      x = (dtype)m_from_uint64(*(u_int64_t*)(ptr + pos));
       return x;
     }
 
@@ -5085,7 +5084,7 @@ static VALUE int32_poly(VALUE self, VALUE args) {
   ndfunc_arg_out_t aout[1] = {{cT, 0}};
   ndfunc_t ndf = {iter_int32_poly, NO_LOOP, 0, 1, 0, aout};
 
-  argc = RARRAY_LEN(args);
+  argc = (int)RARRAY_LEN(args);
   ndf.nin = argc + 1;
   ndf.ain = ALLOCA_N(ndfunc_arg_in_t, argc + 1);
   for (i = 0; i < argc + 1; i++) {
@@ -5229,7 +5228,7 @@ loop:
     pl = (char*)a;
     pn = (char*)a + (n - 1) * es;
     if (n > 40) {
-      d = (n / 8) * es;
+      d = (int)((n / 8) * es);
       pl = med3(pl, pl + d, pl + 2 * d, cmp);
       pm = med3(pm - d, pm, pm + d, cmp);
       pn = med3(pn - 2 * d, pn - d, pn, cmp);
@@ -5260,12 +5259,12 @@ loop:
     pc -= es;
   }
   pn = (char*)a + n * es;
-  r = Min(pa - (char*)a, pb - pa);
+  r = (int)Min(pa - (char*)a, pb - pa);
   vecswap(a, pb - r, r);
-  r = Min(pd - pc, pn - pd - es);
+  r = (int)Min(pd - pc, pn - pd - es);
   vecswap(pb, pn - r, r);
-  if ((r = pb - pa) > es) int32_qsort(a, r / es, es);
-  if ((r = pd - pc) > es) {
+  if ((r = (int)(pb - pa)) > es) int32_qsort(a, r / es, es);
+  if ((r = (int)(pd - pc)) > es) {
     /* Iterate rather than recurse to save stack space */
     a = pn - r;
     n = r / es;
@@ -5436,7 +5435,7 @@ loop:
     pl = (char*)a;
     pn = (char*)a + (n - 1) * es;
     if (n > 40) {
-      d = (n / 8) * es;
+      d = (int)((n / 8) * es);
       pl = med3(pl, pl + d, pl + 2 * d, cmp);
       pm = med3(pm - d, pm, pm + d, cmp);
       pn = med3(pn - 2 * d, pn - d, pn, cmp);
@@ -5467,12 +5466,12 @@ loop:
     pc -= es;
   }
   pn = (char*)a + n * es;
-  r = Min(pa - (char*)a, pb - pa);
+  r = (int)Min(pa - (char*)a, pb - pa);
   vecswap(a, pb - r, r);
-  r = Min(pd - pc, pn - pd - es);
+  r = (int)Min(pd - pc, pn - pd - es);
   vecswap(pb, pn - r, r);
-  if ((r = pb - pa) > es) int32_index_qsort(a, r / es, es);
-  if ((r = pd - pc) > es) {
+  if ((r = (int)(pb - pa)) > es) int32_index_qsort(a, r / es, es);
+  if ((r = (int)(pd - pc)) > es) {
     /* Iterate rather than recurse to save stack space */
     a = pn - r;
     n = r / es;

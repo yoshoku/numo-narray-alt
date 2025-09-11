@@ -364,7 +364,7 @@ static VALUE na_initialize(VALUE self, VALUE args) {
   } else {
     v = args;
   }
-  ndim = RARRAY_LEN(v);
+  ndim = (int)RARRAY_LEN(v);
   if (ndim > NA_MAX_DIMENSION) {
     rb_raise(rb_eArgError, "ndim=%d exceeds maximum dimension", ndim);
   }
@@ -1249,7 +1249,7 @@ static VALUE nary_s_from_binary(int argc, VALUE* argv, VALUE type) {
       shape = &len;
       break;
     case T_ARRAY:
-      nd = RARRAY_LEN(vshape);
+      nd = (int)RARRAY_LEN(vshape);
       if (nd > NA_MAX_DIMENSION) {
         rb_raise(nary_eDimensionError, "shape exceeds max dimension");
       }
@@ -1560,7 +1560,7 @@ static VALUE na_get_reduce_flag_from_axes(VALUE na_obj, VALUE axes) {
       rb_raise(nary_eDimensionError, "invalid dimension argument %s", rb_obj_classname(v));
     }
     for (j = 0; j < len; j++) {
-      r = beg + step * j;
+      r = (int)(beg + step * j);
       if (rowmaj) {
         r = ndim - 1 - r;
       }

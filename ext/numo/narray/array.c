@@ -89,21 +89,18 @@ static VALUE na_object_type(int type, VALUE v) {
   return NA_ROBJ;
 }
 
-#define MDAI_ATTR_TYPE(tp, v, attr)                                                                                            \
-  { tp = na_object_type(tp, rb_funcall(v, id_##attr, 0)); }
-
 static int na_mdai_object_type(int type, VALUE v) {
   if (rb_obj_is_kind_of(v, rb_cRange)) {
-    MDAI_ATTR_TYPE(type, v, begin);
-    MDAI_ATTR_TYPE(type, v, end);
+    type = (int)na_object_type(type, rb_funcall(v, id_begin, 0));
+    type = (int)na_object_type(type, rb_funcall(v, id_end, 0));
 #ifdef HAVE_RB_ARITHMETIC_SEQUENCE_EXTRACT
   } else if (rb_obj_is_kind_of(v, rb_cArithSeq)) {
-    MDAI_ATTR_TYPE(type, v, begin);
-    MDAI_ATTR_TYPE(type, v, end);
-    MDAI_ATTR_TYPE(type, v, step);
+    type = (int)na_object_type(type, rb_funcall(v, id_begin, 0));
+    type = (int)na_object_type(type, rb_funcall(v, id_end, 0));
+    type = (int)na_object_type(type, rb_funcall(v, id_step, 0));
 #endif
   } else {
-    type = na_object_type(type, v);
+    type = (int)na_object_type(type, v);
   }
   return type;
 }
