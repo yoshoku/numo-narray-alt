@@ -1,6 +1,5 @@
 require 'rbconfig.rb'
 require 'mkmf'
-require "erb"
 
 if RUBY_VERSION < "2.1.0"
   puts "Numo::NArray requires Ruby version 2.1 or later."
@@ -17,6 +16,7 @@ rm_f d('numo/extconf.h')
 #$CFLAGS=" $(cflags) -O3 -m64 -msse2 -funroll-loops"
 #$CFLAGS=" $(cflags) -O3"
 $INCFLAGS = "-Itypes #$INCFLAGS"
+$VPATH << "$(srcdir)/src"
 
 $INSTALLFILES = Dir.glob(%w[numo/*.h numo/types/*.h]).map{|x| [x,'$(archdir)'] }
 $INSTALLFILES << ['numo/extconf.h','$(archdir)']
@@ -95,13 +95,5 @@ have_var("rb_cComplex")
 $objs = srcs.collect{|i| i+".o"}
 
 create_header d('numo/extconf.h')
-
-File.open(d('depend'), "w") do |depend|
-  File.open(d('depend.erb'), "r") do |depend_erb|
-    erb = ERB.new(depend_erb.read)
-    erb.filename = d('depend.erb')
-    depend.print(erb.result)
-  end
-end
 
 create_makefile('numo/narray')
