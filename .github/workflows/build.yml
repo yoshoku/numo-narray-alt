@@ -1,18 +1,24 @@
 name: build
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+      - dev*
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+  pull_request:
 
 jobs:
-  MRI:
-    name: ${{ matrix.os }} ruby-${{ matrix.ruby }}
-    runs-on: ${{ matrix.os }}-latest
+  build:
+    runs-on: ubuntu-latest
+    name: Ruby ${{ matrix.ruby }}
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu', 'macos', 'windows']
-        ruby: ['2.6', '2.7', '3.0', '3.1', '3.2', '3.3', '3.4', head]
+        ruby: ['2.7', '3.2', '3.3', '3.4']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Ruby ${{ matrix.ruby }}
         uses: ruby/setup-ruby@v1
         with:
@@ -25,20 +31,16 @@ jobs:
       - name: Tests
         run: rake test
 
-  ruby-head-debug:
-    name: Build on ruby-head-debug
+  build-debug:
+    name: Ruby debug
     runs-on: ubuntu-latest
     continue-on-error: true
-    strategy:
-      fail-fast: false
-      matrix:
-        ruby: [ 'debug' ]
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up Ruby ${{ matrix.ruby }}
+      - uses: actions/checkout@v5
+      - name: Set up Ruby head debug
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ${{ matrix.ruby }}
+          ruby-version: debug
       - name: Build and Install
         run: |
           gem build numo-narray.gemspec
@@ -47,33 +49,28 @@ jobs:
       - name: Tests
         run: rake test
 
-  Fedora:
-    name: fedora
-    runs-on: ubuntu-latest
+  build-win:
+    runs-on: windows-latest
+    name: Ruby 3.4 (Windows)
     steps:
-      - name: Setup Podman
-        run: |
-          sudo apt update
-          sudo apt-get -y install podman
-          podman pull fedora:rawhide
-      - name: Get source
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+      - name: Set up Ruby 3.4
+        uses: ruby/setup-ruby@v1
         with:
-          path: 'numo-narray'
-      - name: Create container and run tests
-        run: |
-          {
-              echo 'FROM fedora:rawhide'
-              echo 'RUN dnf -y update'
-              echo 'RUN dnf -y install gcc-c++ git ruby-devel'
-              echo 'RUN dnf clean all'
-              echo 'COPY numo-narray numo-narray'
-              echo 'WORKDIR /numo-narray'
-              echo 'RUN gem install --no-document bundler'
-              echo 'RUN gem build numo-narray.gemspec'
-              echo 'RUN gem install numo-narray-*.gem'
-              echo 'RUN bundle install'
-              echo 'RUN bundle exec rake compile'
-              echo 'RUN bundle exec rake test'
-          } > podmanfile
-          podman build --tag fedora_test -f ./podmanfile
+          ruby-version: 3.4
+          bundler-cache: true
+      - name: Build and test
+        run: bundle exec rake compile test
+
+  build-mac:
+    runs-on: macos-latest
+    name: Ruby 3.4 (macOS)
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Ruby 3.4
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4
+          bundler-cache: true
+      - name: Build and test
+        run: bundle exec rake compile test
