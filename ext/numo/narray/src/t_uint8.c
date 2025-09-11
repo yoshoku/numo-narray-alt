@@ -181,7 +181,6 @@ static VALUE uint8_new_dim0(dtype x) {
   return v;
 }
 
-
 static VALUE uint8_store_numeric(VALUE self, VALUE obj) {
   dtype x;
   x = m_num_to_data(obj);
@@ -1205,7 +1204,9 @@ static VALUE uint8_aset(int argc, VALUE* argv, VALUE self) {
   @overload coerce_cast(type)
   @return [nil]
 */
-static VALUE uint8_coerce_cast(VALUE self, VALUE type) { return Qnil; }
+static VALUE uint8_coerce_cast(VALUE self, VALUE type) {
+  return Qnil;
+}
 
 static void iter_uint8_to_a(na_loop_t* const lp) {
   size_t i, s1;
@@ -1392,7 +1393,9 @@ static VALUE iter_uint8_inspect(char* ptr, size_t pos, VALUE fmt) {
   @overload inspect
   @return [String]
 */
-static VALUE uint8_inspect(VALUE ary) { return na_ndloop_inspect(ary, iter_uint8_inspect, Qnil); }
+static VALUE uint8_inspect(VALUE ary) {
+  return na_ndloop_inspect(ary, iter_uint8_inspect, Qnil);
+}
 
 static void iter_uint8_each(na_loop_t* const lp) {
   size_t i, s1;
@@ -3469,7 +3472,6 @@ static VALUE uint8_min(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return uint8_extract(v);
-
 }
 
 static void iter_uint8_max(na_loop_t* const lp) {
@@ -3502,7 +3504,6 @@ static VALUE uint8_max(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return uint8_extract(v);
-
 }
 
 static void iter_uint8_ptp(na_loop_t* const lp) {
@@ -3535,9 +3536,7 @@ static VALUE uint8_ptp(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return uint8_extract(v);
-
 }
-
 
 #define idx_t int64_t
 static void iter_uint8_max_index_index64(na_loop_t* const lp) {
@@ -3621,7 +3620,6 @@ static VALUE uint8_max_index(int argc, VALUE* argv, VALUE self) {
   return na_ndloop(&ndf, 3, self, idx, reduce);
 }
 
-
 #define idx_t int64_t
 static void iter_uint8_min_index_index64(na_loop_t* const lp) {
   size_t n, idx;
@@ -3704,7 +3702,6 @@ static VALUE uint8_min_index(int argc, VALUE* argv, VALUE self) {
   return na_ndloop(&ndf, 3, self, idx, reduce);
 }
 
-
 #define idx_t int64_t
 static void iter_uint8_argmax_arg64(na_loop_t* const lp) {
   size_t n, idx;
@@ -3781,7 +3778,6 @@ static VALUE uint8_argmax(int argc, VALUE* argv, VALUE self) {
 
   return na_ndloop(&ndf, 2, self, reduce);
 }
-
 
 #define idx_t int64_t
 static void iter_uint8_argmin_arg64(na_loop_t* const lp) {
@@ -4537,7 +4533,6 @@ static VALUE uint8_eye(int argc, VALUE* argv, VALUE self) {
   return self;
 }
 
-
 #define HWID (sizeof(dtype) * 4)
 
 static int msb_pos(uint32_t a) {
@@ -5077,7 +5072,6 @@ loop:
   }
   /*              qsort(pn - r, r / es, es, cmp);*/
 }
-
 
 #define idx_t int64_t
 static void uint8_index64_qsort(na_loop_t* const lp) {

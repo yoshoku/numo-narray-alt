@@ -180,7 +180,6 @@ static VALUE dfloat_new_dim0(dtype x) {
   return v;
 }
 
-
 static VALUE dfloat_store_numeric(VALUE self, VALUE obj) {
   dtype x;
   x = m_num_to_data(obj);
@@ -1204,7 +1203,9 @@ static VALUE dfloat_aset(int argc, VALUE* argv, VALUE self) {
   @overload coerce_cast(type)
   @return [nil]
 */
-static VALUE dfloat_coerce_cast(VALUE self, VALUE type) { return Qnil; }
+static VALUE dfloat_coerce_cast(VALUE self, VALUE type) {
+  return Qnil;
+}
 
 static void iter_dfloat_to_a(na_loop_t* const lp) {
   size_t i, s1;
@@ -1391,7 +1392,9 @@ static VALUE iter_dfloat_inspect(char* ptr, size_t pos, VALUE fmt) {
   @overload inspect
   @return [String]
 */
-static VALUE dfloat_inspect(VALUE ary) { return na_ndloop_inspect(ary, iter_dfloat_inspect, Qnil); }
+static VALUE dfloat_inspect(VALUE ary) {
+  return na_ndloop_inspect(ary, iter_dfloat_inspect, Qnil);
+}
 
 static void iter_dfloat_each(na_loop_t* const lp) {
   size_t i, s1;
@@ -4313,7 +4316,6 @@ static VALUE dfloat_sum(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dfloat_extract(v);
-
 }
 
 static void iter_dfloat_prod(na_loop_t* const lp) {
@@ -4358,7 +4360,6 @@ static VALUE dfloat_prod(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dfloat_extract(v);
-
 }
 
 static void iter_dfloat_kahan_sum(na_loop_t* const lp) {
@@ -4403,7 +4404,6 @@ static VALUE dfloat_kahan_sum(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dfloat_extract(v);
-
 }
 
 static void iter_dfloat_mean(na_loop_t* const lp) {
@@ -4448,7 +4448,6 @@ static VALUE dfloat_mean(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dfloat_extract(v);
-
 }
 
 static void iter_dfloat_stddev(na_loop_t* const lp) {
@@ -4625,7 +4624,6 @@ static VALUE dfloat_min(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dfloat_extract(v);
-
 }
 
 static void iter_dfloat_max(na_loop_t* const lp) {
@@ -4670,7 +4668,6 @@ static VALUE dfloat_max(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dfloat_extract(v);
-
 }
 
 static void iter_dfloat_ptp(na_loop_t* const lp) {
@@ -4715,9 +4712,7 @@ static VALUE dfloat_ptp(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dfloat_extract(v);
-
 }
-
 
 #define idx_t int64_t
 static void iter_dfloat_max_index_index64(na_loop_t* const lp) {
@@ -4830,13 +4825,11 @@ static VALUE dfloat_max_index(int argc, VALUE* argv, VALUE self) {
     ndf.func = iter_dfloat_max_index_index32;
 
     reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_max_index_index32_nan);
-
   }
   rb_funcall(idx, rb_intern("seq"), 0);
 
   return na_ndloop(&ndf, 3, self, idx, reduce);
 }
-
 
 #define idx_t int64_t
 static void iter_dfloat_min_index_index64(na_loop_t* const lp) {
@@ -4949,13 +4942,11 @@ static VALUE dfloat_min_index(int argc, VALUE* argv, VALUE self) {
     ndf.func = iter_dfloat_min_index_index32;
 
     reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_min_index_index32_nan);
-
   }
   rb_funcall(idx, rb_intern("seq"), 0);
 
   return na_ndloop(&ndf, 3, self, idx, reduce);
 }
-
 
 #define idx_t int64_t
 static void iter_dfloat_argmax_arg64(na_loop_t* const lp) {
@@ -5062,12 +5053,10 @@ static VALUE dfloat_argmax(int argc, VALUE* argv, VALUE self) {
     ndf.func = iter_dfloat_argmax_arg32;
 
     reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_argmax_arg32_nan);
-
   }
 
   return na_ndloop(&ndf, 2, self, reduce);
 }
-
 
 #define idx_t int64_t
 static void iter_dfloat_argmin_arg64(na_loop_t* const lp) {
@@ -5174,7 +5163,6 @@ static VALUE dfloat_argmin(int argc, VALUE* argv, VALUE self) {
     ndf.func = iter_dfloat_argmin_arg32;
 
     reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_argmin_arg32_nan);
-
   }
 
   return na_ndloop(&ndf, 2, self, reduce);
@@ -5861,7 +5849,6 @@ static VALUE dfloat_eye(int argc, VALUE* argv, VALUE self) {
   na_ndloop3(&ndf, g, 1, self);
   return self;
 }
-
 
 typedef struct {
   dtype low;
@@ -6845,7 +6832,6 @@ loop:
   /*              qsort(pn - r, r / es, es, cmp);*/
 }
 
-
 #define idx_t int64_t
 static void dfloat_index64_qsort_ignan(na_loop_t* const lp) {
   size_t i, n, idx;
@@ -7049,7 +7035,6 @@ static VALUE dfloat_sort_index(int argc, VALUE* argv, VALUE self) {
 
     ndf.func = dfloat_index32_qsort_ignan;
     reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, dfloat_index32_qsort_prnan);
-
   }
   rb_funcall(idx, rb_intern("seq"), 0);
 

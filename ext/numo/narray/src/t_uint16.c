@@ -181,7 +181,6 @@ static VALUE uint16_new_dim0(dtype x) {
   return v;
 }
 
-
 static VALUE uint16_store_numeric(VALUE self, VALUE obj) {
   dtype x;
   x = m_num_to_data(obj);
@@ -1205,7 +1204,9 @@ static VALUE uint16_aset(int argc, VALUE* argv, VALUE self) {
   @overload coerce_cast(type)
   @return [nil]
 */
-static VALUE uint16_coerce_cast(VALUE self, VALUE type) { return Qnil; }
+static VALUE uint16_coerce_cast(VALUE self, VALUE type) {
+  return Qnil;
+}
 
 static void iter_uint16_to_a(na_loop_t* const lp) {
   size_t i, s1;
@@ -1392,7 +1393,9 @@ static VALUE iter_uint16_inspect(char* ptr, size_t pos, VALUE fmt) {
   @overload inspect
   @return [String]
 */
-static VALUE uint16_inspect(VALUE ary) { return na_ndloop_inspect(ary, iter_uint16_inspect, Qnil); }
+static VALUE uint16_inspect(VALUE ary) {
+  return na_ndloop_inspect(ary, iter_uint16_inspect, Qnil);
+}
 
 static void iter_uint16_each(na_loop_t* const lp) {
   size_t i, s1;
@@ -3871,7 +3874,6 @@ static VALUE uint16_min(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return uint16_extract(v);
-
 }
 
 static void iter_uint16_max(na_loop_t* const lp) {
@@ -3904,7 +3906,6 @@ static VALUE uint16_max(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return uint16_extract(v);
-
 }
 
 static void iter_uint16_ptp(na_loop_t* const lp) {
@@ -3937,9 +3938,7 @@ static VALUE uint16_ptp(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return uint16_extract(v);
-
 }
-
 
 #define idx_t int64_t
 static void iter_uint16_max_index_index64(na_loop_t* const lp) {
@@ -4023,7 +4022,6 @@ static VALUE uint16_max_index(int argc, VALUE* argv, VALUE self) {
   return na_ndloop(&ndf, 3, self, idx, reduce);
 }
 
-
 #define idx_t int64_t
 static void iter_uint16_min_index_index64(na_loop_t* const lp) {
   size_t n, idx;
@@ -4106,7 +4104,6 @@ static VALUE uint16_min_index(int argc, VALUE* argv, VALUE self) {
   return na_ndloop(&ndf, 3, self, idx, reduce);
 }
 
-
 #define idx_t int64_t
 static void iter_uint16_argmax_arg64(na_loop_t* const lp) {
   size_t n, idx;
@@ -4183,7 +4180,6 @@ static VALUE uint16_argmax(int argc, VALUE* argv, VALUE self) {
 
   return na_ndloop(&ndf, 2, self, reduce);
 }
-
 
 #define idx_t int64_t
 static void iter_uint16_argmin_arg64(na_loop_t* const lp) {
@@ -4939,7 +4935,6 @@ static VALUE uint16_eye(int argc, VALUE* argv, VALUE self) {
   return self;
 }
 
-
 #define HWID (sizeof(dtype) * 4)
 
 static int msb_pos(uint32_t a) {
@@ -5479,7 +5474,6 @@ loop:
   }
   /*              qsort(pn - r, r / es, es, cmp);*/
 }
-
 
 #define idx_t int64_t
 static void uint16_index64_qsort(na_loop_t* const lp) {

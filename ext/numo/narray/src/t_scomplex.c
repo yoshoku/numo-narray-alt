@@ -176,7 +176,6 @@ static VALUE scomplex_new_dim0(dtype x) {
   return v;
 }
 
-
 static VALUE scomplex_store_numeric(VALUE self, VALUE obj) {
   dtype x;
   x = m_num_to_data(obj);
@@ -1324,7 +1323,9 @@ static VALUE scomplex_aset(int argc, VALUE* argv, VALUE self) {
   @overload coerce_cast(type)
   @return [nil]
 */
-static VALUE scomplex_coerce_cast(VALUE self, VALUE type) { return Qnil; }
+static VALUE scomplex_coerce_cast(VALUE self, VALUE type) {
+  return Qnil;
+}
 
 static void iter_scomplex_to_a(na_loop_t* const lp) {
   size_t i, s1;
@@ -1511,7 +1512,9 @@ static VALUE iter_scomplex_inspect(char* ptr, size_t pos, VALUE fmt) {
   @overload inspect
   @return [String]
 */
-static VALUE scomplex_inspect(VALUE ary) { return na_ndloop_inspect(ary, iter_scomplex_inspect, Qnil); }
+static VALUE scomplex_inspect(VALUE ary) {
+  return na_ndloop_inspect(ary, iter_scomplex_inspect, Qnil);
+}
 
 static void iter_scomplex_each(na_loop_t* const lp) {
   size_t i, s1;
@@ -3973,7 +3976,6 @@ static VALUE scomplex_sum(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return scomplex_extract(v);
-
 }
 
 static void iter_scomplex_prod(na_loop_t* const lp) {
@@ -4018,7 +4020,6 @@ static VALUE scomplex_prod(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return scomplex_extract(v);
-
 }
 
 static void iter_scomplex_mean(na_loop_t* const lp) {
@@ -4063,7 +4064,6 @@ static VALUE scomplex_mean(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return scomplex_extract(v);
-
 }
 
 static void iter_scomplex_stddev(na_loop_t* const lp) {
@@ -4694,7 +4694,6 @@ static VALUE scomplex_eye(int argc, VALUE* argv, VALUE self) {
   return self;
 }
 
-
 typedef struct {
   dtype low;
   dtype max;
@@ -4814,7 +4813,6 @@ static void iter_scomplex_rand_norm(na_loop_t* const lp) {
       m_rand_norm(mu, sigma, a0);
       p1 += s1;
     }
-
   }
 }
 

@@ -40,7 +40,9 @@ rb_keyword_error_new(const char* error, VALUE keys) {
 }
 
 NORETURN(static void rb_keyword_error(const char* error, VALUE keys));
-static void rb_keyword_error(const char* error, VALUE keys) { rb_exc_raise(rb_keyword_error_new(error, keys)); }
+static void rb_keyword_error(const char* error, VALUE keys) {
+  rb_exc_raise(rb_keyword_error_new(error, keys));
+}
 
 NORETURN(static void unknown_keyword_error(VALUE hash, const ID* table, int keywords));
 static void unknown_keyword_error(VALUE hash, const ID* table, int keywords) {

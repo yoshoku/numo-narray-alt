@@ -73,7 +73,9 @@ typedef struct NA_MD_LOOP {
 static ID id_cast;
 static ID id_extract;
 
-static inline VALUE nary_type_s_cast(VALUE type, VALUE obj) { return rb_funcall(type, id_cast, 1, obj); }
+static inline VALUE nary_type_s_cast(VALUE type, VALUE obj) {
+  return rb_funcall(type, id_cast, 1, obj);
+}
 
 static void print_ndfunc(ndfunc_t* nf) {
   volatile VALUE t;
@@ -198,7 +200,9 @@ static unsigned int ndloop_func_loop_spec(ndfunc_t* nf, int user_ndim) {
   return f;
 }
 
-static int ndloop_cast_required(VALUE type, VALUE value) { return CASTABLE(type) && type != rb_obj_class(value); }
+static int ndloop_cast_required(VALUE type, VALUE value) {
+  return CASTABLE(type) && type != rb_obj_class(value);
+}
 
 static int ndloop_castable_type(VALUE type) {
   return rb_obj_is_kind_of(type, rb_cClass) && RTEST(rb_class_inherited_p(type, cNArray));
@@ -253,7 +257,9 @@ static void ndloop_handle_symbol_in_ain(VALUE type, VALUE value, int at, na_md_l
   }
 }
 
-static inline int max2(int x, int y) { return x > y ? x : y; }
+static inline int max2(int x, int y) {
+  return x > y ? x : y;
+}
 
 static void ndloop_find_max_dimension(na_md_loop_t* lp, ndfunc_t* nf, VALUE args) {
   int j;
@@ -1333,7 +1339,9 @@ va_dcl
 }
 
 VALUE
-na_ndloop2(ndfunc_t* nf, VALUE args) { return na_ndloop_main(nf, args, NULL); }
+na_ndloop2(ndfunc_t* nf, VALUE args) {
+  return na_ndloop_main(nf, args, NULL);
+}
 
 VALUE
 #ifdef HAVE_STDARG_PROTOTYPES
@@ -1365,7 +1373,9 @@ va_dcl
 }
 
 VALUE
-na_ndloop4(ndfunc_t* nf, void* ptr, VALUE args) { return na_ndloop_main(nf, args, ptr); }
+na_ndloop4(ndfunc_t* nf, void* ptr, VALUE args) {
+  return na_ndloop_main(nf, args, ptr);
+}
 
 //----------------------------------------------------------------------
 

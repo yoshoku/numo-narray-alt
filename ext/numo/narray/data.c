@@ -73,7 +73,9 @@ na_copy(VALUE self) {
 }
 
 VALUE
-na_store(VALUE self, VALUE src) { return rb_funcall(self, id_store, 1, src); }
+na_store(VALUE self, VALUE src) {
+  return rb_funcall(self, id_store, 1, src);
+}
 
 // ---------------------------------------------------------------------
 
@@ -532,7 +534,9 @@ na_flatten_dim(VALUE self, int sd) {
 }
 
 VALUE
-na_flatten(VALUE self) { return na_flatten_dim(self, 0); }
+na_flatten(VALUE self) {
+  return na_flatten_dim(self, 0);
+}
 
 //----------------------------------------------------------------------
 

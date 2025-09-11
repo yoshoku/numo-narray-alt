@@ -220,7 +220,6 @@ static VALUE robject_new_dim0(dtype x) {
   return v;
 }
 
-
 static VALUE robject_store_numeric(VALUE self, VALUE obj) {
   dtype x;
   x = m_num_to_data(obj);
@@ -1116,7 +1115,6 @@ static dtype robject_extract_data(VALUE obj) {
     }
 
     return obj;
-
   }
   if (TYPE(obj) == T_ARRAY) {
     if (RARRAY_LEN(obj) != 1) {
@@ -1179,7 +1177,6 @@ static VALUE robject_s_cast(VALUE type, VALUE obj) {
   }
 
   return robject_new_dim0(obj);
-
 }
 
 /*
@@ -1244,7 +1241,9 @@ static VALUE robject_aset(int argc, VALUE* argv, VALUE self) {
   @overload coerce_cast(type)
   @return [nil]
 */
-static VALUE robject_coerce_cast(VALUE self, VALUE type) { return Qnil; }
+static VALUE robject_coerce_cast(VALUE self, VALUE type) {
+  return Qnil;
+}
 
 static void iter_robject_to_a(na_loop_t* const lp) {
   size_t i, s1;
@@ -1431,7 +1430,9 @@ static VALUE iter_robject_inspect(char* ptr, size_t pos, VALUE fmt) {
   @overload inspect
   @return [String]
 */
-static VALUE robject_inspect(VALUE ary) { return na_ndloop_inspect(ary, iter_robject_inspect, Qnil); }
+static VALUE robject_inspect(VALUE ary) {
+  return na_ndloop_inspect(ary, iter_robject_inspect, Qnil);
+}
 
 static void iter_robject_each(na_loop_t* const lp) {
   size_t i, s1;
@@ -1816,9 +1817,7 @@ static VALUE robject_add_self(VALUE self, VALUE other) {
   @return [Numo::NArray] self + other
 */
 static VALUE robject_add(VALUE self, VALUE other) {
-
   return robject_add_self(self, other);
-
 }
 
 #define check_intdivzero(y)                                                                                                    \
@@ -1895,9 +1894,7 @@ static VALUE robject_sub_self(VALUE self, VALUE other) {
   @return [Numo::NArray] self - other
 */
 static VALUE robject_sub(VALUE self, VALUE other) {
-
   return robject_sub_self(self, other);
-
 }
 
 #define check_intdivzero(y)                                                                                                    \
@@ -1974,9 +1971,7 @@ static VALUE robject_mul_self(VALUE self, VALUE other) {
   @return [Numo::NArray] self * other
 */
 static VALUE robject_mul(VALUE self, VALUE other) {
-
   return robject_mul_self(self, other);
-
 }
 
 #define check_intdivzero(y)                                                                                                    \
@@ -2056,9 +2051,7 @@ static VALUE robject_div_self(VALUE self, VALUE other) {
   @return [Numo::NArray] self / other
 */
 static VALUE robject_div(VALUE self, VALUE other) {
-
   return robject_div_self(self, other);
-
 }
 
 #define check_intdivzero(y)                                                                                                    \
@@ -2138,9 +2131,7 @@ static VALUE robject_mod_self(VALUE self, VALUE other) {
   @return [Numo::NArray] self % other
 */
 static VALUE robject_mod(VALUE self, VALUE other) {
-
   return robject_mod_self(self, other);
-
 }
 
 static void iter_robject_divmod(na_loop_t* const lp) {
@@ -2181,9 +2172,7 @@ static VALUE robject_divmod_self(VALUE self, VALUE other) {
   @return [Numo::NArray] divmod of self and other.
 */
 static VALUE robject_divmod(VALUE self, VALUE other) {
-
   return robject_divmod_self(self, other);
-
 }
 
 static void iter_robject_pow(na_loop_t* const lp) {
@@ -2243,9 +2232,7 @@ static VALUE robject_pow_self(VALUE self, VALUE other) {
   @return [Numo::NArray] self to the other-th power.
 */
 static VALUE robject_pow(VALUE self, VALUE other) {
-
   return robject_pow_self(self, other);
-
 }
 
 static void iter_robject_minus(na_loop_t* const lp) {
@@ -2516,9 +2503,7 @@ static VALUE robject_eq_self(VALUE self, VALUE other) {
   @return [Numo::Bit] result of self eq other.
 */
 static VALUE robject_eq(VALUE self, VALUE other) {
-
   return robject_eq_self(self, other);
-
 }
 
 static void iter_robject_ne(na_loop_t* const lp) {
@@ -2557,9 +2542,7 @@ static VALUE robject_ne_self(VALUE self, VALUE other) {
   @return [Numo::Bit] result of self ne other.
 */
 static VALUE robject_ne(VALUE self, VALUE other) {
-
   return robject_ne_self(self, other);
-
 }
 
 static void iter_robject_nearly_eq(na_loop_t* const lp) {
@@ -2598,9 +2581,7 @@ static VALUE robject_nearly_eq_self(VALUE self, VALUE other) {
   @return [Numo::Bit] result of self nearly_eq other.
 */
 static VALUE robject_nearly_eq(VALUE self, VALUE other) {
-
   return robject_nearly_eq_self(self, other);
-
 }
 
 #define check_intdivzero(y)                                                                                                    \
@@ -2677,9 +2658,7 @@ static VALUE robject_bit_and_self(VALUE self, VALUE other) {
   @return [Numo::NArray] self & other
 */
 static VALUE robject_bit_and(VALUE self, VALUE other) {
-
   return robject_bit_and_self(self, other);
-
 }
 
 #define check_intdivzero(y)                                                                                                    \
@@ -2756,9 +2735,7 @@ static VALUE robject_bit_or_self(VALUE self, VALUE other) {
   @return [Numo::NArray] self | other
 */
 static VALUE robject_bit_or(VALUE self, VALUE other) {
-
   return robject_bit_or_self(self, other);
-
 }
 
 #define check_intdivzero(y)                                                                                                    \
@@ -2835,9 +2812,7 @@ static VALUE robject_bit_xor_self(VALUE self, VALUE other) {
   @return [Numo::NArray] self ^ other
 */
 static VALUE robject_bit_xor(VALUE self, VALUE other) {
-
   return robject_bit_xor_self(self, other);
-
 }
 
 static void iter_robject_bit_not(na_loop_t* const lp) {
@@ -2972,9 +2947,7 @@ static VALUE robject_left_shift_self(VALUE self, VALUE other) {
   @return [Numo::NArray] self << other
 */
 static VALUE robject_left_shift(VALUE self, VALUE other) {
-
   return robject_left_shift_self(self, other);
-
 }
 
 #define check_intdivzero(y)                                                                                                    \
@@ -3051,9 +3024,7 @@ static VALUE robject_right_shift_self(VALUE self, VALUE other) {
   @return [Numo::NArray] self >> other
 */
 static VALUE robject_right_shift(VALUE self, VALUE other) {
-
   return robject_right_shift_self(self, other);
-
 }
 
 static void iter_robject_floor(na_loop_t* const lp) {
@@ -3324,9 +3295,7 @@ static VALUE robject_gt_self(VALUE self, VALUE other) {
   @return [Numo::Bit] result of self gt other.
 */
 static VALUE robject_gt(VALUE self, VALUE other) {
-
   return robject_gt_self(self, other);
-
 }
 
 static void iter_robject_ge(na_loop_t* const lp) {
@@ -3365,9 +3334,7 @@ static VALUE robject_ge_self(VALUE self, VALUE other) {
   @return [Numo::Bit] result of self ge other.
 */
 static VALUE robject_ge(VALUE self, VALUE other) {
-
   return robject_ge_self(self, other);
-
 }
 
 static void iter_robject_lt(na_loop_t* const lp) {
@@ -3406,9 +3373,7 @@ static VALUE robject_lt_self(VALUE self, VALUE other) {
   @return [Numo::Bit] result of self lt other.
 */
 static VALUE robject_lt(VALUE self, VALUE other) {
-
   return robject_lt_self(self, other);
-
 }
 
 static void iter_robject_le(na_loop_t* const lp) {
@@ -3447,9 +3412,7 @@ static VALUE robject_le_self(VALUE self, VALUE other) {
   @return [Numo::Bit] result of self le other.
 */
 static VALUE robject_le(VALUE self, VALUE other) {
-
   return robject_le_self(self, other);
-
 }
 
 static void iter_robject_clip(na_loop_t* const lp) {
@@ -3821,7 +3784,6 @@ static VALUE robject_sum(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return robject_extract(v);
-
 }
 
 static void iter_robject_prod(na_loop_t* const lp) {
@@ -3866,7 +3828,6 @@ static VALUE robject_prod(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return robject_extract(v);
-
 }
 
 static void iter_robject_mean(na_loop_t* const lp) {
@@ -3911,7 +3872,6 @@ static VALUE robject_mean(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return robject_extract(v);
-
 }
 
 static void iter_robject_stddev(na_loop_t* const lp) {
@@ -4088,7 +4048,6 @@ static VALUE robject_min(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return robject_extract(v);
-
 }
 
 static void iter_robject_max(na_loop_t* const lp) {
@@ -4133,7 +4092,6 @@ static VALUE robject_max(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return robject_extract(v);
-
 }
 
 static void iter_robject_ptp(na_loop_t* const lp) {
@@ -4178,9 +4136,7 @@ static VALUE robject_ptp(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return robject_extract(v);
-
 }
-
 
 #define idx_t int64_t
 static void iter_robject_max_index_index64(na_loop_t* const lp) {
@@ -4293,13 +4249,11 @@ static VALUE robject_max_index(int argc, VALUE* argv, VALUE self) {
     ndf.func = iter_robject_max_index_index32;
 
     reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_max_index_index32_nan);
-
   }
   rb_funcall(idx, rb_intern("seq"), 0);
 
   return na_ndloop(&ndf, 3, self, idx, reduce);
 }
-
 
 #define idx_t int64_t
 static void iter_robject_min_index_index64(na_loop_t* const lp) {
@@ -4412,13 +4366,11 @@ static VALUE robject_min_index(int argc, VALUE* argv, VALUE self) {
     ndf.func = iter_robject_min_index_index32;
 
     reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_min_index_index32_nan);
-
   }
   rb_funcall(idx, rb_intern("seq"), 0);
 
   return na_ndloop(&ndf, 3, self, idx, reduce);
 }
-
 
 #define idx_t int64_t
 static void iter_robject_argmax_arg64(na_loop_t* const lp) {
@@ -4525,12 +4477,10 @@ static VALUE robject_argmax(int argc, VALUE* argv, VALUE self) {
     ndf.func = iter_robject_argmax_arg32;
 
     reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_argmax_arg32_nan);
-
   }
 
   return na_ndloop(&ndf, 2, self, reduce);
 }
-
 
 #define idx_t int64_t
 static void iter_robject_argmin_arg64(na_loop_t* const lp) {
@@ -4637,7 +4587,6 @@ static VALUE robject_argmin(int argc, VALUE* argv, VALUE self) {
     ndf.func = iter_robject_argmin_arg32;
 
     reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_argmin_arg32_nan);
-
   }
 
   return na_ndloop(&ndf, 2, self, reduce);
@@ -5314,7 +5263,6 @@ static VALUE robject_eye(int argc, VALUE* argv, VALUE self) {
   na_ndloop3(&ndf, g, 1, self);
   return self;
 }
-
 
 typedef struct {
   dtype low;

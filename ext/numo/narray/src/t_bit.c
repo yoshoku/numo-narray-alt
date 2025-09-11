@@ -47,7 +47,6 @@ static size_t bit_memsize(const void* ptr) {
   if (na->ptr != NULL) {
 
     size += ((na->base.size - 1) / 8 / sizeof(BIT_DIGIT) + 1) * sizeof(BIT_DIGIT);
-
   }
   if (na->base.size > 0) {
     if (na->base.shape != NULL && na->base.shape != &(na->base.size)) {
@@ -170,7 +169,6 @@ static VALUE bit_new_dim0(dtype x) {
   na_release_lock(v);
   return v;
 }
-
 
 static VALUE bit_store_numeric(VALUE self, VALUE obj) {
   dtype x;
@@ -1350,7 +1348,9 @@ static VALUE bit_aset(int argc, VALUE* argv, VALUE self) {
   @overload coerce_cast(type)
   @return [nil]
 */
-static VALUE bit_coerce_cast(VALUE self, VALUE type) { return Qnil; }
+static VALUE bit_coerce_cast(VALUE self, VALUE type) {
+  return Qnil;
+}
 
 static void iter_bit_to_a(na_loop_t* const lp) {
   size_t i;
@@ -1573,7 +1573,9 @@ static VALUE iter_bit_inspect(char* ptr, size_t pos, VALUE fmt) {
   @overload inspect
   @return [String]
 */
-static VALUE bit_inspect(VALUE ary) { return na_ndloop_inspect(ary, iter_bit_inspect, Qnil); }
+static VALUE bit_inspect(VALUE ary) {
+  return na_ndloop_inspect(ary, iter_bit_inspect, Qnil);
+}
 
 static void iter_bit_each(na_loop_t* const lp) {
   size_t i;
@@ -3070,7 +3072,9 @@ static void iter_bit_mask(na_loop_t* const lp) {
 #define cIndex numo_cInt32
 #endif
 
-static void shape_error(void) { rb_raise(nary_eShapeError, "mask and masked arrays must have the same shape"); }
+static void shape_error(void) {
+  rb_raise(nary_eShapeError, "mask and masked arrays must have the same shape");
+}
 
 /*
   Return subarray of argument masked with self bit array.

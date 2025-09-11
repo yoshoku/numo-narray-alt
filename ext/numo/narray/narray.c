@@ -694,13 +694,21 @@ static char* na_get_pointer_for_rw(VALUE self, int flag) {
   return NULL;
 }
 
-char* na_get_pointer_for_read(VALUE self) { return na_get_pointer_for_rw(self, READ); }
+char* na_get_pointer_for_read(VALUE self) {
+  return na_get_pointer_for_rw(self, READ);
+}
 
-char* na_get_pointer_for_write(VALUE self) { return na_get_pointer_for_rw(self, WRITE); }
+char* na_get_pointer_for_write(VALUE self) {
+  return na_get_pointer_for_rw(self, WRITE);
+}
 
-char* na_get_pointer_for_read_write(VALUE self) { return na_get_pointer_for_rw(self, READ | WRITE); }
+char* na_get_pointer_for_read_write(VALUE self) {
+  return na_get_pointer_for_rw(self, READ | WRITE);
+}
 
-char* na_get_pointer(VALUE self) { return na_get_pointer_for_rw(self, 0); }
+char* na_get_pointer(VALUE self) {
+  return na_get_pointer_for_rw(self, 0);
+}
 
 void na_release_lock(VALUE self) {
   narray_t* na;
@@ -809,7 +817,9 @@ unsigned int nary_element_stride(VALUE v) {
   return info->element_stride;
 }
 
-size_t na_dtype_elmsz(VALUE klass) { return NUM2SIZET(rb_const_get(klass, id_contiguous_stride)); }
+size_t na_dtype_elmsz(VALUE klass) {
+  return NUM2SIZET(rb_const_get(klass, id_contiguous_stride));
+}
 
 size_t na_get_offset(VALUE self) {
   narray_t* na;
@@ -1209,7 +1219,9 @@ static VALUE nary_byte_size(VALUE self) {
   Returns byte size of one element of NArray.
   @return [Numeric] byte size.
  */
-static VALUE nary_s_byte_size(VALUE type) { return rb_const_get(type, id_element_byte_size); }
+static VALUE nary_s_byte_size(VALUE type) {
+  return rb_const_get(type, id_element_byte_size);
+}
 
 /*
   Returns a new 1-D array initialized from binary raw data in a string.
@@ -1449,7 +1461,9 @@ static VALUE nary_marshal_load(VALUE self, VALUE a) {
   @param [Class] datatype NArray datatype.
   @return [Numo::NArray]
  */
-static VALUE nary_cast_to(VALUE obj, VALUE type) { return rb_funcall(type, id_cast, 1, obj); }
+static VALUE nary_cast_to(VALUE obj, VALUE type) {
+  return rb_funcall(type, id_cast, 1, obj);
+}
 
 bool na_test_reduce(VALUE reduce, int dim) {
   size_t m;
@@ -1701,7 +1715,9 @@ static VALUE na_debug_set(VALUE mod, VALUE flag) {
 
 static double na_profile_value = 0;
 
-static VALUE na_profile(VALUE mod) { return rb_float_new(na_profile_value); }
+static VALUE na_profile(VALUE mod) {
+  return rb_float_new(na_profile_value);
+}
 
 static VALUE na_profile_set(VALUE mod, VALUE val) {
   na_profile_value = NUM2DBL(val);

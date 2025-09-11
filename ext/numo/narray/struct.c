@@ -39,7 +39,9 @@ static VALUE nst_allocate(VALUE self) {
   return self;
 }
 
-static inline VALUE nst_definitions(VALUE nst) { return rb_const_get(nst, rb_intern("DEFINITIONS")); }
+static inline VALUE nst_definitions(VALUE nst) {
+  return rb_const_get(nst, rb_intern("DEFINITIONS"));
+}
 
 static VALUE nst_definition(VALUE nst, VALUE idx) {
   long i;
@@ -346,7 +348,9 @@ static VALUE nstruct_add_type(VALUE type, int argc, VALUE* argv, VALUE nst) {
   return Qnil;
 }
 
-static VALUE nst_extract(VALUE self) { return self; }
+static VALUE nst_extract(VALUE self) {
+  return self;
+}
 
 static void iter_nstruct_to_a(na_loop_t* const lp) {
   long i, len;
@@ -598,7 +602,9 @@ static VALUE nary_struct_cast_array(VALUE klass, VALUE rary) {
   return nary;
 }
 
-static inline VALUE nary_struct_s_cast(VALUE klass, VALUE rary) { return nary_struct_cast_array(klass, rary); }
+static inline VALUE nary_struct_s_cast(VALUE klass, VALUE rary) {
+  return nary_struct_cast_array(klass, rary);
+}
 
 static void iter_struct_store_struct(na_loop_t* const lp) {
   size_t i, s1, s2;

@@ -429,7 +429,9 @@ na_ary_composition_dtype(VALUE ary) {
   return type;
 }
 
-static VALUE na_s_array_type(VALUE mod, VALUE ary) { return na_ary_composition_dtype(ary); }
+static VALUE na_s_array_type(VALUE mod, VALUE ary) {
+  return na_ary_composition_dtype(ary);
+}
 
 /*
   Generate NArray object. NArray datatype is automatically selected.

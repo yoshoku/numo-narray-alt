@@ -176,7 +176,6 @@ static VALUE dcomplex_new_dim0(dtype x) {
   return v;
 }
 
-
 static VALUE dcomplex_store_numeric(VALUE self, VALUE obj) {
   dtype x;
   x = m_num_to_data(obj);
@@ -1324,7 +1323,9 @@ static VALUE dcomplex_aset(int argc, VALUE* argv, VALUE self) {
   @overload coerce_cast(type)
   @return [nil]
 */
-static VALUE dcomplex_coerce_cast(VALUE self, VALUE type) { return Qnil; }
+static VALUE dcomplex_coerce_cast(VALUE self, VALUE type) {
+  return Qnil;
+}
 
 static void iter_dcomplex_to_a(na_loop_t* const lp) {
   size_t i, s1;
@@ -1511,7 +1512,9 @@ static VALUE iter_dcomplex_inspect(char* ptr, size_t pos, VALUE fmt) {
   @overload inspect
   @return [String]
 */
-static VALUE dcomplex_inspect(VALUE ary) { return na_ndloop_inspect(ary, iter_dcomplex_inspect, Qnil); }
+static VALUE dcomplex_inspect(VALUE ary) {
+  return na_ndloop_inspect(ary, iter_dcomplex_inspect, Qnil);
+}
 
 static void iter_dcomplex_each(na_loop_t* const lp) {
   size_t i, s1;
@@ -3973,7 +3976,6 @@ static VALUE dcomplex_sum(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dcomplex_extract(v);
-
 }
 
 static void iter_dcomplex_prod(na_loop_t* const lp) {
@@ -4018,7 +4020,6 @@ static VALUE dcomplex_prod(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dcomplex_extract(v);
-
 }
 
 static void iter_dcomplex_kahan_sum(na_loop_t* const lp) {
@@ -4063,7 +4064,6 @@ static VALUE dcomplex_kahan_sum(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dcomplex_extract(v);
-
 }
 
 static void iter_dcomplex_mean(na_loop_t* const lp) {
@@ -4108,7 +4108,6 @@ static VALUE dcomplex_mean(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dcomplex_extract(v);
-
 }
 
 static void iter_dcomplex_stddev(na_loop_t* const lp) {
@@ -4739,7 +4738,6 @@ static VALUE dcomplex_eye(int argc, VALUE* argv, VALUE self) {
   return self;
 }
 
-
 typedef struct {
   dtype low;
   dtype max;
@@ -4859,7 +4857,6 @@ static void iter_dcomplex_rand_norm(na_loop_t* const lp) {
       m_rand_norm(mu, sigma, a0);
       p1 += s1;
     }
-
   }
 }
 
