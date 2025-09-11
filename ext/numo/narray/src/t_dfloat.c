@@ -1,4 +1,3 @@
-
 /*
   t_dfloat.c
   Ruby/Numo::NArray - Numerical Array class for Ruby
@@ -15,8 +14,10 @@
 
 #define m_map(x) m_num_to_data(rb_yield(m_data_to_num(x)))
 
+#ifdef __SSE2__
 #include <emmintrin.h>
 #define SIMD_ALIGNMENT_SIZE 16
+#endif
 
 static ID id_pow;
 static ID id_cast;
@@ -1731,6 +1732,7 @@ static void iter_dfloat_add(na_loop_t* const lp) {
   char *p1, *p2, *p3;
   ssize_t s1, s2, s3;
 
+#ifdef __SSE2__
   size_t cnt;
   size_t cnt_simd_loop = -1;
 
@@ -1739,6 +1741,7 @@ static void iter_dfloat_add(na_loop_t* const lp) {
 
   size_t num_pack; // Number of elements packed for SIMD.
   num_pack = SIMD_ALIGNMENT_SIZE / sizeof(dtype);
+#endif
   INIT_COUNTER(lp, n);
   INIT_PTR(lp, 0, p1, s1);
   INIT_PTR(lp, 1, p2, s2);
@@ -1748,20 +1751,32 @@ static void iter_dfloat_add(na_loop_t* const lp) {
   if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
+#ifdef __SSE2__
       // Check number of elements. & Check same alignment.
       if ((n >= num_pack) && is_same_aligned3(&((dtype*)p1)[i], &((dtype*)p2)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
         // Calculate up to the position just before the start of SIMD computation.
         cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+#endif
         if (p1 == p3) { // inplace case
+#ifdef __SSE2__
           for (; i < cnt; i++) {
+#else
+          for (; i < n; i++) {
+            check_intdivzero(((dtype*)p2)[i]);
+#endif
             ((dtype*)p1)[i] = m_add(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
         } else {
+#ifdef __SSE2__
           for (; i < cnt; i++) {
+#else
+          for (; i < n; i++) {
+            check_intdivzero(((dtype*)p2)[i]);
+#endif
             ((dtype*)p3)[i] = m_add(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
         }
-
+#ifdef __SSE2__
         // Get the count of SIMD computation loops.
         cnt_simd_loop = (n - i) % num_pack;
 
@@ -1797,6 +1812,7 @@ static void iter_dfloat_add(na_loop_t* const lp) {
           }
         }
       }
+#endif
       return;
     }
 
@@ -1806,6 +1822,7 @@ static void iter_dfloat_add(na_loop_t* const lp) {
       if (s2 == 0) { // Broadcasting from scalar value.
         check_intdivzero(*(dtype*)p2);
         if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
+#ifdef __SSE2__
           // Broadcast a scalar value and use it for SIMD computation.
           b = _mm_load1_pd(&((dtype*)p2)[0]);
 
@@ -1813,16 +1830,25 @@ static void iter_dfloat_add(na_loop_t* const lp) {
           if ((n >= num_pack) && is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
             // Calculate up to the position just before the start of SIMD computation.
             cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+#endif
             if (p1 == p3) { // inplace case
+#ifdef __SSE2__
               for (; i < cnt; i++) {
+#else
+              for (; i < n; i++) {
+#endif
                 ((dtype*)p1)[i] = m_add(((dtype*)p1)[i], *(dtype*)p2);
               }
             } else {
+#ifdef __SSE2__
               for (; i < cnt; i++) {
+#else
+              for (; i < n; i++) {
+#endif
                 ((dtype*)p3)[i] = m_add(((dtype*)p1)[i], *(dtype*)p2);
               }
             }
-
+#ifdef __SSE2__
             // Get the count of SIMD computation loops.
             cnt_simd_loop = (n - i) % num_pack;
 
@@ -1854,6 +1880,7 @@ static void iter_dfloat_add(na_loop_t* const lp) {
               }
             }
           }
+#endif
         } else {
           for (i = 0; i < n; i++) {
             *(dtype*)p3 = m_add(*(dtype*)p1, *(dtype*)p2);
@@ -1932,6 +1959,7 @@ static void iter_dfloat_sub(na_loop_t* const lp) {
   char *p1, *p2, *p3;
   ssize_t s1, s2, s3;
 
+#ifdef __SSE2__
   size_t cnt;
   size_t cnt_simd_loop = -1;
 
@@ -1940,6 +1968,7 @@ static void iter_dfloat_sub(na_loop_t* const lp) {
 
   size_t num_pack; // Number of elements packed for SIMD.
   num_pack = SIMD_ALIGNMENT_SIZE / sizeof(dtype);
+#endif
   INIT_COUNTER(lp, n);
   INIT_PTR(lp, 0, p1, s1);
   INIT_PTR(lp, 1, p2, s2);
@@ -1949,20 +1978,33 @@ static void iter_dfloat_sub(na_loop_t* const lp) {
   if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
+#ifdef __SSE2__
       // Check number of elements. & Check same alignment.
       if ((n >= num_pack) && is_same_aligned3(&((dtype*)p1)[i], &((dtype*)p2)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
         // Calculate up to the position just before the start of SIMD computation.
         cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+#endif
         if (p1 == p3) { // inplace case
+#ifdef __SSE2__
           for (; i < cnt; i++) {
+#else
+          for (; i < n; i++) {
+            check_intdivzero(((dtype*)p2)[i]);
+#endif
             ((dtype*)p1)[i] = m_sub(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
         } else {
+#ifdef __SSE2__
           for (; i < cnt; i++) {
+#else
+          for (; i < n; i++) {
+            check_intdivzero(((dtype*)p2)[i]);
+#endif
             ((dtype*)p3)[i] = m_sub(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
         }
 
+#ifdef __SSE2__
         // Get the count of SIMD computation loops.
         cnt_simd_loop = (n - i) % num_pack;
 
@@ -1998,6 +2040,7 @@ static void iter_dfloat_sub(na_loop_t* const lp) {
           }
         }
       }
+#endif
       return;
     }
 
@@ -2007,6 +2050,7 @@ static void iter_dfloat_sub(na_loop_t* const lp) {
       if (s2 == 0) { // Broadcasting from scalar value.
         check_intdivzero(*(dtype*)p2);
         if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
+#ifdef __SSE2__
           // Broadcast a scalar value and use it for SIMD computation.
           b = _mm_load1_pd(&((dtype*)p2)[0]);
 
@@ -2014,16 +2058,26 @@ static void iter_dfloat_sub(na_loop_t* const lp) {
           if ((n >= num_pack) && is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
             // Calculate up to the position just before the start of SIMD computation.
             cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+#endif
             if (p1 == p3) { // inplace case
+#ifdef __SSE2__
               for (; i < cnt; i++) {
+#else
+              for (; i < n; i++) {
+#endif
                 ((dtype*)p1)[i] = m_sub(((dtype*)p1)[i], *(dtype*)p2);
               }
             } else {
+#ifdef __SSE2__
               for (; i < cnt; i++) {
+#else
+              for (; i < n; i++) {
+#endif
                 ((dtype*)p3)[i] = m_sub(((dtype*)p1)[i], *(dtype*)p2);
               }
             }
 
+#ifdef __SSE2__
             // Get the count of SIMD computation loops.
             cnt_simd_loop = (n - i) % num_pack;
 
@@ -2055,6 +2109,7 @@ static void iter_dfloat_sub(na_loop_t* const lp) {
               }
             }
           }
+#endif
         } else {
           for (i = 0; i < n; i++) {
             *(dtype*)p3 = m_sub(*(dtype*)p1, *(dtype*)p2);
@@ -2133,6 +2188,7 @@ static void iter_dfloat_mul(na_loop_t* const lp) {
   char *p1, *p2, *p3;
   ssize_t s1, s2, s3;
 
+#ifdef __SSE2__
   size_t cnt;
   size_t cnt_simd_loop = -1;
 
@@ -2141,6 +2197,7 @@ static void iter_dfloat_mul(na_loop_t* const lp) {
 
   size_t num_pack; // Number of elements packed for SIMD.
   num_pack = SIMD_ALIGNMENT_SIZE / sizeof(dtype);
+#endif
   INIT_COUNTER(lp, n);
   INIT_PTR(lp, 0, p1, s1);
   INIT_PTR(lp, 1, p2, s2);
@@ -2150,20 +2207,33 @@ static void iter_dfloat_mul(na_loop_t* const lp) {
   if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
+#ifdef __SSE2__
       // Check number of elements. & Check same alignment.
       if ((n >= num_pack) && is_same_aligned3(&((dtype*)p1)[i], &((dtype*)p2)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
         // Calculate up to the position just before the start of SIMD computation.
         cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+#endif
         if (p1 == p3) { // inplace case
+#ifdef __SSE2__
           for (; i < cnt; i++) {
+#else
+          for (; i < n; i++) {
+            check_intdivzero(((dtype*)p2)[i]);
+#endif
             ((dtype*)p1)[i] = m_mul(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
         } else {
+#ifdef __SSE2__
           for (; i < cnt; i++) {
+#else
+          for (; i < n; i++) {
+            check_intdivzero(((dtype*)p2)[i]);
+#endif
             ((dtype*)p3)[i] = m_mul(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
         }
 
+#ifdef __SSE2__
         // Get the count of SIMD computation loops.
         cnt_simd_loop = (n - i) % num_pack;
 
@@ -2199,6 +2269,7 @@ static void iter_dfloat_mul(na_loop_t* const lp) {
           }
         }
       }
+#endif
       return;
     }
 
@@ -2208,6 +2279,7 @@ static void iter_dfloat_mul(na_loop_t* const lp) {
       if (s2 == 0) { // Broadcasting from scalar value.
         check_intdivzero(*(dtype*)p2);
         if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
+#ifdef __SSE2__
           // Broadcast a scalar value and use it for SIMD computation.
           b = _mm_load1_pd(&((dtype*)p2)[0]);
 
@@ -2215,16 +2287,26 @@ static void iter_dfloat_mul(na_loop_t* const lp) {
           if ((n >= num_pack) && is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
             // Calculate up to the position just before the start of SIMD computation.
             cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+#endif
             if (p1 == p3) { // inplace case
+#ifdef __SSE2__
               for (; i < cnt; i++) {
+#else
+              for (; i < n; i++) {
+#endif
                 ((dtype*)p1)[i] = m_mul(((dtype*)p1)[i], *(dtype*)p2);
               }
             } else {
+#ifdef __SSE2__
               for (; i < cnt; i++) {
+#else
+              for (; i < n; i++) {
+#endif
                 ((dtype*)p3)[i] = m_mul(((dtype*)p1)[i], *(dtype*)p2);
               }
             }
 
+#ifdef __SSE2__
             // Get the count of SIMD computation loops.
             cnt_simd_loop = (n - i) % num_pack;
 
@@ -2256,6 +2338,7 @@ static void iter_dfloat_mul(na_loop_t* const lp) {
               }
             }
           }
+#endif
         } else {
           for (i = 0; i < n; i++) {
             *(dtype*)p3 = m_mul(*(dtype*)p1, *(dtype*)p2);
@@ -2334,6 +2417,7 @@ static void iter_dfloat_div(na_loop_t* const lp) {
   char *p1, *p2, *p3;
   ssize_t s1, s2, s3;
 
+#ifdef __SSE2__
   size_t cnt;
   size_t cnt_simd_loop = -1;
 
@@ -2342,6 +2426,7 @@ static void iter_dfloat_div(na_loop_t* const lp) {
 
   size_t num_pack; // Number of elements packed for SIMD.
   num_pack = SIMD_ALIGNMENT_SIZE / sizeof(dtype);
+#endif
   INIT_COUNTER(lp, n);
   INIT_PTR(lp, 0, p1, s1);
   INIT_PTR(lp, 1, p2, s2);
@@ -2351,20 +2436,31 @@ static void iter_dfloat_div(na_loop_t* const lp) {
   if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
+#ifdef __SSE2__
       // Check number of elements. & Check same alignment.
       if ((n >= num_pack) && is_same_aligned3(&((dtype*)p1)[i], &((dtype*)p2)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
         // Calculate up to the position just before the start of SIMD computation.
         cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+#endif
         if (p1 == p3) { // inplace case
+#ifdef __SSE2__
           for (; i < cnt; i++) {
+#else
+          for (; i < n; i++) {
+#endif
             ((dtype*)p1)[i] = m_div(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
         } else {
+#ifdef __SSE2__
           for (; i < cnt; i++) {
+#else
+          for (; i < n; i++) {
+#endif
             ((dtype*)p3)[i] = m_div(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
         }
 
+#ifdef __SSE2__
         // Get the count of SIMD computation loops.
         cnt_simd_loop = (n - i) % num_pack;
 
@@ -2400,6 +2496,7 @@ static void iter_dfloat_div(na_loop_t* const lp) {
           }
         }
       }
+#endif
       return;
     }
 
@@ -2409,6 +2506,7 @@ static void iter_dfloat_div(na_loop_t* const lp) {
       if (s2 == 0) { // Broadcasting from scalar value.
         check_intdivzero(*(dtype*)p2);
         if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
+#ifdef __SSE2__
           // Broadcast a scalar value and use it for SIMD computation.
           b = _mm_load1_pd(&((dtype*)p2)[0]);
 
@@ -2416,16 +2514,28 @@ static void iter_dfloat_div(na_loop_t* const lp) {
           if ((n >= num_pack) && is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
             // Calculate up to the position just before the start of SIMD computation.
             cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+#endif
             if (p1 == p3) { // inplace case
+#ifdef __SSE2__
               for (; i < cnt; i++) {
+#else
+              for (; i < n; i++) {
+                check_intdivzero(((dtype*)p2)[i]);
+#endif
                 ((dtype*)p1)[i] = m_div(((dtype*)p1)[i], *(dtype*)p2);
               }
             } else {
+#ifdef __SSE2__
               for (; i < cnt; i++) {
+#else
+              for (; i < n; i++) {
+                check_intdivzero(((dtype*)p2)[i]);
+#endif
                 ((dtype*)p3)[i] = m_div(((dtype*)p1)[i], *(dtype*)p2);
               }
             }
 
+#ifdef __SSE2__
             // Get the count of SIMD computation loops.
             cnt_simd_loop = (n - i) % num_pack;
 
@@ -2457,6 +2567,7 @@ static void iter_dfloat_div(na_loop_t* const lp) {
               }
             }
           }
+#endif
         } else {
           for (i = 0; i < n; i++) {
             *(dtype*)p3 = m_div(*(dtype*)p1, *(dtype*)p2);
@@ -7131,6 +7242,7 @@ static void iter_dfloat_math_s_sqrt(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
+#ifdef __SSE2__
   size_t cnt;
   size_t cnt_simd_loop = -1;
 
@@ -7138,6 +7250,7 @@ static void iter_dfloat_math_s_sqrt(na_loop_t* const lp) {
 
   size_t num_pack; // Number of elements packed for SIMD.
   num_pack = SIMD_ALIGNMENT_SIZE / sizeof(dtype);
+#endif
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -7167,15 +7280,22 @@ static void iter_dfloat_math_s_sqrt(na_loop_t* const lp) {
       //
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+#ifdef __SSE2__
           //
           // Check number of elements. & Check same alignment.
           if ((n >= num_pack) && is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p2)[i], SIMD_ALIGNMENT_SIZE)) {
             // Calculate up to the position just before the start of SIMD computation.
             cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+#endif
+#ifdef __SSE2__
             for (i = 0; i < cnt; i++) {
+#else
+            for (i = 0; i < n; i++) {
+#endif
               ((dtype*)p2)[i] = m_sqrt(((dtype*)p1)[i]);
             }
 
+#ifdef __SSE2__
             // Get the count of SIMD computation loops.
             cnt_simd_loop = (n - i) % num_pack;
 
@@ -7203,6 +7323,7 @@ static void iter_dfloat_math_s_sqrt(na_loop_t* const lp) {
             //
           }
           //
+#endif
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {

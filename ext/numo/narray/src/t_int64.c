@@ -15,8 +15,10 @@
 
 #define m_map(x) m_num_to_data(rb_yield(m_data_to_num(x)))
 
+#ifdef __SSE2__
 #include <emmintrin.h>
 #define SIMD_ALIGNMENT_SIZE 16
+#endif
 
 static ID id_pow;
 static ID id_left_shift;
