@@ -10,7 +10,7 @@ class NArrayRactorTest < NArrayTestBase
       dtype = data.fetch(:dtype)
       ary = random_array(dtype)
       r = Ractor.new(ary) { |x| x }
-      ary2 = r.take
+      ary2 = defined_value? ? r.value : r.take
       assert_equal(ary, ary2)
       assert_not_same(ary, ary2)
     end
@@ -22,7 +22,7 @@ class NArrayRactorTest < NArrayTestBase
       r = Ractor.new(ary1) do |ary2|
         [ary2, ary2 * 10]
       end
-      ary2, res = r.take
+      ary2, res = defined_value? ? r.value : r.take
       assert_equal(dtype != Numo::RObject,
                    ary1.equal?(ary2))
       assert_equal(ary1 * 10, res)
@@ -37,7 +37,11 @@ class NArrayRactorTest < NArrayTestBase
       r2 = Ractor.new(ary1) do |ary4|
         ary4 * 10
       end
-      assert_equal(r1.take, r2.take)
+      if defined_value?
+        assert_equal(r1.value, r2.value)
+      else
+        assert_equal(r1.take, r2.take)
+      end
     end
 
     def random_array(dtype, n = 1000)
@@ -47,6 +51,12 @@ class NArrayRactorTest < NArrayTestBase
       else
         dtype.new(n).rand(10)
       end
+    end
+
+    def defined_value?
+      return @defined_value if defined? @defined_value
+
+      @defined_value = Ractor.method_defined?(:value)
     end
   end
 end
