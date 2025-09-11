@@ -7,12 +7,12 @@
   created on: 2017-03-11
   Copyright (C) 2017-2020 Masahiro Tanaka
 */
-
-#include <ruby.h>
 #include <assert.h>
+#include <ruby.h>
+
+#include "SFMT.h"
 #include "numo/narray.h"
 #include "numo/template.h"
-#include "SFMT.h"
 
 #define m_map(x) m_num_to_data(rb_yield(m_data_to_num(x)))
 
@@ -38,7 +38,6 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/class.c"
 /*
   class definition: Numo::SComplex
@@ -46,131 +45,115 @@ extern VALUE cRT;
 
 VALUE cT;
 
-static VALUE scomplex_store(VALUE,VALUE);
-
-
-
-
-
-
-
+static VALUE scomplex_store(VALUE, VALUE);
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
-static size_t
-scomplex_memsize(const void* ptr)
-{
-    size_t size = sizeof(narray_data_t);
-    const narray_data_t *na = (const narray_data_t*)ptr;
+static size_t scomplex_memsize(const void* ptr) {
+  size_t size = sizeof(narray_data_t);
+  const narray_data_t* na = (const narray_data_t*)ptr;
 
-    assert(na->base.type == NARRAY_DATA_T);
+  assert(na->base.type == NARRAY_DATA_T);
 
-    if (na->ptr != NULL) {
-  
+  if (na->ptr != NULL) {
+
 #line 13 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
-        size += na->base.size * sizeof(dtype);
-  
+    size += na->base.size * sizeof(dtype);
+  }
+  if (na->base.size > 0) {
+    if (na->base.shape != NULL && na->base.shape != &(na->base.size)) {
+      size += sizeof(size_t) * na->base.ndim;
     }
-    if (na->base.size > 0) {
-        if (na->base.shape != NULL && na->base.shape != &(na->base.size)) {
-            size += sizeof(size_t) * na->base.ndim;
-        }
-    }
-    return size;
+  }
+  return size;
 }
 
-static void
-scomplex_free(void* ptr)
-{
-    narray_data_t *na = (narray_data_t*)ptr;
+static void scomplex_free(void* ptr) {
+  narray_data_t* na = (narray_data_t*)ptr;
 
-    assert(na->base.type == NARRAY_DATA_T);
+  assert(na->base.type == NARRAY_DATA_T);
 
-    if (na->ptr != NULL) {
-        if (na->owned) {
-            xfree(na->ptr);
-        }
-        na->ptr = NULL;
+  if (na->ptr != NULL) {
+    if (na->owned) {
+      xfree(na->ptr);
     }
-    if (na->base.size > 0) {
-        if (na->base.shape != NULL && na->base.shape != &(na->base.size)) {
-            xfree(na->base.shape);
-            na->base.shape = NULL;
-        }
+    na->ptr = NULL;
+  }
+  if (na->base.size > 0) {
+    if (na->base.shape != NULL && na->base.shape != &(na->base.size)) {
+      xfree(na->base.shape);
+      na->base.shape = NULL;
     }
-    xfree(na);
+  }
+  xfree(na);
 }
 
 static narray_type_info_t scomplex_info = {
-  
-#line 52 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
-    0,             // element_bits
-    sizeof(dtype), // element_bytes
-    sizeof(dtype), // element_stride (in bytes)
-  
-};
 
+#line 52 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
+  0,             // element_bits
+  sizeof(dtype), // element_bytes
+  sizeof(dtype), // element_stride (in bytes)
+
+};
 
 #line 85 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
 static const rb_data_type_t scomplex_data_type = {
-    "Numo::SComplex",
-    {0, scomplex_free, scomplex_memsize,},
-    &na_data_type,
-    &scomplex_info,
-    RUBY_TYPED_FROZEN_SHAREABLE, // flags
+  "Numo::SComplex",
+  {
+    0,
+    scomplex_free,
+    scomplex_memsize,
+  },
+  &na_data_type,
+  &scomplex_info,
+  RUBY_TYPED_FROZEN_SHAREABLE, // flags
 };
 
-
 #line 95 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
-static VALUE
-scomplex_s_alloc_func(VALUE klass)
-{
-    narray_data_t *na = ALLOC(narray_data_t);
+static VALUE scomplex_s_alloc_func(VALUE klass) {
+  narray_data_t* na = ALLOC(narray_data_t);
 
-    na->base.ndim = 0;
-    na->base.type = NARRAY_DATA_T;
-    na->base.flag[0] = NA_FL0_INIT;
-    na->base.flag[1] = NA_FL1_INIT;
-    na->base.size = 0;
-    na->base.shape = NULL;
-    na->base.reduce = INT2FIX(0);
-    na->ptr = NULL;
-    na->owned = FALSE;
-    return TypedData_Wrap_Struct(klass, &scomplex_data_type, (void*)na);
+  na->base.ndim = 0;
+  na->base.type = NARRAY_DATA_T;
+  na->base.flag[0] = NA_FL0_INIT;
+  na->base.flag[1] = NA_FL1_INIT;
+  na->base.size = 0;
+  na->base.shape = NULL;
+  na->base.reduce = INT2FIX(0);
+  na->ptr = NULL;
+  na->owned = FALSE;
+  return TypedData_Wrap_Struct(klass, &scomplex_data_type, (void*)na);
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/allocate.c"
-static VALUE
-scomplex_allocate(VALUE self)
-{
-    narray_t *na;
-    char *ptr;
+static VALUE scomplex_allocate(VALUE self) {
+  narray_t* na;
+  char* ptr;
 
-    GetNArray(self,na);
+  GetNArray(self, na);
 
-    switch(NA_TYPE(na)) {
-    case NARRAY_DATA_T:
-        ptr = NA_DATA_PTR(na);
-        if (na->size > 0 && ptr == NULL) {
-            ptr = xmalloc(sizeof(dtype) * na->size);
-            
+  switch (NA_TYPE(na)) {
+  case NARRAY_DATA_T:
+    ptr = NA_DATA_PTR(na);
+    if (na->size > 0 && ptr == NULL) {
+      ptr = xmalloc(sizeof(dtype) * na->size);
+
 #line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/allocate.c"
-            NA_DATA_PTR(na) = ptr;
-            NA_DATA_OWNED(na) = TRUE;
-        }
-        break;
-    case NARRAY_VIEW_T:
-        rb_funcall(NA_VIEW_DATA(na), rb_intern("allocate"), 0);
-        break;
-    case NARRAY_FILEMAP_T:
-        //ptr = ((narray_filemap_t*)na)->ptr;
-        // to be implemented
-    default:
-        rb_bug("invalid narray type : %d",NA_TYPE(na));
+      NA_DATA_PTR(na) = ptr;
+      NA_DATA_OWNED(na) = TRUE;
     }
-    return self;
+    break;
+  case NARRAY_VIEW_T:
+    rb_funcall(NA_VIEW_DATA(na), rb_intern("allocate"), 0);
+    break;
+  case NARRAY_FILEMAP_T:
+    // ptr = ((narray_filemap_t*)na)->ptr;
+    //  to be implemented
+  default:
+    rb_bug("invalid narray type : %d", NA_TYPE(na));
+  }
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract.c"
 /*
@@ -180,953 +163,858 @@ scomplex_allocate(VALUE self)
   --- Extract element value as Ruby Object if self is a dimensionless NArray,
   otherwise returns self.
 */
-static VALUE
-scomplex_extract(VALUE self)
-{
-    volatile VALUE v;
-    char *ptr;
-    narray_t *na;
-    GetNArray(self,na);
+static VALUE scomplex_extract(VALUE self) {
+  volatile VALUE v;
+  char* ptr;
+  narray_t* na;
+  GetNArray(self, na);
 
-    if (na->ndim==0) {
-        ptr = na_get_pointer_for_read(self) + na_get_offset(self);
-        v = m_extract(ptr);
-        na_release_lock(self);
-        return v;
-    }
-    return self;
+  if (na->ndim == 0) {
+    ptr = na_get_pointer_for_read(self) + na_get_offset(self);
+    v = m_extract(ptr);
+    na_release_lock(self);
+    return v;
+  }
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/new_dim0.c"
-static VALUE
-scomplex_new_dim0(dtype x)
-{
-    VALUE v;
-    dtype *ptr;
+static VALUE scomplex_new_dim0(dtype x) {
+  VALUE v;
+  dtype* ptr;
 
-    v = nary_new(cT, 0, NULL);
-    ptr = (dtype*)(char*)na_get_pointer_for_write(v);
-    *ptr = x;
-    na_release_lock(v);
-    return v;
+  v = nary_new(cT, 0, NULL);
+  ptr = (dtype*)(char*)na_get_pointer_for_write(v);
+  *ptr = x;
+  na_release_lock(v);
+  return v;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_numeric.c"
-static VALUE
-scomplex_store_numeric(VALUE self, VALUE obj)
-{
-    dtype x;
-    x = m_num_to_data(obj);
-    obj = scomplex_new_dim0(x);
-    scomplex_store(self,obj);
-    return self;
+static VALUE scomplex_store_numeric(VALUE self, VALUE obj) {
+  dtype x;
+  x = m_num_to_data(obj);
+  obj = scomplex_new_dim0(x);
+  scomplex_store(self, obj);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_bit.c"
-static void
-iter_scomplex_store_bit(na_loop_t *const lp)
-{
-    size_t     i;
-    char      *p1;
-    size_t     p2;
-    ssize_t    s1, s2;
-    size_t    *idx1, *idx2;
-    BIT_DIGIT *a2, x;
-    dtype      y;
+static void iter_scomplex_store_bit(na_loop_t* const lp) {
+  size_t i;
+  char* p1;
+  size_t p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  BIT_DIGIT *a2, x;
+  dtype y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_BIT_IDX(lp, 1, a2, p2, s2, idx2);
-    if (idx2) {
-        if (idx1) {
-            for (; i--;) {
-                LOAD_BIT(a2, p2+*idx2, x); idx2++;
-                y = m_from_sint(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                LOAD_BIT(a2, p2+*idx2, x); idx2++;
-                y = m_from_sint(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_BIT_IDX(lp, 1, a2, p2, s2, idx2);
+  if (idx2) {
+    if (idx1) {
+      for (; i--;) {
+        LOAD_BIT(a2, p2 + *idx2, x);
+        idx2++;
+        y = m_from_sint(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
     } else {
-        if (idx1) {
-            for (; i--;) {
-                LOAD_BIT(a2, p2, x); p2 += s2;
-                y = m_from_sint(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                LOAD_BIT(a2, p2, x); p2 += s2;
-                y = m_from_sint(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+      for (; i--;) {
+        LOAD_BIT(a2, p2 + *idx2, x);
+        idx2++;
+        y = m_from_sint(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
     }
+  } else {
+    if (idx1) {
+      for (; i--;) {
+        LOAD_BIT(a2, p2, x);
+        p2 += s2;
+        y = m_from_sint(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
+    } else {
+      for (; i--;) {
+        LOAD_BIT(a2, p2, x);
+        p2 += s2;
+        y = m_from_sint(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
+    }
+  }
 }
 
+static VALUE scomplex_store_bit(VALUE self, VALUE obj) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_store_bit, FULL_LOOP, 2, 0, ain, 0};
 
-static VALUE
-scomplex_store_bit(VALUE self, VALUE obj)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{Qnil,0}};
-    ndfunc_t ndf = {iter_scomplex_store_bit, FULL_LOOP, 2,0, ain,0};
-
-    na_ndloop(&ndf, 2, self, obj);
-    return self;
+  na_ndloop(&ndf, 2, self, obj);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
-static void
-iter_scomplex_store_dcomplex(na_loop_t *const lp)
-{
-    size_t  i, s1, s2;
-    char   *p1, *p2;
-    size_t *idx1, *idx2;
-    dcomplex x;
-    dtype y;
+static void iter_scomplex_store_dcomplex(na_loop_t* const lp) {
+  size_t i, s1, s2;
+  char *p1, *p2;
+  size_t *idx1, *idx2;
+  dcomplex x;
+  dtype y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx2) {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,dcomplex,x);
-                y = m_from_dcomplex(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,dcomplex,x);
-                y = m_from_dcomplex(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx2) {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, dcomplex, x);
+        y = m_from_dcomplex(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
     } else {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,dcomplex,x);
-                y = m_from_dcomplex(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,dcomplex,x);
-                y = m_from_dcomplex(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, dcomplex, x);
+        y = m_from_dcomplex(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
     }
+  } else {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, dcomplex, x);
+        y = m_from_dcomplex(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, dcomplex, x);
+        y = m_from_dcomplex(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
+    }
+  }
 }
 
+static VALUE scomplex_store_dcomplex(VALUE self, VALUE obj) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_store_dcomplex, FULL_LOOP, 2, 0, ain, 0};
 
-static VALUE
-scomplex_store_dcomplex(VALUE self, VALUE obj)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{Qnil,0}};
-    ndfunc_t ndf = { iter_scomplex_store_dcomplex, FULL_LOOP, 2, 0, ain, 0 };
-
-    na_ndloop(&ndf, 2, self, obj);
-    return self;
+  na_ndloop(&ndf, 2, self, obj);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
-static void
-iter_scomplex_store_scomplex(na_loop_t *const lp)
-{
-    size_t  i, s1, s2;
-    char   *p1, *p2;
-    size_t *idx1, *idx2;
-    scomplex x;
-    dtype y;
+static void iter_scomplex_store_scomplex(na_loop_t* const lp) {
+  size_t i, s1, s2;
+  char *p1, *p2;
+  size_t *idx1, *idx2;
+  scomplex x;
+  dtype y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx2) {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,scomplex,x);
-                y = m_from_scomplex(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,scomplex,x);
-                y = m_from_scomplex(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx2) {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, scomplex, x);
+        y = m_from_scomplex(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
     } else {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,scomplex,x);
-                y = m_from_scomplex(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,scomplex,x);
-                y = m_from_scomplex(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, scomplex, x);
+        y = m_from_scomplex(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
     }
+  } else {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, scomplex, x);
+        y = m_from_scomplex(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, scomplex, x);
+        y = m_from_scomplex(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
+    }
+  }
 }
 
+static VALUE scomplex_store_scomplex(VALUE self, VALUE obj) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_store_scomplex, FULL_LOOP, 2, 0, ain, 0};
 
-static VALUE
-scomplex_store_scomplex(VALUE self, VALUE obj)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{Qnil,0}};
-    ndfunc_t ndf = { iter_scomplex_store_scomplex, FULL_LOOP, 2, 0, ain, 0 };
-
-    na_ndloop(&ndf, 2, self, obj);
-    return self;
+  na_ndloop(&ndf, 2, self, obj);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
-static void
-iter_scomplex_store_dfloat(na_loop_t *const lp)
-{
-    size_t  i, s1, s2;
-    char   *p1, *p2;
-    size_t *idx1, *idx2;
-    double x;
-    dtype y;
+static void iter_scomplex_store_dfloat(na_loop_t* const lp) {
+  size_t i, s1, s2;
+  char *p1, *p2;
+  size_t *idx1, *idx2;
+  double x;
+  dtype y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx2) {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,double,x);
-                y = m_from_real(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,double,x);
-                y = m_from_real(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx2) {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, double, x);
+        y = m_from_real(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
     } else {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,double,x);
-                y = m_from_real(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,double,x);
-                y = m_from_real(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, double, x);
+        y = m_from_real(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
     }
+  } else {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, double, x);
+        y = m_from_real(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, double, x);
+        y = m_from_real(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
+    }
+  }
 }
 
+static VALUE scomplex_store_dfloat(VALUE self, VALUE obj) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_store_dfloat, FULL_LOOP, 2, 0, ain, 0};
 
-static VALUE
-scomplex_store_dfloat(VALUE self, VALUE obj)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{Qnil,0}};
-    ndfunc_t ndf = { iter_scomplex_store_dfloat, FULL_LOOP, 2, 0, ain, 0 };
-
-    na_ndloop(&ndf, 2, self, obj);
-    return self;
+  na_ndloop(&ndf, 2, self, obj);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
-static void
-iter_scomplex_store_sfloat(na_loop_t *const lp)
-{
-    size_t  i, s1, s2;
-    char   *p1, *p2;
-    size_t *idx1, *idx2;
-    float x;
-    dtype y;
+static void iter_scomplex_store_sfloat(na_loop_t* const lp) {
+  size_t i, s1, s2;
+  char *p1, *p2;
+  size_t *idx1, *idx2;
+  float x;
+  dtype y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx2) {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,float,x);
-                y = m_from_real(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,float,x);
-                y = m_from_real(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx2) {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, float, x);
+        y = m_from_real(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
     } else {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,float,x);
-                y = m_from_real(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,float,x);
-                y = m_from_real(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, float, x);
+        y = m_from_real(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
     }
+  } else {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, float, x);
+        y = m_from_real(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, float, x);
+        y = m_from_real(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
+    }
+  }
 }
 
+static VALUE scomplex_store_sfloat(VALUE self, VALUE obj) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_store_sfloat, FULL_LOOP, 2, 0, ain, 0};
 
-static VALUE
-scomplex_store_sfloat(VALUE self, VALUE obj)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{Qnil,0}};
-    ndfunc_t ndf = { iter_scomplex_store_sfloat, FULL_LOOP, 2, 0, ain, 0 };
-
-    na_ndloop(&ndf, 2, self, obj);
-    return self;
+  na_ndloop(&ndf, 2, self, obj);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
-static void
-iter_scomplex_store_int64(na_loop_t *const lp)
-{
-    size_t  i, s1, s2;
-    char   *p1, *p2;
-    size_t *idx1, *idx2;
-    int64_t x;
-    dtype y;
+static void iter_scomplex_store_int64(na_loop_t* const lp) {
+  size_t i, s1, s2;
+  char *p1, *p2;
+  size_t *idx1, *idx2;
+  int64_t x;
+  dtype y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx2) {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,int64_t,x);
-                y = m_from_int64(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,int64_t,x);
-                y = m_from_int64(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx2) {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, int64_t, x);
+        y = m_from_int64(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
     } else {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,int64_t,x);
-                y = m_from_int64(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,int64_t,x);
-                y = m_from_int64(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, int64_t, x);
+        y = m_from_int64(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
     }
+  } else {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, int64_t, x);
+        y = m_from_int64(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, int64_t, x);
+        y = m_from_int64(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
+    }
+  }
 }
 
+static VALUE scomplex_store_int64(VALUE self, VALUE obj) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_store_int64, FULL_LOOP, 2, 0, ain, 0};
 
-static VALUE
-scomplex_store_int64(VALUE self, VALUE obj)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{Qnil,0}};
-    ndfunc_t ndf = { iter_scomplex_store_int64, FULL_LOOP, 2, 0, ain, 0 };
-
-    na_ndloop(&ndf, 2, self, obj);
-    return self;
+  na_ndloop(&ndf, 2, self, obj);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
-static void
-iter_scomplex_store_int32(na_loop_t *const lp)
-{
-    size_t  i, s1, s2;
-    char   *p1, *p2;
-    size_t *idx1, *idx2;
-    int32_t x;
-    dtype y;
+static void iter_scomplex_store_int32(na_loop_t* const lp) {
+  size_t i, s1, s2;
+  char *p1, *p2;
+  size_t *idx1, *idx2;
+  int32_t x;
+  dtype y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx2) {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,int32_t,x);
-                y = m_from_int32(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,int32_t,x);
-                y = m_from_int32(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx2) {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, int32_t, x);
+        y = m_from_int32(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
     } else {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,int32_t,x);
-                y = m_from_int32(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,int32_t,x);
-                y = m_from_int32(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, int32_t, x);
+        y = m_from_int32(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
     }
+  } else {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, int32_t, x);
+        y = m_from_int32(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, int32_t, x);
+        y = m_from_int32(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
+    }
+  }
 }
 
+static VALUE scomplex_store_int32(VALUE self, VALUE obj) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_store_int32, FULL_LOOP, 2, 0, ain, 0};
 
-static VALUE
-scomplex_store_int32(VALUE self, VALUE obj)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{Qnil,0}};
-    ndfunc_t ndf = { iter_scomplex_store_int32, FULL_LOOP, 2, 0, ain, 0 };
-
-    na_ndloop(&ndf, 2, self, obj);
-    return self;
+  na_ndloop(&ndf, 2, self, obj);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
-static void
-iter_scomplex_store_int16(na_loop_t *const lp)
-{
-    size_t  i, s1, s2;
-    char   *p1, *p2;
-    size_t *idx1, *idx2;
-    int16_t x;
-    dtype y;
+static void iter_scomplex_store_int16(na_loop_t* const lp) {
+  size_t i, s1, s2;
+  char *p1, *p2;
+  size_t *idx1, *idx2;
+  int16_t x;
+  dtype y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx2) {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,int16_t,x);
-                y = m_from_sint(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,int16_t,x);
-                y = m_from_sint(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx2) {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, int16_t, x);
+        y = m_from_sint(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
     } else {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,int16_t,x);
-                y = m_from_sint(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,int16_t,x);
-                y = m_from_sint(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, int16_t, x);
+        y = m_from_sint(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
     }
+  } else {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, int16_t, x);
+        y = m_from_sint(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, int16_t, x);
+        y = m_from_sint(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
+    }
+  }
 }
 
+static VALUE scomplex_store_int16(VALUE self, VALUE obj) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_store_int16, FULL_LOOP, 2, 0, ain, 0};
 
-static VALUE
-scomplex_store_int16(VALUE self, VALUE obj)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{Qnil,0}};
-    ndfunc_t ndf = { iter_scomplex_store_int16, FULL_LOOP, 2, 0, ain, 0 };
-
-    na_ndloop(&ndf, 2, self, obj);
-    return self;
+  na_ndloop(&ndf, 2, self, obj);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
-static void
-iter_scomplex_store_int8(na_loop_t *const lp)
-{
-    size_t  i, s1, s2;
-    char   *p1, *p2;
-    size_t *idx1, *idx2;
-    int8_t x;
-    dtype y;
+static void iter_scomplex_store_int8(na_loop_t* const lp) {
+  size_t i, s1, s2;
+  char *p1, *p2;
+  size_t *idx1, *idx2;
+  int8_t x;
+  dtype y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx2) {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,int8_t,x);
-                y = m_from_sint(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,int8_t,x);
-                y = m_from_sint(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx2) {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, int8_t, x);
+        y = m_from_sint(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
     } else {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,int8_t,x);
-                y = m_from_sint(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,int8_t,x);
-                y = m_from_sint(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, int8_t, x);
+        y = m_from_sint(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
     }
+  } else {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, int8_t, x);
+        y = m_from_sint(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, int8_t, x);
+        y = m_from_sint(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
+    }
+  }
 }
 
+static VALUE scomplex_store_int8(VALUE self, VALUE obj) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_store_int8, FULL_LOOP, 2, 0, ain, 0};
 
-static VALUE
-scomplex_store_int8(VALUE self, VALUE obj)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{Qnil,0}};
-    ndfunc_t ndf = { iter_scomplex_store_int8, FULL_LOOP, 2, 0, ain, 0 };
-
-    na_ndloop(&ndf, 2, self, obj);
-    return self;
+  na_ndloop(&ndf, 2, self, obj);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
-static void
-iter_scomplex_store_uint64(na_loop_t *const lp)
-{
-    size_t  i, s1, s2;
-    char   *p1, *p2;
-    size_t *idx1, *idx2;
-    u_int64_t x;
-    dtype y;
+static void iter_scomplex_store_uint64(na_loop_t* const lp) {
+  size_t i, s1, s2;
+  char *p1, *p2;
+  size_t *idx1, *idx2;
+  u_int64_t x;
+  dtype y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx2) {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,u_int64_t,x);
-                y = m_from_uint64(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,u_int64_t,x);
-                y = m_from_uint64(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx2) {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, u_int64_t, x);
+        y = m_from_uint64(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
     } else {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,u_int64_t,x);
-                y = m_from_uint64(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,u_int64_t,x);
-                y = m_from_uint64(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, u_int64_t, x);
+        y = m_from_uint64(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
     }
+  } else {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, u_int64_t, x);
+        y = m_from_uint64(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, u_int64_t, x);
+        y = m_from_uint64(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
+    }
+  }
 }
 
+static VALUE scomplex_store_uint64(VALUE self, VALUE obj) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_store_uint64, FULL_LOOP, 2, 0, ain, 0};
 
-static VALUE
-scomplex_store_uint64(VALUE self, VALUE obj)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{Qnil,0}};
-    ndfunc_t ndf = { iter_scomplex_store_uint64, FULL_LOOP, 2, 0, ain, 0 };
-
-    na_ndloop(&ndf, 2, self, obj);
-    return self;
+  na_ndloop(&ndf, 2, self, obj);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
-static void
-iter_scomplex_store_uint32(na_loop_t *const lp)
-{
-    size_t  i, s1, s2;
-    char   *p1, *p2;
-    size_t *idx1, *idx2;
-    u_int32_t x;
-    dtype y;
+static void iter_scomplex_store_uint32(na_loop_t* const lp) {
+  size_t i, s1, s2;
+  char *p1, *p2;
+  size_t *idx1, *idx2;
+  u_int32_t x;
+  dtype y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx2) {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,u_int32_t,x);
-                y = m_from_uint32(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,u_int32_t,x);
-                y = m_from_uint32(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx2) {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, u_int32_t, x);
+        y = m_from_uint32(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
     } else {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,u_int32_t,x);
-                y = m_from_uint32(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,u_int32_t,x);
-                y = m_from_uint32(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, u_int32_t, x);
+        y = m_from_uint32(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
     }
+  } else {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, u_int32_t, x);
+        y = m_from_uint32(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, u_int32_t, x);
+        y = m_from_uint32(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
+    }
+  }
 }
 
+static VALUE scomplex_store_uint32(VALUE self, VALUE obj) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_store_uint32, FULL_LOOP, 2, 0, ain, 0};
 
-static VALUE
-scomplex_store_uint32(VALUE self, VALUE obj)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{Qnil,0}};
-    ndfunc_t ndf = { iter_scomplex_store_uint32, FULL_LOOP, 2, 0, ain, 0 };
-
-    na_ndloop(&ndf, 2, self, obj);
-    return self;
+  na_ndloop(&ndf, 2, self, obj);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
-static void
-iter_scomplex_store_uint16(na_loop_t *const lp)
-{
-    size_t  i, s1, s2;
-    char   *p1, *p2;
-    size_t *idx1, *idx2;
-    u_int16_t x;
-    dtype y;
+static void iter_scomplex_store_uint16(na_loop_t* const lp) {
+  size_t i, s1, s2;
+  char *p1, *p2;
+  size_t *idx1, *idx2;
+  u_int16_t x;
+  dtype y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx2) {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,u_int16_t,x);
-                y = m_from_sint(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,u_int16_t,x);
-                y = m_from_sint(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx2) {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, u_int16_t, x);
+        y = m_from_sint(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
     } else {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,u_int16_t,x);
-                y = m_from_sint(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,u_int16_t,x);
-                y = m_from_sint(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, u_int16_t, x);
+        y = m_from_sint(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
     }
+  } else {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, u_int16_t, x);
+        y = m_from_sint(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, u_int16_t, x);
+        y = m_from_sint(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
+    }
+  }
 }
 
+static VALUE scomplex_store_uint16(VALUE self, VALUE obj) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_store_uint16, FULL_LOOP, 2, 0, ain, 0};
 
-static VALUE
-scomplex_store_uint16(VALUE self, VALUE obj)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{Qnil,0}};
-    ndfunc_t ndf = { iter_scomplex_store_uint16, FULL_LOOP, 2, 0, ain, 0 };
-
-    na_ndloop(&ndf, 2, self, obj);
-    return self;
+  na_ndloop(&ndf, 2, self, obj);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
-static void
-iter_scomplex_store_uint8(na_loop_t *const lp)
-{
-    size_t  i, s1, s2;
-    char   *p1, *p2;
-    size_t *idx1, *idx2;
-    u_int8_t x;
-    dtype y;
+static void iter_scomplex_store_uint8(na_loop_t* const lp) {
+  size_t i, s1, s2;
+  char *p1, *p2;
+  size_t *idx1, *idx2;
+  u_int8_t x;
+  dtype y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx2) {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,u_int8_t,x);
-                y = m_from_sint(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,u_int8_t,x);
-                y = m_from_sint(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx2) {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, u_int8_t, x);
+        y = m_from_sint(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
     } else {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,u_int8_t,x);
-                y = m_from_sint(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,u_int8_t,x);
-                y = m_from_sint(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, u_int8_t, x);
+        y = m_from_sint(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
     }
+  } else {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, u_int8_t, x);
+        y = m_from_sint(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, u_int8_t, x);
+        y = m_from_sint(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
+    }
+  }
 }
 
+static VALUE scomplex_store_uint8(VALUE self, VALUE obj) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_store_uint8, FULL_LOOP, 2, 0, ain, 0};
 
-static VALUE
-scomplex_store_uint8(VALUE self, VALUE obj)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{Qnil,0}};
-    ndfunc_t ndf = { iter_scomplex_store_uint8, FULL_LOOP, 2, 0, ain, 0 };
-
-    na_ndloop(&ndf, 2, self, obj);
-    return self;
+  na_ndloop(&ndf, 2, self, obj);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
-static void
-iter_scomplex_store_robject(na_loop_t *const lp)
-{
-    size_t  i, s1, s2;
-    char   *p1, *p2;
-    size_t *idx1, *idx2;
-    VALUE x;
-    dtype y;
+static void iter_scomplex_store_robject(na_loop_t* const lp) {
+  size_t i, s1, s2;
+  char *p1, *p2;
+  size_t *idx1, *idx2;
+  VALUE x;
+  dtype y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx2) {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,VALUE,x);
-                y = m_num_to_data(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p2,idx2,VALUE,x);
-                y = m_num_to_data(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx2) {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, VALUE, x);
+        y = m_num_to_data(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
     } else {
-        if (idx1) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,VALUE,x);
-                y = m_num_to_data(x);
-                SET_DATA_INDEX(p1,idx1,dtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p2,s2,VALUE,x);
-                y = m_num_to_data(x);
-                SET_DATA_STRIDE(p1,s1,dtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p2, idx2, VALUE, x);
+        y = m_num_to_data(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
     }
+  } else {
+    if (idx1) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, VALUE, x);
+        y = m_num_to_data(x);
+        SET_DATA_INDEX(p1, idx1, dtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p2, s2, VALUE, x);
+        y = m_num_to_data(x);
+        SET_DATA_STRIDE(p1, s1, dtype, y);
+      }
+    }
+  }
 }
 
+static VALUE scomplex_store_robject(VALUE self, VALUE obj) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_store_robject, FULL_LOOP, 2, 0, ain, 0};
 
-static VALUE
-scomplex_store_robject(VALUE self, VALUE obj)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{Qnil,0}};
-    ndfunc_t ndf = { iter_scomplex_store_robject, FULL_LOOP, 2, 0, ain, 0 };
-
-    na_ndloop(&ndf, 2, self, obj);
-    return self;
+  na_ndloop(&ndf, 2, self, obj);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_array.c"
-static void
-iter_scomplex_store_array(na_loop_t *const lp)
-{
-    size_t i, n;
-    size_t i1, n1;
-    VALUE  v1, *ptr;
-    char   *p1;
-    size_t s1, *idx1;
-    VALUE  x;
-    double y;
-    dtype  z;
-    size_t len, c;
-    double beg, step;
+static void iter_scomplex_store_array(na_loop_t* const lp) {
+  size_t i, n;
+  size_t i1, n1;
+  VALUE v1, *ptr;
+  char* p1;
+  size_t s1, *idx1;
+  VALUE x;
+  double y;
+  dtype z;
+  size_t len, c;
+  double beg, step;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    v1 = lp->args[1].value;
-    i = 0;
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  v1 = lp->args[1].value;
+  i = 0;
 
-    if (lp->args[1].ptr) {
-        if (v1 == Qtrue) {
-            iter_scomplex_store_scomplex(lp);
-            i = lp->args[1].shape[0];
-            if (idx1) {
-                idx1 += i;
-            } else {
-                p1 += s1 * i;
-            }
-        }
-        goto loop_end;
+  if (lp->args[1].ptr) {
+    if (v1 == Qtrue) {
+      iter_scomplex_store_scomplex(lp);
+      i = lp->args[1].shape[0];
+      if (idx1) {
+        idx1 += i;
+      } else {
+        p1 += s1 * i;
+      }
     }
+    goto loop_end;
+  }
 
-    ptr = &v1;
+  ptr = &v1;
 
-    switch(TYPE(v1)) {
-    case T_ARRAY:
-        n1 = RARRAY_LEN(v1);
-        ptr = RARRAY_PTR(v1);
-        break;
-    case T_NIL:
-        n1 = 0;
-        break;
-    default:
-        n1 = 1;
-    }
+  switch (TYPE(v1)) {
+  case T_ARRAY:
+    n1 = RARRAY_LEN(v1);
+    ptr = RARRAY_PTR(v1);
+    break;
+  case T_NIL:
+    n1 = 0;
+    break;
+  default:
+    n1 = 1;
+  }
 
-    if (idx1) {
-        for (i=i1=0; i1<n1 && i<n; i++,i1++) {
-            x = ptr[i1];
-            if (rb_obj_is_kind_of(x, rb_cRange)
+  if (idx1) {
+    for (i = i1 = 0; i1 < n1 && i < n; i++, i1++) {
+      x = ptr[i1];
+      if (rb_obj_is_kind_of(x, rb_cRange)
 #ifdef HAVE_RB_ARITHMETIC_SEQUENCE_EXTRACT
-                || rb_obj_is_kind_of(x, rb_cArithSeq)
+          || rb_obj_is_kind_of(x, rb_cArithSeq)
 #else
-                || rb_obj_is_kind_of(x, rb_cEnumerator)
+          || rb_obj_is_kind_of(x, rb_cEnumerator)
 #endif
-                ) {
-                nary_step_sequence(x,&len,&beg,&step);
-                for (c=0; c<len && i<n; c++,i++) {
-                    y = beg + step * c;
-                    z = m_from_double(y);
-                    SET_DATA_INDEX(p1, idx1, dtype, z);
-                }
-            }
-            else if (TYPE(x) != T_ARRAY) {
-                z = m_num_to_data(x);
-                SET_DATA_INDEX(p1, idx1, dtype, z);
-            }
+      ) {
+        nary_step_sequence(x, &len, &beg, &step);
+        for (c = 0; c < len && i < n; c++, i++) {
+          y = beg + step * c;
+          z = m_from_double(y);
+          SET_DATA_INDEX(p1, idx1, dtype, z);
         }
-    } else {
-        for (i=i1=0; i1<n1 && i<n; i++,i1++) {
-            x = ptr[i1];
-            if (rb_obj_is_kind_of(x, rb_cRange)
+      } else if (TYPE(x) != T_ARRAY) {
+        z = m_num_to_data(x);
+        SET_DATA_INDEX(p1, idx1, dtype, z);
+      }
+    }
+  } else {
+    for (i = i1 = 0; i1 < n1 && i < n; i++, i1++) {
+      x = ptr[i1];
+      if (rb_obj_is_kind_of(x, rb_cRange)
 #ifdef HAVE_RB_ARITHMETIC_SEQUENCE_EXTRACT
-                || rb_obj_is_kind_of(x, rb_cArithSeq)
+          || rb_obj_is_kind_of(x, rb_cArithSeq)
 #else
-                || rb_obj_is_kind_of(x, rb_cEnumerator)
+          || rb_obj_is_kind_of(x, rb_cEnumerator)
 #endif
-                ) {
-                nary_step_sequence(x,&len,&beg,&step);
-                for (c=0; c<len && i<n; c++,i++) {
-                    y = beg + step * c;
-                    z = m_from_double(y);
-                    SET_DATA_STRIDE(p1, s1, dtype, z);
-                }
-            }
-            else if (TYPE(x) != T_ARRAY) {
-                z = m_num_to_data(x);
-                SET_DATA_STRIDE(p1, s1, dtype, z);
-            }
+      ) {
+        nary_step_sequence(x, &len, &beg, &step);
+        for (c = 0; c < len && i < n; c++, i++) {
+          y = beg + step * c;
+          z = m_from_double(y);
+          SET_DATA_STRIDE(p1, s1, dtype, z);
         }
+      } else if (TYPE(x) != T_ARRAY) {
+        z = m_num_to_data(x);
+        SET_DATA_STRIDE(p1, s1, dtype, z);
+      }
     }
+  }
 
- loop_end:
-    z = m_zero;
-    if (idx1) {
-        for (; i<n; i++) {
-            SET_DATA_INDEX(p1, idx1, dtype, z);
-        }
-    } else {
-        for (; i<n; i++) {
-            SET_DATA_STRIDE(p1, s1, dtype, z);
-        }
+loop_end:
+  z = m_zero;
+  if (idx1) {
+    for (; i < n; i++) {
+      SET_DATA_INDEX(p1, idx1, dtype, z);
     }
+  } else {
+    for (; i < n; i++) {
+      SET_DATA_STRIDE(p1, s1, dtype, z);
+    }
+  }
 }
 
-static VALUE
-scomplex_store_array(VALUE self, VALUE rary)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{rb_cArray,0}};
-    ndfunc_t ndf = {iter_scomplex_store_array, FULL_LOOP, 2, 0, ain, 0};
+static VALUE scomplex_store_array(VALUE self, VALUE rary) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {rb_cArray, 0}};
+  ndfunc_t ndf = {iter_scomplex_store_array, FULL_LOOP, 2, 0, ain, 0};
 
-    na_ndloop_store_rarray(&ndf, self, rary);
-    return self;
+  na_ndloop_store_rarray(&ndf, self, rary);
+  return self;
 }
 
 #line 5 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
@@ -1136,271 +1024,264 @@ scomplex_store_array(VALUE self, VALUE rary)
   @param [Object] other
   @return [Numo::SComplex] self
 */
-static VALUE
-scomplex_store(VALUE self, VALUE obj)
-{
-    VALUE r, klass;
+static VALUE scomplex_store(VALUE self, VALUE obj) {
+  VALUE r, klass;
 
-    klass = rb_obj_class(obj);
+  klass = rb_obj_class(obj);
 
-    
-    if (klass==numo_cSComplex) {
-        scomplex_store_scomplex(self,obj);
-        return self;
-    }
-    
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    if (IS_INTEGER_CLASS(klass) || klass==rb_cFloat || klass==rb_cComplex) {
-        scomplex_store_numeric(self,obj);
-        return self;
-    }
-    
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    if (klass==numo_cBit) {
-        scomplex_store_bit(self,obj);
-        return self;
-    }
-    
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    if (klass==numo_cDComplex) {
-        scomplex_store_dcomplex(self,obj);
-        return self;
-    }
-    
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    if (klass==numo_cDFloat) {
-        scomplex_store_dfloat(self,obj);
-        return self;
-    }
-    
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    if (klass==numo_cSFloat) {
-        scomplex_store_sfloat(self,obj);
-        return self;
-    }
-    
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    if (klass==numo_cInt64) {
-        scomplex_store_int64(self,obj);
-        return self;
-    }
-    
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    if (klass==numo_cInt32) {
-        scomplex_store_int32(self,obj);
-        return self;
-    }
-    
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    if (klass==numo_cInt16) {
-        scomplex_store_int16(self,obj);
-        return self;
-    }
-    
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    if (klass==numo_cInt8) {
-        scomplex_store_int8(self,obj);
-        return self;
-    }
-    
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    if (klass==numo_cUInt64) {
-        scomplex_store_uint64(self,obj);
-        return self;
-    }
-    
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    if (klass==numo_cUInt32) {
-        scomplex_store_uint32(self,obj);
-        return self;
-    }
-    
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    if (klass==numo_cUInt16) {
-        scomplex_store_uint16(self,obj);
-        return self;
-    }
-    
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    if (klass==numo_cUInt8) {
-        scomplex_store_uint8(self,obj);
-        return self;
-    }
-    
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    if (klass==numo_cRObject) {
-        scomplex_store_robject(self,obj);
-        return self;
-    }
-    
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    if (klass==rb_cArray) {
-        scomplex_store_array(self,obj);
-        return self;
-    }
-    
-
-    if (IsNArray(obj)) {
-        r = rb_funcall(obj, rb_intern("coerce_cast"), 1, cT);
-        if (rb_obj_class(r)==cT) {
-            scomplex_store(self,r);
-            return self;
-        }
-    }
-
-    
-#line 36 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
-    rb_raise(nary_eCastError, "unknown conversion from %s to %s",
-             rb_class2name(rb_obj_class(obj)),
-             rb_class2name(rb_obj_class(self)));
-    
+  if (klass == numo_cSComplex) {
+    scomplex_store_scomplex(self, obj);
     return self;
-}
+  }
 
+#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  if (IS_INTEGER_CLASS(klass) || klass == rb_cFloat || klass == rb_cComplex) {
+    scomplex_store_numeric(self, obj);
+    return self;
+  }
+
+#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  if (klass == numo_cBit) {
+    scomplex_store_bit(self, obj);
+    return self;
+  }
+
+#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  if (klass == numo_cDComplex) {
+    scomplex_store_dcomplex(self, obj);
+    return self;
+  }
+
+#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  if (klass == numo_cDFloat) {
+    scomplex_store_dfloat(self, obj);
+    return self;
+  }
+
+#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  if (klass == numo_cSFloat) {
+    scomplex_store_sfloat(self, obj);
+    return self;
+  }
+
+#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  if (klass == numo_cInt64) {
+    scomplex_store_int64(self, obj);
+    return self;
+  }
+
+#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  if (klass == numo_cInt32) {
+    scomplex_store_int32(self, obj);
+    return self;
+  }
+
+#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  if (klass == numo_cInt16) {
+    scomplex_store_int16(self, obj);
+    return self;
+  }
+
+#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  if (klass == numo_cInt8) {
+    scomplex_store_int8(self, obj);
+    return self;
+  }
+
+#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  if (klass == numo_cUInt64) {
+    scomplex_store_uint64(self, obj);
+    return self;
+  }
+
+#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  if (klass == numo_cUInt32) {
+    scomplex_store_uint32(self, obj);
+    return self;
+  }
+
+#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  if (klass == numo_cUInt16) {
+    scomplex_store_uint16(self, obj);
+    return self;
+  }
+
+#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  if (klass == numo_cUInt8) {
+    scomplex_store_uint8(self, obj);
+    return self;
+  }
+
+#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  if (klass == numo_cRObject) {
+    scomplex_store_robject(self, obj);
+    return self;
+  }
+
+#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  if (klass == rb_cArray) {
+    scomplex_store_array(self, obj);
+    return self;
+  }
+
+  if (IsNArray(obj)) {
+    r = rb_funcall(obj, rb_intern("coerce_cast"), 1, cT);
+    if (rb_obj_class(r) == cT) {
+      scomplex_store(self, r);
+      return self;
+    }
+  }
+
+#line 36 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
+  rb_raise(nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)),
+           rb_class2name(rb_obj_class(self)));
+
+  return self;
+}
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
 /*
   Convert a data value of obj (with a single element) to dtype.
 */
-static dtype
-scomplex_extract_data(VALUE obj)
-{
-    narray_t *na;
-    dtype  x;
-    char  *ptr;
-    size_t pos;
-    VALUE  r, klass;
+static dtype scomplex_extract_data(VALUE obj) {
+  narray_t* na;
+  dtype x;
+  char* ptr;
+  size_t pos;
+  VALUE r, klass;
 
-    if (IsNArray(obj)) {
-        GetNArray(obj,na);
-        if (na->size != 1) {
-            rb_raise(nary_eShapeError,"narray size should be 1");
-        }
-        klass = rb_obj_class(obj);
-        ptr = na_get_pointer_for_read(obj);
-        pos = na_get_offset(obj);
-        
-        if (klass==numo_cSComplex) {
-            {scomplex *p = (scomplex*)(ptr+pos); x = c_new(REAL(*p),IMAG(*p));};
-            return x;
-        }
-        
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
-        if (klass==numo_cBit) {
-            {BIT_DIGIT b; LOAD_BIT(ptr,pos,b); x = m_from_sint(b);};
-            return x;
-        }
-        
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
-        if (klass==numo_cDComplex) {
-            {dcomplex *p = (dcomplex*)(ptr+pos); x = c_new(REAL(*p),IMAG(*p));};
-            return x;
-        }
-        
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
-        if (klass==numo_cDFloat) {
-            x = m_from_real(*(double*)(ptr+pos));
-            return x;
-        }
-        
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
-        if (klass==numo_cSFloat) {
-            x = m_from_real(*(float*)(ptr+pos));
-            return x;
-        }
-        
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
-        if (klass==numo_cInt64) {
-            x = m_from_int64(*(int64_t*)(ptr+pos));
-            return x;
-        }
-        
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
-        if (klass==numo_cInt32) {
-            x = m_from_int32(*(int32_t*)(ptr+pos));
-            return x;
-        }
-        
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
-        if (klass==numo_cInt16) {
-            x = m_from_sint(*(int16_t*)(ptr+pos));
-            return x;
-        }
-        
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
-        if (klass==numo_cInt8) {
-            x = m_from_sint(*(int8_t*)(ptr+pos));
-            return x;
-        }
-        
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
-        if (klass==numo_cUInt64) {
-            x = m_from_uint64(*(u_int64_t*)(ptr+pos));
-            return x;
-        }
-        
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
-        if (klass==numo_cUInt32) {
-            x = m_from_uint32(*(u_int32_t*)(ptr+pos));
-            return x;
-        }
-        
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
-        if (klass==numo_cUInt16) {
-            x = m_from_sint(*(u_int16_t*)(ptr+pos));
-            return x;
-        }
-        
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
-        if (klass==numo_cUInt8) {
-            x = m_from_sint(*(u_int8_t*)(ptr+pos));
-            return x;
-        }
-        
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
-        if (klass==numo_cRObject) {
-            x = m_num_to_data(*(VALUE*)(ptr+pos));
-            return x;
-        }
-        
+  if (IsNArray(obj)) {
+    GetNArray(obj, na);
+    if (na->size != 1) {
+      rb_raise(nary_eShapeError, "narray size should be 1");
+    }
+    klass = rb_obj_class(obj);
+    ptr = na_get_pointer_for_read(obj);
+    pos = na_get_offset(obj);
 
-        // coerce
-        r = rb_funcall(obj, rb_intern("coerce_cast"), 1, cT);
-        if (rb_obj_class(r)==cT) {
-            return scomplex_extract_data(r);
-        }
-        
+    if (klass == numo_cSComplex) {
+      {
+        scomplex* p = (scomplex*)(ptr + pos);
+        x = c_new(REAL(*p), IMAG(*p));
+      };
+      return x;
+    }
+
+#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
+    if (klass == numo_cBit) {
+      {
+        BIT_DIGIT b;
+        LOAD_BIT(ptr, pos, b);
+        x = m_from_sint(b);
+      };
+      return x;
+    }
+
+#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
+    if (klass == numo_cDComplex) {
+      {
+        dcomplex* p = (dcomplex*)(ptr + pos);
+        x = c_new(REAL(*p), IMAG(*p));
+      };
+      return x;
+    }
+
+#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
+    if (klass == numo_cDFloat) {
+      x = m_from_real(*(double*)(ptr + pos));
+      return x;
+    }
+
+#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
+    if (klass == numo_cSFloat) {
+      x = m_from_real(*(float*)(ptr + pos));
+      return x;
+    }
+
+#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
+    if (klass == numo_cInt64) {
+      x = m_from_int64(*(int64_t*)(ptr + pos));
+      return x;
+    }
+
+#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
+    if (klass == numo_cInt32) {
+      x = m_from_int32(*(int32_t*)(ptr + pos));
+      return x;
+    }
+
+#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
+    if (klass == numo_cInt16) {
+      x = m_from_sint(*(int16_t*)(ptr + pos));
+      return x;
+    }
+
+#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
+    if (klass == numo_cInt8) {
+      x = m_from_sint(*(int8_t*)(ptr + pos));
+      return x;
+    }
+
+#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
+    if (klass == numo_cUInt64) {
+      x = m_from_uint64(*(u_int64_t*)(ptr + pos));
+      return x;
+    }
+
+#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
+    if (klass == numo_cUInt32) {
+      x = m_from_uint32(*(u_int32_t*)(ptr + pos));
+      return x;
+    }
+
+#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
+    if (klass == numo_cUInt16) {
+      x = m_from_sint(*(u_int16_t*)(ptr + pos));
+      return x;
+    }
+
+#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
+    if (klass == numo_cUInt8) {
+      x = m_from_sint(*(u_int8_t*)(ptr + pos));
+      return x;
+    }
+
+#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
+    if (klass == numo_cRObject) {
+      x = m_num_to_data(*(VALUE*)(ptr + pos));
+      return x;
+    }
+
+    // coerce
+    r = rb_funcall(obj, rb_intern("coerce_cast"), 1, cT);
+    if (rb_obj_class(r) == cT) {
+      return scomplex_extract_data(r);
+    }
+
 #line 36 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
-        rb_raise(nary_eCastError, "unknown conversion from %s to %s",
-                 rb_class2name(rb_obj_class(obj)),
-                 rb_class2name(cT));
-        
+    rb_raise(nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)), rb_class2name(cT));
+  }
+  if (TYPE(obj) == T_ARRAY) {
+    if (RARRAY_LEN(obj) != 1) {
+      rb_raise(nary_eShapeError, "array size should be 1");
     }
-    if (TYPE(obj)==T_ARRAY) {
-        if (RARRAY_LEN(obj) != 1) {
-            rb_raise(nary_eShapeError,"array size should be 1");
-        }
-        return m_num_to_data(RARRAY_AREF(obj,0));
-    }
-    return m_num_to_data(obj);
+    return m_num_to_data(RARRAY_AREF(obj, 0));
+  }
+  return m_num_to_data(obj);
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cast_array.c"
-static VALUE
-scomplex_cast_array(VALUE rary)
-{
-    VALUE nary;
-    narray_t *na;
+static VALUE scomplex_cast_array(VALUE rary) {
+  VALUE nary;
+  narray_t* na;
 
-    nary = na_s_new_like(cT, rary);
-    GetNArray(nary,na);
-    if (na->size > 0) {
-        scomplex_store_array(nary,rary);
-    }
-    return nary;
+  nary = na_s_new_like(cT, rary);
+  GetNArray(nary, na);
+  if (na->size > 0) {
+    scomplex_store_array(nary, rary);
+  }
+  return nary;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cast.c"
 #line 5 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cast.c"
@@ -1412,109 +1293,100 @@ scomplex_cast_array(VALUE rary)
   @param [Array] array
   @return [Numo::SComplex]
 */
-static VALUE
-scomplex_s_cast(VALUE type, VALUE obj)
-{
-    VALUE v;
-    narray_t *na;
-    dtype x;
+static VALUE scomplex_s_cast(VALUE type, VALUE obj) {
+  VALUE v;
+  narray_t* na;
+  dtype x;
 
-    if (rb_obj_class(obj)==cT) {
-        return obj;
+  if (rb_obj_class(obj) == cT) {
+    return obj;
+  }
+  if (RTEST(rb_obj_is_kind_of(obj, rb_cNumeric))) {
+    x = m_num_to_data(obj);
+    return scomplex_new_dim0(x);
+  }
+  if (RTEST(rb_obj_is_kind_of(obj, rb_cArray))) {
+    return scomplex_cast_array(obj);
+  }
+  if (IsNArray(obj)) {
+    GetNArray(obj, na);
+    v = nary_new(cT, NA_NDIM(na), NA_SHAPE(na));
+    if (NA_SIZE(na) > 0) {
+      scomplex_store(v, obj);
     }
-    if (RTEST(rb_obj_is_kind_of(obj,rb_cNumeric))) {
-        x = m_num_to_data(obj);
-        return scomplex_new_dim0(x);
+    return v;
+  }
+  if (rb_respond_to(obj, id_to_a)) {
+    obj = rb_funcall(obj, id_to_a, 0);
+    if (TYPE(obj) != T_ARRAY) {
+      rb_raise(rb_eTypeError, "`to_a' did not return Array");
     }
-    if (RTEST(rb_obj_is_kind_of(obj,rb_cArray))) {
-        return scomplex_cast_array(obj);
-    }
-    if (IsNArray(obj)) {
-        GetNArray(obj,na);
-        v = nary_new(cT, NA_NDIM(na), NA_SHAPE(na));
-        if (NA_SIZE(na) > 0) {
-            scomplex_store(v,obj);
-        }
-        return v;
-    }
-    if (rb_respond_to(obj,id_to_a)) {
-        obj = rb_funcall(obj,id_to_a,0);
-        if (TYPE(obj)!=T_ARRAY) {
-            rb_raise(rb_eTypeError, "`to_a' did not return Array");
-        }
-        return scomplex_cast_array(obj);
-    }
-    
+    return scomplex_cast_array(obj);
+  }
+
 #line 48 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cast.c"
-    rb_raise(nary_eCastError,"cannot cast to %s",rb_class2name(type));
-    return Qnil;
-    
+  rb_raise(nary_eCastError, "cannot cast to %s", rb_class2name(type));
+  return Qnil;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/aref.c"
 /*
   Multi-dimensional element reference.
   @overload [](dim0,...,dimL)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol] dim0,...,dimL  multi-dimensional indices.
+  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol] dim0,...,dimL  multi-dimensional
+  indices.
   @return [Numeric,Numo::SComplex] an element or NArray view.
   @see Numo::NArray#[]
   @see #[]=
  */
-static VALUE
-scomplex_aref(int argc, VALUE *argv, VALUE self)
-{
-    int nd;
-    size_t pos;
-    char *ptr;
+static VALUE scomplex_aref(int argc, VALUE* argv, VALUE self) {
+  int nd;
+  size_t pos;
+  char* ptr;
 
-    nd = na_get_result_dimension(self, argc, argv, sizeof(dtype), &pos);
-    if (nd) {
-        return na_aref_main(argc, argv, self, 0, nd);
-    } else {
-        ptr = na_get_pointer_for_read(self) + pos;
-        return m_extract(ptr);
-    }
+  nd = na_get_result_dimension(self, argc, argv, sizeof(dtype), &pos);
+  if (nd) {
+    return na_aref_main(argc, argv, self, 0, nd);
+  } else {
+    ptr = na_get_pointer_for_read(self) + pos;
+    return m_extract(ptr);
+  }
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/aset.c"
 /*
   Multi-dimensional element assignment.
   @overload []=(dim0,...,dimL,val)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol] dim0,...,dimL  multi-dimensional indices.
+  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol] dim0,...,dimL  multi-dimensional
+  indices.
   @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
   @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
   @see Numo::NArray#[]=
   @see #[]
 */
-static VALUE
-scomplex_aset(int argc, VALUE *argv, VALUE self)
-{
-    int nd;
-    size_t pos;
-    char *ptr;
-    VALUE a;
-    dtype x;
+static VALUE scomplex_aset(int argc, VALUE* argv, VALUE self) {
+  int nd;
+  size_t pos;
+  char* ptr;
+  VALUE a;
+  dtype x;
 
-    argc--;
-    if (argc==0) {
-        scomplex_store(self, argv[argc]);
+  argc--;
+  if (argc == 0) {
+    scomplex_store(self, argv[argc]);
+  } else {
+    nd = na_get_result_dimension(self, argc, argv, sizeof(dtype), &pos);
+    if (nd) {
+      a = na_aref_main(argc, argv, self, 0, nd);
+      scomplex_store(a, argv[argc]);
     } else {
-        nd = na_get_result_dimension(self, argc, argv, sizeof(dtype), &pos);
-        if (nd) {
-            a = na_aref_main(argc, argv, self, 0, nd);
-            scomplex_store(a, argv[argc]);
-        } else {
-            x = scomplex_extract_data(argv[argc]);
-            ptr = na_get_pointer_for_read_write(self) + pos;
-            *(dtype*)ptr = x;
-        }
-
+      x = scomplex_extract_data(argv[argc]);
+      ptr = na_get_pointer_for_read_write(self) + pos;
+      *(dtype*)ptr = x;
     }
-    return argv[argc];
+  }
+  return argv[argc];
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/coerce_cast.c"
 /*
@@ -1522,40 +1394,33 @@ scomplex_aset(int argc, VALUE *argv, VALUE self)
   @overload coerce_cast(type)
   @return [nil]
 */
-static VALUE
-scomplex_coerce_cast(VALUE self, VALUE type)
-{
-    return Qnil;
-}
-
+static VALUE scomplex_coerce_cast(VALUE self, VALUE type) { return Qnil; }
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/to_a.c"
-static void
-iter_scomplex_to_a(na_loop_t *const lp)
-{
-    size_t i, s1;
-    char *p1;
-    size_t *idx1;
-    dtype x;
-    volatile VALUE a, y;
+static void iter_scomplex_to_a(na_loop_t* const lp) {
+  size_t i, s1;
+  char* p1;
+  size_t* idx1;
+  dtype x;
+  volatile VALUE a, y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    a = rb_ary_new2(i);
-    rb_ary_push(lp->args[1].value, a);
-    if (idx1) {
-        for (; i--;) {
-            GET_DATA_INDEX(p1,idx1,dtype,x);
-            y = m_data_to_num(x);
-            rb_ary_push(a,y);
-        }
-    } else {
-        for (; i--;) {
-            GET_DATA_STRIDE(p1,s1,dtype,x);
-            y = m_data_to_num(x);
-            rb_ary_push(a,y);
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  a = rb_ary_new2(i);
+  rb_ary_push(lp->args[1].value, a);
+  if (idx1) {
+    for (; i--;) {
+      GET_DATA_INDEX(p1, idx1, dtype, x);
+      y = m_data_to_num(x);
+      rb_ary_push(a, y);
     }
+  } else {
+    for (; i--;) {
+      GET_DATA_STRIDE(p1, s1, dtype, x);
+      y = m_data_to_num(x);
+      rb_ary_push(a, y);
+    }
+  }
 }
 
 /*
@@ -1563,38 +1428,33 @@ iter_scomplex_to_a(na_loop_t *const lp)
   @overload to_a
   @return [Array]
 */
-static VALUE
-scomplex_to_a(VALUE self)
-{
-    ndfunc_arg_in_t ain[3] = {{Qnil,0},{sym_loop_opt},{sym_option}};
-    ndfunc_arg_out_t aout[1] = {{rb_cArray,0}}; // dummy?
-    ndfunc_t ndf = { iter_scomplex_to_a, FULL_LOOP_NIP, 3, 1, ain, aout };
-    return na_ndloop_cast_narray_to_rarray(&ndf, self, Qnil);
+static VALUE scomplex_to_a(VALUE self) {
+  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {sym_loop_opt}, {sym_option}};
+  ndfunc_arg_out_t aout[1] = {{rb_cArray, 0}}; // dummy?
+  ndfunc_t ndf = {iter_scomplex_to_a, FULL_LOOP_NIP, 3, 1, ain, aout};
+  return na_ndloop_cast_narray_to_rarray(&ndf, self, Qnil);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/fill.c"
-static void
-iter_scomplex_fill(na_loop_t *const lp)
-{
-    size_t   i;
-    char    *p1;
-    ssize_t  s1;
-    size_t  *idx1;
-    VALUE    x = lp->option;
-    dtype    y;
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    y = m_num_to_data(x);
-    if (idx1) {
-        for (; i--;) {
-            SET_DATA_INDEX(p1,idx1,dtype,y);
-        }
-    } else {
-        for (; i--;) {
-            SET_DATA_STRIDE(p1,s1,dtype,y);
-        }
+static void iter_scomplex_fill(na_loop_t* const lp) {
+  size_t i;
+  char* p1;
+  ssize_t s1;
+  size_t* idx1;
+  VALUE x = lp->option;
+  dtype y;
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  y = m_num_to_data(x);
+  if (idx1) {
+    for (; i--;) {
+      SET_DATA_INDEX(p1, idx1, dtype, y);
     }
+  } else {
+    for (; i--;) {
+      SET_DATA_STRIDE(p1, s1, dtype, y);
+    }
+  }
 }
 
 /*
@@ -1603,58 +1463,53 @@ iter_scomplex_fill(na_loop_t *const lp)
   @param [Numeric] other
   @return [Numo::SComplex] self.
 */
-static VALUE
-scomplex_fill(VALUE self, VALUE val)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{sym_option}};
-    ndfunc_t ndf = { iter_scomplex_fill, FULL_LOOP, 2, 0, ain, 0 };
+static VALUE scomplex_fill(VALUE self, VALUE val) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {sym_option}};
+  ndfunc_t ndf = {iter_scomplex_fill, FULL_LOOP, 2, 0, ain, 0};
 
-    na_ndloop(&ndf, 2, self, val);
-    return self;
+  na_ndloop(&ndf, 2, self, val);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/format.c"
-static VALUE
-format_scomplex(VALUE fmt, dtype* x)
-{
-    // fix-me
-    char s[48];
-    int n;
+static VALUE format_scomplex(VALUE fmt, dtype* x) {
+  // fix-me
+  char s[48];
+  int n;
 
-    if (NIL_P(fmt)) {
-        n = m_sprintf(s,*x);
-        return rb_str_new(s,n);
-    }
-    return rb_funcall(fmt, '%', 1, m_data_to_num(*x));
+  if (NIL_P(fmt)) {
+    n = m_sprintf(s, *x);
+    return rb_str_new(s, n);
+  }
+  return rb_funcall(fmt, '%', 1, m_data_to_num(*x));
 }
 
-static void
-iter_scomplex_format(na_loop_t *const lp)
-{
-    size_t  i;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1;
-    dtype *x;
-    VALUE y;
-    VALUE fmt = lp->option;
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR(lp, 1, p2, s2);
-    if (idx1) {
-        for (; i--;) {
-            x = (dtype*)(p1+*idx1); idx1++;
-            y = format_scomplex(fmt, x);
-            SET_DATA_STRIDE(p2, s2, VALUE, y);
-        }
-    } else {
-        for (; i--;) {
-            x = (dtype*)p1;         p1+=s1;
-            y = format_scomplex(fmt, x);
-            SET_DATA_STRIDE(p2, s2, VALUE, y);
-        }
+static void iter_scomplex_format(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t* idx1;
+  dtype* x;
+  VALUE y;
+  VALUE fmt = lp->option;
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR(lp, 1, p2, s2);
+  if (idx1) {
+    for (; i--;) {
+      x = (dtype*)(p1 + *idx1);
+      idx1++;
+      y = format_scomplex(fmt, x);
+      SET_DATA_STRIDE(p2, s2, VALUE, y);
     }
+  } else {
+    for (; i--;) {
+      x = (dtype*)p1;
+      p1 += s1;
+      y = format_scomplex(fmt, x);
+      SET_DATA_STRIDE(p2, s2, VALUE, y);
+    }
+  }
 }
 
 /*
@@ -1663,49 +1518,46 @@ iter_scomplex_format(na_loop_t *const lp)
   @param [String] format
   @return [Numo::RObject] array of formatted strings.
 */
-static VALUE
-scomplex_format(int argc, VALUE *argv, VALUE self)
-{
-    VALUE fmt=Qnil;
+static VALUE scomplex_format(int argc, VALUE* argv, VALUE self) {
+  VALUE fmt = Qnil;
 
-    ndfunc_arg_in_t ain[2] = {{Qnil,0},{sym_option}};
-    ndfunc_arg_out_t aout[1] = {{numo_cRObject,0}};
-    ndfunc_t ndf = { iter_scomplex_format, FULL_LOOP_NIP, 2, 1, ain, aout };
+  ndfunc_arg_in_t ain[2] = {{Qnil, 0}, {sym_option}};
+  ndfunc_arg_out_t aout[1] = {{numo_cRObject, 0}};
+  ndfunc_t ndf = {iter_scomplex_format, FULL_LOOP_NIP, 2, 1, ain, aout};
 
-    rb_scan_args(argc, argv, "01", &fmt);
-    return na_ndloop(&ndf, 2, self, fmt);
+  rb_scan_args(argc, argv, "01", &fmt);
+  return na_ndloop(&ndf, 2, self, fmt);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/format_to_a.c"
-static void
-iter_scomplex_format_to_a(na_loop_t *const lp)
-{
-    size_t  i;
-    char   *p1;
-    ssize_t s1;
-    size_t *idx1;
-    dtype *x;
-    VALUE y;
-    volatile VALUE a;
-    VALUE fmt = lp->option;
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    a = rb_ary_new2(i);
-    rb_ary_push(lp->args[1].value, a);
-    if (idx1) {
-        for (; i--;) {
-            x = (dtype*)(p1 + *idx1);  idx1++;
-            y = format_scomplex(fmt, x);
-            rb_ary_push(a,y);
-        }
-    } else {
-        for (; i--;) {
-            x = (dtype*)p1;  p1+=s1;
-            y = format_scomplex(fmt, x);
-            rb_ary_push(a,y);
-        }
+static void iter_scomplex_format_to_a(na_loop_t* const lp) {
+  size_t i;
+  char* p1;
+  ssize_t s1;
+  size_t* idx1;
+  dtype* x;
+  VALUE y;
+  volatile VALUE a;
+  VALUE fmt = lp->option;
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  a = rb_ary_new2(i);
+  rb_ary_push(lp->args[1].value, a);
+  if (idx1) {
+    for (; i--;) {
+      x = (dtype*)(p1 + *idx1);
+      idx1++;
+      y = format_scomplex(fmt, x);
+      rb_ary_push(a, y);
     }
+  } else {
+    for (; i--;) {
+      x = (dtype*)p1;
+      p1 += s1;
+      y = format_scomplex(fmt, x);
+      rb_ary_push(a, y);
+    }
+  }
 }
 
 /*
@@ -1714,25 +1566,20 @@ iter_scomplex_format_to_a(na_loop_t *const lp)
   @param [String] format
   @return [Array] array of formatted strings.
 */
-static VALUE
-scomplex_format_to_a(int argc, VALUE *argv, VALUE self)
-{
-    VALUE fmt=Qnil;
-    ndfunc_arg_in_t ain[3] = {{Qnil,0},{sym_loop_opt},{sym_option}};
-    ndfunc_arg_out_t aout[1] = {{rb_cArray,0}}; // dummy?
-    ndfunc_t ndf = { iter_scomplex_format_to_a, FULL_LOOP_NIP, 3, 1, ain, aout };
+static VALUE scomplex_format_to_a(int argc, VALUE* argv, VALUE self) {
+  VALUE fmt = Qnil;
+  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {sym_loop_opt}, {sym_option}};
+  ndfunc_arg_out_t aout[1] = {{rb_cArray, 0}}; // dummy?
+  ndfunc_t ndf = {iter_scomplex_format_to_a, FULL_LOOP_NIP, 3, 1, ain, aout};
 
-    rb_scan_args(argc, argv, "01", &fmt);
-    return na_ndloop_cast_narray_to_rarray(&ndf, self, fmt);
+  rb_scan_args(argc, argv, "01", &fmt);
+  return na_ndloop_cast_narray_to_rarray(&ndf, self, fmt);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/inspect.c"
-static VALUE
-iter_scomplex_inspect(char *ptr, size_t pos, VALUE fmt)
-{
+static VALUE iter_scomplex_inspect(char* ptr, size_t pos, VALUE fmt) {
 #line 7 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/inspect.c"
-    return format_scomplex(fmt, (dtype*)(ptr+pos));
+  return format_scomplex(fmt, (dtype*)(ptr + pos));
 #line 9 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/inspect.c"
 }
 
@@ -1741,38 +1588,31 @@ iter_scomplex_inspect(char *ptr, size_t pos, VALUE fmt)
   @overload inspect
   @return [String]
 */
-static VALUE
-scomplex_inspect(VALUE ary)
-{
-    return na_ndloop_inspect(ary, iter_scomplex_inspect, Qnil);
-}
-
+static VALUE scomplex_inspect(VALUE ary) { return na_ndloop_inspect(ary, iter_scomplex_inspect, Qnil); }
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/each.c"
-static void
-iter_scomplex_each(na_loop_t *const lp)
-{
-    size_t i, s1;
-    char *p1;
-    size_t *idx1;
-    dtype x;
-    VALUE y;
+static void iter_scomplex_each(na_loop_t* const lp) {
+  size_t i, s1;
+  char* p1;
+  size_t* idx1;
+  dtype x;
+  VALUE y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    if (idx1) {
-        for (; i--;) {
-            GET_DATA_INDEX(p1,idx1,dtype,x);
-            y = m_data_to_num(x);
-            rb_yield(y);
-        }
-    } else {
-        for (; i--;) {
-            GET_DATA_STRIDE(p1,s1,dtype,x);
-            y = m_data_to_num(x);
-            rb_yield(y);
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  if (idx1) {
+    for (; i--;) {
+      GET_DATA_INDEX(p1, idx1, dtype, x);
+      y = m_data_to_num(x);
+      rb_yield(y);
     }
+  } else {
+    for (; i--;) {
+      GET_DATA_STRIDE(p1, s1, dtype, x);
+      y = m_data_to_num(x);
+      rb_yield(y);
+    }
+  }
 }
 
 /*
@@ -1785,83 +1625,75 @@ iter_scomplex_each(na_loop_t *const lp)
   @see #each_with_index
   @see #map
 */
-static VALUE
-scomplex_each(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{Qnil,0}};
-    ndfunc_t ndf = {iter_scomplex_each, FULL_LOOP_NIP, 1,0, ain,0};
+static VALUE scomplex_each(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_each, FULL_LOOP_NIP, 1, 0, ain, 0};
 
-    na_ndloop(&ndf, 1, self);
-    return self;
+  na_ndloop(&ndf, 1, self);
+  return self;
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
-static void
-iter_scomplex_map(na_loop_t *const lp)
-{
-    size_t  i, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_map(na_loop_t* const lp) {
+  size_t i, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_map(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_map(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_map(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_map(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    for (i=0; i<n; i++) {
-                        ((dtype*)p2)[i] = m_map(((dtype*)p1)[i]);
-                    }
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_map(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_map(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_map(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_map(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          for (i = 0; i < n; i++) {
+            ((dtype*)p2)[i] = m_map(((dtype*)p1)[i]);
+          }
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_map(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_map(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -1869,64 +1701,58 @@ iter_scomplex_map(na_loop_t *const lp)
   @overload map
   @return [Numo::SComplex] map of self.
 */
-static VALUE
-scomplex_map(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = {iter_scomplex_map, FULL_LOOP, 1,1, ain,aout};
+static VALUE scomplex_map(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_map, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/each_with_index.c"
-static inline void
-yield_each_with_index(dtype x, size_t *c, VALUE *a, int nd, int md)
-{
-    int j;
+static inline void yield_each_with_index(dtype x, size_t* c, VALUE* a, int nd, int md) {
+  int j;
 
-    a[0] = m_data_to_num(x);
-    for (j=0; j<=nd; j++) {
-        a[j+1] = SIZET2NUM(c[j]);
-    }
-    rb_yield(rb_ary_new4(md,a));
+  a[0] = m_data_to_num(x);
+  for (j = 0; j <= nd; j++) {
+    a[j + 1] = SIZET2NUM(c[j]);
+  }
+  rb_yield(rb_ary_new4(md, a));
 }
 
+static void iter_scomplex_each_with_index(na_loop_t* const lp) {
+  size_t i, s1;
+  char* p1;
+  size_t* idx1;
+  dtype x;
+  VALUE* a;
+  size_t* c;
+  int nd, md;
 
-static void
-iter_scomplex_each_with_index(na_loop_t *const lp)
-{
-    size_t i, s1;
-    char *p1;
-    size_t *idx1;
-    dtype x;
-    VALUE *a;
-    size_t *c;
-    int nd, md;
+  c = (size_t*)(lp->opt_ptr);
+  nd = lp->ndim;
+  if (nd > 0) {
+    nd--;
+  }
+  md = nd + 2;
+  a = ALLOCA_N(VALUE, md);
 
-    c = (size_t*)(lp->opt_ptr);
-    nd = lp->ndim;
-    if (nd > 0) {nd--;}
-    md = nd + 2;
-    a = ALLOCA_N(VALUE,md);
-
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    c[nd] = 0;
-    if (idx1) {
-        for (; i--;) {
-            GET_DATA_INDEX(p1,idx1,dtype,x);
-            yield_each_with_index(x,c,a,nd,md);
-            c[nd]++;
-        }
-    } else {
-        for (; i--;) {
-            GET_DATA_STRIDE(p1,s1,dtype,x);
-            yield_each_with_index(x,c,a,nd,md);
-            c[nd]++;
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  c[nd] = 0;
+  if (idx1) {
+    for (; i--;) {
+      GET_DATA_INDEX(p1, idx1, dtype, x);
+      yield_each_with_index(x, c, a, nd, md);
+      c[nd]++;
     }
+  } else {
+    for (; i--;) {
+      GET_DATA_STRIDE(p1, s1, dtype, x);
+      yield_each_with_index(x, c, a, nd, md);
+      c[nd]++;
+    }
+  }
 }
 
 /*
@@ -1940,88 +1766,83 @@ iter_scomplex_each_with_index(na_loop_t *const lp)
   @see #each
   @see #map_with_index
 */
-static VALUE
-scomplex_each_with_index(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{Qnil,0}};
-    ndfunc_t ndf = {iter_scomplex_each_with_index, FULL_LOOP_NIP, 1,0, ain,0};
+static VALUE scomplex_each_with_index(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
+  ndfunc_t ndf = {iter_scomplex_each_with_index, FULL_LOOP_NIP, 1, 0, ain, 0};
 
-    na_ndloop_with_index(&ndf, 1, self);
-    return self;
+  na_ndloop_with_index(&ndf, 1, self);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/map_with_index.c"
-static inline dtype
-yield_map_with_index(dtype x, size_t *c, VALUE *a, int nd, int md)
-{
-    int j;
-    VALUE y;
+static inline dtype yield_map_with_index(dtype x, size_t* c, VALUE* a, int nd, int md) {
+  int j;
+  VALUE y;
 
-    a[0] = m_data_to_num(x);
-    for (j=0; j<=nd; j++) {
-        a[j+1] = SIZET2NUM(c[j]);
-    }
-    y = rb_yield(rb_ary_new4(md,a));
-    return m_num_to_data(y);
+  a[0] = m_data_to_num(x);
+  for (j = 0; j <= nd; j++) {
+    a[j + 1] = SIZET2NUM(c[j]);
+  }
+  y = rb_yield(rb_ary_new4(md, a));
+  return m_num_to_data(y);
 }
 
-static void
-iter_scomplex_map_with_index(na_loop_t *const lp)
-{
-    size_t  i;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype x;
-    VALUE *a;
-    size_t *c;
-    int nd, md;
+static void iter_scomplex_map_with_index(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
+  VALUE* a;
+  size_t* c;
+  int nd, md;
 
-    c = (size_t*)(lp->opt_ptr);
-    nd = lp->ndim;
-    if (nd > 0) {nd--;}
-    md = nd + 2;
-    a = ALLOCA_N(VALUE,md);
+  c = (size_t*)(lp->opt_ptr);
+  nd = lp->ndim;
+  if (nd > 0) {
+    nd--;
+  }
+  md = nd + 2;
+  a = ALLOCA_N(VALUE, md);
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    c[nd] = 0;
-    if (idx1) {
-        if (idx2) {
-            for (; i--;) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = yield_map_with_index(x,c,a,nd,md);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-                c[nd]++;
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = yield_map_with_index(x,c,a,nd,md);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-                c[nd]++;
-            }
-        }
+  c[nd] = 0;
+  if (idx1) {
+    if (idx2) {
+      for (; i--;) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = yield_map_with_index(x, c, a, nd, md);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+        c[nd]++;
+      }
     } else {
-        if (idx2) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = yield_map_with_index(x,c,a,nd,md);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-                c[nd]++;
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = yield_map_with_index(x,c,a,nd,md);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-                c[nd]++;
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = yield_map_with_index(x, c, a, nd, md);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+        c[nd]++;
+      }
     }
+  } else {
+    if (idx2) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = yield_map_with_index(x, c, a, nd, md);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+        c[nd]++;
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = yield_map_with_index(x, c, a, nd, md);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+        c[nd]++;
+      }
+    }
+  }
 }
 
 /*
@@ -2037,191 +1858,172 @@ iter_scomplex_map_with_index(na_loop_t *const lp)
   @see #map
   @see #each_with_index
 */
-static VALUE
-scomplex_map_with_index(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{Qnil,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = {iter_scomplex_map_with_index, FULL_LOOP, 1,1, ain,aout};
+static VALUE scomplex_map_with_index(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_map_with_index, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop_with_index(&ndf, 1, self);
+  return na_ndloop_with_index(&ndf, 1, self);
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary2.c"
-static void
-iter_scomplex_abs(na_loop_t *const lp)
-{
-    size_t  i;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
-    rtype y;
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx1) {
-        if (idx2) {
-            for (; i--;) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                y = m_abs(x);
-                SET_DATA_INDEX(p2,idx2,rtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                y = m_abs(x);
-                SET_DATA_STRIDE(p2,s2,rtype,y);
-            }
-        }
+static void iter_scomplex_abs(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
+  rtype y;
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx1) {
+    if (idx2) {
+      for (; i--;) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        y = m_abs(x);
+        SET_DATA_INDEX(p2, idx2, rtype, y);
+      }
     } else {
-        if (idx2) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                y = m_abs(x);
-                SET_DATA_INDEX(p2,idx2,rtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                y = m_abs(x);
-                SET_DATA_STRIDE(p2,s2,rtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        y = m_abs(x);
+        SET_DATA_STRIDE(p2, s2, rtype, y);
+      }
     }
+  } else {
+    if (idx2) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        y = m_abs(x);
+        SET_DATA_INDEX(p2, idx2, rtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        y = m_abs(x);
+        SET_DATA_STRIDE(p2, s2, rtype, y);
+      }
+    }
+  }
 }
-
 
 /*
   abs of self.
   @overload abs
   @return [Numo::SFloat] abs of self.
 */
-static VALUE
-scomplex_abs(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cRT,0}};
-    ndfunc_t ndf = { iter_scomplex_abs, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_abs(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
+  ndfunc_t ndf = {iter_scomplex_abs, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
 #line 8 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-#define check_intdivzero(y) {}
+#define check_intdivzero(y)                                                                                                    \
+  {}
 
 #line 11 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-static void
-iter_scomplex_add(na_loop_t *const lp)
-{
-    size_t   i=0;
-    size_t   n;
-    char    *p1, *p2, *p3;
-    ssize_t  s1, s2, s3;
+static void iter_scomplex_add(na_loop_t* const lp) {
+  size_t i = 0;
+  size_t n;
+  char *p1, *p2, *p3;
+  ssize_t s1, s2, s3;
 
 #line 32 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    INIT_PTR(lp, 2, p3, s3);
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  INIT_PTR(lp, 2, p3, s3);
 
-    //
-    if (is_aligned(p1,sizeof(dtype)) &&
-        is_aligned(p2,sizeof(dtype)) &&
-        is_aligned(p3,sizeof(dtype)) ) {
+  //
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
 
-        if (s1 == sizeof(dtype) &&
-            s2 == sizeof(dtype) &&
-            s3 == sizeof(dtype) ) {
+    if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
 #line 84 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-                if (p1 == p3) { // inplace case
-                    for (; i<n; i++) {
-                        check_intdivzero(((dtype*)p2)[i]);
-                        ((dtype*)p1)[i] = m_add(((dtype*)p1)[i],((dtype*)p2)[i]);
-                    }
-                } else {
-                    for (; i<n; i++) {
-                        check_intdivzero(((dtype*)p2)[i]);
-                        ((dtype*)p3)[i] = m_add(((dtype*)p1)[i],((dtype*)p2)[i]);
-                    }
-                }
+      if (p1 == p3) { // inplace case
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
+          ((dtype*)p1)[i] = m_add(((dtype*)p1)[i], ((dtype*)p2)[i]);
+        }
+      } else {
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
+          ((dtype*)p3)[i] = m_add(((dtype*)p1)[i], ((dtype*)p2)[i]);
+        }
+      }
 #line 98 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-            return;
-        }
+      return;
+    }
 
-        if (is_aligned_step(s1,sizeof(dtype)) &&
-            is_aligned_step(s2,sizeof(dtype)) &&
-            is_aligned_step(s3,sizeof(dtype)) ) {
-            //
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+      //
 
-            if (s2 == 0){ // Broadcasting from scalar value.
-                check_intdivzero(*(dtype*)p2);
-                if (s1 == sizeof(dtype) &&
-                    s3 == sizeof(dtype) ) {
+      if (s2 == 0) { // Broadcasting from scalar value.
+        check_intdivzero(*(dtype*)p2);
+        if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
 #line 150 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-                        if (p1 == p3) { // inplace case
-                            for (; i<n; i++) {
-                                ((dtype*)p1)[i] = m_add(((dtype*)p1)[i],*(dtype*)p2);
-                            }
-                        } else {
-                            for (; i<n; i++) {
-                                ((dtype*)p3)[i] = m_add(((dtype*)p1)[i],*(dtype*)p2);
-                            }
-                        }
-#line 162 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-                } else {
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p3 = m_add(*(dtype*)p1,*(dtype*)p2);
-                        p1 += s1;
-                        p3 += s3;
-                    }
-                }
-            } else {
-                if (p1 == p3) { // inplace case
-                    for (i=0; i<n; i++) {
-                        check_intdivzero(*(dtype*)p2);
-                        *(dtype*)p1 = m_add(*(dtype*)p1,*(dtype*)p2);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                } else {
-                    for (i=0; i<n; i++) {
-                        check_intdivzero(*(dtype*)p2);
-                        *(dtype*)p3 = m_add(*(dtype*)p1,*(dtype*)p2);
-                        p1 += s1;
-                        p2 += s2;
-                        p3 += s3;
-                    }
-                }
+          if (p1 == p3) { // inplace case
+            for (; i < n; i++) {
+              ((dtype*)p1)[i] = m_add(((dtype*)p1)[i], *(dtype*)p2);
             }
-
-            return;
-            //
+          } else {
+            for (; i < n; i++) {
+              ((dtype*)p3)[i] = m_add(((dtype*)p1)[i], *(dtype*)p2);
+            }
+          }
+#line 162 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
+        } else {
+          for (i = 0; i < n; i++) {
+            *(dtype*)p3 = m_add(*(dtype*)p1, *(dtype*)p2);
+            p1 += s1;
+            p3 += s3;
+          }
         }
+      } else {
+        if (p1 == p3) { // inplace case
+          for (i = 0; i < n; i++) {
+            check_intdivzero(*(dtype*)p2);
+            *(dtype*)p1 = m_add(*(dtype*)p1, *(dtype*)p2);
+            p1 += s1;
+            p2 += s2;
+          }
+        } else {
+          for (i = 0; i < n; i++) {
+            check_intdivzero(*(dtype*)p2);
+            *(dtype*)p3 = m_add(*(dtype*)p1, *(dtype*)p2);
+            p1 += s1;
+            p2 += s2;
+            p3 += s3;
+          }
+        }
+      }
+
+      return;
+      //
     }
-    for (i=0; i<n; i++) {
-        dtype x, y, z;
-        GET_DATA_STRIDE(p1,s1,dtype,x);
-        GET_DATA_STRIDE(p2,s2,dtype,y);
-        check_intdivzero(y);
-        z = m_add(x,y);
-        SET_DATA_STRIDE(p3,s3,dtype,z);
-    }
-    //
+  }
+  for (i = 0; i < n; i++) {
+    dtype x, y, z;
+    GET_DATA_STRIDE(p1, s1, dtype, x);
+    GET_DATA_STRIDE(p2, s2, dtype, y);
+    check_intdivzero(y);
+    z = m_add(x, y);
+    SET_DATA_STRIDE(p3, s3, dtype, z);
+  }
+  //
 }
 #undef check_intdivzero
 
-static VALUE
-scomplex_add_self(VALUE self, VALUE other)
-{
-    ndfunc_arg_in_t ain[2] = {{cT,0},{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_add, STRIDE_LOOP, 2, 1, ain, aout };
+static VALUE scomplex_add_self(VALUE self, VALUE other) {
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_add, STRIDE_LOOP, 2, 1, ain, aout};
 
-    return na_ndloop(&ndf, 2, self, other);
+  return na_ndloop(&ndf, 2, self, other);
 }
 
 /*
@@ -2230,137 +2032,123 @@ scomplex_add_self(VALUE self, VALUE other)
   @param [Numo::NArray,Numeric] other
   @return [Numo::NArray] self + other
 */
-static VALUE
-scomplex_add(VALUE self, VALUE other)
-{
-    
+static VALUE scomplex_add(VALUE self, VALUE other) {
+
 #line 226 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-    VALUE klass, v;
+  VALUE klass, v;
 
-    klass = na_upcast(rb_obj_class(self),rb_obj_class(other));
-    if (klass==cT) {
-        return scomplex_add_self(self, other);
-    } else {
-        v = rb_funcall(klass, id_cast, 1, self);
-        return rb_funcall(v, '+', 1, other);
-    }
-    
+  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
+  if (klass == cT) {
+    return scomplex_add_self(self, other);
+  } else {
+    v = rb_funcall(klass, id_cast, 1, self);
+    return rb_funcall(v, '+', 1, other);
+  }
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
 #line 8 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-#define check_intdivzero(y) {}
+#define check_intdivzero(y)                                                                                                    \
+  {}
 
 #line 11 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-static void
-iter_scomplex_sub(na_loop_t *const lp)
-{
-    size_t   i=0;
-    size_t   n;
-    char    *p1, *p2, *p3;
-    ssize_t  s1, s2, s3;
+static void iter_scomplex_sub(na_loop_t* const lp) {
+  size_t i = 0;
+  size_t n;
+  char *p1, *p2, *p3;
+  ssize_t s1, s2, s3;
 
 #line 32 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    INIT_PTR(lp, 2, p3, s3);
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  INIT_PTR(lp, 2, p3, s3);
 
-    //
-    if (is_aligned(p1,sizeof(dtype)) &&
-        is_aligned(p2,sizeof(dtype)) &&
-        is_aligned(p3,sizeof(dtype)) ) {
+  //
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
 
-        if (s1 == sizeof(dtype) &&
-            s2 == sizeof(dtype) &&
-            s3 == sizeof(dtype) ) {
+    if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
 #line 84 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-                if (p1 == p3) { // inplace case
-                    for (; i<n; i++) {
-                        check_intdivzero(((dtype*)p2)[i]);
-                        ((dtype*)p1)[i] = m_sub(((dtype*)p1)[i],((dtype*)p2)[i]);
-                    }
-                } else {
-                    for (; i<n; i++) {
-                        check_intdivzero(((dtype*)p2)[i]);
-                        ((dtype*)p3)[i] = m_sub(((dtype*)p1)[i],((dtype*)p2)[i]);
-                    }
-                }
+      if (p1 == p3) { // inplace case
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
+          ((dtype*)p1)[i] = m_sub(((dtype*)p1)[i], ((dtype*)p2)[i]);
+        }
+      } else {
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
+          ((dtype*)p3)[i] = m_sub(((dtype*)p1)[i], ((dtype*)p2)[i]);
+        }
+      }
 #line 98 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-            return;
-        }
+      return;
+    }
 
-        if (is_aligned_step(s1,sizeof(dtype)) &&
-            is_aligned_step(s2,sizeof(dtype)) &&
-            is_aligned_step(s3,sizeof(dtype)) ) {
-            //
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+      //
 
-            if (s2 == 0){ // Broadcasting from scalar value.
-                check_intdivzero(*(dtype*)p2);
-                if (s1 == sizeof(dtype) &&
-                    s3 == sizeof(dtype) ) {
+      if (s2 == 0) { // Broadcasting from scalar value.
+        check_intdivzero(*(dtype*)p2);
+        if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
 #line 150 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-                        if (p1 == p3) { // inplace case
-                            for (; i<n; i++) {
-                                ((dtype*)p1)[i] = m_sub(((dtype*)p1)[i],*(dtype*)p2);
-                            }
-                        } else {
-                            for (; i<n; i++) {
-                                ((dtype*)p3)[i] = m_sub(((dtype*)p1)[i],*(dtype*)p2);
-                            }
-                        }
-#line 162 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-                } else {
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p3 = m_sub(*(dtype*)p1,*(dtype*)p2);
-                        p1 += s1;
-                        p3 += s3;
-                    }
-                }
-            } else {
-                if (p1 == p3) { // inplace case
-                    for (i=0; i<n; i++) {
-                        check_intdivzero(*(dtype*)p2);
-                        *(dtype*)p1 = m_sub(*(dtype*)p1,*(dtype*)p2);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                } else {
-                    for (i=0; i<n; i++) {
-                        check_intdivzero(*(dtype*)p2);
-                        *(dtype*)p3 = m_sub(*(dtype*)p1,*(dtype*)p2);
-                        p1 += s1;
-                        p2 += s2;
-                        p3 += s3;
-                    }
-                }
+          if (p1 == p3) { // inplace case
+            for (; i < n; i++) {
+              ((dtype*)p1)[i] = m_sub(((dtype*)p1)[i], *(dtype*)p2);
             }
-
-            return;
-            //
+          } else {
+            for (; i < n; i++) {
+              ((dtype*)p3)[i] = m_sub(((dtype*)p1)[i], *(dtype*)p2);
+            }
+          }
+#line 162 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
+        } else {
+          for (i = 0; i < n; i++) {
+            *(dtype*)p3 = m_sub(*(dtype*)p1, *(dtype*)p2);
+            p1 += s1;
+            p3 += s3;
+          }
         }
+      } else {
+        if (p1 == p3) { // inplace case
+          for (i = 0; i < n; i++) {
+            check_intdivzero(*(dtype*)p2);
+            *(dtype*)p1 = m_sub(*(dtype*)p1, *(dtype*)p2);
+            p1 += s1;
+            p2 += s2;
+          }
+        } else {
+          for (i = 0; i < n; i++) {
+            check_intdivzero(*(dtype*)p2);
+            *(dtype*)p3 = m_sub(*(dtype*)p1, *(dtype*)p2);
+            p1 += s1;
+            p2 += s2;
+            p3 += s3;
+          }
+        }
+      }
+
+      return;
+      //
     }
-    for (i=0; i<n; i++) {
-        dtype x, y, z;
-        GET_DATA_STRIDE(p1,s1,dtype,x);
-        GET_DATA_STRIDE(p2,s2,dtype,y);
-        check_intdivzero(y);
-        z = m_sub(x,y);
-        SET_DATA_STRIDE(p3,s3,dtype,z);
-    }
-    //
+  }
+  for (i = 0; i < n; i++) {
+    dtype x, y, z;
+    GET_DATA_STRIDE(p1, s1, dtype, x);
+    GET_DATA_STRIDE(p2, s2, dtype, y);
+    check_intdivzero(y);
+    z = m_sub(x, y);
+    SET_DATA_STRIDE(p3, s3, dtype, z);
+  }
+  //
 }
 #undef check_intdivzero
 
-static VALUE
-scomplex_sub_self(VALUE self, VALUE other)
-{
-    ndfunc_arg_in_t ain[2] = {{cT,0},{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_sub, STRIDE_LOOP, 2, 1, ain, aout };
+static VALUE scomplex_sub_self(VALUE self, VALUE other) {
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_sub, STRIDE_LOOP, 2, 1, ain, aout};
 
-    return na_ndloop(&ndf, 2, self, other);
+  return na_ndloop(&ndf, 2, self, other);
 }
 
 /*
@@ -2369,137 +2157,123 @@ scomplex_sub_self(VALUE self, VALUE other)
   @param [Numo::NArray,Numeric] other
   @return [Numo::NArray] self - other
 */
-static VALUE
-scomplex_sub(VALUE self, VALUE other)
-{
-    
+static VALUE scomplex_sub(VALUE self, VALUE other) {
+
 #line 226 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-    VALUE klass, v;
+  VALUE klass, v;
 
-    klass = na_upcast(rb_obj_class(self),rb_obj_class(other));
-    if (klass==cT) {
-        return scomplex_sub_self(self, other);
-    } else {
-        v = rb_funcall(klass, id_cast, 1, self);
-        return rb_funcall(v, '-', 1, other);
-    }
-    
+  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
+  if (klass == cT) {
+    return scomplex_sub_self(self, other);
+  } else {
+    v = rb_funcall(klass, id_cast, 1, self);
+    return rb_funcall(v, '-', 1, other);
+  }
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
 #line 8 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-#define check_intdivzero(y) {}
+#define check_intdivzero(y)                                                                                                    \
+  {}
 
 #line 11 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-static void
-iter_scomplex_mul(na_loop_t *const lp)
-{
-    size_t   i=0;
-    size_t   n;
-    char    *p1, *p2, *p3;
-    ssize_t  s1, s2, s3;
+static void iter_scomplex_mul(na_loop_t* const lp) {
+  size_t i = 0;
+  size_t n;
+  char *p1, *p2, *p3;
+  ssize_t s1, s2, s3;
 
 #line 32 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    INIT_PTR(lp, 2, p3, s3);
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  INIT_PTR(lp, 2, p3, s3);
 
-    //
-    if (is_aligned(p1,sizeof(dtype)) &&
-        is_aligned(p2,sizeof(dtype)) &&
-        is_aligned(p3,sizeof(dtype)) ) {
+  //
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
 
-        if (s1 == sizeof(dtype) &&
-            s2 == sizeof(dtype) &&
-            s3 == sizeof(dtype) ) {
+    if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
 #line 84 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-                if (p1 == p3) { // inplace case
-                    for (; i<n; i++) {
-                        check_intdivzero(((dtype*)p2)[i]);
-                        ((dtype*)p1)[i] = m_mul(((dtype*)p1)[i],((dtype*)p2)[i]);
-                    }
-                } else {
-                    for (; i<n; i++) {
-                        check_intdivzero(((dtype*)p2)[i]);
-                        ((dtype*)p3)[i] = m_mul(((dtype*)p1)[i],((dtype*)p2)[i]);
-                    }
-                }
+      if (p1 == p3) { // inplace case
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
+          ((dtype*)p1)[i] = m_mul(((dtype*)p1)[i], ((dtype*)p2)[i]);
+        }
+      } else {
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
+          ((dtype*)p3)[i] = m_mul(((dtype*)p1)[i], ((dtype*)p2)[i]);
+        }
+      }
 #line 98 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-            return;
-        }
+      return;
+    }
 
-        if (is_aligned_step(s1,sizeof(dtype)) &&
-            is_aligned_step(s2,sizeof(dtype)) &&
-            is_aligned_step(s3,sizeof(dtype)) ) {
-            //
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+      //
 
-            if (s2 == 0){ // Broadcasting from scalar value.
-                check_intdivzero(*(dtype*)p2);
-                if (s1 == sizeof(dtype) &&
-                    s3 == sizeof(dtype) ) {
+      if (s2 == 0) { // Broadcasting from scalar value.
+        check_intdivzero(*(dtype*)p2);
+        if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
 #line 150 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-                        if (p1 == p3) { // inplace case
-                            for (; i<n; i++) {
-                                ((dtype*)p1)[i] = m_mul(((dtype*)p1)[i],*(dtype*)p2);
-                            }
-                        } else {
-                            for (; i<n; i++) {
-                                ((dtype*)p3)[i] = m_mul(((dtype*)p1)[i],*(dtype*)p2);
-                            }
-                        }
-#line 162 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-                } else {
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p3 = m_mul(*(dtype*)p1,*(dtype*)p2);
-                        p1 += s1;
-                        p3 += s3;
-                    }
-                }
-            } else {
-                if (p1 == p3) { // inplace case
-                    for (i=0; i<n; i++) {
-                        check_intdivzero(*(dtype*)p2);
-                        *(dtype*)p1 = m_mul(*(dtype*)p1,*(dtype*)p2);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                } else {
-                    for (i=0; i<n; i++) {
-                        check_intdivzero(*(dtype*)p2);
-                        *(dtype*)p3 = m_mul(*(dtype*)p1,*(dtype*)p2);
-                        p1 += s1;
-                        p2 += s2;
-                        p3 += s3;
-                    }
-                }
+          if (p1 == p3) { // inplace case
+            for (; i < n; i++) {
+              ((dtype*)p1)[i] = m_mul(((dtype*)p1)[i], *(dtype*)p2);
             }
-
-            return;
-            //
+          } else {
+            for (; i < n; i++) {
+              ((dtype*)p3)[i] = m_mul(((dtype*)p1)[i], *(dtype*)p2);
+            }
+          }
+#line 162 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
+        } else {
+          for (i = 0; i < n; i++) {
+            *(dtype*)p3 = m_mul(*(dtype*)p1, *(dtype*)p2);
+            p1 += s1;
+            p3 += s3;
+          }
         }
+      } else {
+        if (p1 == p3) { // inplace case
+          for (i = 0; i < n; i++) {
+            check_intdivzero(*(dtype*)p2);
+            *(dtype*)p1 = m_mul(*(dtype*)p1, *(dtype*)p2);
+            p1 += s1;
+            p2 += s2;
+          }
+        } else {
+          for (i = 0; i < n; i++) {
+            check_intdivzero(*(dtype*)p2);
+            *(dtype*)p3 = m_mul(*(dtype*)p1, *(dtype*)p2);
+            p1 += s1;
+            p2 += s2;
+            p3 += s3;
+          }
+        }
+      }
+
+      return;
+      //
     }
-    for (i=0; i<n; i++) {
-        dtype x, y, z;
-        GET_DATA_STRIDE(p1,s1,dtype,x);
-        GET_DATA_STRIDE(p2,s2,dtype,y);
-        check_intdivzero(y);
-        z = m_mul(x,y);
-        SET_DATA_STRIDE(p3,s3,dtype,z);
-    }
-    //
+  }
+  for (i = 0; i < n; i++) {
+    dtype x, y, z;
+    GET_DATA_STRIDE(p1, s1, dtype, x);
+    GET_DATA_STRIDE(p2, s2, dtype, y);
+    check_intdivzero(y);
+    z = m_mul(x, y);
+    SET_DATA_STRIDE(p3, s3, dtype, z);
+  }
+  //
 }
 #undef check_intdivzero
 
-static VALUE
-scomplex_mul_self(VALUE self, VALUE other)
-{
-    ndfunc_arg_in_t ain[2] = {{cT,0},{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_mul, STRIDE_LOOP, 2, 1, ain, aout };
+static VALUE scomplex_mul_self(VALUE self, VALUE other) {
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_mul, STRIDE_LOOP, 2, 1, ain, aout};
 
-    return na_ndloop(&ndf, 2, self, other);
+  return na_ndloop(&ndf, 2, self, other);
 }
 
 /*
@@ -2508,137 +2282,123 @@ scomplex_mul_self(VALUE self, VALUE other)
   @param [Numo::NArray,Numeric] other
   @return [Numo::NArray] self * other
 */
-static VALUE
-scomplex_mul(VALUE self, VALUE other)
-{
-    
+static VALUE scomplex_mul(VALUE self, VALUE other) {
+
 #line 226 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-    VALUE klass, v;
+  VALUE klass, v;
 
-    klass = na_upcast(rb_obj_class(self),rb_obj_class(other));
-    if (klass==cT) {
-        return scomplex_mul_self(self, other);
-    } else {
-        v = rb_funcall(klass, id_cast, 1, self);
-        return rb_funcall(v, '*', 1, other);
-    }
-    
+  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
+  if (klass == cT) {
+    return scomplex_mul_self(self, other);
+  } else {
+    v = rb_funcall(klass, id_cast, 1, self);
+    return rb_funcall(v, '*', 1, other);
+  }
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
 #line 8 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-#define check_intdivzero(y) {}
+#define check_intdivzero(y)                                                                                                    \
+  {}
 
 #line 11 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-static void
-iter_scomplex_div(na_loop_t *const lp)
-{
-    size_t   i=0;
-    size_t   n;
-    char    *p1, *p2, *p3;
-    ssize_t  s1, s2, s3;
+static void iter_scomplex_div(na_loop_t* const lp) {
+  size_t i = 0;
+  size_t n;
+  char *p1, *p2, *p3;
+  ssize_t s1, s2, s3;
 
 #line 32 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    INIT_PTR(lp, 2, p3, s3);
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  INIT_PTR(lp, 2, p3, s3);
 
-    //
-    if (is_aligned(p1,sizeof(dtype)) &&
-        is_aligned(p2,sizeof(dtype)) &&
-        is_aligned(p3,sizeof(dtype)) ) {
+  //
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
 
-        if (s1 == sizeof(dtype) &&
-            s2 == sizeof(dtype) &&
-            s3 == sizeof(dtype) ) {
+    if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
 #line 84 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-                if (p1 == p3) { // inplace case
-                    for (; i<n; i++) {
-                        check_intdivzero(((dtype*)p2)[i]);
-                        ((dtype*)p1)[i] = m_div(((dtype*)p1)[i],((dtype*)p2)[i]);
-                    }
-                } else {
-                    for (; i<n; i++) {
-                        check_intdivzero(((dtype*)p2)[i]);
-                        ((dtype*)p3)[i] = m_div(((dtype*)p1)[i],((dtype*)p2)[i]);
-                    }
-                }
+      if (p1 == p3) { // inplace case
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
+          ((dtype*)p1)[i] = m_div(((dtype*)p1)[i], ((dtype*)p2)[i]);
+        }
+      } else {
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
+          ((dtype*)p3)[i] = m_div(((dtype*)p1)[i], ((dtype*)p2)[i]);
+        }
+      }
 #line 98 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-            return;
-        }
+      return;
+    }
 
-        if (is_aligned_step(s1,sizeof(dtype)) &&
-            is_aligned_step(s2,sizeof(dtype)) &&
-            is_aligned_step(s3,sizeof(dtype)) ) {
-            //
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+      //
 
-            if (s2 == 0){ // Broadcasting from scalar value.
-                check_intdivzero(*(dtype*)p2);
-                if (s1 == sizeof(dtype) &&
-                    s3 == sizeof(dtype) ) {
+      if (s2 == 0) { // Broadcasting from scalar value.
+        check_intdivzero(*(dtype*)p2);
+        if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
 #line 150 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-                        if (p1 == p3) { // inplace case
-                            for (; i<n; i++) {
-                                ((dtype*)p1)[i] = m_div(((dtype*)p1)[i],*(dtype*)p2);
-                            }
-                        } else {
-                            for (; i<n; i++) {
-                                ((dtype*)p3)[i] = m_div(((dtype*)p1)[i],*(dtype*)p2);
-                            }
-                        }
-#line 162 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-                } else {
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p3 = m_div(*(dtype*)p1,*(dtype*)p2);
-                        p1 += s1;
-                        p3 += s3;
-                    }
-                }
-            } else {
-                if (p1 == p3) { // inplace case
-                    for (i=0; i<n; i++) {
-                        check_intdivzero(*(dtype*)p2);
-                        *(dtype*)p1 = m_div(*(dtype*)p1,*(dtype*)p2);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                } else {
-                    for (i=0; i<n; i++) {
-                        check_intdivzero(*(dtype*)p2);
-                        *(dtype*)p3 = m_div(*(dtype*)p1,*(dtype*)p2);
-                        p1 += s1;
-                        p2 += s2;
-                        p3 += s3;
-                    }
-                }
+          if (p1 == p3) { // inplace case
+            for (; i < n; i++) {
+              ((dtype*)p1)[i] = m_div(((dtype*)p1)[i], *(dtype*)p2);
             }
-
-            return;
-            //
+          } else {
+            for (; i < n; i++) {
+              ((dtype*)p3)[i] = m_div(((dtype*)p1)[i], *(dtype*)p2);
+            }
+          }
+#line 162 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
+        } else {
+          for (i = 0; i < n; i++) {
+            *(dtype*)p3 = m_div(*(dtype*)p1, *(dtype*)p2);
+            p1 += s1;
+            p3 += s3;
+          }
         }
+      } else {
+        if (p1 == p3) { // inplace case
+          for (i = 0; i < n; i++) {
+            check_intdivzero(*(dtype*)p2);
+            *(dtype*)p1 = m_div(*(dtype*)p1, *(dtype*)p2);
+            p1 += s1;
+            p2 += s2;
+          }
+        } else {
+          for (i = 0; i < n; i++) {
+            check_intdivzero(*(dtype*)p2);
+            *(dtype*)p3 = m_div(*(dtype*)p1, *(dtype*)p2);
+            p1 += s1;
+            p2 += s2;
+            p3 += s3;
+          }
+        }
+      }
+
+      return;
+      //
     }
-    for (i=0; i<n; i++) {
-        dtype x, y, z;
-        GET_DATA_STRIDE(p1,s1,dtype,x);
-        GET_DATA_STRIDE(p2,s2,dtype,y);
-        check_intdivzero(y);
-        z = m_div(x,y);
-        SET_DATA_STRIDE(p3,s3,dtype,z);
-    }
-    //
+  }
+  for (i = 0; i < n; i++) {
+    dtype x, y, z;
+    GET_DATA_STRIDE(p1, s1, dtype, x);
+    GET_DATA_STRIDE(p2, s2, dtype, y);
+    check_intdivzero(y);
+    z = m_div(x, y);
+    SET_DATA_STRIDE(p3, s3, dtype, z);
+  }
+  //
 }
 #undef check_intdivzero
 
-static VALUE
-scomplex_div_self(VALUE self, VALUE other)
-{
-    ndfunc_arg_in_t ain[2] = {{cT,0},{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_div, STRIDE_LOOP, 2, 1, ain, aout };
+static VALUE scomplex_div_self(VALUE self, VALUE other) {
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_div, STRIDE_LOOP, 2, 1, ain, aout};
 
-    return na_ndloop(&ndf, 2, self, other);
+  return na_ndloop(&ndf, 2, self, other);
 }
 
 /*
@@ -2647,79 +2407,69 @@ scomplex_div_self(VALUE self, VALUE other)
   @param [Numo::NArray,Numeric] other
   @return [Numo::NArray] self / other
 */
-static VALUE
-scomplex_div(VALUE self, VALUE other)
-{
-    
+static VALUE scomplex_div(VALUE self, VALUE other) {
+
 #line 226 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-    VALUE klass, v;
+  VALUE klass, v;
 
-    klass = na_upcast(rb_obj_class(self),rb_obj_class(other));
-    if (klass==cT) {
-        return scomplex_div_self(self, other);
-    } else {
-        v = rb_funcall(klass, id_cast, 1, self);
-        return rb_funcall(v, '/', 1, other);
-    }
-    
+  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
+  if (klass == cT) {
+    return scomplex_div_self(self, other);
+  } else {
+    v = rb_funcall(klass, id_cast, 1, self);
+    return rb_funcall(v, '/', 1, other);
+  }
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/pow.c"
-static void
-iter_scomplex_pow(na_loop_t *const lp)
-{
-    size_t  i;
-    char    *p1, *p2, *p3;
-    ssize_t s1, s2, s3;
-    dtype    x, y;
-    INIT_COUNTER(lp, i);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    INIT_PTR(lp, 2, p3, s3);
-    for (; i--;) {
-        GET_DATA_STRIDE(p1,s1,dtype,x);
-        GET_DATA_STRIDE(p2,s2,dtype,y);
-        x = m_pow(x,y);
-        SET_DATA_STRIDE(p3,s3,dtype,x);
-    }
+static void iter_scomplex_pow(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2, *p3;
+  ssize_t s1, s2, s3;
+  dtype x, y;
+  INIT_COUNTER(lp, i);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  INIT_PTR(lp, 2, p3, s3);
+  for (; i--;) {
+    GET_DATA_STRIDE(p1, s1, dtype, x);
+    GET_DATA_STRIDE(p2, s2, dtype, y);
+    x = m_pow(x, y);
+    SET_DATA_STRIDE(p3, s3, dtype, x);
+  }
 }
 
-static void
-iter_scomplex_pow_int32(na_loop_t *const lp)
-{
-    size_t  i;
-    char   *p1, *p2, *p3;
-    ssize_t s1, s2, s3;
-    dtype   x;
-    int32_t y;
-    INIT_COUNTER(lp, i);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    INIT_PTR(lp, 2, p3, s3);
-    for (; i--;) {
-        GET_DATA_STRIDE(p1,s1,dtype,x);
-        GET_DATA_STRIDE(p2,s2,int32_t,y);
-        x = m_pow_int(x,y);
-        SET_DATA_STRIDE(p3,s3,dtype,x);
-    }
+static void iter_scomplex_pow_int32(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2, *p3;
+  ssize_t s1, s2, s3;
+  dtype x;
+  int32_t y;
+  INIT_COUNTER(lp, i);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  INIT_PTR(lp, 2, p3, s3);
+  for (; i--;) {
+    GET_DATA_STRIDE(p1, s1, dtype, x);
+    GET_DATA_STRIDE(p2, s2, int32_t, y);
+    x = m_pow_int(x, y);
+    SET_DATA_STRIDE(p3, s3, dtype, x);
+  }
 }
 
-static VALUE
-scomplex_pow_self(VALUE self, VALUE other)
-{
-    ndfunc_arg_in_t ain[2] = {{cT,0},{cT,0}};
-    ndfunc_arg_in_t ain_i[2] = {{cT,0},{numo_cInt32,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_pow, STRIDE_LOOP, 2, 1, ain, aout };
-    ndfunc_t ndf_i = { iter_scomplex_pow_int32, STRIDE_LOOP, 2, 1, ain_i, aout };
+static VALUE scomplex_pow_self(VALUE self, VALUE other) {
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
+  ndfunc_arg_in_t ain_i[2] = {{cT, 0}, {numo_cInt32, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_pow, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_t ndf_i = {iter_scomplex_pow_int32, STRIDE_LOOP, 2, 1, ain_i, aout};
 
-    // fixme : use na.integer?
-    if (FIXNUM_P(other) || rb_obj_is_kind_of(other,numo_cInt32)) {
-        return na_ndloop(&ndf_i, 2, self, other);
-    } else {
-        return na_ndloop(&ndf, 2, self, other);
-    }
+  // fixme : use na.integer?
+  if (FIXNUM_P(other) || rb_obj_is_kind_of(other, numo_cInt32)) {
+    return na_ndloop(&ndf_i, 2, self, other);
+  } else {
+    return na_ndloop(&ndf, 2, self, other);
+  }
 }
 
 /*
@@ -2728,90 +2478,80 @@ scomplex_pow_self(VALUE self, VALUE other)
   @param [Numo::NArray,Numeric] other
   @return [Numo::NArray] self to the other-th power.
 */
-static VALUE
-scomplex_pow(VALUE self, VALUE other)
-{
-    
+static VALUE scomplex_pow(VALUE self, VALUE other) {
+
 #line 69 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/pow.c"
-    VALUE klass, v;
-    klass = na_upcast(rb_obj_class(self),rb_obj_class(other));
-    if (klass==cT) {
-        return scomplex_pow_self(self,other);
-    } else {
-        v = rb_funcall(klass, id_cast, 1, self);
-        return rb_funcall(v, id_pow, 1, other);
-    }
-    
+  VALUE klass, v;
+  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
+  if (klass == cT) {
+    return scomplex_pow_self(self, other);
+  } else {
+    v = rb_funcall(klass, id_cast, 1, self);
+    return rb_funcall(v, id_pow, 1, other);
+  }
 }
 
-
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
-static void
-iter_scomplex_minus(na_loop_t *const lp)
-{
-    size_t  i, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_minus(na_loop_t* const lp) {
+  size_t i, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_minus(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_minus(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_minus(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_minus(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    for (i=0; i<n; i++) {
-                        ((dtype*)p2)[i] = m_minus(((dtype*)p1)[i]);
-                    }
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_minus(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_minus(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_minus(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_minus(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          for (i = 0; i < n; i++) {
+            ((dtype*)p2)[i] = m_minus(((dtype*)p1)[i]);
+          }
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_minus(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_minus(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -2819,83 +2559,75 @@ iter_scomplex_minus(na_loop_t *const lp)
   @overload -@
   @return [Numo::SComplex] minus of self.
 */
-static VALUE
-scomplex_minus(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = {iter_scomplex_minus, FULL_LOOP, 1,1, ain,aout};
+static VALUE scomplex_minus(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_minus, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
-static void
-iter_scomplex_reciprocal(na_loop_t *const lp)
-{
-    size_t  i, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_reciprocal(na_loop_t* const lp) {
+  size_t i, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_reciprocal(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_reciprocal(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_reciprocal(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_reciprocal(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    for (i=0; i<n; i++) {
-                        ((dtype*)p2)[i] = m_reciprocal(((dtype*)p1)[i]);
-                    }
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_reciprocal(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_reciprocal(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_reciprocal(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_reciprocal(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          for (i = 0; i < n; i++) {
+            ((dtype*)p2)[i] = m_reciprocal(((dtype*)p1)[i]);
+          }
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_reciprocal(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_reciprocal(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -2903,83 +2635,75 @@ iter_scomplex_reciprocal(na_loop_t *const lp)
   @overload reciprocal
   @return [Numo::SComplex] reciprocal of self.
 */
-static VALUE
-scomplex_reciprocal(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = {iter_scomplex_reciprocal, FULL_LOOP, 1,1, ain,aout};
+static VALUE scomplex_reciprocal(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_reciprocal, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
-static void
-iter_scomplex_sign(na_loop_t *const lp)
-{
-    size_t  i, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_sign(na_loop_t* const lp) {
+  size_t i, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_sign(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_sign(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_sign(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_sign(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    for (i=0; i<n; i++) {
-                        ((dtype*)p2)[i] = m_sign(((dtype*)p1)[i]);
-                    }
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_sign(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_sign(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_sign(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_sign(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          for (i = 0; i < n; i++) {
+            ((dtype*)p2)[i] = m_sign(((dtype*)p1)[i]);
+          }
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_sign(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_sign(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -2987,83 +2711,75 @@ iter_scomplex_sign(na_loop_t *const lp)
   @overload sign
   @return [Numo::SComplex] sign of self.
 */
-static VALUE
-scomplex_sign(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = {iter_scomplex_sign, FULL_LOOP, 1,1, ain,aout};
+static VALUE scomplex_sign(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_sign, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
-static void
-iter_scomplex_square(na_loop_t *const lp)
-{
-    size_t  i, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_square(na_loop_t* const lp) {
+  size_t i, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_square(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_square(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_square(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_square(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    for (i=0; i<n; i++) {
-                        ((dtype*)p2)[i] = m_square(((dtype*)p1)[i]);
-                    }
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_square(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_square(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_square(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_square(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          for (i = 0; i < n; i++) {
+            ((dtype*)p2)[i] = m_square(((dtype*)p1)[i]);
+          }
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_square(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_square(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -3071,83 +2787,75 @@ iter_scomplex_square(na_loop_t *const lp)
   @overload square
   @return [Numo::SComplex] square of self.
 */
-static VALUE
-scomplex_square(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = {iter_scomplex_square, FULL_LOOP, 1,1, ain,aout};
+static VALUE scomplex_square(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_square, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
-static void
-iter_scomplex_conj(na_loop_t *const lp)
-{
-    size_t  i, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_conj(na_loop_t* const lp) {
+  size_t i, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_conj(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_conj(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_conj(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_conj(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    for (i=0; i<n; i++) {
-                        ((dtype*)p2)[i] = m_conj(((dtype*)p1)[i]);
-                    }
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_conj(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_conj(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_conj(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_conj(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          for (i = 0; i < n; i++) {
+            ((dtype*)p2)[i] = m_conj(((dtype*)p1)[i]);
+          }
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_conj(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_conj(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -3155,83 +2863,75 @@ iter_scomplex_conj(na_loop_t *const lp)
   @overload conj
   @return [Numo::SComplex] conj of self.
 */
-static VALUE
-scomplex_conj(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = {iter_scomplex_conj, FULL_LOOP, 1,1, ain,aout};
+static VALUE scomplex_conj(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_conj, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
-static void
-iter_scomplex_im(na_loop_t *const lp)
-{
-    size_t  i, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_im(na_loop_t* const lp) {
+  size_t i, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_im(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_im(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_im(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_im(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    for (i=0; i<n; i++) {
-                        ((dtype*)p2)[i] = m_im(((dtype*)p1)[i]);
-                    }
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_im(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_im(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_im(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_im(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          for (i = 0; i < n; i++) {
+            ((dtype*)p2)[i] = m_im(((dtype*)p1)[i]);
+          }
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_im(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_im(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -3239,354 +2939,315 @@ iter_scomplex_im(na_loop_t *const lp)
   @overload im
   @return [Numo::SComplex] im of self.
 */
-static VALUE
-scomplex_im(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = {iter_scomplex_im, FULL_LOOP, 1,1, ain,aout};
+static VALUE scomplex_im(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_im, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary2.c"
-static void
-iter_scomplex_real(na_loop_t *const lp)
-{
-    size_t  i;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
-    rtype y;
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx1) {
-        if (idx2) {
-            for (; i--;) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                y = m_real(x);
-                SET_DATA_INDEX(p2,idx2,rtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                y = m_real(x);
-                SET_DATA_STRIDE(p2,s2,rtype,y);
-            }
-        }
+static void iter_scomplex_real(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
+  rtype y;
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx1) {
+    if (idx2) {
+      for (; i--;) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        y = m_real(x);
+        SET_DATA_INDEX(p2, idx2, rtype, y);
+      }
     } else {
-        if (idx2) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                y = m_real(x);
-                SET_DATA_INDEX(p2,idx2,rtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                y = m_real(x);
-                SET_DATA_STRIDE(p2,s2,rtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        y = m_real(x);
+        SET_DATA_STRIDE(p2, s2, rtype, y);
+      }
     }
+  } else {
+    if (idx2) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        y = m_real(x);
+        SET_DATA_INDEX(p2, idx2, rtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        y = m_real(x);
+        SET_DATA_STRIDE(p2, s2, rtype, y);
+      }
+    }
+  }
 }
-
 
 /*
   real of self.
   @overload real
   @return [Numo::SFloat] real of self.
 */
-static VALUE
-scomplex_real(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cRT,0}};
-    ndfunc_t ndf = { iter_scomplex_real, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_real(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
+  ndfunc_t ndf = {iter_scomplex_real, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary2.c"
-static void
-iter_scomplex_imag(na_loop_t *const lp)
-{
-    size_t  i;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
-    rtype y;
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx1) {
-        if (idx2) {
-            for (; i--;) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                y = m_imag(x);
-                SET_DATA_INDEX(p2,idx2,rtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                y = m_imag(x);
-                SET_DATA_STRIDE(p2,s2,rtype,y);
-            }
-        }
+static void iter_scomplex_imag(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
+  rtype y;
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx1) {
+    if (idx2) {
+      for (; i--;) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        y = m_imag(x);
+        SET_DATA_INDEX(p2, idx2, rtype, y);
+      }
     } else {
-        if (idx2) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                y = m_imag(x);
-                SET_DATA_INDEX(p2,idx2,rtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                y = m_imag(x);
-                SET_DATA_STRIDE(p2,s2,rtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        y = m_imag(x);
+        SET_DATA_STRIDE(p2, s2, rtype, y);
+      }
     }
+  } else {
+    if (idx2) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        y = m_imag(x);
+        SET_DATA_INDEX(p2, idx2, rtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        y = m_imag(x);
+        SET_DATA_STRIDE(p2, s2, rtype, y);
+      }
+    }
+  }
 }
-
 
 /*
   imag of self.
   @overload imag
   @return [Numo::SFloat] imag of self.
 */
-static VALUE
-scomplex_imag(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cRT,0}};
-    ndfunc_t ndf = { iter_scomplex_imag, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_imag(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
+  ndfunc_t ndf = {iter_scomplex_imag, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary2.c"
-static void
-iter_scomplex_arg(na_loop_t *const lp)
-{
-    size_t  i;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
-    rtype y;
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx1) {
-        if (idx2) {
-            for (; i--;) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                y = m_arg(x);
-                SET_DATA_INDEX(p2,idx2,rtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                y = m_arg(x);
-                SET_DATA_STRIDE(p2,s2,rtype,y);
-            }
-        }
+static void iter_scomplex_arg(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
+  rtype y;
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx1) {
+    if (idx2) {
+      for (; i--;) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        y = m_arg(x);
+        SET_DATA_INDEX(p2, idx2, rtype, y);
+      }
     } else {
-        if (idx2) {
-            for (; i--;) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                y = m_arg(x);
-                SET_DATA_INDEX(p2,idx2,rtype,y);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                y = m_arg(x);
-                SET_DATA_STRIDE(p2,s2,rtype,y);
-            }
-        }
+      for (; i--;) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        y = m_arg(x);
+        SET_DATA_STRIDE(p2, s2, rtype, y);
+      }
     }
+  } else {
+    if (idx2) {
+      for (; i--;) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        y = m_arg(x);
+        SET_DATA_INDEX(p2, idx2, rtype, y);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        y = m_arg(x);
+        SET_DATA_STRIDE(p2, s2, rtype, y);
+      }
+    }
+  }
 }
-
 
 /*
   arg of self.
   @overload arg
   @return [Numo::SFloat] arg of self.
 */
-static VALUE
-scomplex_arg(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cRT,0}};
-    ndfunc_t ndf = { iter_scomplex_arg, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_arg(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
+  ndfunc_t ndf = {iter_scomplex_arg, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
-
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/set2.c"
-static void
-iter_scomplex_set_imag(na_loop_t *const lp)
-{
-    size_t  i;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
-    rtype y;
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx1) {
-        if (idx2) {
-            for (; i--;) {
-                GET_DATA(p1+*idx1,dtype,x);
-                GET_DATA_INDEX(p2,idx2,rtype,y);
-                x = m_set_imag(x,y);
-                SET_DATA_INDEX(p1,idx1,dtype,x);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA(p1+*idx1,dtype,x);
-                GET_DATA_STRIDE(p2,s2,rtype,y);
-                x = m_set_imag(x,y);
-                SET_DATA_INDEX(p1,idx1,dtype,x);
-            }
-        }
+static void iter_scomplex_set_imag(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
+  rtype y;
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx1) {
+    if (idx2) {
+      for (; i--;) {
+        GET_DATA(p1 + *idx1, dtype, x);
+        GET_DATA_INDEX(p2, idx2, rtype, y);
+        x = m_set_imag(x, y);
+        SET_DATA_INDEX(p1, idx1, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (; i--;) {
-                GET_DATA(p1,dtype,x);
-                GET_DATA_INDEX(p2,idx2,rtype,y);
-                x = m_set_imag(x,y);
-                SET_DATA_STRIDE(p1,s1,dtype,x);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA(p1,dtype,x);
-                GET_DATA_STRIDE(p2,s2,rtype,y);
-                x = m_set_imag(x,y);
-                SET_DATA_STRIDE(p1,s1,dtype,x);
-            }
-        }
+      for (; i--;) {
+        GET_DATA(p1 + *idx1, dtype, x);
+        GET_DATA_STRIDE(p2, s2, rtype, y);
+        x = m_set_imag(x, y);
+        SET_DATA_INDEX(p1, idx1, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (; i--;) {
+        GET_DATA(p1, dtype, x);
+        GET_DATA_INDEX(p2, idx2, rtype, y);
+        x = m_set_imag(x, y);
+        SET_DATA_STRIDE(p1, s1, dtype, x);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA(p1, dtype, x);
+        GET_DATA_STRIDE(p2, s2, rtype, y);
+        x = m_set_imag(x, y);
+        SET_DATA_STRIDE(p1, s1, dtype, x);
+      }
+    }
+  }
 }
 
-static VALUE
-scomplex_set_imag(VALUE self, VALUE a1)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{cRT,0}};
-    ndfunc_t ndf = { iter_scomplex_set_imag, FULL_LOOP, 2, 0, ain, 0 };
+static VALUE scomplex_set_imag(VALUE self, VALUE a1) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {cRT, 0}};
+  ndfunc_t ndf = {iter_scomplex_set_imag, FULL_LOOP, 2, 0, ain, 0};
 
-    na_ndloop(&ndf, 2, self, a1);
-    return a1;
+  na_ndloop(&ndf, 2, self, a1);
+  return a1;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/set2.c"
-static void
-iter_scomplex_set_real(na_loop_t *const lp)
-{
-    size_t  i;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
-    rtype y;
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-    if (idx1) {
-        if (idx2) {
-            for (; i--;) {
-                GET_DATA(p1+*idx1,dtype,x);
-                GET_DATA_INDEX(p2,idx2,rtype,y);
-                x = m_set_real(x,y);
-                SET_DATA_INDEX(p1,idx1,dtype,x);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA(p1+*idx1,dtype,x);
-                GET_DATA_STRIDE(p2,s2,rtype,y);
-                x = m_set_real(x,y);
-                SET_DATA_INDEX(p1,idx1,dtype,x);
-            }
-        }
+static void iter_scomplex_set_real(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
+  rtype y;
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  if (idx1) {
+    if (idx2) {
+      for (; i--;) {
+        GET_DATA(p1 + *idx1, dtype, x);
+        GET_DATA_INDEX(p2, idx2, rtype, y);
+        x = m_set_real(x, y);
+        SET_DATA_INDEX(p1, idx1, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (; i--;) {
-                GET_DATA(p1,dtype,x);
-                GET_DATA_INDEX(p2,idx2,rtype,y);
-                x = m_set_real(x,y);
-                SET_DATA_STRIDE(p1,s1,dtype,x);
-            }
-        } else {
-            for (; i--;) {
-                GET_DATA(p1,dtype,x);
-                GET_DATA_STRIDE(p2,s2,rtype,y);
-                x = m_set_real(x,y);
-                SET_DATA_STRIDE(p1,s1,dtype,x);
-            }
-        }
+      for (; i--;) {
+        GET_DATA(p1 + *idx1, dtype, x);
+        GET_DATA_STRIDE(p2, s2, rtype, y);
+        x = m_set_real(x, y);
+        SET_DATA_INDEX(p1, idx1, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (; i--;) {
+        GET_DATA(p1, dtype, x);
+        GET_DATA_INDEX(p2, idx2, rtype, y);
+        x = m_set_real(x, y);
+        SET_DATA_STRIDE(p1, s1, dtype, x);
+      }
+    } else {
+      for (; i--;) {
+        GET_DATA(p1, dtype, x);
+        GET_DATA_STRIDE(p2, s2, rtype, y);
+        x = m_set_real(x, y);
+        SET_DATA_STRIDE(p1, s1, dtype, x);
+      }
+    }
+  }
 }
 
-static VALUE
-scomplex_set_real(VALUE self, VALUE a1)
-{
-    ndfunc_arg_in_t ain[2] = {{OVERWRITE,0},{cRT,0}};
-    ndfunc_t ndf = { iter_scomplex_set_real, FULL_LOOP, 2, 0, ain, 0 };
+static VALUE scomplex_set_real(VALUE self, VALUE a1) {
+  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {cRT, 0}};
+  ndfunc_t ndf = {iter_scomplex_set_real, FULL_LOOP, 2, 0, ain, 0};
 
-    na_ndloop(&ndf, 2, self, a1);
-    return a1;
+  na_ndloop(&ndf, 2, self, a1);
+  return a1;
 }
-
-
-
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_binary.c"
-static void
-iter_scomplex_eq(na_loop_t *const lp)
-{
-    size_t  i;
-    char   *p1, *p2;
-    BIT_DIGIT *a3;
-    size_t  p3;
-    ssize_t s1, s2, s3;
-    dtype   x, y;
-    BIT_DIGIT b;
-    INIT_COUNTER(lp, i);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    INIT_PTR_BIT(lp, 2, a3, p3, s3);
-    for (; i--;) {
-        GET_DATA_STRIDE(p1,s1,dtype,x);
-        GET_DATA_STRIDE(p2,s2,dtype,y);
-        b = (m_eq(x,y)) ? 1:0;
-        STORE_BIT(a3,p3,b);
-        p3+=s3;
-    }
+static void iter_scomplex_eq(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2;
+  BIT_DIGIT* a3;
+  size_t p3;
+  ssize_t s1, s2, s3;
+  dtype x, y;
+  BIT_DIGIT b;
+  INIT_COUNTER(lp, i);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  INIT_PTR_BIT(lp, 2, a3, p3, s3);
+  for (; i--;) {
+    GET_DATA_STRIDE(p1, s1, dtype, x);
+    GET_DATA_STRIDE(p2, s2, dtype, y);
+    b = (m_eq(x, y)) ? 1 : 0;
+    STORE_BIT(a3, p3, b);
+    p3 += s3;
+  }
 }
 
-static VALUE
-scomplex_eq_self(VALUE self, VALUE other)
-{
-    ndfunc_arg_in_t ain[2] = {{cT,0},{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{numo_cBit,0}};
-    ndfunc_t ndf = { iter_scomplex_eq, STRIDE_LOOP, 2, 1, ain, aout };
+static VALUE scomplex_eq_self(VALUE self, VALUE other) {
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
+  ndfunc_t ndf = {iter_scomplex_eq, STRIDE_LOOP, 2, 1, ain, aout};
 
-    return na_ndloop(&ndf, 2, self, other);
+  return na_ndloop(&ndf, 2, self, other);
 }
 
 /*
@@ -3595,55 +3256,47 @@ scomplex_eq_self(VALUE self, VALUE other)
   @param [Numo::NArray,Numeric] other
   @return [Numo::Bit] result of self eq other.
 */
-static VALUE
-scomplex_eq(VALUE self, VALUE other)
-{
-    
-#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_binary.c"
-    VALUE klass, v;
-    klass = na_upcast(rb_obj_class(self),rb_obj_class(other));
-    if (klass==cT) {
-        return scomplex_eq_self(self, other);
-    } else {
-        v = rb_funcall(klass, id_cast, 1, self);
-        return rb_funcall(v, id_eq, 1, other);
-    }
-    
-}
+static VALUE scomplex_eq(VALUE self, VALUE other) {
 
+#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_binary.c"
+  VALUE klass, v;
+  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
+  if (klass == cT) {
+    return scomplex_eq_self(self, other);
+  } else {
+    v = rb_funcall(klass, id_cast, 1, self);
+    return rb_funcall(v, id_eq, 1, other);
+  }
+}
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_binary.c"
-static void
-iter_scomplex_ne(na_loop_t *const lp)
-{
-    size_t  i;
-    char   *p1, *p2;
-    BIT_DIGIT *a3;
-    size_t  p3;
-    ssize_t s1, s2, s3;
-    dtype   x, y;
-    BIT_DIGIT b;
-    INIT_COUNTER(lp, i);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    INIT_PTR_BIT(lp, 2, a3, p3, s3);
-    for (; i--;) {
-        GET_DATA_STRIDE(p1,s1,dtype,x);
-        GET_DATA_STRIDE(p2,s2,dtype,y);
-        b = (m_ne(x,y)) ? 1:0;
-        STORE_BIT(a3,p3,b);
-        p3+=s3;
-    }
+static void iter_scomplex_ne(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2;
+  BIT_DIGIT* a3;
+  size_t p3;
+  ssize_t s1, s2, s3;
+  dtype x, y;
+  BIT_DIGIT b;
+  INIT_COUNTER(lp, i);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  INIT_PTR_BIT(lp, 2, a3, p3, s3);
+  for (; i--;) {
+    GET_DATA_STRIDE(p1, s1, dtype, x);
+    GET_DATA_STRIDE(p2, s2, dtype, y);
+    b = (m_ne(x, y)) ? 1 : 0;
+    STORE_BIT(a3, p3, b);
+    p3 += s3;
+  }
 }
 
-static VALUE
-scomplex_ne_self(VALUE self, VALUE other)
-{
-    ndfunc_arg_in_t ain[2] = {{cT,0},{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{numo_cBit,0}};
-    ndfunc_t ndf = { iter_scomplex_ne, STRIDE_LOOP, 2, 1, ain, aout };
+static VALUE scomplex_ne_self(VALUE self, VALUE other) {
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
+  ndfunc_t ndf = {iter_scomplex_ne, STRIDE_LOOP, 2, 1, ain, aout};
 
-    return na_ndloop(&ndf, 2, self, other);
+  return na_ndloop(&ndf, 2, self, other);
 }
 
 /*
@@ -3652,55 +3305,47 @@ scomplex_ne_self(VALUE self, VALUE other)
   @param [Numo::NArray,Numeric] other
   @return [Numo::Bit] result of self ne other.
 */
-static VALUE
-scomplex_ne(VALUE self, VALUE other)
-{
-    
-#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_binary.c"
-    VALUE klass, v;
-    klass = na_upcast(rb_obj_class(self),rb_obj_class(other));
-    if (klass==cT) {
-        return scomplex_ne_self(self, other);
-    } else {
-        v = rb_funcall(klass, id_cast, 1, self);
-        return rb_funcall(v, id_ne, 1, other);
-    }
-    
-}
+static VALUE scomplex_ne(VALUE self, VALUE other) {
 
+#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_binary.c"
+  VALUE klass, v;
+  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
+  if (klass == cT) {
+    return scomplex_ne_self(self, other);
+  } else {
+    v = rb_funcall(klass, id_cast, 1, self);
+    return rb_funcall(v, id_ne, 1, other);
+  }
+}
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_binary.c"
-static void
-iter_scomplex_nearly_eq(na_loop_t *const lp)
-{
-    size_t  i;
-    char   *p1, *p2;
-    BIT_DIGIT *a3;
-    size_t  p3;
-    ssize_t s1, s2, s3;
-    dtype   x, y;
-    BIT_DIGIT b;
-    INIT_COUNTER(lp, i);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    INIT_PTR_BIT(lp, 2, a3, p3, s3);
-    for (; i--;) {
-        GET_DATA_STRIDE(p1,s1,dtype,x);
-        GET_DATA_STRIDE(p2,s2,dtype,y);
-        b = (m_nearly_eq(x,y)) ? 1:0;
-        STORE_BIT(a3,p3,b);
-        p3+=s3;
-    }
+static void iter_scomplex_nearly_eq(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2;
+  BIT_DIGIT* a3;
+  size_t p3;
+  ssize_t s1, s2, s3;
+  dtype x, y;
+  BIT_DIGIT b;
+  INIT_COUNTER(lp, i);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  INIT_PTR_BIT(lp, 2, a3, p3, s3);
+  for (; i--;) {
+    GET_DATA_STRIDE(p1, s1, dtype, x);
+    GET_DATA_STRIDE(p2, s2, dtype, y);
+    b = (m_nearly_eq(x, y)) ? 1 : 0;
+    STORE_BIT(a3, p3, b);
+    p3 += s3;
+  }
 }
 
-static VALUE
-scomplex_nearly_eq_self(VALUE self, VALUE other)
-{
-    ndfunc_arg_in_t ain[2] = {{cT,0},{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{numo_cBit,0}};
-    ndfunc_t ndf = { iter_scomplex_nearly_eq, STRIDE_LOOP, 2, 1, ain, aout };
+static VALUE scomplex_nearly_eq_self(VALUE self, VALUE other) {
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
+  ndfunc_t ndf = {iter_scomplex_nearly_eq, STRIDE_LOOP, 2, 1, ain, aout};
 
-    return na_ndloop(&ndf, 2, self, other);
+  return na_ndloop(&ndf, 2, self, other);
 }
 
 /*
@@ -3709,90 +3354,80 @@ scomplex_nearly_eq_self(VALUE self, VALUE other)
   @param [Numo::NArray,Numeric] other
   @return [Numo::Bit] result of self nearly_eq other.
 */
-static VALUE
-scomplex_nearly_eq(VALUE self, VALUE other)
-{
-    
+static VALUE scomplex_nearly_eq(VALUE self, VALUE other) {
+
 #line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_binary.c"
-    VALUE klass, v;
-    klass = na_upcast(rb_obj_class(self),rb_obj_class(other));
-    if (klass==cT) {
-        return scomplex_nearly_eq_self(self, other);
-    } else {
-        v = rb_funcall(klass, id_cast, 1, self);
-        return rb_funcall(v, id_nearly_eq, 1, other);
-    }
-    
+  VALUE klass, v;
+  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
+  if (klass == cT) {
+    return scomplex_nearly_eq_self(self, other);
+  } else {
+    v = rb_funcall(klass, id_cast, 1, self);
+    return rb_funcall(v, id_nearly_eq, 1, other);
+  }
 }
 
-
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
-static void
-iter_scomplex_floor(na_loop_t *const lp)
-{
-    size_t  i, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_floor(na_loop_t* const lp) {
+  size_t i, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_floor(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_floor(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_floor(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_floor(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    for (i=0; i<n; i++) {
-                        ((dtype*)p2)[i] = m_floor(((dtype*)p1)[i]);
-                    }
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_floor(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_floor(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_floor(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_floor(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          for (i = 0; i < n; i++) {
+            ((dtype*)p2)[i] = m_floor(((dtype*)p1)[i]);
+          }
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_floor(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_floor(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -3800,83 +3435,75 @@ iter_scomplex_floor(na_loop_t *const lp)
   @overload floor
   @return [Numo::SComplex] floor of self.
 */
-static VALUE
-scomplex_floor(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = {iter_scomplex_floor, FULL_LOOP, 1,1, ain,aout};
+static VALUE scomplex_floor(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_floor, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
-static void
-iter_scomplex_round(na_loop_t *const lp)
-{
-    size_t  i, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_round(na_loop_t* const lp) {
+  size_t i, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_round(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_round(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_round(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_round(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    for (i=0; i<n; i++) {
-                        ((dtype*)p2)[i] = m_round(((dtype*)p1)[i]);
-                    }
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_round(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_round(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_round(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_round(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          for (i = 0; i < n; i++) {
+            ((dtype*)p2)[i] = m_round(((dtype*)p1)[i]);
+          }
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_round(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_round(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -3884,83 +3511,75 @@ iter_scomplex_round(na_loop_t *const lp)
   @overload round
   @return [Numo::SComplex] round of self.
 */
-static VALUE
-scomplex_round(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = {iter_scomplex_round, FULL_LOOP, 1,1, ain,aout};
+static VALUE scomplex_round(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_round, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
-static void
-iter_scomplex_ceil(na_loop_t *const lp)
-{
-    size_t  i, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_ceil(na_loop_t* const lp) {
+  size_t i, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_ceil(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_ceil(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_ceil(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_ceil(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    for (i=0; i<n; i++) {
-                        ((dtype*)p2)[i] = m_ceil(((dtype*)p1)[i]);
-                    }
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_ceil(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_ceil(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_ceil(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_ceil(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          for (i = 0; i < n; i++) {
+            ((dtype*)p2)[i] = m_ceil(((dtype*)p1)[i]);
+          }
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_ceil(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_ceil(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -3968,83 +3587,75 @@ iter_scomplex_ceil(na_loop_t *const lp)
   @overload ceil
   @return [Numo::SComplex] ceil of self.
 */
-static VALUE
-scomplex_ceil(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = {iter_scomplex_ceil, FULL_LOOP, 1,1, ain,aout};
+static VALUE scomplex_ceil(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_ceil, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
-static void
-iter_scomplex_trunc(na_loop_t *const lp)
-{
-    size_t  i, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_trunc(na_loop_t* const lp) {
+  size_t i, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_trunc(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_trunc(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_trunc(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_trunc(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    for (i=0; i<n; i++) {
-                        ((dtype*)p2)[i] = m_trunc(((dtype*)p1)[i]);
-                    }
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_trunc(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_trunc(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_trunc(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_trunc(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          for (i = 0; i < n; i++) {
+            ((dtype*)p2)[i] = m_trunc(((dtype*)p1)[i]);
+          }
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_trunc(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_trunc(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -4052,83 +3663,75 @@ iter_scomplex_trunc(na_loop_t *const lp)
   @overload trunc
   @return [Numo::SComplex] trunc of self.
 */
-static VALUE
-scomplex_trunc(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = {iter_scomplex_trunc, FULL_LOOP, 1,1, ain,aout};
+static VALUE scomplex_trunc(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_trunc, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
-static void
-iter_scomplex_rint(na_loop_t *const lp)
-{
-    size_t  i, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_rint(na_loop_t* const lp) {
+  size_t i, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_rint(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_rint(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_rint(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_rint(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    for (i=0; i<n; i++) {
-                        ((dtype*)p2)[i] = m_rint(((dtype*)p1)[i]);
-                    }
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_rint(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_rint(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_rint(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_rint(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          for (i = 0; i < n; i++) {
+            ((dtype*)p2)[i] = m_rint(((dtype*)p1)[i]);
+          }
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_rint(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_rint(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -4136,130 +3739,117 @@ iter_scomplex_rint(na_loop_t *const lp)
   @overload rint
   @return [Numo::SComplex] rint of self.
 */
-static VALUE
-scomplex_rint(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = {iter_scomplex_rint, FULL_LOOP, 1,1, ain,aout};
+static VALUE scomplex_rint(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_rint, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
 #line 8 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-#define check_intdivzero(y) {}
+#define check_intdivzero(y)                                                                                                    \
+  {}
 
 #line 11 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-static void
-iter_scomplex_copysign(na_loop_t *const lp)
-{
-    size_t   i=0;
-    size_t   n;
-    char    *p1, *p2, *p3;
-    ssize_t  s1, s2, s3;
+static void iter_scomplex_copysign(na_loop_t* const lp) {
+  size_t i = 0;
+  size_t n;
+  char *p1, *p2, *p3;
+  ssize_t s1, s2, s3;
 
 #line 32 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    INIT_PTR(lp, 2, p3, s3);
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  INIT_PTR(lp, 2, p3, s3);
 
-    //
-    if (is_aligned(p1,sizeof(dtype)) &&
-        is_aligned(p2,sizeof(dtype)) &&
-        is_aligned(p3,sizeof(dtype)) ) {
+  //
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
 
-        if (s1 == sizeof(dtype) &&
-            s2 == sizeof(dtype) &&
-            s3 == sizeof(dtype) ) {
+    if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
 #line 84 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-                if (p1 == p3) { // inplace case
-                    for (; i<n; i++) {
-                        check_intdivzero(((dtype*)p2)[i]);
-                        ((dtype*)p1)[i] = m_copysign(((dtype*)p1)[i],((dtype*)p2)[i]);
-                    }
-                } else {
-                    for (; i<n; i++) {
-                        check_intdivzero(((dtype*)p2)[i]);
-                        ((dtype*)p3)[i] = m_copysign(((dtype*)p1)[i],((dtype*)p2)[i]);
-                    }
-                }
+      if (p1 == p3) { // inplace case
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
+          ((dtype*)p1)[i] = m_copysign(((dtype*)p1)[i], ((dtype*)p2)[i]);
+        }
+      } else {
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
+          ((dtype*)p3)[i] = m_copysign(((dtype*)p1)[i], ((dtype*)p2)[i]);
+        }
+      }
 #line 98 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-            return;
-        }
+      return;
+    }
 
-        if (is_aligned_step(s1,sizeof(dtype)) &&
-            is_aligned_step(s2,sizeof(dtype)) &&
-            is_aligned_step(s3,sizeof(dtype)) ) {
-            //
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+      //
 
-            if (s2 == 0){ // Broadcasting from scalar value.
-                check_intdivzero(*(dtype*)p2);
-                if (s1 == sizeof(dtype) &&
-                    s3 == sizeof(dtype) ) {
+      if (s2 == 0) { // Broadcasting from scalar value.
+        check_intdivzero(*(dtype*)p2);
+        if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
 #line 150 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-                        if (p1 == p3) { // inplace case
-                            for (; i<n; i++) {
-                                ((dtype*)p1)[i] = m_copysign(((dtype*)p1)[i],*(dtype*)p2);
-                            }
-                        } else {
-                            for (; i<n; i++) {
-                                ((dtype*)p3)[i] = m_copysign(((dtype*)p1)[i],*(dtype*)p2);
-                            }
-                        }
-#line 162 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-                } else {
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p3 = m_copysign(*(dtype*)p1,*(dtype*)p2);
-                        p1 += s1;
-                        p3 += s3;
-                    }
-                }
-            } else {
-                if (p1 == p3) { // inplace case
-                    for (i=0; i<n; i++) {
-                        check_intdivzero(*(dtype*)p2);
-                        *(dtype*)p1 = m_copysign(*(dtype*)p1,*(dtype*)p2);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                } else {
-                    for (i=0; i<n; i++) {
-                        check_intdivzero(*(dtype*)p2);
-                        *(dtype*)p3 = m_copysign(*(dtype*)p1,*(dtype*)p2);
-                        p1 += s1;
-                        p2 += s2;
-                        p3 += s3;
-                    }
-                }
+          if (p1 == p3) { // inplace case
+            for (; i < n; i++) {
+              ((dtype*)p1)[i] = m_copysign(((dtype*)p1)[i], *(dtype*)p2);
             }
-
-            return;
-            //
+          } else {
+            for (; i < n; i++) {
+              ((dtype*)p3)[i] = m_copysign(((dtype*)p1)[i], *(dtype*)p2);
+            }
+          }
+#line 162 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
+        } else {
+          for (i = 0; i < n; i++) {
+            *(dtype*)p3 = m_copysign(*(dtype*)p1, *(dtype*)p2);
+            p1 += s1;
+            p3 += s3;
+          }
         }
+      } else {
+        if (p1 == p3) { // inplace case
+          for (i = 0; i < n; i++) {
+            check_intdivzero(*(dtype*)p2);
+            *(dtype*)p1 = m_copysign(*(dtype*)p1, *(dtype*)p2);
+            p1 += s1;
+            p2 += s2;
+          }
+        } else {
+          for (i = 0; i < n; i++) {
+            check_intdivzero(*(dtype*)p2);
+            *(dtype*)p3 = m_copysign(*(dtype*)p1, *(dtype*)p2);
+            p1 += s1;
+            p2 += s2;
+            p3 += s3;
+          }
+        }
+      }
+
+      return;
+      //
     }
-    for (i=0; i<n; i++) {
-        dtype x, y, z;
-        GET_DATA_STRIDE(p1,s1,dtype,x);
-        GET_DATA_STRIDE(p2,s2,dtype,y);
-        check_intdivzero(y);
-        z = m_copysign(x,y);
-        SET_DATA_STRIDE(p3,s3,dtype,z);
-    }
-    //
+  }
+  for (i = 0; i < n; i++) {
+    dtype x, y, z;
+    GET_DATA_STRIDE(p1, s1, dtype, x);
+    GET_DATA_STRIDE(p2, s2, dtype, y);
+    check_intdivzero(y);
+    z = m_copysign(x, y);
+    SET_DATA_STRIDE(p3, s3, dtype, z);
+  }
+  //
 }
 #undef check_intdivzero
 
-static VALUE
-scomplex_copysign_self(VALUE self, VALUE other)
-{
-    ndfunc_arg_in_t ain[2] = {{cT,0},{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_copysign, STRIDE_LOOP, 2, 1, ain, aout };
+static VALUE scomplex_copysign_self(VALUE self, VALUE other) {
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_copysign, STRIDE_LOOP, 2, 1, ain, aout};
 
-    return na_ndloop(&ndf, 2, self, other);
+  return na_ndloop(&ndf, 2, self, other);
 }
 
 /*
@@ -4268,54 +3858,48 @@ scomplex_copysign_self(VALUE self, VALUE other)
   @param [Numo::NArray,Numeric] other
   @return [Numo::NArray] self copysign other
 */
-static VALUE
-scomplex_copysign(VALUE self, VALUE other)
-{
-    
-#line 226 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-    VALUE klass, v;
+static VALUE scomplex_copysign(VALUE self, VALUE other) {
 
-    klass = na_upcast(rb_obj_class(self),rb_obj_class(other));
-    if (klass==cT) {
-        return scomplex_copysign_self(self, other);
-    } else {
-        v = rb_funcall(klass, id_cast, 1, self);
-        return rb_funcall(v, id_copysign, 1, other);
-    }
-    
+#line 226 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
+  VALUE klass, v;
+
+  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
+  if (klass == cT) {
+    return scomplex_copysign_self(self, other);
+  } else {
+    v = rb_funcall(klass, id_cast, 1, self);
+    return rb_funcall(v, id_copysign, 1, other);
+  }
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_unary.c"
-static void
-iter_scomplex_isnan(na_loop_t *const lp)
-{
-    size_t    i;
-    char     *p1;
-    BIT_DIGIT *a2;
-    size_t    p2;
-    ssize_t   s1, s2;
-    size_t   *idx1;
-    dtype     x;
-    BIT_DIGIT b;
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_BIT(lp, 1, a2, p2, s2);
-    if (idx1) {
-        for (; i--;) {
-            GET_DATA_INDEX(p1,idx1,dtype,x);
-            b = (m_isnan(x)) ? 1:0;
-            STORE_BIT(a2,p2,b);
-            p2+=s2;
-        }
-    } else {
-        for (; i--;) {
-            GET_DATA_STRIDE(p1,s1,dtype,x);
-            b = (m_isnan(x)) ? 1:0;
-            STORE_BIT(a2,p2,b);
-            p2+=s2;
-        }
+static void iter_scomplex_isnan(na_loop_t* const lp) {
+  size_t i;
+  char* p1;
+  BIT_DIGIT* a2;
+  size_t p2;
+  ssize_t s1, s2;
+  size_t* idx1;
+  dtype x;
+  BIT_DIGIT b;
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_BIT(lp, 1, a2, p2, s2);
+  if (idx1) {
+    for (; i--;) {
+      GET_DATA_INDEX(p1, idx1, dtype, x);
+      b = (m_isnan(x)) ? 1 : 0;
+      STORE_BIT(a2, p2, b);
+      p2 += s2;
     }
+  } else {
+    for (; i--;) {
+      GET_DATA_STRIDE(p1, s1, dtype, x);
+      b = (m_isnan(x)) ? 1 : 0;
+      STORE_BIT(a2, p2, b);
+      p2 += s2;
+    }
+  }
 }
 
 /*
@@ -4323,47 +3907,42 @@ iter_scomplex_isnan(na_loop_t *const lp)
   @overload isnan
   @return [Numo::Bit] Condition of isnan.
 */
-static VALUE
-scomplex_isnan(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{numo_cBit,0}};
-    ndfunc_t ndf = { iter_scomplex_isnan, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_isnan(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
+  ndfunc_t ndf = {iter_scomplex_isnan, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_unary.c"
-static void
-iter_scomplex_isinf(na_loop_t *const lp)
-{
-    size_t    i;
-    char     *p1;
-    BIT_DIGIT *a2;
-    size_t    p2;
-    ssize_t   s1, s2;
-    size_t   *idx1;
-    dtype     x;
-    BIT_DIGIT b;
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_BIT(lp, 1, a2, p2, s2);
-    if (idx1) {
-        for (; i--;) {
-            GET_DATA_INDEX(p1,idx1,dtype,x);
-            b = (m_isinf(x)) ? 1:0;
-            STORE_BIT(a2,p2,b);
-            p2+=s2;
-        }
-    } else {
-        for (; i--;) {
-            GET_DATA_STRIDE(p1,s1,dtype,x);
-            b = (m_isinf(x)) ? 1:0;
-            STORE_BIT(a2,p2,b);
-            p2+=s2;
-        }
+static void iter_scomplex_isinf(na_loop_t* const lp) {
+  size_t i;
+  char* p1;
+  BIT_DIGIT* a2;
+  size_t p2;
+  ssize_t s1, s2;
+  size_t* idx1;
+  dtype x;
+  BIT_DIGIT b;
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_BIT(lp, 1, a2, p2, s2);
+  if (idx1) {
+    for (; i--;) {
+      GET_DATA_INDEX(p1, idx1, dtype, x);
+      b = (m_isinf(x)) ? 1 : 0;
+      STORE_BIT(a2, p2, b);
+      p2 += s2;
     }
+  } else {
+    for (; i--;) {
+      GET_DATA_STRIDE(p1, s1, dtype, x);
+      b = (m_isinf(x)) ? 1 : 0;
+      STORE_BIT(a2, p2, b);
+      p2 += s2;
+    }
+  }
 }
 
 /*
@@ -4371,47 +3950,42 @@ iter_scomplex_isinf(na_loop_t *const lp)
   @overload isinf
   @return [Numo::Bit] Condition of isinf.
 */
-static VALUE
-scomplex_isinf(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{numo_cBit,0}};
-    ndfunc_t ndf = { iter_scomplex_isinf, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_isinf(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
+  ndfunc_t ndf = {iter_scomplex_isinf, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_unary.c"
-static void
-iter_scomplex_isposinf(na_loop_t *const lp)
-{
-    size_t    i;
-    char     *p1;
-    BIT_DIGIT *a2;
-    size_t    p2;
-    ssize_t   s1, s2;
-    size_t   *idx1;
-    dtype     x;
-    BIT_DIGIT b;
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_BIT(lp, 1, a2, p2, s2);
-    if (idx1) {
-        for (; i--;) {
-            GET_DATA_INDEX(p1,idx1,dtype,x);
-            b = (m_isposinf(x)) ? 1:0;
-            STORE_BIT(a2,p2,b);
-            p2+=s2;
-        }
-    } else {
-        for (; i--;) {
-            GET_DATA_STRIDE(p1,s1,dtype,x);
-            b = (m_isposinf(x)) ? 1:0;
-            STORE_BIT(a2,p2,b);
-            p2+=s2;
-        }
+static void iter_scomplex_isposinf(na_loop_t* const lp) {
+  size_t i;
+  char* p1;
+  BIT_DIGIT* a2;
+  size_t p2;
+  ssize_t s1, s2;
+  size_t* idx1;
+  dtype x;
+  BIT_DIGIT b;
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_BIT(lp, 1, a2, p2, s2);
+  if (idx1) {
+    for (; i--;) {
+      GET_DATA_INDEX(p1, idx1, dtype, x);
+      b = (m_isposinf(x)) ? 1 : 0;
+      STORE_BIT(a2, p2, b);
+      p2 += s2;
     }
+  } else {
+    for (; i--;) {
+      GET_DATA_STRIDE(p1, s1, dtype, x);
+      b = (m_isposinf(x)) ? 1 : 0;
+      STORE_BIT(a2, p2, b);
+      p2 += s2;
+    }
+  }
 }
 
 /*
@@ -4419,47 +3993,42 @@ iter_scomplex_isposinf(na_loop_t *const lp)
   @overload isposinf
   @return [Numo::Bit] Condition of isposinf.
 */
-static VALUE
-scomplex_isposinf(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{numo_cBit,0}};
-    ndfunc_t ndf = { iter_scomplex_isposinf, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_isposinf(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
+  ndfunc_t ndf = {iter_scomplex_isposinf, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_unary.c"
-static void
-iter_scomplex_isneginf(na_loop_t *const lp)
-{
-    size_t    i;
-    char     *p1;
-    BIT_DIGIT *a2;
-    size_t    p2;
-    ssize_t   s1, s2;
-    size_t   *idx1;
-    dtype     x;
-    BIT_DIGIT b;
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_BIT(lp, 1, a2, p2, s2);
-    if (idx1) {
-        for (; i--;) {
-            GET_DATA_INDEX(p1,idx1,dtype,x);
-            b = (m_isneginf(x)) ? 1:0;
-            STORE_BIT(a2,p2,b);
-            p2+=s2;
-        }
-    } else {
-        for (; i--;) {
-            GET_DATA_STRIDE(p1,s1,dtype,x);
-            b = (m_isneginf(x)) ? 1:0;
-            STORE_BIT(a2,p2,b);
-            p2+=s2;
-        }
+static void iter_scomplex_isneginf(na_loop_t* const lp) {
+  size_t i;
+  char* p1;
+  BIT_DIGIT* a2;
+  size_t p2;
+  ssize_t s1, s2;
+  size_t* idx1;
+  dtype x;
+  BIT_DIGIT b;
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_BIT(lp, 1, a2, p2, s2);
+  if (idx1) {
+    for (; i--;) {
+      GET_DATA_INDEX(p1, idx1, dtype, x);
+      b = (m_isneginf(x)) ? 1 : 0;
+      STORE_BIT(a2, p2, b);
+      p2 += s2;
     }
+  } else {
+    for (; i--;) {
+      GET_DATA_STRIDE(p1, s1, dtype, x);
+      b = (m_isneginf(x)) ? 1 : 0;
+      STORE_BIT(a2, p2, b);
+      p2 += s2;
+    }
+  }
 }
 
 /*
@@ -4467,47 +4036,42 @@ iter_scomplex_isneginf(na_loop_t *const lp)
   @overload isneginf
   @return [Numo::Bit] Condition of isneginf.
 */
-static VALUE
-scomplex_isneginf(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{numo_cBit,0}};
-    ndfunc_t ndf = { iter_scomplex_isneginf, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_isneginf(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
+  ndfunc_t ndf = {iter_scomplex_isneginf, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_unary.c"
-static void
-iter_scomplex_isfinite(na_loop_t *const lp)
-{
-    size_t    i;
-    char     *p1;
-    BIT_DIGIT *a2;
-    size_t    p2;
-    ssize_t   s1, s2;
-    size_t   *idx1;
-    dtype     x;
-    BIT_DIGIT b;
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_BIT(lp, 1, a2, p2, s2);
-    if (idx1) {
-        for (; i--;) {
-            GET_DATA_INDEX(p1,idx1,dtype,x);
-            b = (m_isfinite(x)) ? 1:0;
-            STORE_BIT(a2,p2,b);
-            p2+=s2;
-        }
-    } else {
-        for (; i--;) {
-            GET_DATA_STRIDE(p1,s1,dtype,x);
-            b = (m_isfinite(x)) ? 1:0;
-            STORE_BIT(a2,p2,b);
-            p2+=s2;
-        }
+static void iter_scomplex_isfinite(na_loop_t* const lp) {
+  size_t i;
+  char* p1;
+  BIT_DIGIT* a2;
+  size_t p2;
+  ssize_t s1, s2;
+  size_t* idx1;
+  dtype x;
+  BIT_DIGIT b;
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_BIT(lp, 1, a2, p2, s2);
+  if (idx1) {
+    for (; i--;) {
+      GET_DATA_INDEX(p1, idx1, dtype, x);
+      b = (m_isfinite(x)) ? 1 : 0;
+      STORE_BIT(a2, p2, b);
+      p2 += s2;
     }
+  } else {
+    for (; i--;) {
+      GET_DATA_STRIDE(p1, s1, dtype, x);
+      b = (m_isfinite(x)) ? 1 : 0;
+      STORE_BIT(a2, p2, b);
+      p2 += s2;
+    }
+  }
 }
 
 /*
@@ -4515,45 +4079,38 @@ iter_scomplex_isfinite(na_loop_t *const lp)
   @overload isfinite
   @return [Numo::Bit] Condition of isfinite.
 */
-static VALUE
-scomplex_isfinite(VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{numo_cBit,0}};
-    ndfunc_t ndf = { iter_scomplex_isfinite, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_isfinite(VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
+  ndfunc_t ndf = {iter_scomplex_isfinite, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, self);
+  return na_ndloop(&ndf, 1, self);
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-static void
-iter_scomplex_sum(na_loop_t *const lp)
-{
-    size_t   n;
-    char    *p1, *p2;
-    ssize_t  s1;
+static void iter_scomplex_sum(na_loop_t* const lp) {
+  size_t n;
+  char *p1, *p2;
+  ssize_t s1;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
 
-    *(dtype*)p2 = f_sum(n,p1,s1);
+  *(dtype*)p2 = f_sum(n, p1, s1);
 }
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-static void
-iter_scomplex_sum_nan(na_loop_t *const lp)
-{
-    size_t   n;
-    char    *p1, *p2;
-    ssize_t  s1;
+static void iter_scomplex_sum_nan(na_loop_t* const lp) {
+  size_t n;
+  char *p1, *p2;
+  ssize_t s1;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
 
-    *(dtype*)p2 = f_sum_nan(n,p1,s1);
+  *(dtype*)p2 = f_sum_nan(n, p1, s1);
 }
 
 #line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
@@ -4565,54 +4122,46 @@ iter_scomplex_sum_nan(na_loop_t *const lp)
   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
   @return [Numo::SComplex] returns result of sum.
 */
-static VALUE
-scomplex_sum(int argc, VALUE *argv, VALUE self)
-{
-    VALUE v, reduce;
-    ndfunc_arg_in_t ain[2] = {{cT,0},{sym_reduce,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_sum, STRIDE_LOOP_NIP|NDF_FLAT_REDUCE, 2, 1, ain, aout };
+static VALUE scomplex_sum(int argc, VALUE* argv, VALUE self) {
+  VALUE v, reduce;
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_sum, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
 
-  
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_sum_nan);
-  
+  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_sum_nan);
+
 #line 42 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-    v =  na_ndloop(&ndf, 2, self, reduce);
-  
-    return scomplex_extract(v);
-  
+  v = na_ndloop(&ndf, 2, self, reduce);
+
+  return scomplex_extract(v);
+
 #line 48 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-static void
-iter_scomplex_prod(na_loop_t *const lp)
-{
-    size_t   n;
-    char    *p1, *p2;
-    ssize_t  s1;
+static void iter_scomplex_prod(na_loop_t* const lp) {
+  size_t n;
+  char *p1, *p2;
+  ssize_t s1;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
 
-    *(dtype*)p2 = f_prod(n,p1,s1);
+  *(dtype*)p2 = f_prod(n, p1, s1);
 }
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-static void
-iter_scomplex_prod_nan(na_loop_t *const lp)
-{
-    size_t   n;
-    char    *p1, *p2;
-    ssize_t  s1;
+static void iter_scomplex_prod_nan(na_loop_t* const lp) {
+  size_t n;
+  char *p1, *p2;
+  ssize_t s1;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
 
-    *(dtype*)p2 = f_prod_nan(n,p1,s1);
+  *(dtype*)p2 = f_prod_nan(n, p1, s1);
 }
 
 #line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
@@ -4624,54 +4173,46 @@ iter_scomplex_prod_nan(na_loop_t *const lp)
   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
   @return [Numo::SComplex] returns result of prod.
 */
-static VALUE
-scomplex_prod(int argc, VALUE *argv, VALUE self)
-{
-    VALUE v, reduce;
-    ndfunc_arg_in_t ain[2] = {{cT,0},{sym_reduce,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_prod, STRIDE_LOOP_NIP|NDF_FLAT_REDUCE, 2, 1, ain, aout };
+static VALUE scomplex_prod(int argc, VALUE* argv, VALUE self) {
+  VALUE v, reduce;
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_prod, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
 
-  
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_prod_nan);
-  
+  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_prod_nan);
+
 #line 42 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-    v =  na_ndloop(&ndf, 2, self, reduce);
-  
-    return scomplex_extract(v);
-  
+  v = na_ndloop(&ndf, 2, self, reduce);
+
+  return scomplex_extract(v);
+
 #line 48 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-static void
-iter_scomplex_mean(na_loop_t *const lp)
-{
-    size_t   n;
-    char    *p1, *p2;
-    ssize_t  s1;
+static void iter_scomplex_mean(na_loop_t* const lp) {
+  size_t n;
+  char *p1, *p2;
+  ssize_t s1;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
 
-    *(dtype*)p2 = f_mean(n,p1,s1);
+  *(dtype*)p2 = f_mean(n, p1, s1);
 }
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-static void
-iter_scomplex_mean_nan(na_loop_t *const lp)
-{
-    size_t   n;
-    char    *p1, *p2;
-    ssize_t  s1;
+static void iter_scomplex_mean_nan(na_loop_t* const lp) {
+  size_t n;
+  char *p1, *p2;
+  ssize_t s1;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
 
-    *(dtype*)p2 = f_mean_nan(n,p1,s1);
+  *(dtype*)p2 = f_mean_nan(n, p1, s1);
 }
 
 #line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
@@ -4683,54 +4224,46 @@ iter_scomplex_mean_nan(na_loop_t *const lp)
   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
   @return [Numo::SComplex] returns result of mean.
 */
-static VALUE
-scomplex_mean(int argc, VALUE *argv, VALUE self)
-{
-    VALUE v, reduce;
-    ndfunc_arg_in_t ain[2] = {{cT,0},{sym_reduce,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_mean, STRIDE_LOOP_NIP|NDF_FLAT_REDUCE, 2, 1, ain, aout };
+static VALUE scomplex_mean(int argc, VALUE* argv, VALUE self) {
+  VALUE v, reduce;
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_mean, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
 
-  
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_mean_nan);
-  
+  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_mean_nan);
+
 #line 42 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-    v =  na_ndloop(&ndf, 2, self, reduce);
-  
-    return scomplex_extract(v);
-  
+  v = na_ndloop(&ndf, 2, self, reduce);
+
+  return scomplex_extract(v);
+
 #line 48 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-static void
-iter_scomplex_stddev(na_loop_t *const lp)
-{
-    size_t   n;
-    char    *p1, *p2;
-    ssize_t  s1;
+static void iter_scomplex_stddev(na_loop_t* const lp) {
+  size_t n;
+  char *p1, *p2;
+  ssize_t s1;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
 
-    *(rtype*)p2 = f_stddev(n,p1,s1);
+  *(rtype*)p2 = f_stddev(n, p1, s1);
 }
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-static void
-iter_scomplex_stddev_nan(na_loop_t *const lp)
-{
-    size_t   n;
-    char    *p1, *p2;
-    ssize_t  s1;
+static void iter_scomplex_stddev_nan(na_loop_t* const lp) {
+  size_t n;
+  char *p1, *p2;
+  ssize_t s1;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
 
-    *(rtype*)p2 = f_stddev_nan(n,p1,s1);
+  *(rtype*)p2 = f_stddev_nan(n, p1, s1);
 }
 
 #line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
@@ -4742,54 +4275,45 @@ iter_scomplex_stddev_nan(na_loop_t *const lp)
   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
   @return [Numo::SComplex] returns result of stddev.
 */
-static VALUE
-scomplex_stddev(int argc, VALUE *argv, VALUE self)
-{
-    VALUE v, reduce;
-    ndfunc_arg_in_t ain[2] = {{cT,0},{sym_reduce,0}};
-    ndfunc_arg_out_t aout[1] = {{cRT,0}};
-    ndfunc_t ndf = { iter_scomplex_stddev, STRIDE_LOOP_NIP|NDF_FLAT_REDUCE, 2, 1, ain, aout };
+static VALUE scomplex_stddev(int argc, VALUE* argv, VALUE self) {
+  VALUE v, reduce;
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
+  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
+  ndfunc_t ndf = {iter_scomplex_stddev, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
 
-  
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_stddev_nan);
-  
+  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_stddev_nan);
+
 #line 42 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-    v =  na_ndloop(&ndf, 2, self, reduce);
-  
-#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-    return rb_funcall(v,rb_intern("extract"),0);
-  
-}
+  v = na_ndloop(&ndf, 2, self, reduce);
 
+#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
+  return rb_funcall(v, rb_intern("extract"), 0);
+}
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-static void
-iter_scomplex_var(na_loop_t *const lp)
-{
-    size_t   n;
-    char    *p1, *p2;
-    ssize_t  s1;
+static void iter_scomplex_var(na_loop_t* const lp) {
+  size_t n;
+  char *p1, *p2;
+  ssize_t s1;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
 
-    *(rtype*)p2 = f_var(n,p1,s1);
+  *(rtype*)p2 = f_var(n, p1, s1);
 }
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-static void
-iter_scomplex_var_nan(na_loop_t *const lp)
-{
-    size_t   n;
-    char    *p1, *p2;
-    ssize_t  s1;
+static void iter_scomplex_var_nan(na_loop_t* const lp) {
+  size_t n;
+  char *p1, *p2;
+  ssize_t s1;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
 
-    *(rtype*)p2 = f_var_nan(n,p1,s1);
+  *(rtype*)p2 = f_var_nan(n, p1, s1);
 }
 
 #line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
@@ -4801,54 +4325,45 @@ iter_scomplex_var_nan(na_loop_t *const lp)
   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
   @return [Numo::SComplex] returns result of var.
 */
-static VALUE
-scomplex_var(int argc, VALUE *argv, VALUE self)
-{
-    VALUE v, reduce;
-    ndfunc_arg_in_t ain[2] = {{cT,0},{sym_reduce,0}};
-    ndfunc_arg_out_t aout[1] = {{cRT,0}};
-    ndfunc_t ndf = { iter_scomplex_var, STRIDE_LOOP_NIP|NDF_FLAT_REDUCE, 2, 1, ain, aout };
+static VALUE scomplex_var(int argc, VALUE* argv, VALUE self) {
+  VALUE v, reduce;
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
+  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
+  ndfunc_t ndf = {iter_scomplex_var, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
 
-  
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_var_nan);
-  
+  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_var_nan);
+
 #line 42 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-    v =  na_ndloop(&ndf, 2, self, reduce);
-  
-#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-    return rb_funcall(v,rb_intern("extract"),0);
-  
-}
+  v = na_ndloop(&ndf, 2, self, reduce);
 
+#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
+  return rb_funcall(v, rb_intern("extract"), 0);
+}
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-static void
-iter_scomplex_rms(na_loop_t *const lp)
-{
-    size_t   n;
-    char    *p1, *p2;
-    ssize_t  s1;
+static void iter_scomplex_rms(na_loop_t* const lp) {
+  size_t n;
+  char *p1, *p2;
+  ssize_t s1;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
 
-    *(rtype*)p2 = f_rms(n,p1,s1);
+  *(rtype*)p2 = f_rms(n, p1, s1);
 }
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-static void
-iter_scomplex_rms_nan(na_loop_t *const lp)
-{
-    size_t   n;
-    char    *p1, *p2;
-    ssize_t  s1;
+static void iter_scomplex_rms_nan(na_loop_t* const lp) {
+  size_t n;
+  char *p1, *p2;
+  ssize_t s1;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
 
-    *(rtype*)p2 = f_rms_nan(n,p1,s1);
+  *(rtype*)p2 = f_rms_nan(n, p1, s1);
 }
 
 #line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
@@ -4860,74 +4375,65 @@ iter_scomplex_rms_nan(na_loop_t *const lp)
   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
   @return [Numo::SComplex] returns result of rms.
 */
-static VALUE
-scomplex_rms(int argc, VALUE *argv, VALUE self)
-{
-    VALUE v, reduce;
-    ndfunc_arg_in_t ain[2] = {{cT,0},{sym_reduce,0}};
-    ndfunc_arg_out_t aout[1] = {{cRT,0}};
-    ndfunc_t ndf = { iter_scomplex_rms, STRIDE_LOOP_NIP|NDF_FLAT_REDUCE, 2, 1, ain, aout };
+static VALUE scomplex_rms(int argc, VALUE* argv, VALUE self) {
+  VALUE v, reduce;
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
+  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
+  ndfunc_t ndf = {iter_scomplex_rms, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
 
-  
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_rms_nan);
-  
+  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_rms_nan);
+
 #line 42 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-    v =  na_ndloop(&ndf, 2, self, reduce);
-  
-#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-    return rb_funcall(v,rb_intern("extract"),0);
-  
-}
+  v = na_ndloop(&ndf, 2, self, reduce);
 
+#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
+  return rb_funcall(v, rb_intern("extract"), 0);
+}
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
-static void
-iter_scomplex_cumsum(na_loop_t *const lp)
-{
-    size_t   i;
-    char    *p1, *p2;
-    ssize_t  s1, s2;
-    dtype    x, y;
+static void iter_scomplex_cumsum(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  dtype x, y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    //printf("i=%lu p1=%lx s1=%lu p2=%lx s2=%lu\n",i,(size_t)p1,s1,(size_t)p2,s2);
+  INIT_COUNTER(lp, i);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  // printf("i=%lu p1=%lx s1=%lu p2=%lx s2=%lu\n",i,(size_t)p1,s1,(size_t)p2,s2);
 
-    GET_DATA_STRIDE(p1,s1,dtype,x);
-    SET_DATA_STRIDE(p2,s2,dtype,x);
-    //printf("i=%lu x=%f\n",i,x);
-    for (i--; i--;) {
-        GET_DATA_STRIDE(p1,s1,dtype,y);
-        m_cumsum(x,y);
-        SET_DATA_STRIDE(p2,s2,dtype,x);
-        //printf("i=%lu x=%f\n",i,x);
-    }
+  GET_DATA_STRIDE(p1, s1, dtype, x);
+  SET_DATA_STRIDE(p2, s2, dtype, x);
+  // printf("i=%lu x=%f\n",i,x);
+  for (i--; i--;) {
+    GET_DATA_STRIDE(p1, s1, dtype, y);
+    m_cumsum(x, y);
+    SET_DATA_STRIDE(p2, s2, dtype, x);
+    // printf("i=%lu x=%f\n",i,x);
+  }
 }
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
-static void
-iter_scomplex_cumsum_nan(na_loop_t *const lp)
-{
-    size_t   i;
-    char    *p1, *p2;
-    ssize_t  s1, s2;
-    dtype    x, y;
+static void iter_scomplex_cumsum_nan(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  dtype x, y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    //printf("i=%lu p1=%lx s1=%lu p2=%lx s2=%lu\n",i,(size_t)p1,s1,(size_t)p2,s2);
+  INIT_COUNTER(lp, i);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  // printf("i=%lu p1=%lx s1=%lu p2=%lx s2=%lu\n",i,(size_t)p1,s1,(size_t)p2,s2);
 
-    GET_DATA_STRIDE(p1,s1,dtype,x);
-    SET_DATA_STRIDE(p2,s2,dtype,x);
-    //printf("i=%lu x=%f\n",i,x);
-    for (i--; i--;) {
-        GET_DATA_STRIDE(p1,s1,dtype,y);
-        m_cumsum_nan(x,y);
-        SET_DATA_STRIDE(p2,s2,dtype,x);
-        //printf("i=%lu x=%f\n",i,x);
-    }
+  GET_DATA_STRIDE(p1, s1, dtype, x);
+  SET_DATA_STRIDE(p2, s2, dtype, x);
+  // printf("i=%lu x=%f\n",i,x);
+  for (i--; i--;) {
+    GET_DATA_STRIDE(p1, s1, dtype, y);
+    m_cumsum_nan(x, y);
+    SET_DATA_STRIDE(p2, s2, dtype, x);
+    // printf("i=%lu x=%f\n",i,x);
+  }
 }
 
 #line 27 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
@@ -4938,71 +4444,62 @@ iter_scomplex_cumsum_nan(na_loop_t *const lp)
   @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
   @return [Numo::SComplex] cumsum of self.
 */
-static VALUE
-scomplex_cumsum(int argc, VALUE *argv, VALUE self)
-{
-    VALUE reduce;
-    ndfunc_arg_in_t ain[2] = {{cT,0},{sym_reduce,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_cumsum, STRIDE_LOOP|NDF_FLAT_REDUCE|NDF_CUM,
-                     2, 1, ain, aout };
+static VALUE scomplex_cumsum(int argc, VALUE* argv, VALUE self) {
+  VALUE reduce;
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_cumsum, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout};
 
-  
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_cumsum_nan);
-  
+  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_cumsum_nan);
+
 #line 48 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
-    return na_ndloop(&ndf, 2, self, reduce);
+  return na_ndloop(&ndf, 2, self, reduce);
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
-static void
-iter_scomplex_cumprod(na_loop_t *const lp)
-{
-    size_t   i;
-    char    *p1, *p2;
-    ssize_t  s1, s2;
-    dtype    x, y;
+static void iter_scomplex_cumprod(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  dtype x, y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    //printf("i=%lu p1=%lx s1=%lu p2=%lx s2=%lu\n",i,(size_t)p1,s1,(size_t)p2,s2);
+  INIT_COUNTER(lp, i);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  // printf("i=%lu p1=%lx s1=%lu p2=%lx s2=%lu\n",i,(size_t)p1,s1,(size_t)p2,s2);
 
-    GET_DATA_STRIDE(p1,s1,dtype,x);
-    SET_DATA_STRIDE(p2,s2,dtype,x);
-    //printf("i=%lu x=%f\n",i,x);
-    for (i--; i--;) {
-        GET_DATA_STRIDE(p1,s1,dtype,y);
-        m_cumprod(x,y);
-        SET_DATA_STRIDE(p2,s2,dtype,x);
-        //printf("i=%lu x=%f\n",i,x);
-    }
+  GET_DATA_STRIDE(p1, s1, dtype, x);
+  SET_DATA_STRIDE(p2, s2, dtype, x);
+  // printf("i=%lu x=%f\n",i,x);
+  for (i--; i--;) {
+    GET_DATA_STRIDE(p1, s1, dtype, y);
+    m_cumprod(x, y);
+    SET_DATA_STRIDE(p2, s2, dtype, x);
+    // printf("i=%lu x=%f\n",i,x);
+  }
 }
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
-static void
-iter_scomplex_cumprod_nan(na_loop_t *const lp)
-{
-    size_t   i;
-    char    *p1, *p2;
-    ssize_t  s1, s2;
-    dtype    x, y;
+static void iter_scomplex_cumprod_nan(na_loop_t* const lp) {
+  size_t i;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  dtype x, y;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    //printf("i=%lu p1=%lx s1=%lu p2=%lx s2=%lu\n",i,(size_t)p1,s1,(size_t)p2,s2);
+  INIT_COUNTER(lp, i);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  // printf("i=%lu p1=%lx s1=%lu p2=%lx s2=%lu\n",i,(size_t)p1,s1,(size_t)p2,s2);
 
-    GET_DATA_STRIDE(p1,s1,dtype,x);
-    SET_DATA_STRIDE(p2,s2,dtype,x);
-    //printf("i=%lu x=%f\n",i,x);
-    for (i--; i--;) {
-        GET_DATA_STRIDE(p1,s1,dtype,y);
-        m_cumprod_nan(x,y);
-        SET_DATA_STRIDE(p2,s2,dtype,x);
-        //printf("i=%lu x=%f\n",i,x);
-    }
+  GET_DATA_STRIDE(p1, s1, dtype, x);
+  SET_DATA_STRIDE(p2, s2, dtype, x);
+  // printf("i=%lu x=%f\n",i,x);
+  for (i--; i--;) {
+    GET_DATA_STRIDE(p1, s1, dtype, y);
+    m_cumprod_nan(x, y);
+    SET_DATA_STRIDE(p2, s2, dtype, x);
+    // printf("i=%lu x=%f\n",i,x);
+  }
 }
 
 #line 27 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
@@ -5013,121 +4510,110 @@ iter_scomplex_cumprod_nan(na_loop_t *const lp)
   @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
   @return [Numo::SComplex] cumprod of self.
 */
-static VALUE
-scomplex_cumprod(int argc, VALUE *argv, VALUE self)
-{
-    VALUE reduce;
-    ndfunc_arg_in_t ain[2] = {{cT,0},{sym_reduce,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_cumprod, STRIDE_LOOP|NDF_FLAT_REDUCE|NDF_CUM,
-                     2, 1, ain, aout };
+static VALUE scomplex_cumprod(int argc, VALUE* argv, VALUE self) {
+  VALUE reduce;
+  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_cumprod, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout};
 
-  
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_cumprod_nan);
-  
+  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_scomplex_cumprod_nan);
+
 #line 48 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
-    return na_ndloop(&ndf, 2, self, reduce);
+  return na_ndloop(&ndf, 2, self, reduce);
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum_binary.c"
 //
-static void
-iter_scomplex_mulsum(na_loop_t *const lp)
-{
-    size_t   i, n;
-    char    *p1, *p2, *p3;
-    ssize_t  s1, s2, s3;
+static void iter_scomplex_mulsum(na_loop_t* const lp) {
+  size_t i, n;
+  char *p1, *p2, *p3;
+  ssize_t s1, s2, s3;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    INIT_PTR(lp, 2, p3, s3);
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  INIT_PTR(lp, 2, p3, s3);
 
-    if (s3==0) {
-        dtype z;
-        // Reduce loop
-        GET_DATA(p3,dtype,z);
-        for (i=0; i<n; i++) {
-            dtype x, y;
-            GET_DATA_STRIDE(p1,s1,dtype,x);
-            GET_DATA_STRIDE(p2,s2,dtype,y);
-            m_mulsum(x,y,z);
-        }
-        SET_DATA(p3,dtype,z);
-        return;
-    } else {
-        for (i=0; i<n; i++) {
-            dtype x, y, z;
-            GET_DATA_STRIDE(p1,s1,dtype,x);
-            GET_DATA_STRIDE(p2,s2,dtype,y);
-            GET_DATA(p3,dtype,z);
-            m_mulsum(x,y,z);
-            SET_DATA_STRIDE(p3,s3,dtype,z);
-        }
+  if (s3 == 0) {
+    dtype z;
+    // Reduce loop
+    GET_DATA(p3, dtype, z);
+    for (i = 0; i < n; i++) {
+      dtype x, y;
+      GET_DATA_STRIDE(p1, s1, dtype, x);
+      GET_DATA_STRIDE(p2, s2, dtype, y);
+      m_mulsum(x, y, z);
     }
+    SET_DATA(p3, dtype, z);
+    return;
+  } else {
+    for (i = 0; i < n; i++) {
+      dtype x, y, z;
+      GET_DATA_STRIDE(p1, s1, dtype, x);
+      GET_DATA_STRIDE(p2, s2, dtype, y);
+      GET_DATA(p3, dtype, z);
+      m_mulsum(x, y, z);
+      SET_DATA_STRIDE(p3, s3, dtype, z);
+    }
+  }
 }
 //
 #line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum_binary.c"
-static void
-iter_scomplex_mulsum_nan(na_loop_t *const lp)
-{
-    size_t   i, n;
-    char    *p1, *p2, *p3;
-    ssize_t  s1, s2, s3;
+static void iter_scomplex_mulsum_nan(na_loop_t* const lp) {
+  size_t i, n;
+  char *p1, *p2, *p3;
+  ssize_t s1, s2, s3;
 
-    INIT_COUNTER(lp, n);
-    INIT_PTR(lp, 0, p1, s1);
-    INIT_PTR(lp, 1, p2, s2);
-    INIT_PTR(lp, 2, p3, s3);
+  INIT_COUNTER(lp, n);
+  INIT_PTR(lp, 0, p1, s1);
+  INIT_PTR(lp, 1, p2, s2);
+  INIT_PTR(lp, 2, p3, s3);
 
-    if (s3==0) {
-        dtype z;
-        // Reduce loop
-        GET_DATA(p3,dtype,z);
-        for (i=0; i<n; i++) {
-            dtype x, y;
-            GET_DATA_STRIDE(p1,s1,dtype,x);
-            GET_DATA_STRIDE(p2,s2,dtype,y);
-            m_mulsum_nan(x,y,z);
-        }
-        SET_DATA(p3,dtype,z);
-        return;
-    } else {
-        for (i=0; i<n; i++) {
-            dtype x, y, z;
-            GET_DATA_STRIDE(p1,s1,dtype,x);
-            GET_DATA_STRIDE(p2,s2,dtype,y);
-            GET_DATA(p3,dtype,z);
-            m_mulsum_nan(x,y,z);
-            SET_DATA_STRIDE(p3,s3,dtype,z);
-        }
+  if (s3 == 0) {
+    dtype z;
+    // Reduce loop
+    GET_DATA(p3, dtype, z);
+    for (i = 0; i < n; i++) {
+      dtype x, y;
+      GET_DATA_STRIDE(p1, s1, dtype, x);
+      GET_DATA_STRIDE(p2, s2, dtype, y);
+      m_mulsum_nan(x, y, z);
     }
+    SET_DATA(p3, dtype, z);
+    return;
+  } else {
+    for (i = 0; i < n; i++) {
+      dtype x, y, z;
+      GET_DATA_STRIDE(p1, s1, dtype, x);
+      GET_DATA_STRIDE(p2, s2, dtype, y);
+      GET_DATA(p3, dtype, z);
+      m_mulsum_nan(x, y, z);
+      SET_DATA_STRIDE(p3, s3, dtype, z);
+    }
+  }
 }
 //
 
-static VALUE
-scomplex_mulsum_self(int argc, VALUE *argv, VALUE self)
-{
-    VALUE v, reduce;
-    VALUE naryv[2];
-    ndfunc_arg_in_t ain[4] = {{cT,0},{cT,0},{sym_reduce,0},{sym_init,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_mulsum, STRIDE_LOOP_NIP, 4, 1, ain, aout };
+static VALUE scomplex_mulsum_self(int argc, VALUE* argv, VALUE self) {
+  VALUE v, reduce;
+  VALUE naryv[2];
+  ndfunc_arg_in_t ain[4] = {{cT, 0}, {cT, 0}, {sym_reduce, 0}, {sym_init, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_mulsum, STRIDE_LOOP_NIP, 4, 1, ain, aout};
 
-    if (argc < 1) {
-        rb_raise(rb_eArgError,"wrong number of arguments (%d for >=1)",argc);
-    }
-    // should fix below: [self.ndim,other.ndim].max or?
-    naryv[0] = self;
-    naryv[1] = argv[0];
-    //
-    reduce = na_reduce_dimension(argc-1, argv+1, 2, naryv, &ndf, iter_scomplex_mulsum_nan);
-    //
+  if (argc < 1) {
+    rb_raise(rb_eArgError, "wrong number of arguments (%d for >=1)", argc);
+  }
+  // should fix below: [self.ndim,other.ndim].max or?
+  naryv[0] = self;
+  naryv[1] = argv[0];
+  //
+  reduce = na_reduce_dimension(argc - 1, argv + 1, 2, naryv, &ndf, iter_scomplex_mulsum_nan);
+  //
 
 #line 60 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum_binary.c"
-    v =  na_ndloop(&ndf, 4, self, argv[0], reduce, m_mulsum_init);
-    return scomplex_extract(v);
+  v = na_ndloop(&ndf, 4, self, argv[0], reduce, m_mulsum_init);
+  return scomplex_extract(v);
 }
 
 /*
@@ -5140,30 +4626,27 @@ scomplex_mulsum_self(int argc, VALUE *argv, VALUE self)
   @param [TrueClass] nan (keyword) If true, apply NaN-aware algorithm (avoid NaN if exists).
   @return [Numo::NArray] mulsum of self and other.
 */
-static VALUE
-scomplex_mulsum(int argc, VALUE *argv, VALUE self)
-{
-    //
-    VALUE klass, v;
-    //
-    if (argc < 1) {
-        rb_raise(rb_eArgError,"wrong number of arguments (%d for >=1)",argc);
-    }
-    //
+static VALUE scomplex_mulsum(int argc, VALUE* argv, VALUE self) {
+  //
+  VALUE klass, v;
+  //
+  if (argc < 1) {
+    rb_raise(rb_eArgError, "wrong number of arguments (%d for >=1)", argc);
+  }
+  //
 #line 92 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum_binary.c"
-    klass = na_upcast(rb_obj_class(self),rb_obj_class(argv[0]));
-    if (klass==cT) {
-        return scomplex_mulsum_self(argc, argv, self);
-    } else {
-        v = rb_funcall(klass, id_cast, 1, self);
-        //
-#line 100 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum_binary.c"
-        return rb_funcallv_kw(v, rb_intern("mulsum"), argc, argv, RB_PASS_CALLED_KEYWORDS);
-        //
-    }
+  klass = na_upcast(rb_obj_class(self), rb_obj_class(argv[0]));
+  if (klass == cT) {
+    return scomplex_mulsum_self(argc, argv, self);
+  } else {
+    v = rb_funcall(klass, id_cast, 1, self);
     //
+#line 100 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum_binary.c"
+    return rb_funcallv_kw(v, rb_intern("mulsum"), argc, argv, RB_PASS_CALLED_KEYWORDS);
+    //
+  }
+  //
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/seq.c"
 #line 4 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/seq.c"
@@ -5174,43 +4657,41 @@ typedef double seq_count_t;
 
 #line 13 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/seq.c"
 typedef struct {
-    seq_data_t beg;
-    seq_data_t step;
-    seq_count_t count;
+  seq_data_t beg;
+  seq_data_t step;
+  seq_count_t count;
 } seq_opt_t;
 
-static void
-iter_scomplex_seq(na_loop_t *const lp)
-{
-    size_t  i;
-    char   *p1;
-    ssize_t s1;
-    size_t *idx1;
-    dtype   x;
-    seq_data_t beg, step;
-    seq_count_t c;
-    seq_opt_t *g;
+static void iter_scomplex_seq(na_loop_t* const lp) {
+  size_t i;
+  char* p1;
+  ssize_t s1;
+  size_t* idx1;
+  dtype x;
+  seq_data_t beg, step;
+  seq_count_t c;
+  seq_opt_t* g;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    g = (seq_opt_t*)(lp->opt_ptr);
-    beg  = g->beg;
-    step = g->step;
-    c    = g->count;
-    if (idx1) {
-        for (; i--;) {
-            x = f_seq(beg,step,c++);
-            *(dtype*)(p1+*idx1) = x;
-            idx1++;
-        }
-    } else {
-        for (; i--;) {
-            x = f_seq(beg,step,c++);
-            *(dtype*)(p1) = x;
-            p1 += s1;
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  g = (seq_opt_t*)(lp->opt_ptr);
+  beg = g->beg;
+  step = g->step;
+  c = g->count;
+  if (idx1) {
+    for (; i--;) {
+      x = f_seq(beg, step, c++);
+      *(dtype*)(p1 + *idx1) = x;
+      idx1++;
     }
-    g->count = c;
+  } else {
+    for (; i--;) {
+      x = f_seq(beg, step, c++);
+      *(dtype*)(p1) = x;
+      p1 += s1;
+    }
+  }
+  g->count = c;
 }
 
 /*
@@ -5230,70 +4711,69 @@ iter_scomplex_seq(na_loop_t *const lp)
     # => Numo::DComplex#shape=[6]
     # [1+0i, 0.8+0.2i, 0.6+0.4i, 0.4+0.6i, 0.2+0.8i, 0+1i]
 */
-static VALUE
-scomplex_seq(int argc, VALUE *args, VALUE self)
-{
-    seq_opt_t *g;
-    VALUE vbeg=Qnil, vstep=Qnil;
-    ndfunc_arg_in_t ain[1] = {{OVERWRITE,0}};
-    ndfunc_t ndf = {iter_scomplex_seq, FULL_LOOP, 1,0, ain,0};
+static VALUE scomplex_seq(int argc, VALUE* args, VALUE self) {
+  seq_opt_t* g;
+  VALUE vbeg = Qnil, vstep = Qnil;
+  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
+  ndfunc_t ndf = {iter_scomplex_seq, FULL_LOOP, 1, 0, ain, 0};
 
-    g = ALLOCA_N(seq_opt_t,1);
-    g->beg = m_zero;
-    g->step = m_one;
-    g->count = 0;
-    rb_scan_args(argc, args, "02", &vbeg, &vstep);
+  g = ALLOCA_N(seq_opt_t, 1);
+  g->beg = m_zero;
+  g->step = m_one;
+  g->count = 0;
+  rb_scan_args(argc, args, "02", &vbeg, &vstep);
 #line 87 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/seq.c"
-    if (vbeg!=Qnil) {g->beg = m_num_to_data(vbeg);}
-    if (vstep!=Qnil) {g->step = m_num_to_data(vstep);}
+  if (vbeg != Qnil) {
+    g->beg = m_num_to_data(vbeg);
+  }
+  if (vstep != Qnil) {
+    g->step = m_num_to_data(vstep);
+  }
 
 #line 91 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/seq.c"
-    na_ndloop3(&ndf, g, 1, self);
-    return self;
+  na_ndloop3(&ndf, g, 1, self);
+  return self;
 }
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/logseq.c"
 typedef struct {
-    seq_data_t beg;
-    seq_data_t step;
-    seq_data_t base;
-    seq_count_t count;
+  seq_data_t beg;
+  seq_data_t step;
+  seq_data_t base;
+  seq_count_t count;
 } logseq_opt_t;
 
-static void
-iter_scomplex_logseq(na_loop_t *const lp)
-{
-    size_t  i;
-    char   *p1;
-    ssize_t s1;
-    size_t *idx1;
-    dtype   x;
-    seq_data_t beg, step, base;
-    seq_count_t c;
-    logseq_opt_t *g;
+static void iter_scomplex_logseq(na_loop_t* const lp) {
+  size_t i;
+  char* p1;
+  ssize_t s1;
+  size_t* idx1;
+  dtype x;
+  seq_data_t beg, step, base;
+  seq_count_t c;
+  logseq_opt_t* g;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    g = (logseq_opt_t*)(lp->opt_ptr);
-    beg  = g->beg;
-    step = g->step;
-    base = g->base;
-    c    = g->count;
-    if (idx1) {
-        for (; i--;) {
-            x = f_seq(beg,step,c++);
-            *(dtype*)(p1+*idx1) = m_pow(base,x);
-            idx1++;
-        }
-    } else {
-        for (; i--;) {
-            x = f_seq(beg,step,c++);
-            *(dtype*)(p1) = m_pow(base,x);
-            p1 += s1;
-        }
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  g = (logseq_opt_t*)(lp->opt_ptr);
+  beg = g->beg;
+  step = g->step;
+  base = g->base;
+  c = g->count;
+  if (idx1) {
+    for (; i--;) {
+      x = f_seq(beg, step, c++);
+      *(dtype*)(p1 + *idx1) = m_pow(base, x);
+      idx1++;
     }
-    g->count = c;
+  } else {
+    for (; i--;) {
+      x = f_seq(beg, step, c++);
+      *(dtype*)(p1) = m_pow(base, x);
+      p1 += s1;
+    }
+  }
+  g->count = c;
 }
 
 /*
@@ -5317,58 +4797,53 @@ iter_scomplex_logseq(na_loop_t *const lp)
     # => Numo::DComplex#shape=[5]
     # [1+7.26156e-310i, 0.5+0.866025i, -0.5+0.866025i, -1+1.22465e-16i, ...]
 */
-static VALUE
-scomplex_logseq(int argc, VALUE *args, VALUE self)
-{
-    logseq_opt_t *g;
-    VALUE vbeg, vstep, vbase;
-    ndfunc_arg_in_t ain[1] = {{OVERWRITE,0}};
-    ndfunc_t ndf = {iter_scomplex_logseq, FULL_LOOP, 1,0, ain,0};
+static VALUE scomplex_logseq(int argc, VALUE* args, VALUE self) {
+  logseq_opt_t* g;
+  VALUE vbeg, vstep, vbase;
+  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
+  ndfunc_t ndf = {iter_scomplex_logseq, FULL_LOOP, 1, 0, ain, 0};
 
-    g = ALLOCA_N(logseq_opt_t,1);
-    rb_scan_args(argc, args, "21", &vbeg, &vstep, &vbase);
-    g->beg = m_num_to_data(vbeg);
-    g->step = m_num_to_data(vstep);
-    if (vbase==Qnil) {
-        g->base = m_from_real(10);
-    } else {
-        g->base = m_num_to_data(vbase);
-    }
-    na_ndloop3(&ndf, g, 1, self);
-    return self;
+  g = ALLOCA_N(logseq_opt_t, 1);
+  rb_scan_args(argc, args, "21", &vbeg, &vstep, &vbase);
+  g->beg = m_num_to_data(vbeg);
+  g->step = m_num_to_data(vstep);
+  if (vbase == Qnil) {
+    g->base = m_from_real(10);
+  } else {
+    g->base = m_num_to_data(vbase);
+  }
+  na_ndloop3(&ndf, g, 1, self);
+  return self;
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/eye.c"
-static void
-iter_scomplex_eye(na_loop_t *const lp)
-{
-    size_t   n0, n1;
-    size_t   i0, i1;
-    ssize_t  s0, s1;
-    char    *p0, *p1;
-    char    *g;
-    ssize_t kofs;
-    dtype   data;
+static void iter_scomplex_eye(na_loop_t* const lp) {
+  size_t n0, n1;
+  size_t i0, i1;
+  ssize_t s0, s1;
+  char *p0, *p1;
+  char* g;
+  ssize_t kofs;
+  dtype data;
 
-    g = (char*)(lp->opt_ptr);
-    kofs = *(ssize_t*)g;
-    data = *(dtype*)(g+sizeof(ssize_t));
+  g = (char*)(lp->opt_ptr);
+  kofs = *(ssize_t*)g;
+  data = *(dtype*)(g + sizeof(ssize_t));
 
-    n0 = lp->args[0].shape[0];
-    n1 = lp->args[0].shape[1];
-    s0 = lp->args[0].iter[0].step;
-    s1 = lp->args[0].iter[1].step;
-    p0 = NDL_PTR(lp,0);
+  n0 = lp->args[0].shape[0];
+  n1 = lp->args[0].shape[1];
+  s0 = lp->args[0].iter[0].step;
+  s1 = lp->args[0].iter[1].step;
+  p0 = NDL_PTR(lp, 0);
 
-    for (i0=0; i0 < n0; i0++) {
-        p1 = p0;
-        for (i1=0; i1 < n1; i1++) {
-            *(dtype*)p1 = (i0+kofs==i1) ? data : m_zero;
-            p1 += s1;
-        }
-        p0 += s0;
+  for (i0 = 0; i0 < n0; i0++) {
+    p1 = p0;
+    for (i1 = 0; i1 < n1; i1++) {
+      *(dtype*)p1 = (i0 + kofs == i1) ? data : m_zero;
+      p1 += s1;
     }
+    p0 += s0;
+  }
 }
 
 /*
@@ -5380,102 +4855,96 @@ iter_scomplex_eye(na_loop_t *const lp)
       for diagonals below the main diagonal.
   @return [Numo::SComplex] eye of self.
 */
-static VALUE
-scomplex_eye(int argc, VALUE *argv, VALUE self)
-{
-    ndfunc_arg_in_t ain[1] = {{OVERWRITE,2}};
-    ndfunc_t ndf = {iter_scomplex_eye, NO_LOOP, 1,0, ain,0};
-    ssize_t kofs;
-    dtype data;
-    char *g;
-    int nd;
-    narray_t *na;
+static VALUE scomplex_eye(int argc, VALUE* argv, VALUE self) {
+  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 2}};
+  ndfunc_t ndf = {iter_scomplex_eye, NO_LOOP, 1, 0, ain, 0};
+  ssize_t kofs;
+  dtype data;
+  char* g;
+  int nd;
+  narray_t* na;
 
-    // check arguments
-    if (argc > 2) {
-        rb_raise(rb_eArgError,"too many arguments (%d for 0..2)",argc);
-    } else if (argc == 2) {
-        data = m_num_to_data(argv[0]);
-        kofs = NUM2SSIZET(argv[1]);
-    } else if (argc == 1) {
-        data = m_num_to_data(argv[0]);
-        kofs = 0;
-    } else {
-        data = m_one;
-        kofs = 0;
+  // check arguments
+  if (argc > 2) {
+    rb_raise(rb_eArgError, "too many arguments (%d for 0..2)", argc);
+  } else if (argc == 2) {
+    data = m_num_to_data(argv[0]);
+    kofs = NUM2SSIZET(argv[1]);
+  } else if (argc == 1) {
+    data = m_num_to_data(argv[0]);
+    kofs = 0;
+  } else {
+    data = m_one;
+    kofs = 0;
+  }
+
+  GetNArray(self, na);
+  nd = na->ndim;
+  if (nd < 2) {
+    rb_raise(nary_eDimensionError, "less than 2-d array");
+  }
+
+  // Diagonal offset from the main diagonal.
+  if (kofs >= 0) {
+    if ((size_t)(kofs) >= na->shape[nd - 1]) {
+      rb_raise(rb_eArgError,
+               "invalid diagonal offset(%" SZF "d) for "
+               "last dimension size(%" SZF "d)",
+               kofs, na->shape[nd - 1]);
     }
-
-    GetNArray(self,na);
-    nd = na->ndim;
-    if (nd < 2) {
-        rb_raise(nary_eDimensionError,"less than 2-d array");
+  } else {
+    if ((size_t)(-kofs) >= na->shape[nd - 2]) {
+      rb_raise(rb_eArgError,
+               "invalid diagonal offset(%" SZF "d) for "
+               "last-1 dimension size(%" SZF "d)",
+               kofs, na->shape[nd - 2]);
     }
+  }
 
-    // Diagonal offset from the main diagonal.
-    if (kofs >= 0) {
-        if ((size_t)(kofs) >= na->shape[nd-1]) {
-            rb_raise(rb_eArgError,"invalid diagonal offset(%"SZF"d) for "
-                     "last dimension size(%"SZF"d)",kofs,na->shape[nd-1]);
-        }
-    } else {
-        if ((size_t)(-kofs) >= na->shape[nd-2]) {
-            rb_raise(rb_eArgError,"invalid diagonal offset(%"SZF"d) for "
-                     "last-1 dimension size(%"SZF"d)",kofs,na->shape[nd-2]);
-        }
-    }
+  g = ALLOCA_N(char, sizeof(ssize_t) + sizeof(dtype));
+  *(ssize_t*)g = kofs;
+  *(dtype*)(g + sizeof(ssize_t)) = data;
 
-    g = ALLOCA_N(char,sizeof(ssize_t)+sizeof(dtype));
-    *(ssize_t*)g = kofs;
-    *(dtype*)(g+sizeof(ssize_t)) = data;
-
-    na_ndloop3(&ndf, g, 1, self);
-    return self;
+  na_ndloop3(&ndf, g, 1, self);
+  return self;
 }
-
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand.c"
 
-
 #line 69 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand.c"
 typedef struct {
-    dtype low;
-    dtype max;
+  dtype low;
+  dtype max;
 } rand_opt_t;
 
-static void
-iter_scomplex_rand(na_loop_t *const lp)
-{
-    size_t   i;
-    char    *p1;
-    ssize_t  s1;
-    size_t  *idx1;
-    dtype    x;
-    rand_opt_t *g;
-    dtype    low;
-    dtype max;
-    
+static void iter_scomplex_rand(na_loop_t* const lp) {
+  size_t i;
+  char* p1;
+  ssize_t s1;
+  size_t* idx1;
+  dtype x;
+  rand_opt_t* g;
+  dtype low;
+  dtype max;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    g = (rand_opt_t*)(lp->opt_ptr);
-    low = g->low;
-    max = g->max;
-    
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  g = (rand_opt_t*)(lp->opt_ptr);
+  low = g->low;
+  max = g->max;
 
-    if (idx1) {
-        for (; i--;) {
-            x = m_add(m_rand(max),low);
-            SET_DATA_INDEX(p1,idx1,dtype,x);
-        }
-    } else {
-        for (; i--;) {
-            x = m_add(m_rand(max),low);
-            SET_DATA_STRIDE(p1,s1,dtype,x);
-        }
+  if (idx1) {
+    for (; i--;) {
+      x = m_add(m_rand(max), low);
+      SET_DATA_INDEX(p1, idx1, dtype, x);
     }
+  } else {
+    for (; i--;) {
+      x = m_add(m_rand(max), low);
+      SET_DATA_STRIDE(p1, s1, dtype, x);
+    }
+  }
 }
-
 
 /*
   Generate uniformly distributed random numbers on self narray.
@@ -5496,87 +4965,81 @@ iter_scomplex_rand(na_loop_t *const lp)
     # => Numo::Int32#shape=[6]
     # [4, 3, 3, 2, 4, 2]
 */
-static VALUE
-scomplex_rand(int argc, VALUE *args, VALUE self)
-{
-    rand_opt_t g;
-    VALUE v1=Qnil, v2=Qnil;
-    dtype high;
-    ndfunc_arg_in_t ain[1] = {{OVERWRITE,0}};
-    ndfunc_t ndf = {iter_scomplex_rand, FULL_LOOP, 1,0, ain,0};
+static VALUE scomplex_rand(int argc, VALUE* args, VALUE self) {
+  rand_opt_t g;
+  VALUE v1 = Qnil, v2 = Qnil;
+  dtype high;
+  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
+  ndfunc_t ndf = {iter_scomplex_rand, FULL_LOOP, 1, 0, ain, 0};
 
-    
 #line 142 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand.c"
-    rb_scan_args(argc, args, "02", &v1, &v2);
-    if (v2==Qnil) {
-        g.low = m_zero;
-        if (v1==Qnil) {
-            
-            g.max = high = c_new(1,1);
-            
-#line 151 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand.c"
-        } else {
-            g.max = high = m_num_to_data(v1);
-        }
-    
-    } else {
-        g.low = m_num_to_data(v1);
-        high = m_num_to_data(v2);
-        g.max = m_sub(high,g.low);
-    }
-    
-#line 165 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand.c"
-    na_ndloop3(&ndf, &g, 1, self);
-    return self;
-}
+  rb_scan_args(argc, args, "02", &v1, &v2);
+  if (v2 == Qnil) {
+    g.low = m_zero;
+    if (v1 == Qnil) {
 
+      g.max = high = c_new(1, 1);
+
+#line 151 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand.c"
+    } else {
+      g.max = high = m_num_to_data(v1);
+    }
+
+  } else {
+    g.low = m_num_to_data(v1);
+    high = m_num_to_data(v2);
+    g.max = m_sub(high, g.low);
+  }
+
+#line 165 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand.c"
+  na_ndloop3(&ndf, &g, 1, self);
+  return self;
+}
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand_norm.c"
 typedef struct {
-    dtype mu;
-    rtype sigma;
+  dtype mu;
+  rtype sigma;
 } randn_opt_t;
 
-static void
-iter_scomplex_rand_norm(na_loop_t *const lp)
-{
-    size_t   i;
-    char    *p1;
-    ssize_t  s1;
-    size_t  *idx1;
-    
-    dtype   *a0;
-    
+static void iter_scomplex_rand_norm(na_loop_t* const lp) {
+  size_t i;
+  char* p1;
+  ssize_t s1;
+  size_t* idx1;
+
+  dtype* a0;
+
 #line 18 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand_norm.c"
-    dtype    mu;
-    rtype    sigma;
-    randn_opt_t *g;
+  dtype mu;
+  rtype sigma;
+  randn_opt_t* g;
 
-    INIT_COUNTER(lp, i);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    g = (randn_opt_t*)(lp->opt_ptr);
-    mu = g->mu;
-    sigma = g->sigma;
+  INIT_COUNTER(lp, i);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  g = (randn_opt_t*)(lp->opt_ptr);
+  mu = g->mu;
+  sigma = g->sigma;
 
-    if (idx1) {
-        
-        for (; i--;) {
-            a0 = (dtype*)(p1+*idx1);
-            m_rand_norm(mu,sigma,a0);
-            idx1 += 1;
-        }
-        
-#line 47 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand_norm.c"
-    } else {
-        
-        for (; i--;) {
-            a0 = (dtype*)(p1);
-            m_rand_norm(mu,sigma,a0);
-            p1 += s1;
-        }
-        
-#line 66 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand_norm.c"
+  if (idx1) {
+
+    for (; i--;) {
+      a0 = (dtype*)(p1 + *idx1);
+      m_rand_norm(mu, sigma, a0);
+      idx1 += 1;
     }
+
+#line 47 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand_norm.c"
+  } else {
+
+    for (; i--;) {
+      a0 = (dtype*)(p1);
+      m_rand_norm(mu, sigma, a0);
+      p1 += s1;
+    }
+
+#line 66 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand_norm.c"
+  }
 }
 
 /*
@@ -5609,48 +5072,43 @@ iter_scomplex_rand_norm(na_loop_t *const lp)
     #  [4.26477+3.99655i, 4.90052+5.00763i, 4.46607+2.3444i],
     #  [4.5528+7.11003i, 5.62117+6.69094i, 5.05443+5.35133i]]
 */
-static VALUE
-scomplex_rand_norm(int argc, VALUE *args, VALUE self)
-{
-    int n;
-    randn_opt_t g;
-    VALUE v1=Qnil, v2=Qnil;
-    ndfunc_arg_in_t ain[1] = {{OVERWRITE,0}};
-    ndfunc_t ndf = {iter_scomplex_rand_norm, FULL_LOOP, 1,0, ain,0};
+static VALUE scomplex_rand_norm(int argc, VALUE* args, VALUE self) {
+  int n;
+  randn_opt_t g;
+  VALUE v1 = Qnil, v2 = Qnil;
+  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
+  ndfunc_t ndf = {iter_scomplex_rand_norm, FULL_LOOP, 1, 0, ain, 0};
 
-    n = rb_scan_args(argc, args, "02", &v1, &v2);
-    if (n == 0) {
-        g.mu = m_zero;
-    } else {
-        g.mu = m_num_to_data(v1);
-    }
-    if (n == 2) {
-        g.sigma = NUM2DBL(v2);
-    } else {
-        g.sigma = 1;
-    }
-    na_ndloop3(&ndf, &g, 1, self);
-    return self;
+  n = rb_scan_args(argc, args, "02", &v1, &v2);
+  if (n == 0) {
+    g.mu = m_zero;
+  } else {
+    g.mu = m_num_to_data(v1);
+  }
+  if (n == 2) {
+    g.sigma = NUM2DBL(v2);
+  } else {
+    g.sigma = 1;
+  }
+  na_ndloop3(&ndf, &g, 1, self);
+  return self;
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/poly.c"
-static void
-iter_scomplex_poly(na_loop_t *const lp)
-{
-    size_t  i;
-    dtype  x, y, a;
+static void iter_scomplex_poly(na_loop_t* const lp) {
+  size_t i;
+  dtype x, y, a;
 
-    x = *(dtype*)(lp->args[0].ptr + lp->args[0].iter[0].pos);
-    i = lp->narg - 2;
-    y = *(dtype*)(lp->args[i].ptr + lp->args[i].iter[0].pos);
-    for (; --i;) {
-        y = m_mul(x,y);
-        a = *(dtype*)(lp->args[i].ptr + lp->args[i].iter[0].pos);
-        y = m_add(y,a);
-    }
-    i = lp->narg - 1;
-    *(dtype*)(lp->args[i].ptr + lp->args[i].iter[0].pos) = y;
+  x = *(dtype*)(lp->args[0].ptr + lp->args[0].iter[0].pos);
+  i = lp->narg - 2;
+  y = *(dtype*)(lp->args[i].ptr + lp->args[i].iter[0].pos);
+  for (; --i;) {
+    y = m_mul(x, y);
+    a = *(dtype*)(lp->args[i].ptr + lp->args[i].iter[0].pos);
+    y = m_add(y, a);
+  }
+  i = lp->narg - 1;
+  *(dtype*)(lp->args[i].ptr + lp->args[i].iter[0].pos) = y;
 }
 
 /*
@@ -5660,32 +5118,28 @@ iter_scomplex_poly(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] a0,a1,...,an
   @return [Numo::SComplex]
 */
-static VALUE
-scomplex_poly(VALUE self, VALUE args)
-{
-    int argc, i;
-    VALUE *argv;
-    volatile VALUE v, a;
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_poly, NO_LOOP, 0, 1, 0, aout };
+static VALUE scomplex_poly(VALUE self, VALUE args) {
+  int argc, i;
+  VALUE* argv;
+  volatile VALUE v, a;
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_poly, NO_LOOP, 0, 1, 0, aout};
 
-    argc = RARRAY_LEN(args);
-    ndf.nin = argc+1;
-    ndf.ain = ALLOCA_N(ndfunc_arg_in_t,argc+1);
-    for (i=0; i<argc+1; i++) {
-        ndf.ain[i].type = cT;
-    }
-    argv = ALLOCA_N(VALUE,argc+1);
-    argv[0] = self;
-    for (i=0; i<argc; i++) {
-        argv[i+1] = RARRAY_PTR(args)[i];
-    }
-    a = rb_ary_new4(argc+1, argv);
-    v = na_ndloop2(&ndf, a);
-    return scomplex_extract(v);
+  argc = RARRAY_LEN(args);
+  ndf.nin = argc + 1;
+  ndf.ain = ALLOCA_N(ndfunc_arg_in_t, argc + 1);
+  for (i = 0; i < argc + 1; i++) {
+    ndf.ain[i].type = cT;
+  }
+  argv = ALLOCA_N(VALUE, argc + 1);
+  argv[0] = self;
+  for (i = 0; i < argc; i++) {
+    argv[i + 1] = RARRAY_PTR(args)[i];
+  }
+  a = rb_ary_new4(argc + 1, argv);
+  v = na_ndloop2(&ndf, a);
+  return scomplex_extract(v);
 }
-
-
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/module.c"
 /*
@@ -5695,78 +5149,72 @@ scomplex_poly(VALUE self, VALUE args)
 #line 6 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/module.c"
 VALUE mTM;
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_sqrt(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_sqrt(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_sqrt(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_sqrt(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_sqrt(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_sqrt(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_sqrt(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_sqrt(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_sqrt(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_sqrt(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_sqrt(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_sqrt(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_sqrt(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_sqrt(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -5775,88 +5223,80 @@ iter_scomplex_math_s_sqrt(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of sqrt(x).
 */
-static VALUE
-scomplex_math_s_sqrt(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_sqrt, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_sqrt(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_sqrt, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_cbrt(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_cbrt(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_cbrt(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_cbrt(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_cbrt(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_cbrt(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_cbrt(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_cbrt(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_cbrt(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_cbrt(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_cbrt(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_cbrt(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_cbrt(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_cbrt(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -5865,88 +5305,80 @@ iter_scomplex_math_s_cbrt(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of cbrt(x).
 */
-static VALUE
-scomplex_math_s_cbrt(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_cbrt, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_cbrt(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_cbrt, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_log(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_log(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_log(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_log(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_log(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_log(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_log(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_log(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_log(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_log(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_log(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_log(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_log(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_log(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -5955,88 +5387,80 @@ iter_scomplex_math_s_log(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of log(x).
 */
-static VALUE
-scomplex_math_s_log(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_log, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_log(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_log, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_log2(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_log2(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_log2(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_log2(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_log2(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_log2(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_log2(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_log2(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_log2(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_log2(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_log2(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_log2(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_log2(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_log2(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -6045,88 +5469,80 @@ iter_scomplex_math_s_log2(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of log2(x).
 */
-static VALUE
-scomplex_math_s_log2(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_log2, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_log2(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_log2, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_log10(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_log10(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_log10(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_log10(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_log10(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_log10(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_log10(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_log10(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_log10(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_log10(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_log10(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_log10(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_log10(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_log10(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -6135,88 +5551,80 @@ iter_scomplex_math_s_log10(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of log10(x).
 */
-static VALUE
-scomplex_math_s_log10(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_log10, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_log10(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_log10, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_exp(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_exp(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_exp(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_exp(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_exp(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_exp(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_exp(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_exp(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_exp(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_exp(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_exp(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_exp(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_exp(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_exp(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -6225,88 +5633,80 @@ iter_scomplex_math_s_exp(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of exp(x).
 */
-static VALUE
-scomplex_math_s_exp(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_exp, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_exp(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_exp, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_exp2(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_exp2(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_exp2(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_exp2(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_exp2(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_exp2(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_exp2(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_exp2(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_exp2(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_exp2(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_exp2(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_exp2(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_exp2(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_exp2(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -6315,88 +5715,80 @@ iter_scomplex_math_s_exp2(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of exp2(x).
 */
-static VALUE
-scomplex_math_s_exp2(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_exp2, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_exp2(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_exp2, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_exp10(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_exp10(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_exp10(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_exp10(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_exp10(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_exp10(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_exp10(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_exp10(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_exp10(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_exp10(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_exp10(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_exp10(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_exp10(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_exp10(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -6405,88 +5797,80 @@ iter_scomplex_math_s_exp10(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of exp10(x).
 */
-static VALUE
-scomplex_math_s_exp10(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_exp10, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_exp10(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_exp10, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_sin(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_sin(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_sin(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_sin(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_sin(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_sin(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_sin(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_sin(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_sin(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_sin(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_sin(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_sin(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_sin(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_sin(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -6495,88 +5879,80 @@ iter_scomplex_math_s_sin(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of sin(x).
 */
-static VALUE
-scomplex_math_s_sin(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_sin, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_sin(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_sin, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_cos(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_cos(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_cos(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_cos(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_cos(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_cos(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_cos(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_cos(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_cos(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_cos(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_cos(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_cos(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_cos(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_cos(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -6585,88 +5961,80 @@ iter_scomplex_math_s_cos(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of cos(x).
 */
-static VALUE
-scomplex_math_s_cos(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_cos, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_cos(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_cos, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_tan(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_tan(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_tan(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_tan(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_tan(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_tan(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_tan(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_tan(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_tan(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_tan(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_tan(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_tan(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_tan(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_tan(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -6675,88 +6043,80 @@ iter_scomplex_math_s_tan(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of tan(x).
 */
-static VALUE
-scomplex_math_s_tan(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_tan, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_tan(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_tan, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_asin(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_asin(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_asin(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_asin(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_asin(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_asin(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_asin(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_asin(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_asin(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_asin(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_asin(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_asin(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_asin(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_asin(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -6765,88 +6125,80 @@ iter_scomplex_math_s_asin(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of asin(x).
 */
-static VALUE
-scomplex_math_s_asin(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_asin, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_asin(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_asin, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_acos(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_acos(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_acos(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_acos(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_acos(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_acos(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_acos(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_acos(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_acos(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_acos(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_acos(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_acos(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_acos(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_acos(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -6855,88 +6207,80 @@ iter_scomplex_math_s_acos(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of acos(x).
 */
-static VALUE
-scomplex_math_s_acos(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_acos, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_acos(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_acos, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_atan(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_atan(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_atan(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_atan(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_atan(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_atan(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_atan(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_atan(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_atan(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_atan(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_atan(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_atan(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_atan(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_atan(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -6945,88 +6289,80 @@ iter_scomplex_math_s_atan(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of atan(x).
 */
-static VALUE
-scomplex_math_s_atan(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_atan, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_atan(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_atan, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_sinh(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_sinh(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_sinh(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_sinh(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_sinh(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_sinh(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_sinh(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_sinh(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_sinh(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_sinh(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_sinh(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_sinh(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_sinh(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_sinh(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -7035,88 +6371,80 @@ iter_scomplex_math_s_sinh(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of sinh(x).
 */
-static VALUE
-scomplex_math_s_sinh(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_sinh, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_sinh(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_sinh, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_cosh(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_cosh(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_cosh(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_cosh(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_cosh(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_cosh(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_cosh(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_cosh(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_cosh(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_cosh(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_cosh(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_cosh(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_cosh(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_cosh(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -7125,88 +6453,80 @@ iter_scomplex_math_s_cosh(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of cosh(x).
 */
-static VALUE
-scomplex_math_s_cosh(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_cosh, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_cosh(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_cosh, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_tanh(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_tanh(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_tanh(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_tanh(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_tanh(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_tanh(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_tanh(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_tanh(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_tanh(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_tanh(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_tanh(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_tanh(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_tanh(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_tanh(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -7215,88 +6535,80 @@ iter_scomplex_math_s_tanh(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of tanh(x).
 */
-static VALUE
-scomplex_math_s_tanh(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_tanh, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_tanh(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_tanh, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_asinh(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_asinh(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_asinh(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_asinh(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_asinh(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_asinh(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_asinh(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_asinh(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_asinh(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_asinh(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_asinh(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_asinh(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_asinh(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_asinh(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -7305,88 +6617,80 @@ iter_scomplex_math_s_asinh(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of asinh(x).
 */
-static VALUE
-scomplex_math_s_asinh(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_asinh, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_asinh(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_asinh, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_acosh(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_acosh(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_acosh(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_acosh(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_acosh(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_acosh(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_acosh(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_acosh(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_acosh(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_acosh(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_acosh(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_acosh(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_acosh(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_acosh(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -7395,88 +6699,80 @@ iter_scomplex_math_s_acosh(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of acosh(x).
 */
-static VALUE
-scomplex_math_s_acosh(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_acosh, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_acosh(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_acosh, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_atanh(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_atanh(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_atanh(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_atanh(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_atanh(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_atanh(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_atanh(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_atanh(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_atanh(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_atanh(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_atanh(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_atanh(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_atanh(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_atanh(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -7485,88 +6781,80 @@ iter_scomplex_math_s_atanh(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of atanh(x).
 */
-static VALUE
-scomplex_math_s_atanh(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_atanh, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_atanh(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_atanh, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-static void
-iter_scomplex_math_s_sinc(na_loop_t *const lp)
-{
-    size_t  i=0, n;
-    char   *p1, *p2;
-    ssize_t s1, s2;
-    size_t *idx1, *idx2;
-    dtype   x;
+static void iter_scomplex_math_s_sinc(na_loop_t* const lp) {
+  size_t i = 0, n;
+  char *p1, *p2;
+  ssize_t s1, s2;
+  size_t *idx1, *idx2;
+  dtype x;
 
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-    INIT_COUNTER(lp, n);
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);
+  INIT_COUNTER(lp, n);
+  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
+  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
 
-    if (idx1) {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_sinc(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            for (i=0; i<n; i++) {
-                GET_DATA_INDEX(p1,idx1,dtype,x);
-                x = m_sinc(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-        }
+  if (idx1) {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_sinc(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
     } else {
-        if (idx2) {
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_sinc(x);
-                SET_DATA_INDEX(p2,idx2,dtype,x);
-            }
-        } else {
-            //
-            if (is_aligned(p1,sizeof(dtype)) &&
-                is_aligned(p2,sizeof(dtype)) ) {
-                if (s1 == sizeof(dtype) &&
-                    s2 == sizeof(dtype) ) {
-                    //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                        for (; i<n; i++) {
-                            ((dtype*)p2)[i] = m_sinc(((dtype*)p1)[i]);
-                        }
-                        //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
-                    return;
-                }
-                if (is_aligned_step(s1,sizeof(dtype)) &&
-                    is_aligned_step(s2,sizeof(dtype)) ) {
-                    //
-                    for (i=0; i<n; i++) {
-                        *(dtype*)p2 = m_sinc(*(dtype*)p1);
-                        p1 += s1;
-                        p2 += s2;
-                    }
-                    return;
-                    //
-                }
-            }
-            for (i=0; i<n; i++) {
-                GET_DATA_STRIDE(p1,s1,dtype,x);
-                x = m_sinc(x);
-                SET_DATA_STRIDE(p2,s2,dtype,x);
-            }
-            //
-        }
+      for (i = 0; i < n; i++) {
+        GET_DATA_INDEX(p1, idx1, dtype, x);
+        x = m_sinc(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
     }
+  } else {
+    if (idx2) {
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_sinc(x);
+        SET_DATA_INDEX(p2, idx2, dtype, x);
+      }
+    } else {
+      //
+      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
+        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
+          //
+#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          for (; i < n; i++) {
+            ((dtype*)p2)[i] = m_sinc(((dtype*)p1)[i]);
+          }
+          //
+#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
+          return;
+        }
+        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
+          //
+          for (i = 0; i < n; i++) {
+            *(dtype*)p2 = m_sinc(*(dtype*)p1);
+            p1 += s1;
+            p2 += s2;
+          }
+          return;
+          //
+        }
+      }
+      for (i = 0; i < n; i++) {
+        GET_DATA_STRIDE(p1, s1, dtype, x);
+        x = m_sinc(x);
+        SET_DATA_STRIDE(p2, s2, dtype, x);
+      }
+      //
+    }
+  }
 }
 
 /*
@@ -7575,201 +6863,188 @@ iter_scomplex_math_s_sinc(na_loop_t *const lp)
   @param [Numo::NArray,Numeric] x  input value
   @return [Numo::SComplex] result of sinc(x).
 */
-static VALUE
-scomplex_math_s_sinc(VALUE mod, VALUE a1)
-{
-    ndfunc_arg_in_t ain[1] = {{cT,0}};
-    ndfunc_arg_out_t aout[1] = {{cT,0}};
-    ndfunc_t ndf = { iter_scomplex_math_s_sinc, FULL_LOOP, 1, 1, ain, aout };
+static VALUE scomplex_math_s_sinc(VALUE mod, VALUE a1) {
+  ndfunc_arg_in_t ain[1] = {{cT, 0}};
+  ndfunc_arg_out_t aout[1] = {{cT, 0}};
+  ndfunc_t ndf = {iter_scomplex_math_s_sinc, FULL_LOOP, 1, 1, ain, aout};
 
-    return na_ndloop(&ndf, 1, a1);
+  return na_ndloop(&ndf, 1, a1);
 }
 
-
-
 #line 37 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/lib.c"
-void
-Init_numo_scomplex(void)
-{
-    VALUE hCast, mNumo;
+void Init_numo_scomplex(void) {
+  VALUE hCast, mNumo;
 
-    mNumo = rb_define_module("Numo");
+  mNumo = rb_define_module("Numo");
 
-    
-    id_pow = rb_intern("**");
-    id_cast = rb_intern("cast");
-    id_copysign = rb_intern("copysign");
-    id_eq = rb_intern("eq");
-    id_imag = rb_intern("imag");
-    id_mulsum = rb_intern("mulsum");
-    id_ne = rb_intern("ne");
-    id_nearly_eq = rb_intern("nearly_eq");
-    id_real = rb_intern("real");
-    id_to_a = rb_intern("to_a");
-
+  id_pow = rb_intern("**");
+  id_cast = rb_intern("cast");
+  id_copysign = rb_intern("copysign");
+  id_eq = rb_intern("eq");
+  id_imag = rb_intern("imag");
+  id_mulsum = rb_intern("mulsum");
+  id_ne = rb_intern("ne");
+  id_nearly_eq = rb_intern("nearly_eq");
+  id_real = rb_intern("real");
+  id_to_a = rb_intern("to_a");
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/init_class.c"
-    /*
-      Document-class: Numo::SComplex
-      
-    */
-    cT = rb_define_class_under(mNumo, "SComplex", cNArray);
+  /*
+    Document-class: Numo::SComplex
 
-  
-    // alias of SComplex
-    rb_define_const(mNumo, "Complex32", numo_cSComplex);
-  
+  */
+  cT = rb_define_class_under(mNumo, "SComplex", cNArray);
 
-    hCast = rb_hash_new();
-    rb_define_const(cT, "UPCAST", hCast);
-    rb_hash_aset(hCast, rb_cArray,   cT);
-    
-    #ifdef RUBY_INTEGER_UNIFICATION
-    rb_hash_aset(hCast, rb_cInteger, cT);
-    #else
-    rb_hash_aset(hCast, rb_cFixnum, cT);
-    rb_hash_aset(hCast, rb_cBignum, cT);
-    #endif
-    rb_hash_aset(hCast, rb_cFloat, cT);
-    rb_hash_aset(hCast, rb_cComplex, cT);
-    rb_hash_aset(hCast, numo_cRObject, numo_cRObject);
-    rb_hash_aset(hCast, numo_cDComplex, numo_cDComplex);
-    rb_hash_aset(hCast, numo_cSComplex, numo_cSComplex);
-    rb_hash_aset(hCast, numo_cDFloat, numo_cDComplex);
-    rb_hash_aset(hCast, numo_cSFloat, numo_cSComplex);
-    rb_hash_aset(hCast, numo_cInt64, numo_cSComplex);
-    rb_hash_aset(hCast, numo_cInt32, numo_cSComplex);
-    rb_hash_aset(hCast, numo_cInt16, numo_cSComplex);
-    rb_hash_aset(hCast, numo_cInt8, numo_cSComplex);
-    rb_hash_aset(hCast, numo_cUInt64, numo_cSComplex);
-    rb_hash_aset(hCast, numo_cUInt32, numo_cSComplex);
-    rb_hash_aset(hCast, numo_cUInt16, numo_cSComplex);
-    rb_hash_aset(hCast, numo_cUInt8, numo_cSComplex);
+  // alias of SComplex
+  rb_define_const(mNumo, "Complex32", numo_cSComplex);
+
+  hCast = rb_hash_new();
+  rb_define_const(cT, "UPCAST", hCast);
+  rb_hash_aset(hCast, rb_cArray, cT);
+
+#ifdef RUBY_INTEGER_UNIFICATION
+  rb_hash_aset(hCast, rb_cInteger, cT);
+#else
+  rb_hash_aset(hCast, rb_cFixnum, cT);
+  rb_hash_aset(hCast, rb_cBignum, cT);
+#endif
+  rb_hash_aset(hCast, rb_cFloat, cT);
+  rb_hash_aset(hCast, rb_cComplex, cT);
+  rb_hash_aset(hCast, numo_cRObject, numo_cRObject);
+  rb_hash_aset(hCast, numo_cDComplex, numo_cDComplex);
+  rb_hash_aset(hCast, numo_cSComplex, numo_cSComplex);
+  rb_hash_aset(hCast, numo_cDFloat, numo_cDComplex);
+  rb_hash_aset(hCast, numo_cSFloat, numo_cSComplex);
+  rb_hash_aset(hCast, numo_cInt64, numo_cSComplex);
+  rb_hash_aset(hCast, numo_cInt32, numo_cSComplex);
+  rb_hash_aset(hCast, numo_cInt16, numo_cSComplex);
+  rb_hash_aset(hCast, numo_cInt8, numo_cSComplex);
+  rb_hash_aset(hCast, numo_cUInt64, numo_cSComplex);
+  rb_hash_aset(hCast, numo_cUInt32, numo_cSComplex);
+  rb_hash_aset(hCast, numo_cUInt16, numo_cSComplex);
+  rb_hash_aset(hCast, numo_cUInt8, numo_cSComplex);
 #line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/init_class.c"
-    rb_obj_freeze(hCast);
+  rb_obj_freeze(hCast);
 
-    
-    /**/
-    rb_define_const(cT,"ELEMENT_BIT_SIZE",INT2FIX(sizeof(dtype)*8));
-    /**/
-    rb_define_const(cT,"ELEMENT_BYTE_SIZE",INT2FIX(sizeof(dtype)));
-    /**/
-    rb_define_const(cT,"CONTIGUOUS_STRIDE",INT2FIX(sizeof(dtype)));
-    /**/
-    rb_define_const(cT,"EPSILON",M_EPSILON);
-    /**/
-    rb_define_const(cT,"MAX",M_MAX);
-    /**/
-    rb_define_const(cT,"MIN",M_MIN);
-    rb_define_alloc_func(cT, scomplex_s_alloc_func);
-    rb_define_method(cT, "allocate", scomplex_allocate, 0);
-    rb_define_method(cT, "extract", scomplex_extract, 0);
-    
-    rb_define_method(cT, "store", scomplex_store, 1);
-    
-    
-    rb_define_singleton_method(cT, "cast", scomplex_s_cast, 1);
-    rb_define_method(cT, "[]", scomplex_aref, -1);
-    rb_define_method(cT, "[]=", scomplex_aset, -1);
-    rb_define_method(cT, "coerce_cast", scomplex_coerce_cast, 1);
-    rb_define_method(cT, "to_a", scomplex_to_a, 0);
-    rb_define_method(cT, "fill", scomplex_fill, 1);
-    rb_define_method(cT, "format", scomplex_format, -1);
-    rb_define_method(cT, "format_to_a", scomplex_format_to_a, -1);
-    rb_define_method(cT, "inspect", scomplex_inspect, 0);
-    rb_define_method(cT, "each", scomplex_each, 0);
-    rb_define_method(cT, "map", scomplex_map, 0);
-    rb_define_method(cT, "each_with_index", scomplex_each_with_index, 0);
-    rb_define_method(cT, "map_with_index", scomplex_map_with_index, 0);
-    rb_define_method(cT, "abs", scomplex_abs, 0);
-    rb_define_method(cT, "+", scomplex_add, 1);
-    rb_define_method(cT, "-", scomplex_sub, 1);
-    rb_define_method(cT, "*", scomplex_mul, 1);
-    rb_define_method(cT, "/", scomplex_div, 1);
-    rb_define_method(cT, "**", scomplex_pow, 1);
-    rb_define_alias(cT, "pow", "**");
-    rb_define_method(cT, "-@", scomplex_minus, 0);
-    rb_define_method(cT, "reciprocal", scomplex_reciprocal, 0);
-    rb_define_method(cT, "sign", scomplex_sign, 0);
-    rb_define_method(cT, "square", scomplex_square, 0);
-    rb_define_method(cT, "conj", scomplex_conj, 0);
-    rb_define_method(cT, "im", scomplex_im, 0);
-    rb_define_method(cT, "real", scomplex_real, 0);
-    rb_define_method(cT, "imag", scomplex_imag, 0);
-    rb_define_method(cT, "arg", scomplex_arg, 0);
-    rb_define_alias(cT, "angle", "arg");
-    rb_define_method(cT, "set_imag", scomplex_set_imag, 1);
-    rb_define_method(cT, "set_real", scomplex_set_real, 1);
-    rb_define_alias(cT, "imag=", "set_imag");
-    rb_define_alias(cT, "real=", "set_real");
-    rb_define_alias(cT, "conjugate", "conj");
-    rb_define_method(cT, "eq", scomplex_eq, 1);
-    rb_define_method(cT, "ne", scomplex_ne, 1);
-    rb_define_method(cT, "nearly_eq", scomplex_nearly_eq, 1);
-    rb_define_alias(cT, "close_to", "nearly_eq");
-    rb_define_method(cT, "floor", scomplex_floor, 0);
-    rb_define_method(cT, "round", scomplex_round, 0);
-    rb_define_method(cT, "ceil", scomplex_ceil, 0);
-    rb_define_method(cT, "trunc", scomplex_trunc, 0);
-    rb_define_method(cT, "rint", scomplex_rint, 0);
-    rb_define_method(cT, "copysign", scomplex_copysign, 1);
-    rb_define_method(cT, "isnan", scomplex_isnan, 0);
-    rb_define_method(cT, "isinf", scomplex_isinf, 0);
-    rb_define_method(cT, "isposinf", scomplex_isposinf, 0);
-    rb_define_method(cT, "isneginf", scomplex_isneginf, 0);
-    rb_define_method(cT, "isfinite", scomplex_isfinite, 0);
-    rb_define_method(cT, "sum", scomplex_sum, -1);
-    rb_define_method(cT, "prod", scomplex_prod, -1);
-    rb_define_method(cT, "mean", scomplex_mean, -1);
-    rb_define_method(cT, "stddev", scomplex_stddev, -1);
-    rb_define_method(cT, "var", scomplex_var, -1);
-    rb_define_method(cT, "rms", scomplex_rms, -1);
-    rb_define_method(cT, "cumsum", scomplex_cumsum, -1);
-    rb_define_method(cT, "cumprod", scomplex_cumprod, -1);
-    rb_define_method(cT, "mulsum", scomplex_mulsum, -1);
-    rb_define_method(cT, "seq", scomplex_seq, -1);
-    rb_define_method(cT, "logseq", scomplex_logseq, -1);
-    rb_define_method(cT, "eye", scomplex_eye, -1);
-    rb_define_alias(cT, "indgen", "seq");
-    rb_define_method(cT, "rand", scomplex_rand, -1);
-    rb_define_method(cT, "rand_norm", scomplex_rand_norm, -1);
-    rb_define_method(cT, "poly", scomplex_poly, -2);
+  /**/
+  rb_define_const(cT, "ELEMENT_BIT_SIZE", INT2FIX(sizeof(dtype) * 8));
+  /**/
+  rb_define_const(cT, "ELEMENT_BYTE_SIZE", INT2FIX(sizeof(dtype)));
+  /**/
+  rb_define_const(cT, "CONTIGUOUS_STRIDE", INT2FIX(sizeof(dtype)));
+  /**/
+  rb_define_const(cT, "EPSILON", M_EPSILON);
+  /**/
+  rb_define_const(cT, "MAX", M_MAX);
+  /**/
+  rb_define_const(cT, "MIN", M_MIN);
+  rb_define_alloc_func(cT, scomplex_s_alloc_func);
+  rb_define_method(cT, "allocate", scomplex_allocate, 0);
+  rb_define_method(cT, "extract", scomplex_extract, 0);
+
+  rb_define_method(cT, "store", scomplex_store, 1);
+
+  rb_define_singleton_method(cT, "cast", scomplex_s_cast, 1);
+  rb_define_method(cT, "[]", scomplex_aref, -1);
+  rb_define_method(cT, "[]=", scomplex_aset, -1);
+  rb_define_method(cT, "coerce_cast", scomplex_coerce_cast, 1);
+  rb_define_method(cT, "to_a", scomplex_to_a, 0);
+  rb_define_method(cT, "fill", scomplex_fill, 1);
+  rb_define_method(cT, "format", scomplex_format, -1);
+  rb_define_method(cT, "format_to_a", scomplex_format_to_a, -1);
+  rb_define_method(cT, "inspect", scomplex_inspect, 0);
+  rb_define_method(cT, "each", scomplex_each, 0);
+  rb_define_method(cT, "map", scomplex_map, 0);
+  rb_define_method(cT, "each_with_index", scomplex_each_with_index, 0);
+  rb_define_method(cT, "map_with_index", scomplex_map_with_index, 0);
+  rb_define_method(cT, "abs", scomplex_abs, 0);
+  rb_define_method(cT, "+", scomplex_add, 1);
+  rb_define_method(cT, "-", scomplex_sub, 1);
+  rb_define_method(cT, "*", scomplex_mul, 1);
+  rb_define_method(cT, "/", scomplex_div, 1);
+  rb_define_method(cT, "**", scomplex_pow, 1);
+  rb_define_alias(cT, "pow", "**");
+  rb_define_method(cT, "-@", scomplex_minus, 0);
+  rb_define_method(cT, "reciprocal", scomplex_reciprocal, 0);
+  rb_define_method(cT, "sign", scomplex_sign, 0);
+  rb_define_method(cT, "square", scomplex_square, 0);
+  rb_define_method(cT, "conj", scomplex_conj, 0);
+  rb_define_method(cT, "im", scomplex_im, 0);
+  rb_define_method(cT, "real", scomplex_real, 0);
+  rb_define_method(cT, "imag", scomplex_imag, 0);
+  rb_define_method(cT, "arg", scomplex_arg, 0);
+  rb_define_alias(cT, "angle", "arg");
+  rb_define_method(cT, "set_imag", scomplex_set_imag, 1);
+  rb_define_method(cT, "set_real", scomplex_set_real, 1);
+  rb_define_alias(cT, "imag=", "set_imag");
+  rb_define_alias(cT, "real=", "set_real");
+  rb_define_alias(cT, "conjugate", "conj");
+  rb_define_method(cT, "eq", scomplex_eq, 1);
+  rb_define_method(cT, "ne", scomplex_ne, 1);
+  rb_define_method(cT, "nearly_eq", scomplex_nearly_eq, 1);
+  rb_define_alias(cT, "close_to", "nearly_eq");
+  rb_define_method(cT, "floor", scomplex_floor, 0);
+  rb_define_method(cT, "round", scomplex_round, 0);
+  rb_define_method(cT, "ceil", scomplex_ceil, 0);
+  rb_define_method(cT, "trunc", scomplex_trunc, 0);
+  rb_define_method(cT, "rint", scomplex_rint, 0);
+  rb_define_method(cT, "copysign", scomplex_copysign, 1);
+  rb_define_method(cT, "isnan", scomplex_isnan, 0);
+  rb_define_method(cT, "isinf", scomplex_isinf, 0);
+  rb_define_method(cT, "isposinf", scomplex_isposinf, 0);
+  rb_define_method(cT, "isneginf", scomplex_isneginf, 0);
+  rb_define_method(cT, "isfinite", scomplex_isfinite, 0);
+  rb_define_method(cT, "sum", scomplex_sum, -1);
+  rb_define_method(cT, "prod", scomplex_prod, -1);
+  rb_define_method(cT, "mean", scomplex_mean, -1);
+  rb_define_method(cT, "stddev", scomplex_stddev, -1);
+  rb_define_method(cT, "var", scomplex_var, -1);
+  rb_define_method(cT, "rms", scomplex_rms, -1);
+  rb_define_method(cT, "cumsum", scomplex_cumsum, -1);
+  rb_define_method(cT, "cumprod", scomplex_cumprod, -1);
+  rb_define_method(cT, "mulsum", scomplex_mulsum, -1);
+  rb_define_method(cT, "seq", scomplex_seq, -1);
+  rb_define_method(cT, "logseq", scomplex_logseq, -1);
+  rb_define_method(cT, "eye", scomplex_eye, -1);
+  rb_define_alias(cT, "indgen", "seq");
+  rb_define_method(cT, "rand", scomplex_rand, -1);
+  rb_define_method(cT, "rand_norm", scomplex_rand_norm, -1);
+  rb_define_method(cT, "poly", scomplex_poly, -2);
 #line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/init_class.c"
-    rb_define_singleton_method(cT, "[]", scomplex_s_cast, -2);
+  rb_define_singleton_method(cT, "[]", scomplex_s_cast, -2);
 
 #line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/init_module.c"
-    /*
-      Document-module: Numo::SComplex::NMath
-      
-    */
-    
-    mTM = rb_define_module_under(cT, "Math");
-    
-    
-    rb_define_module_function(mTM, "sqrt", scomplex_math_s_sqrt, 1);
-    rb_define_module_function(mTM, "cbrt", scomplex_math_s_cbrt, 1);
-    rb_define_module_function(mTM, "log", scomplex_math_s_log, 1);
-    rb_define_module_function(mTM, "log2", scomplex_math_s_log2, 1);
-    rb_define_module_function(mTM, "log10", scomplex_math_s_log10, 1);
-    rb_define_module_function(mTM, "exp", scomplex_math_s_exp, 1);
-    rb_define_module_function(mTM, "exp2", scomplex_math_s_exp2, 1);
-    rb_define_module_function(mTM, "exp10", scomplex_math_s_exp10, 1);
-    rb_define_module_function(mTM, "sin", scomplex_math_s_sin, 1);
-    rb_define_module_function(mTM, "cos", scomplex_math_s_cos, 1);
-    rb_define_module_function(mTM, "tan", scomplex_math_s_tan, 1);
-    rb_define_module_function(mTM, "asin", scomplex_math_s_asin, 1);
-    rb_define_module_function(mTM, "acos", scomplex_math_s_acos, 1);
-    rb_define_module_function(mTM, "atan", scomplex_math_s_atan, 1);
-    rb_define_module_function(mTM, "sinh", scomplex_math_s_sinh, 1);
-    rb_define_module_function(mTM, "cosh", scomplex_math_s_cosh, 1);
-    rb_define_module_function(mTM, "tanh", scomplex_math_s_tanh, 1);
-    rb_define_module_function(mTM, "asinh", scomplex_math_s_asinh, 1);
-    rb_define_module_function(mTM, "acosh", scomplex_math_s_acosh, 1);
-    rb_define_module_function(mTM, "atanh", scomplex_math_s_atanh, 1);
-    rb_define_module_function(mTM, "sinc", scomplex_math_s_sinc, 1);
+  /*
+    Document-module: Numo::SComplex::NMath
+
+  */
+
+  mTM = rb_define_module_under(cT, "Math");
+
+  rb_define_module_function(mTM, "sqrt", scomplex_math_s_sqrt, 1);
+  rb_define_module_function(mTM, "cbrt", scomplex_math_s_cbrt, 1);
+  rb_define_module_function(mTM, "log", scomplex_math_s_log, 1);
+  rb_define_module_function(mTM, "log2", scomplex_math_s_log2, 1);
+  rb_define_module_function(mTM, "log10", scomplex_math_s_log10, 1);
+  rb_define_module_function(mTM, "exp", scomplex_math_s_exp, 1);
+  rb_define_module_function(mTM, "exp2", scomplex_math_s_exp2, 1);
+  rb_define_module_function(mTM, "exp10", scomplex_math_s_exp10, 1);
+  rb_define_module_function(mTM, "sin", scomplex_math_s_sin, 1);
+  rb_define_module_function(mTM, "cos", scomplex_math_s_cos, 1);
+  rb_define_module_function(mTM, "tan", scomplex_math_s_tan, 1);
+  rb_define_module_function(mTM, "asin", scomplex_math_s_asin, 1);
+  rb_define_module_function(mTM, "acos", scomplex_math_s_acos, 1);
+  rb_define_module_function(mTM, "atan", scomplex_math_s_atan, 1);
+  rb_define_module_function(mTM, "sinh", scomplex_math_s_sinh, 1);
+  rb_define_module_function(mTM, "cosh", scomplex_math_s_cosh, 1);
+  rb_define_module_function(mTM, "tanh", scomplex_math_s_tanh, 1);
+  rb_define_module_function(mTM, "asinh", scomplex_math_s_asinh, 1);
+  rb_define_module_function(mTM, "acosh", scomplex_math_s_acosh, 1);
+  rb_define_module_function(mTM, "atanh", scomplex_math_s_atanh, 1);
+  rb_define_module_function(mTM, "sinc", scomplex_math_s_sinc, 1);
 
 #line 11 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/init_module.c"
-    //  how to do this?
-    //rb_extend_object(cT, mTM);
+  //  how to do this?
+  // rb_extend_object(cT, mTM);
 #line 50 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/lib.c"
 }
