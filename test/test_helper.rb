@@ -1,13 +1,15 @@
-$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-require "numo/narray"
-require "test/unit"
-require "stringio"
+# frozen_string_literal: true
+
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
+require 'numo/narray'
+require 'test/unit'
+require 'stringio'
 
 class NArrayTestBase < Test::Unit::TestCase
   FLOAT_TYPES = [
     Numo::DFloat,
-    Numo::DComplex,
-  ]
+    Numo::DComplex
+  ].freeze
 
   TYPES = [
     *FLOAT_TYPES,
@@ -21,6 +23,6 @@ class NArrayTestBase < Test::Unit::TestCase
     Numo::UInt32,
     Numo::UInt16,
     Numo::UInt8,
-    Numo::RObject,
-  ]
+    Numo::RObject
+  ].freeze
 end
