@@ -1,5 +1,4 @@
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/lib.c"
 /*
   t_dcomplex.c
   Ruby/Numo::NArray - Numerical Array class for Ruby
@@ -16,7 +15,6 @@
 
 #define m_map(x) m_num_to_data(rb_yield(m_data_to_num(x)))
 
-#line 18 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/lib.c"
 #include <emmintrin.h>
 #define SIMD_ALIGNMENT_SIZE 16
 
@@ -31,14 +29,11 @@ static ID id_nearly_eq;
 static ID id_real;
 static ID id_to_a;
 
-#line 27 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/lib.c"
 #include <numo/types/dcomplex.h>
 
-#line 30 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/lib.c"
 VALUE cT;
 extern VALUE cRT;
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/class.c"
 /*
   class definition: Numo::DComplex
 */
@@ -47,7 +42,6 @@ VALUE cT;
 
 static VALUE dcomplex_store(VALUE, VALUE);
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
 static size_t dcomplex_memsize(const void* ptr) {
   size_t size = sizeof(narray_data_t);
   const narray_data_t* na = (const narray_data_t*)ptr;
@@ -56,7 +50,6 @@ static size_t dcomplex_memsize(const void* ptr) {
 
   if (na->ptr != NULL) {
 
-#line 13 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
     size += na->base.size * sizeof(dtype);
   }
   if (na->base.size > 0) {
@@ -89,14 +82,12 @@ static void dcomplex_free(void* ptr) {
 
 static narray_type_info_t dcomplex_info = {
 
-#line 52 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
   0,             // element_bits
   sizeof(dtype), // element_bytes
   sizeof(dtype), // element_stride (in bytes)
 
 };
 
-#line 85 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
 static const rb_data_type_t dcomplex_data_type = {
   "Numo::DComplex",
   {
@@ -109,7 +100,6 @@ static const rb_data_type_t dcomplex_data_type = {
   RUBY_TYPED_FROZEN_SHAREABLE, // flags
 };
 
-#line 95 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
 static VALUE dcomplex_s_alloc_func(VALUE klass) {
   narray_data_t* na = ALLOC(narray_data_t);
 
@@ -125,7 +115,6 @@ static VALUE dcomplex_s_alloc_func(VALUE klass) {
   return TypedData_Wrap_Struct(klass, &dcomplex_data_type, (void*)na);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/allocate.c"
 static VALUE dcomplex_allocate(VALUE self) {
   narray_t* na;
   char* ptr;
@@ -138,7 +127,6 @@ static VALUE dcomplex_allocate(VALUE self) {
     if (na->size > 0 && ptr == NULL) {
       ptr = xmalloc(sizeof(dtype) * na->size);
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/allocate.c"
       NA_DATA_PTR(na) = ptr;
       NA_DATA_OWNED(na) = TRUE;
     }
@@ -155,7 +143,6 @@ static VALUE dcomplex_allocate(VALUE self) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract.c"
 /*
   Extract an element only if self is a dimensionless NArray.
   @overload extract
@@ -178,7 +165,6 @@ static VALUE dcomplex_extract(VALUE self) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/new_dim0.c"
 static VALUE dcomplex_new_dim0(dtype x) {
   VALUE v;
   dtype* ptr;
@@ -190,9 +176,7 @@ static VALUE dcomplex_new_dim0(dtype x) {
   return v;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_numeric.c"
 static VALUE dcomplex_store_numeric(VALUE self, VALUE obj) {
   dtype x;
   x = m_num_to_data(obj);
@@ -201,7 +185,6 @@ static VALUE dcomplex_store_numeric(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_bit.c"
 static void iter_dcomplex_store_bit(na_loop_t* const lp) {
   size_t i;
   char* p1;
@@ -257,7 +240,6 @@ static VALUE dcomplex_store_bit(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
 static void iter_dcomplex_store_dcomplex(na_loop_t* const lp) {
   size_t i, s1, s2;
   char *p1, *p2;
@@ -307,7 +289,6 @@ static VALUE dcomplex_store_dcomplex(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
 static void iter_dcomplex_store_scomplex(na_loop_t* const lp) {
   size_t i, s1, s2;
   char *p1, *p2;
@@ -357,7 +338,6 @@ static VALUE dcomplex_store_scomplex(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
 static void iter_dcomplex_store_dfloat(na_loop_t* const lp) {
   size_t i, s1, s2;
   char *p1, *p2;
@@ -407,7 +387,6 @@ static VALUE dcomplex_store_dfloat(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
 static void iter_dcomplex_store_sfloat(na_loop_t* const lp) {
   size_t i, s1, s2;
   char *p1, *p2;
@@ -457,7 +436,6 @@ static VALUE dcomplex_store_sfloat(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
 static void iter_dcomplex_store_int64(na_loop_t* const lp) {
   size_t i, s1, s2;
   char *p1, *p2;
@@ -507,7 +485,6 @@ static VALUE dcomplex_store_int64(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
 static void iter_dcomplex_store_int32(na_loop_t* const lp) {
   size_t i, s1, s2;
   char *p1, *p2;
@@ -557,7 +534,6 @@ static VALUE dcomplex_store_int32(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
 static void iter_dcomplex_store_int16(na_loop_t* const lp) {
   size_t i, s1, s2;
   char *p1, *p2;
@@ -607,7 +583,6 @@ static VALUE dcomplex_store_int16(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
 static void iter_dcomplex_store_int8(na_loop_t* const lp) {
   size_t i, s1, s2;
   char *p1, *p2;
@@ -657,7 +632,6 @@ static VALUE dcomplex_store_int8(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
 static void iter_dcomplex_store_uint64(na_loop_t* const lp) {
   size_t i, s1, s2;
   char *p1, *p2;
@@ -707,7 +681,6 @@ static VALUE dcomplex_store_uint64(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
 static void iter_dcomplex_store_uint32(na_loop_t* const lp) {
   size_t i, s1, s2;
   char *p1, *p2;
@@ -757,7 +730,6 @@ static VALUE dcomplex_store_uint32(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
 static void iter_dcomplex_store_uint16(na_loop_t* const lp) {
   size_t i, s1, s2;
   char *p1, *p2;
@@ -807,7 +779,6 @@ static VALUE dcomplex_store_uint16(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
 static void iter_dcomplex_store_uint8(na_loop_t* const lp) {
   size_t i, s1, s2;
   char *p1, *p2;
@@ -857,7 +828,6 @@ static VALUE dcomplex_store_uint8(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_from.c"
 static void iter_dcomplex_store_robject(na_loop_t* const lp) {
   size_t i, s1, s2;
   char *p1, *p2;
@@ -907,7 +877,6 @@ static VALUE dcomplex_store_robject(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_array.c"
 static void iter_dcomplex_store_array(na_loop_t* const lp) {
   size_t i, n;
   size_t i1, n1;
@@ -1017,7 +986,6 @@ static VALUE dcomplex_store_array(VALUE self, VALUE rary) {
   return self;
 }
 
-#line 5 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
 /*
   Store elements to Numo::DComplex from other.
   @overload store(other)
@@ -1034,91 +1002,76 @@ static VALUE dcomplex_store(VALUE self, VALUE obj) {
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (IS_INTEGER_CLASS(klass) || klass == rb_cFloat || klass == rb_cComplex) {
     dcomplex_store_numeric(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cBit) {
     dcomplex_store_bit(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cSComplex) {
     dcomplex_store_scomplex(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cDFloat) {
     dcomplex_store_dfloat(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cSFloat) {
     dcomplex_store_sfloat(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cInt64) {
     dcomplex_store_int64(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cInt32) {
     dcomplex_store_int32(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cInt16) {
     dcomplex_store_int16(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cInt8) {
     dcomplex_store_int8(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cUInt64) {
     dcomplex_store_uint64(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cUInt32) {
     dcomplex_store_uint32(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cUInt16) {
     dcomplex_store_uint16(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cUInt8) {
     dcomplex_store_uint8(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cRObject) {
     dcomplex_store_robject(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == rb_cArray) {
     dcomplex_store_array(self, obj);
     return self;
@@ -1132,14 +1085,12 @@ static VALUE dcomplex_store(VALUE self, VALUE obj) {
     }
   }
 
-#line 36 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   rb_raise(nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)),
            rb_class2name(rb_obj_class(self)));
 
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
 /*
   Convert a data value of obj (with a single element) to dtype.
 */
@@ -1167,7 +1118,6 @@ static dtype dcomplex_extract_data(VALUE obj) {
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cBit) {
       {
         BIT_DIGIT b;
@@ -1177,7 +1127,6 @@ static dtype dcomplex_extract_data(VALUE obj) {
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cSComplex) {
       {
         scomplex* p = (scomplex*)(ptr + pos);
@@ -1186,67 +1135,56 @@ static dtype dcomplex_extract_data(VALUE obj) {
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cDFloat) {
       x = m_from_real(*(double*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cSFloat) {
       x = m_from_real(*(float*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cInt64) {
       x = m_from_int64(*(int64_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cInt32) {
       x = m_from_int32(*(int32_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cInt16) {
       x = m_from_sint(*(int16_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cInt8) {
       x = m_from_sint(*(int8_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cUInt64) {
       x = m_from_uint64(*(u_int64_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cUInt32) {
       x = m_from_uint32(*(u_int32_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cUInt16) {
       x = m_from_sint(*(u_int16_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cUInt8) {
       x = m_from_sint(*(u_int8_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cRObject) {
       x = m_num_to_data(*(VALUE*)(ptr + pos));
       return x;
@@ -1258,7 +1196,6 @@ static dtype dcomplex_extract_data(VALUE obj) {
       return dcomplex_extract_data(r);
     }
 
-#line 36 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     rb_raise(nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)), rb_class2name(cT));
   }
   if (TYPE(obj) == T_ARRAY) {
@@ -1270,7 +1207,6 @@ static dtype dcomplex_extract_data(VALUE obj) {
   return m_num_to_data(obj);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cast_array.c"
 static VALUE dcomplex_cast_array(VALUE rary) {
   VALUE nary;
   narray_t* na;
@@ -1283,8 +1219,6 @@ static VALUE dcomplex_cast_array(VALUE rary) {
   return nary;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cast.c"
-#line 5 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cast.c"
 /*
   Cast object to Numo::DComplex.
   @overload [](elements)
@@ -1324,12 +1258,10 @@ static VALUE dcomplex_s_cast(VALUE type, VALUE obj) {
     return dcomplex_cast_array(obj);
   }
 
-#line 48 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cast.c"
   rb_raise(nary_eCastError, "cannot cast to %s", rb_class2name(type));
   return Qnil;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/aref.c"
 /*
   Multi-dimensional element reference.
   @overload [](dim0,...,dimL)
@@ -1353,7 +1285,6 @@ static VALUE dcomplex_aref(int argc, VALUE* argv, VALUE self) {
   }
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/aset.c"
 /*
   Multi-dimensional element assignment.
   @overload []=(dim0,...,dimL,val)
@@ -1388,7 +1319,6 @@ static VALUE dcomplex_aset(int argc, VALUE* argv, VALUE self) {
   return argv[argc];
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/coerce_cast.c"
 /*
   return NArray with cast to the type of self.
   @overload coerce_cast(type)
@@ -1396,7 +1326,6 @@ static VALUE dcomplex_aset(int argc, VALUE* argv, VALUE self) {
 */
 static VALUE dcomplex_coerce_cast(VALUE self, VALUE type) { return Qnil; }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/to_a.c"
 static void iter_dcomplex_to_a(na_loop_t* const lp) {
   size_t i, s1;
   char* p1;
@@ -1435,7 +1364,6 @@ static VALUE dcomplex_to_a(VALUE self) {
   return na_ndloop_cast_narray_to_rarray(&ndf, self, Qnil);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/fill.c"
 static void iter_dcomplex_fill(na_loop_t* const lp) {
   size_t i;
   char* p1;
@@ -1471,7 +1399,6 @@ static VALUE dcomplex_fill(VALUE self, VALUE val) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/format.c"
 static VALUE format_dcomplex(VALUE fmt, dtype* x) {
   // fix-me
   char s[48];
@@ -1529,7 +1456,6 @@ static VALUE dcomplex_format(int argc, VALUE* argv, VALUE self) {
   return na_ndloop(&ndf, 2, self, fmt);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/format_to_a.c"
 static void iter_dcomplex_format_to_a(na_loop_t* const lp) {
   size_t i;
   char* p1;
@@ -1576,11 +1502,8 @@ static VALUE dcomplex_format_to_a(int argc, VALUE* argv, VALUE self) {
   return na_ndloop_cast_narray_to_rarray(&ndf, self, fmt);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/inspect.c"
 static VALUE iter_dcomplex_inspect(char* ptr, size_t pos, VALUE fmt) {
-#line 7 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/inspect.c"
   return format_dcomplex(fmt, (dtype*)(ptr + pos));
-#line 9 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/inspect.c"
 }
 
 /*
@@ -1590,7 +1513,6 @@ static VALUE iter_dcomplex_inspect(char* ptr, size_t pos, VALUE fmt) {
 */
 static VALUE dcomplex_inspect(VALUE ary) { return na_ndloop_inspect(ary, iter_dcomplex_inspect, Qnil); }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/each.c"
 static void iter_dcomplex_each(na_loop_t* const lp) {
   size_t i, s1;
   char* p1;
@@ -1633,7 +1555,6 @@ static VALUE dcomplex_each(VALUE self) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
 static void iter_dcomplex_map(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2;
@@ -1709,7 +1630,6 @@ static VALUE dcomplex_map(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/each_with_index.c"
 static inline void yield_each_with_index(dtype x, size_t* c, VALUE* a, int nd, int md) {
   int j;
 
@@ -1774,7 +1694,6 @@ static VALUE dcomplex_each_with_index(VALUE self) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/map_with_index.c"
 static inline dtype yield_map_with_index(dtype x, size_t* c, VALUE* a, int nd, int md) {
   int j;
   VALUE y;
@@ -1866,7 +1785,6 @@ static VALUE dcomplex_map_with_index(VALUE self) {
   return na_ndloop_with_index(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary2.c"
 static void iter_dcomplex_abs(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -1921,19 +1839,15 @@ static VALUE dcomplex_abs(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-#line 8 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
 #define check_intdivzero(y)                                                                                                    \
   {}
 
-#line 11 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
 static void iter_dcomplex_add(na_loop_t* const lp) {
   size_t i = 0;
   size_t n;
   char *p1, *p2, *p3;
   ssize_t s1, s2, s3;
 
-#line 32 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
   INIT_COUNTER(lp, n);
   INIT_PTR(lp, 0, p1, s1);
   INIT_PTR(lp, 1, p2, s2);
@@ -1943,7 +1857,6 @@ static void iter_dcomplex_add(na_loop_t* const lp) {
   if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
-#line 84 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
       if (p1 == p3) { // inplace case
         for (; i < n; i++) {
           check_intdivzero(((dtype*)p2)[i]);
@@ -1955,7 +1868,6 @@ static void iter_dcomplex_add(na_loop_t* const lp) {
           ((dtype*)p3)[i] = m_add(((dtype*)p1)[i], ((dtype*)p2)[i]);
         }
       }
-#line 98 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
       return;
     }
 
@@ -1965,7 +1877,6 @@ static void iter_dcomplex_add(na_loop_t* const lp) {
       if (s2 == 0) { // Broadcasting from scalar value.
         check_intdivzero(*(dtype*)p2);
         if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
-#line 150 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
           if (p1 == p3) { // inplace case
             for (; i < n; i++) {
               ((dtype*)p1)[i] = m_add(((dtype*)p1)[i], *(dtype*)p2);
@@ -1975,7 +1886,6 @@ static void iter_dcomplex_add(na_loop_t* const lp) {
               ((dtype*)p3)[i] = m_add(((dtype*)p1)[i], *(dtype*)p2);
             }
           }
-#line 162 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
         } else {
           for (i = 0; i < n; i++) {
             *(dtype*)p3 = m_add(*(dtype*)p1, *(dtype*)p2);
@@ -2034,7 +1944,6 @@ static VALUE dcomplex_add_self(VALUE self, VALUE other) {
 */
 static VALUE dcomplex_add(VALUE self, VALUE other) {
 
-#line 226 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
   VALUE klass, v;
 
   klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
@@ -2046,19 +1955,15 @@ static VALUE dcomplex_add(VALUE self, VALUE other) {
   }
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-#line 8 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
 #define check_intdivzero(y)                                                                                                    \
   {}
 
-#line 11 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
 static void iter_dcomplex_sub(na_loop_t* const lp) {
   size_t i = 0;
   size_t n;
   char *p1, *p2, *p3;
   ssize_t s1, s2, s3;
 
-#line 32 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
   INIT_COUNTER(lp, n);
   INIT_PTR(lp, 0, p1, s1);
   INIT_PTR(lp, 1, p2, s2);
@@ -2068,7 +1973,6 @@ static void iter_dcomplex_sub(na_loop_t* const lp) {
   if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
-#line 84 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
       if (p1 == p3) { // inplace case
         for (; i < n; i++) {
           check_intdivzero(((dtype*)p2)[i]);
@@ -2080,7 +1984,6 @@ static void iter_dcomplex_sub(na_loop_t* const lp) {
           ((dtype*)p3)[i] = m_sub(((dtype*)p1)[i], ((dtype*)p2)[i]);
         }
       }
-#line 98 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
       return;
     }
 
@@ -2090,7 +1993,6 @@ static void iter_dcomplex_sub(na_loop_t* const lp) {
       if (s2 == 0) { // Broadcasting from scalar value.
         check_intdivzero(*(dtype*)p2);
         if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
-#line 150 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
           if (p1 == p3) { // inplace case
             for (; i < n; i++) {
               ((dtype*)p1)[i] = m_sub(((dtype*)p1)[i], *(dtype*)p2);
@@ -2100,7 +2002,6 @@ static void iter_dcomplex_sub(na_loop_t* const lp) {
               ((dtype*)p3)[i] = m_sub(((dtype*)p1)[i], *(dtype*)p2);
             }
           }
-#line 162 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
         } else {
           for (i = 0; i < n; i++) {
             *(dtype*)p3 = m_sub(*(dtype*)p1, *(dtype*)p2);
@@ -2159,7 +2060,6 @@ static VALUE dcomplex_sub_self(VALUE self, VALUE other) {
 */
 static VALUE dcomplex_sub(VALUE self, VALUE other) {
 
-#line 226 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
   VALUE klass, v;
 
   klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
@@ -2171,19 +2071,15 @@ static VALUE dcomplex_sub(VALUE self, VALUE other) {
   }
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-#line 8 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
 #define check_intdivzero(y)                                                                                                    \
   {}
 
-#line 11 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
 static void iter_dcomplex_mul(na_loop_t* const lp) {
   size_t i = 0;
   size_t n;
   char *p1, *p2, *p3;
   ssize_t s1, s2, s3;
 
-#line 32 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
   INIT_COUNTER(lp, n);
   INIT_PTR(lp, 0, p1, s1);
   INIT_PTR(lp, 1, p2, s2);
@@ -2193,7 +2089,6 @@ static void iter_dcomplex_mul(na_loop_t* const lp) {
   if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
-#line 84 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
       if (p1 == p3) { // inplace case
         for (; i < n; i++) {
           check_intdivzero(((dtype*)p2)[i]);
@@ -2205,7 +2100,6 @@ static void iter_dcomplex_mul(na_loop_t* const lp) {
           ((dtype*)p3)[i] = m_mul(((dtype*)p1)[i], ((dtype*)p2)[i]);
         }
       }
-#line 98 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
       return;
     }
 
@@ -2215,7 +2109,6 @@ static void iter_dcomplex_mul(na_loop_t* const lp) {
       if (s2 == 0) { // Broadcasting from scalar value.
         check_intdivzero(*(dtype*)p2);
         if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
-#line 150 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
           if (p1 == p3) { // inplace case
             for (; i < n; i++) {
               ((dtype*)p1)[i] = m_mul(((dtype*)p1)[i], *(dtype*)p2);
@@ -2225,7 +2118,6 @@ static void iter_dcomplex_mul(na_loop_t* const lp) {
               ((dtype*)p3)[i] = m_mul(((dtype*)p1)[i], *(dtype*)p2);
             }
           }
-#line 162 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
         } else {
           for (i = 0; i < n; i++) {
             *(dtype*)p3 = m_mul(*(dtype*)p1, *(dtype*)p2);
@@ -2284,7 +2176,6 @@ static VALUE dcomplex_mul_self(VALUE self, VALUE other) {
 */
 static VALUE dcomplex_mul(VALUE self, VALUE other) {
 
-#line 226 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
   VALUE klass, v;
 
   klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
@@ -2296,19 +2187,15 @@ static VALUE dcomplex_mul(VALUE self, VALUE other) {
   }
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-#line 8 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
 #define check_intdivzero(y)                                                                                                    \
   {}
 
-#line 11 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
 static void iter_dcomplex_div(na_loop_t* const lp) {
   size_t i = 0;
   size_t n;
   char *p1, *p2, *p3;
   ssize_t s1, s2, s3;
 
-#line 32 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
   INIT_COUNTER(lp, n);
   INIT_PTR(lp, 0, p1, s1);
   INIT_PTR(lp, 1, p2, s2);
@@ -2318,7 +2205,6 @@ static void iter_dcomplex_div(na_loop_t* const lp) {
   if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
-#line 84 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
       if (p1 == p3) { // inplace case
         for (; i < n; i++) {
           check_intdivzero(((dtype*)p2)[i]);
@@ -2330,7 +2216,6 @@ static void iter_dcomplex_div(na_loop_t* const lp) {
           ((dtype*)p3)[i] = m_div(((dtype*)p1)[i], ((dtype*)p2)[i]);
         }
       }
-#line 98 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
       return;
     }
 
@@ -2340,7 +2225,6 @@ static void iter_dcomplex_div(na_loop_t* const lp) {
       if (s2 == 0) { // Broadcasting from scalar value.
         check_intdivzero(*(dtype*)p2);
         if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
-#line 150 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
           if (p1 == p3) { // inplace case
             for (; i < n; i++) {
               ((dtype*)p1)[i] = m_div(((dtype*)p1)[i], *(dtype*)p2);
@@ -2350,7 +2234,6 @@ static void iter_dcomplex_div(na_loop_t* const lp) {
               ((dtype*)p3)[i] = m_div(((dtype*)p1)[i], *(dtype*)p2);
             }
           }
-#line 162 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
         } else {
           for (i = 0; i < n; i++) {
             *(dtype*)p3 = m_div(*(dtype*)p1, *(dtype*)p2);
@@ -2409,7 +2292,6 @@ static VALUE dcomplex_div_self(VALUE self, VALUE other) {
 */
 static VALUE dcomplex_div(VALUE self, VALUE other) {
 
-#line 226 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
   VALUE klass, v;
 
   klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
@@ -2421,7 +2303,6 @@ static VALUE dcomplex_div(VALUE self, VALUE other) {
   }
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/pow.c"
 static void iter_dcomplex_pow(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2, *p3;
@@ -2480,7 +2361,6 @@ static VALUE dcomplex_pow_self(VALUE self, VALUE other) {
 */
 static VALUE dcomplex_pow(VALUE self, VALUE other) {
 
-#line 69 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/pow.c"
   VALUE klass, v;
   klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
   if (klass == cT) {
@@ -2491,7 +2371,6 @@ static VALUE dcomplex_pow(VALUE self, VALUE other) {
   }
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
 static void iter_dcomplex_minus(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2;
@@ -2567,7 +2446,6 @@ static VALUE dcomplex_minus(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
 static void iter_dcomplex_reciprocal(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2;
@@ -2643,7 +2521,6 @@ static VALUE dcomplex_reciprocal(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
 static void iter_dcomplex_sign(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2;
@@ -2719,7 +2596,6 @@ static VALUE dcomplex_sign(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
 static void iter_dcomplex_square(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2;
@@ -2795,7 +2671,6 @@ static VALUE dcomplex_square(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
 static void iter_dcomplex_conj(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2;
@@ -2871,7 +2746,6 @@ static VALUE dcomplex_conj(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
 static void iter_dcomplex_im(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2;
@@ -2947,7 +2821,6 @@ static VALUE dcomplex_im(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary2.c"
 static void iter_dcomplex_real(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -3002,7 +2875,6 @@ static VALUE dcomplex_real(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary2.c"
 static void iter_dcomplex_imag(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -3057,7 +2929,6 @@ static VALUE dcomplex_imag(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary2.c"
 static void iter_dcomplex_arg(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -3112,7 +2983,6 @@ static VALUE dcomplex_arg(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/set2.c"
 static void iter_dcomplex_set_imag(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -3166,7 +3036,6 @@ static VALUE dcomplex_set_imag(VALUE self, VALUE a1) {
   return a1;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/set2.c"
 static void iter_dcomplex_set_real(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -3220,7 +3089,6 @@ static VALUE dcomplex_set_real(VALUE self, VALUE a1) {
   return a1;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_binary.c"
 static void iter_dcomplex_eq(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -3258,7 +3126,6 @@ static VALUE dcomplex_eq_self(VALUE self, VALUE other) {
 */
 static VALUE dcomplex_eq(VALUE self, VALUE other) {
 
-#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_binary.c"
   VALUE klass, v;
   klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
   if (klass == cT) {
@@ -3269,7 +3136,6 @@ static VALUE dcomplex_eq(VALUE self, VALUE other) {
   }
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_binary.c"
 static void iter_dcomplex_ne(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -3307,7 +3173,6 @@ static VALUE dcomplex_ne_self(VALUE self, VALUE other) {
 */
 static VALUE dcomplex_ne(VALUE self, VALUE other) {
 
-#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_binary.c"
   VALUE klass, v;
   klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
   if (klass == cT) {
@@ -3318,7 +3183,6 @@ static VALUE dcomplex_ne(VALUE self, VALUE other) {
   }
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_binary.c"
 static void iter_dcomplex_nearly_eq(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -3356,7 +3220,6 @@ static VALUE dcomplex_nearly_eq_self(VALUE self, VALUE other) {
 */
 static VALUE dcomplex_nearly_eq(VALUE self, VALUE other) {
 
-#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_binary.c"
   VALUE klass, v;
   klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
   if (klass == cT) {
@@ -3367,7 +3230,6 @@ static VALUE dcomplex_nearly_eq(VALUE self, VALUE other) {
   }
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
 static void iter_dcomplex_floor(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2;
@@ -3443,7 +3305,6 @@ static VALUE dcomplex_floor(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
 static void iter_dcomplex_round(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2;
@@ -3519,7 +3380,6 @@ static VALUE dcomplex_round(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
 static void iter_dcomplex_ceil(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2;
@@ -3595,7 +3455,6 @@ static VALUE dcomplex_ceil(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
 static void iter_dcomplex_trunc(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2;
@@ -3671,7 +3530,6 @@ static VALUE dcomplex_trunc(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary.c"
 static void iter_dcomplex_rint(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2;
@@ -3747,19 +3605,15 @@ static VALUE dcomplex_rint(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
-#line 8 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
 #define check_intdivzero(y)                                                                                                    \
   {}
 
-#line 11 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
 static void iter_dcomplex_copysign(na_loop_t* const lp) {
   size_t i = 0;
   size_t n;
   char *p1, *p2, *p3;
   ssize_t s1, s2, s3;
 
-#line 32 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
   INIT_COUNTER(lp, n);
   INIT_PTR(lp, 0, p1, s1);
   INIT_PTR(lp, 1, p2, s2);
@@ -3769,7 +3623,6 @@ static void iter_dcomplex_copysign(na_loop_t* const lp) {
   if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
-#line 84 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
       if (p1 == p3) { // inplace case
         for (; i < n; i++) {
           check_intdivzero(((dtype*)p2)[i]);
@@ -3781,7 +3634,6 @@ static void iter_dcomplex_copysign(na_loop_t* const lp) {
           ((dtype*)p3)[i] = m_copysign(((dtype*)p1)[i], ((dtype*)p2)[i]);
         }
       }
-#line 98 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
       return;
     }
 
@@ -3791,7 +3643,6 @@ static void iter_dcomplex_copysign(na_loop_t* const lp) {
       if (s2 == 0) { // Broadcasting from scalar value.
         check_intdivzero(*(dtype*)p2);
         if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
-#line 150 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
           if (p1 == p3) { // inplace case
             for (; i < n; i++) {
               ((dtype*)p1)[i] = m_copysign(((dtype*)p1)[i], *(dtype*)p2);
@@ -3801,7 +3652,6 @@ static void iter_dcomplex_copysign(na_loop_t* const lp) {
               ((dtype*)p3)[i] = m_copysign(((dtype*)p1)[i], *(dtype*)p2);
             }
           }
-#line 162 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
         } else {
           for (i = 0; i < n; i++) {
             *(dtype*)p3 = m_copysign(*(dtype*)p1, *(dtype*)p2);
@@ -3860,7 +3710,6 @@ static VALUE dcomplex_copysign_self(VALUE self, VALUE other) {
 */
 static VALUE dcomplex_copysign(VALUE self, VALUE other) {
 
-#line 226 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/binary.c"
   VALUE klass, v;
 
   klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
@@ -3872,7 +3721,6 @@ static VALUE dcomplex_copysign(VALUE self, VALUE other) {
   }
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_unary.c"
 static void iter_dcomplex_isnan(na_loop_t* const lp) {
   size_t i;
   char* p1;
@@ -3915,7 +3763,6 @@ static VALUE dcomplex_isnan(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_unary.c"
 static void iter_dcomplex_isinf(na_loop_t* const lp) {
   size_t i;
   char* p1;
@@ -3958,7 +3805,6 @@ static VALUE dcomplex_isinf(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_unary.c"
 static void iter_dcomplex_isposinf(na_loop_t* const lp) {
   size_t i;
   char* p1;
@@ -4001,7 +3847,6 @@ static VALUE dcomplex_isposinf(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_unary.c"
 static void iter_dcomplex_isneginf(na_loop_t* const lp) {
   size_t i;
   char* p1;
@@ -4044,7 +3889,6 @@ static VALUE dcomplex_isneginf(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cond_unary.c"
 static void iter_dcomplex_isfinite(na_loop_t* const lp) {
   size_t i;
   char* p1;
@@ -4087,8 +3931,6 @@ static VALUE dcomplex_isfinite(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 static void iter_dcomplex_sum(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -4100,7 +3942,6 @@ static void iter_dcomplex_sum(na_loop_t* const lp) {
 
   *(dtype*)p2 = f_sum(n, p1, s1);
 }
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 static void iter_dcomplex_sum_nan(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -4113,7 +3954,6 @@ static void iter_dcomplex_sum_nan(na_loop_t* const lp) {
   *(dtype*)p2 = f_sum_nan(n, p1, s1);
 }
 
-#line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 /*
   sum of self.
   @overload sum(axis:nil, keepdims:false, nan:false)
@@ -4130,16 +3970,12 @@ static VALUE dcomplex_sum(int argc, VALUE* argv, VALUE self) {
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_sum_nan);
 
-#line 42 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dcomplex_extract(v);
 
-#line 48 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 static void iter_dcomplex_prod(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -4151,7 +3987,6 @@ static void iter_dcomplex_prod(na_loop_t* const lp) {
 
   *(dtype*)p2 = f_prod(n, p1, s1);
 }
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 static void iter_dcomplex_prod_nan(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -4164,7 +3999,6 @@ static void iter_dcomplex_prod_nan(na_loop_t* const lp) {
   *(dtype*)p2 = f_prod_nan(n, p1, s1);
 }
 
-#line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 /*
   prod of self.
   @overload prod(axis:nil, keepdims:false, nan:false)
@@ -4181,16 +4015,12 @@ static VALUE dcomplex_prod(int argc, VALUE* argv, VALUE self) {
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_prod_nan);
 
-#line 42 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dcomplex_extract(v);
 
-#line 48 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 static void iter_dcomplex_kahan_sum(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -4202,7 +4032,6 @@ static void iter_dcomplex_kahan_sum(na_loop_t* const lp) {
 
   *(dtype*)p2 = f_kahan_sum(n, p1, s1);
 }
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 static void iter_dcomplex_kahan_sum_nan(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -4215,7 +4044,6 @@ static void iter_dcomplex_kahan_sum_nan(na_loop_t* const lp) {
   *(dtype*)p2 = f_kahan_sum_nan(n, p1, s1);
 }
 
-#line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 /*
   kahan_sum of self.
   @overload kahan_sum(axis:nil, keepdims:false, nan:false)
@@ -4232,16 +4060,12 @@ static VALUE dcomplex_kahan_sum(int argc, VALUE* argv, VALUE self) {
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_kahan_sum_nan);
 
-#line 42 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dcomplex_extract(v);
 
-#line 48 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 static void iter_dcomplex_mean(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -4253,7 +4077,6 @@ static void iter_dcomplex_mean(na_loop_t* const lp) {
 
   *(dtype*)p2 = f_mean(n, p1, s1);
 }
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 static void iter_dcomplex_mean_nan(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -4266,7 +4089,6 @@ static void iter_dcomplex_mean_nan(na_loop_t* const lp) {
   *(dtype*)p2 = f_mean_nan(n, p1, s1);
 }
 
-#line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 /*
   mean of self.
   @overload mean(axis:nil, keepdims:false, nan:false)
@@ -4283,16 +4105,12 @@ static VALUE dcomplex_mean(int argc, VALUE* argv, VALUE self) {
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_mean_nan);
 
-#line 42 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dcomplex_extract(v);
 
-#line 48 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 static void iter_dcomplex_stddev(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -4304,7 +4122,6 @@ static void iter_dcomplex_stddev(na_loop_t* const lp) {
 
   *(rtype*)p2 = f_stddev(n, p1, s1);
 }
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 static void iter_dcomplex_stddev_nan(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -4317,7 +4134,6 @@ static void iter_dcomplex_stddev_nan(na_loop_t* const lp) {
   *(rtype*)p2 = f_stddev_nan(n, p1, s1);
 }
 
-#line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 /*
   stddev of self.
   @overload stddev(axis:nil, keepdims:false, nan:false)
@@ -4334,15 +4150,11 @@ static VALUE dcomplex_stddev(int argc, VALUE* argv, VALUE self) {
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_stddev_nan);
 
-#line 42 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
   v = na_ndloop(&ndf, 2, self, reduce);
 
-#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
   return rb_funcall(v, rb_intern("extract"), 0);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 static void iter_dcomplex_var(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -4354,7 +4166,6 @@ static void iter_dcomplex_var(na_loop_t* const lp) {
 
   *(rtype*)p2 = f_var(n, p1, s1);
 }
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 static void iter_dcomplex_var_nan(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -4367,7 +4178,6 @@ static void iter_dcomplex_var_nan(na_loop_t* const lp) {
   *(rtype*)p2 = f_var_nan(n, p1, s1);
 }
 
-#line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 /*
   var of self.
   @overload var(axis:nil, keepdims:false, nan:false)
@@ -4384,15 +4194,11 @@ static VALUE dcomplex_var(int argc, VALUE* argv, VALUE self) {
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_var_nan);
 
-#line 42 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
   v = na_ndloop(&ndf, 2, self, reduce);
 
-#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
   return rb_funcall(v, rb_intern("extract"), 0);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 static void iter_dcomplex_rms(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -4404,7 +4210,6 @@ static void iter_dcomplex_rms(na_loop_t* const lp) {
 
   *(rtype*)p2 = f_rms(n, p1, s1);
 }
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 static void iter_dcomplex_rms_nan(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -4417,7 +4222,6 @@ static void iter_dcomplex_rms_nan(na_loop_t* const lp) {
   *(rtype*)p2 = f_rms_nan(n, p1, s1);
 }
 
-#line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
 /*
   rms of self.
   @overload rms(axis:nil, keepdims:false, nan:false)
@@ -4434,15 +4238,11 @@ static VALUE dcomplex_rms(int argc, VALUE* argv, VALUE self) {
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_rms_nan);
 
-#line 42 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
   v = na_ndloop(&ndf, 2, self, reduce);
 
-#line 46 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum.c"
   return rb_funcall(v, rb_intern("extract"), 0);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
 static void iter_dcomplex_cumsum(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -4464,7 +4264,6 @@ static void iter_dcomplex_cumsum(na_loop_t* const lp) {
     // printf("i=%lu x=%f\n",i,x);
   }
 }
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
 static void iter_dcomplex_cumsum_nan(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -4487,7 +4286,6 @@ static void iter_dcomplex_cumsum_nan(na_loop_t* const lp) {
   }
 }
 
-#line 27 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
 /*
   cumsum of self.
   @overload cumsum(axis:nil, nan:false)
@@ -4503,12 +4301,9 @@ static VALUE dcomplex_cumsum(int argc, VALUE* argv, VALUE self) {
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_cumsum_nan);
 
-#line 48 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
   return na_ndloop(&ndf, 2, self, reduce);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
 static void iter_dcomplex_cumprod(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -4530,7 +4325,6 @@ static void iter_dcomplex_cumprod(na_loop_t* const lp) {
     // printf("i=%lu x=%f\n",i,x);
   }
 }
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
 static void iter_dcomplex_cumprod_nan(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -4553,7 +4347,6 @@ static void iter_dcomplex_cumprod_nan(na_loop_t* const lp) {
   }
 }
 
-#line 27 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
 /*
   cumprod of self.
   @overload cumprod(axis:nil, nan:false)
@@ -4569,11 +4362,9 @@ static VALUE dcomplex_cumprod(int argc, VALUE* argv, VALUE self) {
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_cumprod_nan);
 
-#line 48 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cum.c"
   return na_ndloop(&ndf, 2, self, reduce);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum_binary.c"
 //
 static void iter_dcomplex_mulsum(na_loop_t* const lp) {
   size_t i, n;
@@ -4609,7 +4400,6 @@ static void iter_dcomplex_mulsum(na_loop_t* const lp) {
   }
 }
 //
-#line 2 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum_binary.c"
 static void iter_dcomplex_mulsum_nan(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2, *p3;
@@ -4662,7 +4452,6 @@ static VALUE dcomplex_mulsum_self(int argc, VALUE* argv, VALUE self) {
   reduce = na_reduce_dimension(argc - 1, argv + 1, 2, naryv, &ndf, iter_dcomplex_mulsum_nan);
   //
 
-#line 60 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum_binary.c"
   v = na_ndloop(&ndf, 4, self, argv[0], reduce, m_mulsum_init);
   return dcomplex_extract(v);
 }
@@ -4685,28 +4474,22 @@ static VALUE dcomplex_mulsum(int argc, VALUE* argv, VALUE self) {
     rb_raise(rb_eArgError, "wrong number of arguments (%d for >=1)", argc);
   }
   //
-#line 92 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum_binary.c"
   klass = na_upcast(rb_obj_class(self), rb_obj_class(argv[0]));
   if (klass == cT) {
     return dcomplex_mulsum_self(argc, argv, self);
   } else {
     v = rb_funcall(klass, id_cast, 1, self);
     //
-#line 100 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/accum_binary.c"
     return rb_funcallv_kw(v, rb_intern("mulsum"), argc, argv, RB_PASS_CALLED_KEYWORDS);
     //
   }
   //
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/seq.c"
-#line 4 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/seq.c"
 typedef dtype seq_data_t;
 
-#line 10 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/seq.c"
 typedef double seq_count_t;
 
-#line 13 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/seq.c"
 typedef struct {
   seq_data_t beg;
   seq_data_t step;
@@ -4773,7 +4556,6 @@ static VALUE dcomplex_seq(int argc, VALUE* args, VALUE self) {
   g->step = m_one;
   g->count = 0;
   rb_scan_args(argc, args, "02", &vbeg, &vstep);
-#line 87 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/seq.c"
   if (vbeg != Qnil) {
     g->beg = m_num_to_data(vbeg);
   }
@@ -4781,12 +4563,10 @@ static VALUE dcomplex_seq(int argc, VALUE* args, VALUE self) {
     g->step = m_num_to_data(vstep);
   }
 
-#line 91 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/seq.c"
   na_ndloop3(&ndf, g, 1, self);
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/logseq.c"
 typedef struct {
   seq_data_t beg;
   seq_data_t step;
@@ -4867,7 +4647,6 @@ static VALUE dcomplex_logseq(int argc, VALUE* args, VALUE self) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/eye.c"
 static void iter_dcomplex_eye(na_loop_t* const lp) {
   size_t n0, n1;
   size_t i0, i1;
@@ -4960,9 +4739,7 @@ static VALUE dcomplex_eye(int argc, VALUE* argv, VALUE self) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand.c"
 
-#line 69 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand.c"
 typedef struct {
   dtype low;
   dtype max;
@@ -5023,7 +4800,6 @@ static VALUE dcomplex_rand(int argc, VALUE* args, VALUE self) {
   ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
   ndfunc_t ndf = {iter_dcomplex_rand, FULL_LOOP, 1, 0, ain, 0};
 
-#line 142 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand.c"
   rb_scan_args(argc, args, "02", &v1, &v2);
   if (v2 == Qnil) {
     g.low = m_zero;
@@ -5031,7 +4807,6 @@ static VALUE dcomplex_rand(int argc, VALUE* args, VALUE self) {
 
       g.max = high = c_new(1, 1);
 
-#line 151 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand.c"
     } else {
       g.max = high = m_num_to_data(v1);
     }
@@ -5042,12 +4817,10 @@ static VALUE dcomplex_rand(int argc, VALUE* args, VALUE self) {
     g.max = m_sub(high, g.low);
   }
 
-#line 165 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand.c"
   na_ndloop3(&ndf, &g, 1, self);
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand_norm.c"
 typedef struct {
   dtype mu;
   rtype sigma;
@@ -5061,7 +4834,6 @@ static void iter_dcomplex_rand_norm(na_loop_t* const lp) {
 
   dtype* a0;
 
-#line 18 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand_norm.c"
   dtype mu;
   rtype sigma;
   randn_opt_t* g;
@@ -5080,7 +4852,6 @@ static void iter_dcomplex_rand_norm(na_loop_t* const lp) {
       idx1 += 1;
     }
 
-#line 47 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand_norm.c"
   } else {
 
     for (; i--;) {
@@ -5089,7 +4860,6 @@ static void iter_dcomplex_rand_norm(na_loop_t* const lp) {
       p1 += s1;
     }
 
-#line 66 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/rand_norm.c"
   }
 }
 
@@ -5145,7 +4915,6 @@ static VALUE dcomplex_rand_norm(int argc, VALUE* args, VALUE self) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/poly.c"
 static void iter_dcomplex_poly(na_loop_t* const lp) {
   size_t i;
   dtype x, y, a;
@@ -5192,15 +4961,12 @@ static VALUE dcomplex_poly(VALUE self, VALUE args) {
   return dcomplex_extract(v);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/module.c"
 /*
   module definition: Numo::DComplex::NMath
 */
 
-#line 6 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/module.c"
 VALUE mTM;
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_sqrt(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -5208,7 +4974,6 @@ static void iter_dcomplex_math_s_sqrt(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -5239,12 +5004,10 @@ static void iter_dcomplex_math_s_sqrt(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_sqrt(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -5282,7 +5045,6 @@ static VALUE dcomplex_math_s_sqrt(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_cbrt(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -5290,7 +5052,6 @@ static void iter_dcomplex_math_s_cbrt(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -5321,12 +5082,10 @@ static void iter_dcomplex_math_s_cbrt(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_cbrt(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -5364,7 +5123,6 @@ static VALUE dcomplex_math_s_cbrt(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_log(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -5372,7 +5130,6 @@ static void iter_dcomplex_math_s_log(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -5403,12 +5160,10 @@ static void iter_dcomplex_math_s_log(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_log(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -5446,7 +5201,6 @@ static VALUE dcomplex_math_s_log(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_log2(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -5454,7 +5208,6 @@ static void iter_dcomplex_math_s_log2(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -5485,12 +5238,10 @@ static void iter_dcomplex_math_s_log2(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_log2(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -5528,7 +5279,6 @@ static VALUE dcomplex_math_s_log2(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_log10(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -5536,7 +5286,6 @@ static void iter_dcomplex_math_s_log10(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -5567,12 +5316,10 @@ static void iter_dcomplex_math_s_log10(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_log10(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -5610,7 +5357,6 @@ static VALUE dcomplex_math_s_log10(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_exp(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -5618,7 +5364,6 @@ static void iter_dcomplex_math_s_exp(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -5649,12 +5394,10 @@ static void iter_dcomplex_math_s_exp(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_exp(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -5692,7 +5435,6 @@ static VALUE dcomplex_math_s_exp(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_exp2(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -5700,7 +5442,6 @@ static void iter_dcomplex_math_s_exp2(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -5731,12 +5472,10 @@ static void iter_dcomplex_math_s_exp2(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_exp2(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -5774,7 +5513,6 @@ static VALUE dcomplex_math_s_exp2(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_exp10(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -5782,7 +5520,6 @@ static void iter_dcomplex_math_s_exp10(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -5813,12 +5550,10 @@ static void iter_dcomplex_math_s_exp10(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_exp10(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -5856,7 +5591,6 @@ static VALUE dcomplex_math_s_exp10(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_sin(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -5864,7 +5598,6 @@ static void iter_dcomplex_math_s_sin(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -5895,12 +5628,10 @@ static void iter_dcomplex_math_s_sin(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_sin(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -5938,7 +5669,6 @@ static VALUE dcomplex_math_s_sin(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_cos(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -5946,7 +5676,6 @@ static void iter_dcomplex_math_s_cos(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -5977,12 +5706,10 @@ static void iter_dcomplex_math_s_cos(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_cos(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -6020,7 +5747,6 @@ static VALUE dcomplex_math_s_cos(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_tan(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -6028,7 +5754,6 @@ static void iter_dcomplex_math_s_tan(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -6059,12 +5784,10 @@ static void iter_dcomplex_math_s_tan(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_tan(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -6102,7 +5825,6 @@ static VALUE dcomplex_math_s_tan(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_asin(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -6110,7 +5832,6 @@ static void iter_dcomplex_math_s_asin(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -6141,12 +5862,10 @@ static void iter_dcomplex_math_s_asin(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_asin(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -6184,7 +5903,6 @@ static VALUE dcomplex_math_s_asin(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_acos(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -6192,7 +5910,6 @@ static void iter_dcomplex_math_s_acos(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -6223,12 +5940,10 @@ static void iter_dcomplex_math_s_acos(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_acos(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -6266,7 +5981,6 @@ static VALUE dcomplex_math_s_acos(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_atan(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -6274,7 +5988,6 @@ static void iter_dcomplex_math_s_atan(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -6305,12 +6018,10 @@ static void iter_dcomplex_math_s_atan(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_atan(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -6348,7 +6059,6 @@ static VALUE dcomplex_math_s_atan(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_sinh(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -6356,7 +6066,6 @@ static void iter_dcomplex_math_s_sinh(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -6387,12 +6096,10 @@ static void iter_dcomplex_math_s_sinh(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_sinh(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -6430,7 +6137,6 @@ static VALUE dcomplex_math_s_sinh(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_cosh(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -6438,7 +6144,6 @@ static void iter_dcomplex_math_s_cosh(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -6469,12 +6174,10 @@ static void iter_dcomplex_math_s_cosh(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_cosh(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -6512,7 +6215,6 @@ static VALUE dcomplex_math_s_cosh(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_tanh(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -6520,7 +6222,6 @@ static void iter_dcomplex_math_s_tanh(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -6551,12 +6252,10 @@ static void iter_dcomplex_math_s_tanh(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_tanh(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -6594,7 +6293,6 @@ static VALUE dcomplex_math_s_tanh(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_asinh(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -6602,7 +6300,6 @@ static void iter_dcomplex_math_s_asinh(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -6633,12 +6330,10 @@ static void iter_dcomplex_math_s_asinh(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_asinh(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -6676,7 +6371,6 @@ static VALUE dcomplex_math_s_asinh(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_acosh(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -6684,7 +6378,6 @@ static void iter_dcomplex_math_s_acosh(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -6715,12 +6408,10 @@ static void iter_dcomplex_math_s_acosh(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_acosh(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -6758,7 +6449,6 @@ static VALUE dcomplex_math_s_acosh(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_atanh(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -6766,7 +6456,6 @@ static void iter_dcomplex_math_s_atanh(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -6797,12 +6486,10 @@ static void iter_dcomplex_math_s_atanh(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_atanh(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -6840,7 +6527,6 @@ static VALUE dcomplex_math_s_atanh(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
 static void iter_dcomplex_math_s_sinc(na_loop_t* const lp) {
   size_t i = 0, n;
   char *p1, *p2;
@@ -6848,7 +6534,6 @@ static void iter_dcomplex_math_s_sinc(na_loop_t* const lp) {
   size_t *idx1, *idx2;
   dtype x;
 
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
   INIT_COUNTER(lp, n);
   INIT_PTR_IDX(lp, 0, p1, s1, idx1);
   INIT_PTR_IDX(lp, 1, p2, s2, idx2);
@@ -6879,12 +6564,10 @@ static void iter_dcomplex_math_s_sinc(na_loop_t* const lp) {
       if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
         if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
           //
-#line 83 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           for (; i < n; i++) {
             ((dtype*)p2)[i] = m_sinc(((dtype*)p1)[i]);
           }
           //
-#line 89 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/unary_s.c"
           return;
         }
         if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
@@ -6922,7 +6605,6 @@ static VALUE dcomplex_math_s_sinc(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-#line 37 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/lib.c"
 void Init_numo_dcomplex(void) {
   VALUE hCast, mNumo;
 
@@ -6939,7 +6621,6 @@ void Init_numo_dcomplex(void) {
   id_real = rb_intern("real");
   id_to_a = rb_intern("to_a");
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/init_class.c"
   /*
     Document-class: Numo::DComplex
 
@@ -6974,7 +6655,6 @@ void Init_numo_dcomplex(void) {
   rb_hash_aset(hCast, numo_cUInt32, numo_cDComplex);
   rb_hash_aset(hCast, numo_cUInt16, numo_cDComplex);
   rb_hash_aset(hCast, numo_cUInt8, numo_cDComplex);
-#line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/init_class.c"
   rb_obj_freeze(hCast);
 
   /**/
@@ -7062,10 +6742,8 @@ void Init_numo_dcomplex(void) {
   rb_define_method(cT, "rand", dcomplex_rand, -1);
   rb_define_method(cT, "rand_norm", dcomplex_rand_norm, -1);
   rb_define_method(cT, "poly", dcomplex_poly, -2);
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/init_class.c"
   rb_define_singleton_method(cT, "[]", dcomplex_s_cast, -2);
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/init_module.c"
   /*
     Document-module: Numo::DComplex::NMath
 
@@ -7095,8 +6773,6 @@ void Init_numo_dcomplex(void) {
   rb_define_module_function(mTM, "atanh", dcomplex_math_s_atanh, 1);
   rb_define_module_function(mTM, "sinc", dcomplex_math_s_sinc, 1);
 
-#line 11 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/init_module.c"
   //  how to do this?
   // rb_extend_object(cT, mTM);
-#line 50 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/lib.c"
 }

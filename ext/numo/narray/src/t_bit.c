@@ -1,5 +1,4 @@
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/lib.c"
 /*
   t_bit.c
   Ruby/Numo::NArray - Numerical Array class for Ruby
@@ -16,7 +15,6 @@
 
 #define m_map(x) m_num_to_data(rb_yield(m_data_to_num(x)))
 
-#line 18 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/lib.c"
 #include <emmintrin.h>
 #define SIMD_ALIGNMENT_SIZE 16
 
@@ -27,14 +25,11 @@ static ID id_mulsum;
 static ID id_ne;
 static ID id_to_a;
 
-#line 27 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/lib.c"
 #include <numo/types/bit.h>
 
-#line 30 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/lib.c"
 VALUE cT;
 extern VALUE cRT;
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/class.c"
 /*
   class definition: Numo::Bit
 */
@@ -43,7 +38,6 @@ VALUE cT;
 
 static VALUE bit_store(VALUE, VALUE);
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
 static size_t bit_memsize(const void* ptr) {
   size_t size = sizeof(narray_data_t);
   const narray_data_t* na = (const narray_data_t*)ptr;
@@ -54,7 +48,6 @@ static size_t bit_memsize(const void* ptr) {
 
     size += ((na->base.size - 1) / 8 / sizeof(BIT_DIGIT) + 1) * sizeof(BIT_DIGIT);
 
-#line 15 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
   }
   if (na->base.size > 0) {
     if (na->base.shape != NULL && na->base.shape != &(na->base.size)) {
@@ -90,10 +83,8 @@ static narray_type_info_t bit_info = {
   0, // element_bytes
   1, // element_stride (in bits)
 
-#line 56 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
 };
 
-#line 85 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
 static const rb_data_type_t bit_data_type = {
   "Numo::Bit",
   {
@@ -106,7 +97,6 @@ static const rb_data_type_t bit_data_type = {
   RUBY_TYPED_FROZEN_SHAREABLE, // flags
 };
 
-#line 95 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/alloc_func.c"
 static VALUE bit_s_alloc_func(VALUE klass) {
   narray_data_t* na = ALLOC(narray_data_t);
 
@@ -122,7 +112,6 @@ static VALUE bit_s_alloc_func(VALUE klass) {
   return TypedData_Wrap_Struct(klass, &bit_data_type, (void*)na);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/allocate.c"
 static VALUE bit_allocate(VALUE self) {
   narray_t* na;
   char* ptr;
@@ -147,7 +136,6 @@ static VALUE bit_allocate(VALUE self) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/extract.c"
 /*
   Extract an element only if self is a dimensionless NArray.
   @overload extract
@@ -172,7 +160,6 @@ static VALUE bit_extract(VALUE self) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/new_dim0.c"
 static VALUE bit_new_dim0(dtype x) {
   VALUE v;
   dtype* ptr;
@@ -184,9 +171,7 @@ static VALUE bit_new_dim0(dtype x) {
   return v;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store_numeric.c"
 static VALUE bit_store_numeric(VALUE self, VALUE obj) {
   dtype x;
   x = m_num_to_data(obj);
@@ -195,7 +180,6 @@ static VALUE bit_store_numeric(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/store_bit.c"
 static void iter_bit_store_bit(na_loop_t* const lp) {
   size_t n;
   ssize_t p1, p3;
@@ -279,7 +263,6 @@ static VALUE bit_store_bit(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/store_from.c"
 static void iter_bit_store_dfloat(na_loop_t* const lp) {
   ssize_t i, s1, s2;
   size_t p1;
@@ -336,7 +319,6 @@ static VALUE bit_store_dfloat(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/store_from.c"
 static void iter_bit_store_sfloat(na_loop_t* const lp) {
   ssize_t i, s1, s2;
   size_t p1;
@@ -393,7 +375,6 @@ static VALUE bit_store_sfloat(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/store_from.c"
 static void iter_bit_store_int64(na_loop_t* const lp) {
   ssize_t i, s1, s2;
   size_t p1;
@@ -450,7 +431,6 @@ static VALUE bit_store_int64(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/store_from.c"
 static void iter_bit_store_int32(na_loop_t* const lp) {
   ssize_t i, s1, s2;
   size_t p1;
@@ -507,7 +487,6 @@ static VALUE bit_store_int32(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/store_from.c"
 static void iter_bit_store_int16(na_loop_t* const lp) {
   ssize_t i, s1, s2;
   size_t p1;
@@ -564,7 +543,6 @@ static VALUE bit_store_int16(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/store_from.c"
 static void iter_bit_store_int8(na_loop_t* const lp) {
   ssize_t i, s1, s2;
   size_t p1;
@@ -621,7 +599,6 @@ static VALUE bit_store_int8(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/store_from.c"
 static void iter_bit_store_uint64(na_loop_t* const lp) {
   ssize_t i, s1, s2;
   size_t p1;
@@ -678,7 +655,6 @@ static VALUE bit_store_uint64(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/store_from.c"
 static void iter_bit_store_uint32(na_loop_t* const lp) {
   ssize_t i, s1, s2;
   size_t p1;
@@ -735,7 +711,6 @@ static VALUE bit_store_uint32(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/store_from.c"
 static void iter_bit_store_uint16(na_loop_t* const lp) {
   ssize_t i, s1, s2;
   size_t p1;
@@ -792,7 +767,6 @@ static VALUE bit_store_uint16(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/store_from.c"
 static void iter_bit_store_uint8(na_loop_t* const lp) {
   ssize_t i, s1, s2;
   size_t p1;
@@ -849,7 +823,6 @@ static VALUE bit_store_uint8(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/store_from.c"
 static void iter_bit_store_robject(na_loop_t* const lp) {
   ssize_t i, s1, s2;
   size_t p1;
@@ -906,7 +879,6 @@ static VALUE bit_store_robject(VALUE self, VALUE obj) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/store_array.c"
 static void iter_bit_store_array(na_loop_t* const lp) {
   size_t i, n;
   size_t i1, n1;
@@ -1026,7 +998,6 @@ static VALUE bit_store_array(VALUE self, VALUE rary) {
   return self;
 }
 
-#line 5 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
 /*
   Store elements to Numo::Bit from other.
   @overload store(other)
@@ -1043,79 +1014,66 @@ static VALUE bit_store(VALUE self, VALUE obj) {
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (IS_INTEGER_CLASS(klass) || klass == rb_cFloat || klass == rb_cComplex) {
     bit_store_numeric(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cDFloat) {
     bit_store_dfloat(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cSFloat) {
     bit_store_sfloat(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cInt64) {
     bit_store_int64(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cInt32) {
     bit_store_int32(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cInt16) {
     bit_store_int16(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cInt8) {
     bit_store_int8(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cUInt64) {
     bit_store_uint64(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cUInt32) {
     bit_store_uint32(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cUInt16) {
     bit_store_uint16(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cUInt8) {
     bit_store_uint8(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == numo_cRObject) {
     bit_store_robject(self, obj);
     return self;
   }
 
-#line 19 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   if (klass == rb_cArray) {
     bit_store_array(self, obj);
     return self;
@@ -1129,14 +1087,12 @@ static VALUE bit_store(VALUE self, VALUE obj) {
     }
   }
 
-#line 36 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/store.c"
   rb_raise(nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)),
            rb_class2name(rb_obj_class(self)));
 
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
 /*
   Convert a data value of obj (with a single element) to dtype.
 */
@@ -1165,67 +1121,56 @@ static dtype bit_extract_data(VALUE obj) {
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cDFloat) {
       x = m_from_real(*(double*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cSFloat) {
       x = m_from_real(*(float*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cInt64) {
       x = m_from_int64(*(int64_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cInt32) {
       x = m_from_int32(*(int32_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cInt16) {
       x = m_from_sint(*(int16_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cInt8) {
       x = m_from_sint(*(int8_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cUInt64) {
       x = m_from_uint64(*(u_int64_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cUInt32) {
       x = m_from_uint32(*(u_int32_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cUInt16) {
       x = m_from_sint(*(u_int16_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cUInt8) {
       x = m_from_sint(*(u_int8_t*)(ptr + pos));
       return x;
     }
 
-#line 22 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     if (klass == numo_cRObject) {
       x = m_num_to_data(*(VALUE*)(ptr + pos));
       return x;
@@ -1237,7 +1182,6 @@ static dtype bit_extract_data(VALUE obj) {
       return bit_extract_data(r);
     }
 
-#line 36 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/extract_data.c"
     rb_raise(nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)), rb_class2name(cT));
   }
   if (TYPE(obj) == T_ARRAY) {
@@ -1249,7 +1193,6 @@ static dtype bit_extract_data(VALUE obj) {
   return m_num_to_data(obj);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cast_array.c"
 static VALUE bit_cast_array(VALUE rary) {
   VALUE nary;
   narray_t* na;
@@ -1262,8 +1205,6 @@ static VALUE bit_cast_array(VALUE rary) {
   return nary;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cast.c"
-#line 5 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cast.c"
 /*
   Cast object to Numo::Bit.
   @overload [](elements)
@@ -1303,12 +1244,10 @@ static VALUE bit_s_cast(VALUE type, VALUE obj) {
     return bit_cast_array(obj);
   }
 
-#line 48 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/cast.c"
   rb_raise(nary_eCastError, "cannot cast to %s", rb_class2name(type));
   return Qnil;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/aref.c"
 /*
   Multi-dimensional element reference.
   @overload [](dim0,...,dimL)
@@ -1356,7 +1295,6 @@ static VALUE bit_aref(int argc, VALUE* argv, VALUE self) {
   }
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/aset.c"
 /*
   Multi-dimensional element assignment.
   @overload []=(dim0,...,dimL,val)
@@ -1407,7 +1345,6 @@ static VALUE bit_aset(int argc, VALUE* argv, VALUE self) {
   return argv[argc];
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/coerce_cast.c"
 /*
   return NArray with cast to the type of self.
   @overload coerce_cast(type)
@@ -1415,7 +1352,6 @@ static VALUE bit_aset(int argc, VALUE* argv, VALUE self) {
 */
 static VALUE bit_coerce_cast(VALUE self, VALUE type) { return Qnil; }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/to_a.c"
 static void iter_bit_to_a(na_loop_t* const lp) {
   size_t i;
   BIT_DIGIT* a1;
@@ -1458,7 +1394,6 @@ static VALUE bit_to_a(VALUE self) {
   return na_ndloop_cast_narray_to_rarray(&ndf, self, Qnil);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/fill.c"
 static void iter_bit_fill(na_loop_t* const lp) {
   size_t n;
   size_t p3;
@@ -1522,7 +1457,6 @@ static VALUE bit_fill(VALUE self, VALUE val) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/format.c"
 static VALUE format_bit(VALUE fmt, dtype x) {
   if (NIL_P(fmt)) {
     char s[4];
@@ -1581,7 +1515,6 @@ static VALUE bit_format(int argc, VALUE* argv, VALUE self) {
   return na_ndloop(&ndf, 2, self, fmt);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/format_to_a.c"
 static void iter_bit_format_to_a(na_loop_t* const lp) {
   size_t i;
   BIT_DIGIT *a1, x = 0;
@@ -1629,7 +1562,6 @@ static VALUE bit_format_to_a(int argc, VALUE* argv, VALUE self) {
   return na_ndloop_cast_narray_to_rarray(&ndf, self, fmt);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/inspect.c"
 static VALUE iter_bit_inspect(char* ptr, size_t pos, VALUE fmt) {
   dtype x;
   LOAD_BIT(ptr, pos, x);
@@ -1643,7 +1575,6 @@ static VALUE iter_bit_inspect(char* ptr, size_t pos, VALUE fmt) {
 */
 static VALUE bit_inspect(VALUE ary) { return na_ndloop_inspect(ary, iter_bit_inspect, Qnil); }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/each.c"
 static void iter_bit_each(na_loop_t* const lp) {
   size_t i;
   BIT_DIGIT *a1, x = 0;
@@ -1687,7 +1618,6 @@ static VALUE bit_each(VALUE self) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/each_with_index.c"
 static inline void yield_each_with_index(dtype x, size_t* c, VALUE* a, int nd, int md) {
   int j;
 
@@ -1750,7 +1680,6 @@ static VALUE bit_each_with_index(VALUE self) {
   return self;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/unary.c"
 static void iter_bit_copy(na_loop_t* const lp) {
   size_t n;
   size_t p1, p3;
@@ -1845,7 +1774,6 @@ static VALUE bit_copy(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/unary.c"
 static void iter_bit_not(na_loop_t* const lp) {
   size_t n;
   size_t p1, p3;
@@ -1940,7 +1868,6 @@ static VALUE bit_not(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/binary.c"
 static void iter_bit_and(na_loop_t* const lp) {
   size_t n;
   size_t p1, p2, p3;
@@ -2070,7 +1997,6 @@ static VALUE bit_and(VALUE self, VALUE other) {
   return na_ndloop(&ndf, 2, self, other);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/binary.c"
 static void iter_bit_or(na_loop_t* const lp) {
   size_t n;
   size_t p1, p2, p3;
@@ -2200,7 +2126,6 @@ static VALUE bit_or(VALUE self, VALUE other) {
   return na_ndloop(&ndf, 2, self, other);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/binary.c"
 static void iter_bit_xor(na_loop_t* const lp) {
   size_t n;
   size_t p1, p2, p3;
@@ -2330,7 +2255,6 @@ static VALUE bit_xor(VALUE self, VALUE other) {
   return na_ndloop(&ndf, 2, self, other);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/binary.c"
 static void iter_bit_eq(na_loop_t* const lp) {
   size_t n;
   size_t p1, p2, p3;
@@ -2460,7 +2384,6 @@ static VALUE bit_eq(VALUE self, VALUE other) {
   return na_ndloop(&ndf, 2, self, other);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/bit_count.c"
 #undef int_t
 #define int_t int64_t
 
@@ -2548,7 +2471,6 @@ static VALUE bit_count_true(int argc, VALUE* argv, VALUE self) {
   return rb_funcall(v, rb_intern("extract"), 0);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/bit_count.c"
 #undef int_t
 #define int_t int64_t
 
@@ -2636,7 +2558,6 @@ static VALUE bit_count_false(int argc, VALUE* argv, VALUE self) {
   return rb_funcall(v, rb_intern("extract"), 0);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/bit_reduce.c"
 static void iter_bit_all_p(na_loop_t* const lp) {
   size_t i;
   BIT_DIGIT *a1, *a2;
@@ -2763,7 +2684,6 @@ static VALUE bit_all_p(int argc, VALUE* argv, VALUE self) {
   }
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/bit_reduce.c"
 static void iter_bit_any_p(na_loop_t* const lp) {
   size_t i;
   BIT_DIGIT *a1, *a2;
@@ -2891,7 +2811,6 @@ static VALUE bit_any_p(int argc, VALUE* argv, VALUE self) {
   }
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/none_p.c"
 static VALUE bit_none_p(int argc, VALUE* argv, VALUE self) {
   VALUE v;
 
@@ -2905,7 +2824,6 @@ static VALUE bit_none_p(int argc, VALUE* argv, VALUE self) {
   return bit_not(v);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/where.c"
 typedef struct {
   size_t count;
   char* idx0;
@@ -2989,7 +2907,6 @@ static VALUE bit_where(VALUE self) {
   return idx_1;
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/where2.c"
 static void iter_bit_where2(na_loop_t* const lp) {
   size_t i;
   BIT_DIGIT* a;
@@ -3078,7 +2995,6 @@ static VALUE bit_where2(VALUE self) {
   return rb_assoc_new(idx_1, idx_0);
 }
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl_bit/mask.c"
 static void iter_bit_mask(na_loop_t* const lp) {
   size_t i;
   BIT_DIGIT* a;
@@ -3226,7 +3142,6 @@ static VALUE bit_mask(VALUE mask, VALUE val) {
   return view;
 }
 
-#line 37 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/lib.c"
 void Init_numo_bit(void) {
   VALUE hCast, mNumo;
 
@@ -3239,14 +3154,12 @@ void Init_numo_bit(void) {
   id_ne = rb_intern("ne");
   id_to_a = rb_intern("to_a");
 
-#line 1 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/init_class.c"
   /*
     Document-class: Numo::Bit
 
   */
   cT = rb_define_class_under(mNumo, "Bit", cNArray);
 
-#line 12 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/init_class.c"
   hCast = rb_hash_new();
   rb_define_const(cT, "UPCAST", hCast);
   rb_hash_aset(hCast, rb_cArray, cT);
@@ -3272,7 +3185,6 @@ void Init_numo_bit(void) {
   rb_hash_aset(hCast, numo_cUInt32, numo_cUInt32);
   rb_hash_aset(hCast, numo_cUInt16, numo_cUInt16);
   rb_hash_aset(hCast, numo_cUInt8, numo_cUInt8);
-#line 17 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/init_class.c"
   rb_obj_freeze(hCast);
 
   /**/
@@ -3315,7 +3227,5 @@ void Init_numo_bit(void) {
   rb_define_method(cT, "where", bit_where, 0);
   rb_define_method(cT, "where2", bit_where2, 0);
   rb_define_method(cT, "mask", bit_mask, 1);
-#line 21 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/init_class.c"
   rb_define_singleton_method(cT, "[]", bit_s_cast, -2);
-#line 50 "/home/tatsuma/numo-narray/ext/numo/narray/gen/tmpl/lib.c"
 }
