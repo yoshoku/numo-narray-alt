@@ -1,0 +1,19 @@
+name: commitlint
+
+on: [pull_request]
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+    - name: Setup Node.js
+      uses: actions/setup-node@v5
+      with:
+        node-version: lts/*
+    - name: Install npms
+      run: npm install
+    - name: Check commit messages
+      run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
