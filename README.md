@@ -13,8 +13,26 @@ This project is in no way intended to adversely affect the development of the or
 ## Installation
 
 ```shell
-$ gem install specific_install
-$ gem specific_install https://github.com/yoshoku/numo-narray-alt.git
+$ gem install numo-narray-alt
+```
+
+## Usage
+
+The same as Numo::NArray.
+
+```irb
+irb(main):001> require 'numo/narray'
+=> true
+irb(main):002> x = Numo::DFloat[[1, 2, 3], [4, 5, 6]]
+=>
+Numo::DFloat#shape=[2,3]
+...
+irb(main):003> x.dot(x.transpose)
+=>
+Numo::DFloat#shape=[2,2]
+[[14, 32],
+ [32, 77]]
+irb(main):004>
 ```
 
 ## Development
