@@ -4768,8 +4768,13 @@ static VALUE uint8_poly(VALUE self, VALUE args) {
     } while (--i > 0);                                                                                                         \
   } while (0)
 
+#ifdef HAVE_STDINT_H
+#define SWAPINIT(a, es)                                                                                                        \
+  swaptype = (uintptr_t)(a) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
+#else
 #define SWAPINIT(a, es)                                                                                                        \
   swaptype = ((char*)(a) - (char*)0) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
+#endif
 
 static inline void swapfunc(char* a, char* b, size_t n, int swaptype) {
   if (swaptype <= 1)
@@ -4975,8 +4980,13 @@ static VALUE uint8_sort(int argc, VALUE* argv, VALUE self) {
     } while (--i > 0);                                                                                                         \
   } while (0)
 
+#ifdef HAVE_STDINT_H
+#define SWAPINIT(a, es)                                                                                                        \
+  swaptype = (uintptr_t)(a) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
+#else
 #define SWAPINIT(a, es)                                                                                                        \
   swaptype = ((char*)(a) - (char*)0) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
+#endif
 
 static inline void swapfunc(char* a, char* b, size_t n, int swaptype) {
   if (swaptype <= 1)
