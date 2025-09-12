@@ -1761,8 +1761,8 @@ static void iter_dfloat_add(na_loop_t* const lp) {
 #ifdef __SSE2__
           for (; i < cnt; i++) {
 #else
-          for (; i < n; i++) {
-            check_intdivzero(((dtype*)p2)[i]);
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
 #endif
             ((dtype*)p1)[i] = m_add(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
@@ -1770,8 +1770,8 @@ static void iter_dfloat_add(na_loop_t* const lp) {
 #ifdef __SSE2__
           for (; i < cnt; i++) {
 #else
-          for (; i < n; i++) {
-            check_intdivzero(((dtype*)p2)[i]);
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
 #endif
             ((dtype*)p3)[i] = m_add(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
@@ -1835,7 +1835,7 @@ static void iter_dfloat_add(na_loop_t* const lp) {
 #ifdef __SSE2__
               for (; i < cnt; i++) {
 #else
-              for (; i < n; i++) {
+            for (; i < n; i++) {
 #endif
                 ((dtype*)p1)[i] = m_add(((dtype*)p1)[i], *(dtype*)p2);
               }
@@ -1843,7 +1843,7 @@ static void iter_dfloat_add(na_loop_t* const lp) {
 #ifdef __SSE2__
               for (; i < cnt; i++) {
 #else
-              for (; i < n; i++) {
+            for (; i < n; i++) {
 #endif
                 ((dtype*)p3)[i] = m_add(((dtype*)p1)[i], *(dtype*)p2);
               }
@@ -1988,8 +1988,8 @@ static void iter_dfloat_sub(na_loop_t* const lp) {
 #ifdef __SSE2__
           for (; i < cnt; i++) {
 #else
-          for (; i < n; i++) {
-            check_intdivzero(((dtype*)p2)[i]);
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
 #endif
             ((dtype*)p1)[i] = m_sub(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
@@ -1997,8 +1997,8 @@ static void iter_dfloat_sub(na_loop_t* const lp) {
 #ifdef __SSE2__
           for (; i < cnt; i++) {
 #else
-          for (; i < n; i++) {
-            check_intdivzero(((dtype*)p2)[i]);
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
 #endif
             ((dtype*)p3)[i] = m_sub(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
@@ -2063,7 +2063,7 @@ static void iter_dfloat_sub(na_loop_t* const lp) {
 #ifdef __SSE2__
               for (; i < cnt; i++) {
 #else
-              for (; i < n; i++) {
+            for (; i < n; i++) {
 #endif
                 ((dtype*)p1)[i] = m_sub(((dtype*)p1)[i], *(dtype*)p2);
               }
@@ -2071,7 +2071,7 @@ static void iter_dfloat_sub(na_loop_t* const lp) {
 #ifdef __SSE2__
               for (; i < cnt; i++) {
 #else
-              for (; i < n; i++) {
+            for (; i < n; i++) {
 #endif
                 ((dtype*)p3)[i] = m_sub(((dtype*)p1)[i], *(dtype*)p2);
               }
@@ -2217,8 +2217,8 @@ static void iter_dfloat_mul(na_loop_t* const lp) {
 #ifdef __SSE2__
           for (; i < cnt; i++) {
 #else
-          for (; i < n; i++) {
-            check_intdivzero(((dtype*)p2)[i]);
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
 #endif
             ((dtype*)p1)[i] = m_mul(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
@@ -2226,8 +2226,8 @@ static void iter_dfloat_mul(na_loop_t* const lp) {
 #ifdef __SSE2__
           for (; i < cnt; i++) {
 #else
-          for (; i < n; i++) {
-            check_intdivzero(((dtype*)p2)[i]);
+        for (; i < n; i++) {
+          check_intdivzero(((dtype*)p2)[i]);
 #endif
             ((dtype*)p3)[i] = m_mul(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
@@ -2292,7 +2292,7 @@ static void iter_dfloat_mul(na_loop_t* const lp) {
 #ifdef __SSE2__
               for (; i < cnt; i++) {
 #else
-              for (; i < n; i++) {
+            for (; i < n; i++) {
 #endif
                 ((dtype*)p1)[i] = m_mul(((dtype*)p1)[i], *(dtype*)p2);
               }
@@ -2300,7 +2300,7 @@ static void iter_dfloat_mul(na_loop_t* const lp) {
 #ifdef __SSE2__
               for (; i < cnt; i++) {
 #else
-              for (; i < n; i++) {
+            for (; i < n; i++) {
 #endif
                 ((dtype*)p3)[i] = m_mul(((dtype*)p1)[i], *(dtype*)p2);
               }
@@ -2446,7 +2446,7 @@ static void iter_dfloat_div(na_loop_t* const lp) {
 #ifdef __SSE2__
           for (; i < cnt; i++) {
 #else
-          for (; i < n; i++) {
+        for (; i < n; i++) {
 #endif
             ((dtype*)p1)[i] = m_div(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
@@ -2454,7 +2454,7 @@ static void iter_dfloat_div(na_loop_t* const lp) {
 #ifdef __SSE2__
           for (; i < cnt; i++) {
 #else
-          for (; i < n; i++) {
+        for (; i < n; i++) {
 #endif
             ((dtype*)p3)[i] = m_div(((dtype*)p1)[i], ((dtype*)p2)[i]);
           }
@@ -2519,8 +2519,8 @@ static void iter_dfloat_div(na_loop_t* const lp) {
 #ifdef __SSE2__
               for (; i < cnt; i++) {
 #else
-              for (; i < n; i++) {
-                check_intdivzero(((dtype*)p2)[i]);
+            for (; i < n; i++) {
+              check_intdivzero(((dtype*)p2)[i]);
 #endif
                 ((dtype*)p1)[i] = m_div(((dtype*)p1)[i], *(dtype*)p2);
               }
@@ -2528,8 +2528,8 @@ static void iter_dfloat_div(na_loop_t* const lp) {
 #ifdef __SSE2__
               for (; i < cnt; i++) {
 #else
-              for (; i < n; i++) {
-                check_intdivzero(((dtype*)p2)[i]);
+            for (; i < n; i++) {
+              check_intdivzero(((dtype*)p2)[i]);
 #endif
                 ((dtype*)p3)[i] = m_div(((dtype*)p1)[i], *(dtype*)p2);
               }
@@ -6266,8 +6266,7 @@ static VALUE dfloat_poly(VALUE self, VALUE args) {
   } while (0)
 
 #ifdef HAVE_STDINT_H
-#define SWAPINIT(a, es)                                                                                                        \
-  swaptype = (uintptr_t)a % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
+#define SWAPINIT(a, es) swaptype = (uintptr_t)a % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
 #else
 #define SWAPINIT(a, es)                                                                                                        \
   swaptype = ((char*)(a) - (char*)0) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
@@ -6448,8 +6447,7 @@ loop:
   } while (0)
 
 #ifdef HAVE_STDINT_H
-#define SWAPINIT(a, es)                                                                                                        \
-  swaptype = (uintptr_t)(a) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
+#define SWAPINIT(a, es) swaptype = (uintptr_t)(a) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
 #else
 #define SWAPINIT(a, es)                                                                                                        \
   swaptype = ((char*)(a) - (char*)0) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
@@ -7300,7 +7298,7 @@ static void iter_dfloat_math_s_sqrt(na_loop_t* const lp) {
 #ifdef __SSE2__
             for (i = 0; i < cnt; i++) {
 #else
-            for (i = 0; i < n; i++) {
+          for (i = 0; i < n; i++) {
 #endif
               ((dtype*)p2)[i] = m_sqrt(((dtype*)p1)[i]);
             }

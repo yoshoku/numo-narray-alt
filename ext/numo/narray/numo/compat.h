@@ -14,10 +14,10 @@
 #define RARRAY_PTR(a) RARRAY(a)->ptr
 #endif
 #if !defined RARRAY_AREF
-#define RARRAY_AREF(a,i) RARRAY_PTR(a)[i]
+#define RARRAY_AREF(a, i) RARRAY_PTR(a)[i]
 #endif
 #if !defined RARRAY_ASET
-#define RARRAY_ASET(a,i,v) (RARRAY_PTR(a)[i] = v)
+#define RARRAY_ASET(a, i, v) (RARRAY_PTR(a)[i] = v)
 #endif
 
 #endif /* ifndef COMPAT_H */

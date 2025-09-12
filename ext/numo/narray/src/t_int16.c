@@ -5175,8 +5175,7 @@ static VALUE int16_poly(VALUE self, VALUE args) {
   } while (0)
 
 #ifdef HAVE_STDINT_H
-#define SWAPINIT(a, es)                                                                                                        \
-  swaptype = (uintptr_t)(a) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
+#define SWAPINIT(a, es) swaptype = (uintptr_t)(a) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
 #else
 #define SWAPINIT(a, es)                                                                                                        \
   swaptype = ((char*)(a) - (char*)0) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
@@ -5387,8 +5386,7 @@ static VALUE int16_sort(int argc, VALUE* argv, VALUE self) {
   } while (0)
 
 #ifdef HAVE_STDINT_H
-#define SWAPINIT(a, es)                                                                                                        \
-  swaptype = (uintptr_t)(a) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
+#define SWAPINIT(a, es) swaptype = (uintptr_t)(a) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
 #else
 #define SWAPINIT(a, es)                                                                                                        \
   swaptype = ((char*)(a) - (char*)0) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
