@@ -4993,9 +4993,7 @@ loop:
     pm = med3(pl, pm, pn, cmp);
   }
   swap(a, pm);
-  pa = pb = (char*)a + es;
-  pc = pd = (char*)a + (n - 1) * es;
-  for (;;) {
+  for (pa = pb = (char*)a + es, pc = pd = (char*)a + (n - 1) * es; pb <= pc; pb += es, pc -= es) {
     while (pb <= pc && (r = cmp(pb, a)) <= 0) {
       if (r == 0) {
         swap(pa, pb);
@@ -5012,8 +5010,6 @@ loop:
     }
     if (pb > pc) break;
     swap(pb, pc);
-    pb += es;
-    pc -= es;
   }
   pn = (char*)a + n * es;
   r = (int)Min(pa - (char*)a, pb - pa);

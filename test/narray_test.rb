@@ -644,4 +644,28 @@ class NArrayTest < Test::Unit::TestCase
     assert_equal(Numo::DFloat[1, Float::NAN, 3].format_to_a,
                  Numo::DFloat.cast(Numo::RObject[1, nil, 3]).format_to_a)
   end
+
+  test '#sort_index' do
+    rng = Random.new(42)
+    arr = Array.new(100) { rng.rand(-1.0...1.0) }
+    [Numo::DFloat, Numo::SFloat].each do |dtype|
+      a = dtype.asarray(arr)
+      idx = a.sort_index
+      assert_equal(a[idx].to_a, a.to_a.sort)
+    end
+
+    arr = Array.new(100) { rng.rand(-100...100) }
+    [Numo::Int64, Numo::Int32, Numo::Int16, Numo::Int8].each do |dtype|
+      a = dtype.asarray(arr)
+      idx = a.sort_index
+      assert_equal(a[idx].to_a, a.to_a.sort)
+    end
+
+    arr = Array.new(100) { rng.rand(0...100) }
+    [Numo::UInt64, Numo::UInt32, Numo::UInt16, Numo::UInt8].each do |dtype|
+      a = dtype.asarray(arr)
+      idx = a.sort_index
+      assert_equal(a[idx].to_a, a.to_a.sort)
+    end
+  end
 end
