@@ -19,12 +19,26 @@ $ gem specific_install https://github.com/yoshoku/numo-narray-alt.git
 
 ## Development
 
+preparation:
+
 ```shell
 $ git clone https://github.com/yoshoku/numo-narray-alt
 $ cd numo-narray-alt
 $ bundle install
+```
+
+build and test:
+
+```
 $ bundle exec rake compile
 $ bundle exec rake test
+```
+
+linter:
+
+```shell
+$ bundle exec rubocop
+$ clang-format --dry-run --Werror --style=file ext/**/*.h ext/**/*.c
 ```
 
 ## Contributing
