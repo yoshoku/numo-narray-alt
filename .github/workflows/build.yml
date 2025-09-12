@@ -39,8 +39,8 @@ jobs:
           ruby-version: debug
       - name: Build and Install
         run: |
-          gem build numo-narray.gemspec
-          gem install numo-narray-*.gem
+          gem build numo-narray-alt.gemspec
+          gem install numo-narray-alt-*.gem
           bundle install
       - name: Tests
         run: rake test

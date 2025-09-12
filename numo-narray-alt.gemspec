@@ -15,13 +15,13 @@ open('ext/numo/narray/numo/narray.h') do |f|
 end
 
 Gem::Specification.new do |spec|
-  spec.name          = 'numo-narray'
+  spec.name          = 'numo-narray-alt'
   spec.version       = NARRAY_VERSION
-  spec.authors       = ['Masahiro TANAKA']
-  spec.email         = ['masa16.tanaka@gmail.com']
-  spec.description   = 'Numo::NArray - New NArray class library in Ruby/Numo.'
-  spec.summary       = 'alpha release of Numo::NArray - New NArray class library in Ruby/Numo (NUmerical MOdule)'
-  spec.homepage      = 'https://github.com/ruby-numo/numo-narray'
+  spec.authors       = ['yoshoku']
+  spec.email         = ['yoshoku@outlook.com']
+  spec.description   = 'Numo::NArray Alternative is an experimental project forked from Numo::NArray.'
+  spec.summary       = 'Numo::NArray Alternative is an experimental project forked from Numo::NArray.'
+  spec.homepage      = 'https://github.com/yoshoku/numo-narray-alt'
   spec.license       = 'BSD-3-Clause'
   spec.required_ruby_version = '>= 2.2'
 
