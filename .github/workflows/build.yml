@@ -23,13 +23,9 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - name: Build and Install
-        run: |
-          gem build numo-narray.gemspec
-          gem install numo-narray-*.gem
-          bundle install
-      - name: Tests
-        run: rake test
+          bundler-cache: true
+      - name: Build and test
+        run: bundle exec rake compile test
 
   build-debug:
     name: Ruby debug
