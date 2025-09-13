@@ -21,5 +21,17 @@ class NArrayExtraTest < NArrayTestBase
       assert_equal(na[0, 0], 0)
       assert_equal(na[1, 0], 0)
     end
+
+    test "#{dtype}#new_ones" do
+      a = dtype[[2, 3], [4, 5]]
+      na = a.new_ones
+      assert_equal(na.ndim, 2)
+      assert_equal(na.shape[0], 2)
+      assert_equal(na.shape[1], 2)
+      assert_equal(na[0, 0], 1)
+      assert_equal(na[0, 1], 1)
+      assert_equal(na[1, 0], 1)
+      assert_equal(na[1, 1], 1)
+    end
   end
 end
