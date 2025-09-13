@@ -10,14 +10,14 @@ require 'stringio'
 
 class NArrayTestBase < Test::Unit::TestCase
   FLOAT_TYPES = [
+    Numo::SFloat,
+    Numo::SComplex,
     Numo::DFloat,
     Numo::DComplex
   ].freeze
 
   TYPES = [
     *FLOAT_TYPES,
-    Numo::SFloat,
-    Numo::SComplex,
     Numo::Int64,
     Numo::Int32,
     Numo::Int16,

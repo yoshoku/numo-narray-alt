@@ -44,4 +44,22 @@ class NArrayExtraTest < NArrayTestBase
       assert_equal(na[1, 0], 5)
     end
   end
+
+  FLOAT_TYPES.each do |dtype|
+    test "#{dtype}#rad2deg" do
+      a = dtype[Math::PI / 2, Math::PI / 4]
+      na = a.rad2deg
+      assert { na[0] != a[0] }
+      assert { na[1] != a[1] }
+      if [Numo::DComplex, Numo::SComplex].include?(dtype)
+        assert_in_delta(na[0].real, 90, 1e-12)
+        assert_in_delta(na[0].imag, 0, 1e-12)
+        assert_in_delta(na[1].real, 45, 1e-12)
+        assert_in_delta(na[1].imag, 0, 1e-12)
+      else
+        assert_in_delta(na[0], 90, 1e-12)
+        assert_in_delta(na[1], 45, 1e-12)
+      end
+    end
+  end
 end
