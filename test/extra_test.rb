@@ -98,6 +98,19 @@ class NArrayExtraTest < NArrayTestBase
         assert { ai.is_a?(Integer) }
       end
     end
+
+    test "#{dtype}#to_f" do
+      a = dtype[1, 2, 3]
+      assert_raise(TypeError) { a.to_f }
+      a = dtype[5]
+      if [Numo::DComplex, Numo::SComplex].include?(dtype)
+        assert_raise(RangeError) { a.to_f }
+      else
+        ai = a.to_f
+        assert_equal(ai, 5)
+        assert { ai.is_a?(Float) }
+      end
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
