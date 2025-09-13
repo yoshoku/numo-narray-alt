@@ -33,5 +33,15 @@ class NArrayExtraTest < NArrayTestBase
       assert_equal(na[1, 0], 1)
       assert_equal(na[1, 1], 1)
     end
+
+    test "#{dtype}#new_fill" do
+      a = dtype[[1], [2]]
+      na = a.new_fill(5)
+      assert_equal(na.ndim, 2)
+      assert_equal(na.shape[0], 2)
+      assert_equal(na.shape[1], 1)
+      assert_equal(na[0, 0], 5)
+      assert_equal(na[1, 0], 5)
+    end
   end
 end
