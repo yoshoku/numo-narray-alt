@@ -61,6 +61,30 @@ class NArrayExtraTest < NArrayTestBase
       assert_equal(na[1, 0], 2)
       assert_equal(na[1, 1], 3)
     end
+
+    test "#{dtype}#rot90" do
+      a = dtype[[0, 1], [2, 3]]
+      na = a.rot90(0)
+      assert_equal(na[0, 0], a[0, 0])
+      assert_equal(na[0, 1], a[0, 1])
+      assert_equal(na[1, 0], a[1, 0])
+      assert_equal(na[1, 1], a[1, 1])
+      na = a.rot90
+      assert_equal(na[0, 0], a[0, 1])
+      assert_equal(na[0, 1], a[1, 1])
+      assert_equal(na[1, 0], a[0, 0])
+      assert_equal(na[1, 1], a[1, 0])
+      na = a.rot90(2)
+      assert_equal(na[0, 0], a[1, 1])
+      assert_equal(na[0, 1], a[1, 0])
+      assert_equal(na[1, 0], a[0, 1])
+      assert_equal(na[1, 1], a[0, 0])
+      na = a.rot90(3)
+      assert_equal(na[0, 0], a[1, 0])
+      assert_equal(na[0, 1], a[0, 0])
+      assert_equal(na[1, 0], a[1, 1])
+      assert_equal(na[1, 1], a[0, 1])
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
