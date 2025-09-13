@@ -52,6 +52,15 @@ class NArrayExtraTest < NArrayTestBase
       assert_equal(na[1, 0], 5)
       assert_equal(na[1, 1], 4)
     end
+
+    test "#{dtype}#flipud" do
+      a = dtype[[2, 3], [4, 5]]
+      na = a.flipud
+      assert_equal(na[0, 0], 4)
+      assert_equal(na[0, 1], 5)
+      assert_equal(na[1, 0], 2)
+      assert_equal(na[1, 1], 3)
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
