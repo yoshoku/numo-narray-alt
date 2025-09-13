@@ -111,6 +111,15 @@ class NArrayExtraTest < NArrayTestBase
         assert { ai.is_a?(Float) }
       end
     end
+
+    test "#{dtype}#to_c" do
+      a = dtype[1, 2, 3]
+      assert_raise(TypeError) { a.to_c }
+      a = dtype[5]
+      ai = a.to_c
+      assert_equal(ai, 5 + 0i)
+      assert { ai.is_a?(Complex) }
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
