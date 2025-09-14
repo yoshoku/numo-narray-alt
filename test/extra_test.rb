@@ -155,6 +155,25 @@ class NArrayExtraTest < NArrayTestBase
       assert_equal(2, na.shape[0])
       assert_equal(3, na.shape[1])
     end
+
+    test "#{dtype}#delete" do
+      a = dtype[[1, 2], [3, 4], [5, 6]]
+      na = a.delete(1)
+      assert_equal(1, na.ndim)
+      assert_equal(5, na.size)
+      na = a.delete(1, 0)
+      assert_equal(2, na.ndim)
+      assert_equal(2, na.shape[0])
+      assert_equal(2, na.shape[1])
+      na = a.delete(1, 1)
+      assert_equal(2, na.ndim)
+      assert_equal(3, na.shape[0])
+      assert_equal(1, na.shape[1])
+      na = a.delete([0, 2], 0)
+      assert_equal(2, na.ndim)
+      assert_equal(1, na.shape[0])
+      assert_equal(2, na.shape[1])
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
