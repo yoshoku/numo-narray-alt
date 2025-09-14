@@ -120,6 +120,23 @@ class NArrayExtraTest < NArrayTestBase
       assert_equal(ai, 5 + 0i)
       assert { ai.is_a?(Complex) }
     end
+
+    test "#{dtype}#each_over_axis" do
+      a = dtype[[0, 1], [2, 3]]
+      enm = a.each_over_axis
+      assert_equal(enm.class, Enumerator)
+      assert_equal(enm.to_a.size, 2)
+      assert_equal(enm.next, dtype[0, 1])
+      assert_equal(enm.next, dtype[2, 3])
+      enm = a.each_over_axis(1)
+      assert_equal(enm.class, Enumerator)
+      assert_equal(enm.to_a.size, 2)
+      assert_equal(enm.next, dtype[0, 2])
+      assert_equal(enm.next, dtype[1, 3])
+      a = dtype.new
+      assert_raise(RuntimeError) { a.each_over_axis { |_v| nil } }
+      assert_raise(ArgumentError) { a.each_over_axis(1) { |_v| nil } }
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
