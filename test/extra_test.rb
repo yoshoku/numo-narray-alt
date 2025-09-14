@@ -198,6 +198,32 @@ class NArrayExtraTest < NArrayTestBase
       assert_equal(dtype[8, 8, 8], na[true, 0])
       assert_equal(dtype[9, 9, 9], na[true, 3])
     end
+
+    test "#{dtype}#concatenate" do
+      a = dtype[[1, 2], [3, 4]]
+      b = dtype[[5, 6]]
+      na = a.concatenate(b, axis: 0)
+      assert_equal(2, na.ndim)
+      assert_equal(3, na.shape[0])
+      assert_equal(2, na.shape[1])
+      assert_equal(na[2, true], b[0, true])
+      na = a.concatenate(b.transpose, axis: 1)
+      assert_equal(2, na.ndim)
+      assert_equal(2, na.shape[0])
+      assert_equal(3, na.shape[1])
+      assert_equal(na[true, 2], b[0, true])
+      a = dtype[1, 2]
+      na = a.concatenate([3, 4])
+      assert_equal(1, na.ndim)
+      assert_equal(4, na.size)
+      assert_equal(3, na[2])
+      assert_equal(4, na[3])
+      na = a.concatenate(3)
+      assert_equal(1, na.ndim)
+      assert_equal(3, na.size)
+      assert_equal(3, na[2])
+      assert_raise(TypeError) { a.concatenate('3') }
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
