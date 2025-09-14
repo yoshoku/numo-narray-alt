@@ -137,6 +137,24 @@ class NArrayExtraTest < NArrayTestBase
       assert_raise(RuntimeError) { a.each_over_axis { |_v| nil } }
       assert_raise(ArgumentError) { a.each_over_axis(1) { |_v| nil } }
     end
+
+    test "#{dtype}#append" do
+      a = dtype[1, 2]
+      na = a.append([[3, 4], [5, 6]])
+      assert_equal(na.ndim, 1)
+      assert_equal(na.size, 6)
+      a = dtype[[1, 2]]
+      na = a.append([[3, 4], [5, 6]], axis: 0)
+      assert_equal(na.ndim, 2)
+      assert_equal(na.shape[0], 3)
+      assert_equal(na.shape[1], 2)
+      assert_raise(Numo::NArray::DimensionError) { a.append([3, 4], axis: 0) }
+      a = dtype[[1], [2]]
+      na = a.append([[3, 4], [5, 6]], axis: 1)
+      assert_equal(na.ndim, 2)
+      assert_equal(na.shape[0], 2)
+      assert_equal(na.shape[1], 3)
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
