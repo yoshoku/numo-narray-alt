@@ -224,6 +224,30 @@ class NArrayExtraTest < NArrayTestBase
       assert_equal(3, na[2])
       assert_raise(TypeError) { a.concatenate('3') }
     end
+
+    test "#{dtype}#split" do
+      a = dtype.new(6).seq
+      na = a.split(2)
+      assert_equal(2, na.size)
+      assert_equal(dtype[0, 1, 2], na[0])
+      assert_equal(dtype[3, 4, 5], na[1])
+      na = a.split([2, 5])
+      assert_equal(3, na.size)
+      assert_equal(dtype[0, 1], na[0])
+      assert_equal(dtype[2, 3, 4], na[1])
+      assert_equal(dtype[5], na[2])
+      na = a.split(Numo::UInt8[2, 5])
+      assert_equal(3, na.size)
+      assert_equal(dtype[0, 1], na[0])
+      assert_equal(dtype[2, 3, 4], na[1])
+      assert_equal(dtype[5], na[2])
+      a = dtype.new(2, 3).seq
+      na = a.split(2, axis: 1)
+      assert_equal(2, na.size)
+      assert_equal(dtype[[0, 1], [3, 4]], na[0])
+      assert_equal(dtype[[2], [5]], na[1])
+      assert_raise(TypeError) { a.split('2') }
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
