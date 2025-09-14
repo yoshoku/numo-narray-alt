@@ -174,6 +174,30 @@ class NArrayExtraTest < NArrayTestBase
       assert_equal(1, na.shape[0])
       assert_equal(2, na.shape[1])
     end
+
+    test "#{dtype}#insert" do
+      a = dtype[[1, 2], [3, 4], [5, 6]]
+      na = a.insert(1, 9)
+      assert_equal(1, na.ndim)
+      assert_equal(7, na.size)
+      assert_equal(9, na[1])
+      na = a.insert(1, 9, axis: 1)
+      assert_equal(2, na.ndim)
+      assert_equal(3, na.shape[0])
+      assert_equal(3, na.shape[1])
+      assert_equal(dtype[9, 9, 9], na[true, 1])
+      na = a.insert(1, [7, 8], axis: 0)
+      assert_equal(2, na.ndim)
+      assert_equal(4, na.shape[0])
+      assert_equal(2, na.shape[1])
+      assert_equal(dtype[7, 8], na[1, true])
+      na = a.insert([0, 2], [8, 9], axis: 1)
+      assert_equal(2, na.ndim)
+      assert_equal(3, na.shape[0])
+      assert_equal(4, na.shape[1])
+      assert_equal(dtype[8, 8, 8], na[true, 0])
+      assert_equal(dtype[9, 9, 9], na[true, 3])
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
