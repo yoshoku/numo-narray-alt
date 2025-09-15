@@ -287,6 +287,20 @@ class NArrayExtraTest < NArrayTestBase
       na = a.tile(2, 2)
       assert_equal(dtype[[0, 1, 0, 1], [2, 3, 2, 3], [0, 1, 0, 1], [2, 3, 2, 3]], na)
     end
+
+    test "#{dtype}#repeat" do
+      a = dtype.new(2, 3).seq
+      na = a.repeat(2)
+      assert_equal(dtype[0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5], na)
+      na = a.repeat(2, axis: 0)
+      assert_equal(dtype[[0, 1, 2], [0, 1, 2], [3, 4, 5], [3, 4, 5]], na)
+      na = a.repeat(2, axis: 1)
+      assert_equal(dtype[[0, 0, 1, 1, 2, 2], [3, 3, 4, 4, 5, 5]], na)
+      assert_raise(ArgumentError) { a.repeat(2, axis: '0') }
+      na = a.repeat([1, 2], axis: 0)
+      assert_equal(dtype[[0, 1, 2], [3, 4, 5], [3, 4, 5]], na)
+      assert_raise(ArgumentError) { a.repeat([1, 2], axis: 1) }
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
