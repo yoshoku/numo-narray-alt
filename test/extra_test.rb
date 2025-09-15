@@ -364,6 +364,12 @@ class NArrayExtraTest < NArrayTestBase
       na = a.diag(-1)
       assert_equal(dtype[[0, 0, 0], [1, 0, 0], [0, 2, 0]], na)
     end
+
+    test "#{dtype}#trace" do
+      a = dtype.new(3, 3).seq + 1
+      tr = a.trace
+      assert_equal(15, tr)
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
