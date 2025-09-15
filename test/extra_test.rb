@@ -256,6 +256,14 @@ class NArrayExtraTest < NArrayTestBase
       assert_equal(Numo::DFloat[[0, 1], [2, 3]], na[0])
       assert_equal(Numo::DFloat[[4, 5]], na[1])
     end
+
+    test "#{dtype}#hsplit" do
+      a = Numo::DFloat.new(3, 2).seq
+      na = a.hsplit(2)
+      assert_equal(2, na.size)
+      assert_equal(Numo::DFloat[[0], [2], [4]], na[0])
+      assert_equal(Numo::DFloat[[1], [3], [5]], na[1])
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
