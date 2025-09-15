@@ -301,6 +301,20 @@ class NArrayExtraTest < NArrayTestBase
       assert_equal(dtype[[0, 1, 2], [3, 4, 5], [3, 4, 5]], na)
       assert_raise(ArgumentError) { a.repeat([1, 2], axis: 1) }
     end
+
+    test "#{dtype}#diff" do
+      a = dtype[1, 3, 5, 7, 9]
+      na = a.diff
+      assert_equal(dtype[2, 2, 2, 2], na)
+      a = dtype[1, 3, 5, 9]
+      na = a.diff(2)
+      assert_equal(dtype[0, 2], na)
+      a = dtype[[0, 3, 6, 8], [1, 5, 6, 10]]
+      na = a.diff(axis: 0)
+      assert_equal(dtype[[1, 2, 0, 2]], na)
+      na = a.diff(axis: 1)
+      assert_equal(dtype[[3, 3, 2], [4, 1, 4]], na)
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
