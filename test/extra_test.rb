@@ -343,6 +343,17 @@ class NArrayExtraTest < NArrayTestBase
       av.tril!
       assert_equal(dtype[[1, 2, 3], [4, 5, 0], [7, 8, 9]], a)
     end
+
+    test "#{dtype}#diag_indices" do
+      a = dtype[1, 2, 3]
+      assert_raise(Numo::NArray::ShapeError) { a.diag_indices }
+      a = dtype[[1, 2], [3, 4]]
+      assert_equal(Numo::Int32[0, 3], a.diag_indices)
+      a = dtype[[1, 2, 3], [4, 5, 6]]
+      assert_equal(Numo::Int32[0, 4], a.diag_indices)
+      a = dtype[[1, 2], [3, 4], [5, 6]]
+      assert_equal(Numo::Int32[0, 3], a.diag_indices)
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
