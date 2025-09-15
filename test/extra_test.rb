@@ -250,19 +250,27 @@ class NArrayExtraTest < NArrayTestBase
     end
 
     test "#{dtype}#vsplit" do
-      a = Numo::DFloat.new(3, 2).seq
+      a = dtype.new(3, 2).seq
       na = a.vsplit(2)
       assert_equal(2, na.size)
-      assert_equal(Numo::DFloat[[0, 1], [2, 3]], na[0])
-      assert_equal(Numo::DFloat[[4, 5]], na[1])
+      assert_equal(dtype[[0, 1], [2, 3]], na[0])
+      assert_equal(dtype[[4, 5]], na[1])
     end
 
     test "#{dtype}#hsplit" do
-      a = Numo::DFloat.new(3, 2).seq
+      a = dtype.new(3, 2).seq
       na = a.hsplit(2)
       assert_equal(2, na.size)
-      assert_equal(Numo::DFloat[[0], [2], [4]], na[0])
-      assert_equal(Numo::DFloat[[1], [3], [5]], na[1])
+      assert_equal(dtype[[0], [2], [4]], na[0])
+      assert_equal(dtype[[1], [3], [5]], na[1])
+    end
+
+    test "#{dtype}#dsplit" do
+      a = dtype.new(3, 2, 2).seq
+      na = a.dsplit(2)
+      assert_equal(2, na.size)
+      assert_equal(dtype[[[0], [2]], [[4], [6]], [[8], [10]]], na[0])
+      assert_equal(dtype[[[1], [3]], [[5], [7]], [[9], [11]]], na[1])
     end
   end
 
