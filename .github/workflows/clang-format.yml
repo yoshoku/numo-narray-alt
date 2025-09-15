@@ -7,9 +7,11 @@ on:
       - dev*
     paths:
       - 'ext/**'
+      - '.github/workflows/clang-format.yml'
   pull_request:
     paths:
       - 'ext/**'
+      - '.github/workflows/clang-format.yml'
 
 jobs:
   clang-format:
