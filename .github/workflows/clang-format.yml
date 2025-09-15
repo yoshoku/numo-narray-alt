@@ -5,7 +5,11 @@ on:
     branches:
       - main
       - dev*
+    paths:
+      - 'ext/**'
   pull_request:
+    paths:
+      - 'ext/**'
 
 jobs:
   clang-format:
