@@ -315,6 +315,20 @@ class NArrayExtraTest < NArrayTestBase
       na = a.diff(axis: 1)
       assert_equal(dtype[[3, 3, 2], [4, 1, 4]], na)
     end
+
+    test "#{dtype}#triu/triu!" do
+      a = dtype.new(3, 3).seq + 1
+      na = a.triu
+      assert_equal(dtype[[1, 2, 3], [0, 5, 6], [0, 0, 9]], na)
+      na = a.triu(1)
+      assert_equal(dtype[[0, 2, 3], [0, 0, 6], [0, 0, 0]], na)
+      na = a.triu(-1)
+      assert_equal(dtype[[1, 2, 3], [4, 5, 6], [0, 8, 9]], na)
+      av = a[0...2, 0...2]
+      assert_equal(false, av.contiguous?)
+      av.triu!
+      assert_equal(dtype[[1, 2, 3], [0, 5, 6], [7, 8, 9]], a)
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
