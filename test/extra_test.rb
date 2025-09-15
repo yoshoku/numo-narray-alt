@@ -248,6 +248,14 @@ class NArrayExtraTest < NArrayTestBase
       assert_equal(dtype[[2], [5]], na[1])
       assert_raise(TypeError) { a.split('2') }
     end
+
+    test "#{dtype}#vsplit" do
+      a = Numo::DFloat.new(3, 2).seq
+      na = a.vsplit(2)
+      assert_equal(2, na.size)
+      assert_equal(Numo::DFloat[[0, 1], [2, 3]], na[0])
+      assert_equal(Numo::DFloat[[4, 5]], na[1])
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
