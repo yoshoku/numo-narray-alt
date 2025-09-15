@@ -354,6 +354,16 @@ class NArrayExtraTest < NArrayTestBase
       a = dtype[[1, 2], [3, 4], [5, 6]]
       assert_equal(Numo::Int32[0, 3], a.diag_indices)
     end
+
+    test "#{dtype}#diag" do
+      a = dtype[1, 2]
+      na = a.diag
+      assert_equal(dtype[[1, 0], [0, 2]], na)
+      na = a.diag(1)
+      assert_equal(dtype[[0, 1, 0], [0, 0, 2], [0, 0, 0]], na)
+      na = a.diag(-1)
+      assert_equal(dtype[[0, 0, 0], [1, 0, 0], [0, 2, 0]], na)
+    end
   end
 
   FLOAT_TYPES.each do |dtype|
