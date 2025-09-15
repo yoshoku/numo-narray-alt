@@ -283,7 +283,6 @@ class NArrayTest < Test::Unit::TestCase
         assert { a.reshape(nil, 2) == [[1, 2], [3, 5], [7, 11]] }
         assert { a.transpose == [[1, 5], [2, 7], [3, 11]] }
         assert { a.transpose(1, 0) == [[1, 5], [2, 7], [3, 11]] }
-        assert { a.tril == [[1, 0, 0], [5, 7, 0]] }
         assert { a.reverse == [[11, 7, 5], [3, 2, 1]] }
         assert { a.reverse(0, 1) == [[11, 7, 5], [3, 2, 1]] }
         assert { a.reverse(1, 0) == [[11, 7, 5], [3, 2, 1]] }
