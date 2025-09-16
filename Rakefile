@@ -15,9 +15,7 @@ require 'rake/testtask'
 Rake::TestTask.new(:test) do |t|
   t.libs << 'test'
   t.libs << 'lib'
-  t.verbose = false
-  t.warning = false
-  t.test_files = FileList['test/**/*_test.rb']
+  t.test_files = FileList['test/**/test_*.rb']
 end
 
 require 'rake/extensiontask'
