@@ -370,6 +370,46 @@ class NArrayExtraTest < NArrayTestBase
       tr = a.trace
       assert_equal(15, tr)
     end
+
+    sub_test_case "#{dtype}#dot" do
+      test 'vector.dot(vector)' do
+        a = dtype[1..3]
+        b = dtype[2..4]
+        assert { a.dot(b) == ((1 * 2) + (2 * 3) + (3 * 4)) }
+      end
+      test 'matrix.dot(vector)' do
+        a = dtype[1..6].reshape(3, 2)
+        b = dtype[1..2]
+        assert { a.dot(b) == [5, 11, 17] }
+      end
+      test 'vector.dot(matrix)' do
+        a = dtype[1..2]
+        b = dtype[1..6].reshape(2, 3)
+        assert { a.dot(b) == [9, 12, 15] }
+      end
+      test 'matrix.dot(matrix)' do
+        a = dtype[1..6].reshape(3, 2)
+        b = dtype[1..6].reshape(2, 3)
+        assert { a.dot(b) == [[9, 12, 15], [19, 26, 33], [29, 40, 51]] }
+        assert { b.dot(a) == [[22, 28], [49, 64]] }
+      end
+      test 'matrix.dot(matrix) with incorrect shape' do
+        a = dtype[1..6].reshape(3, 2)
+        b = dtype[1..9].reshape(3, 3)
+        assert_raise(Numo::NArray::ShapeError) { a.dot(b) }
+      end
+    end
+  end
+
+  test '#dot with different type arrays' do
+    $stderr = StringIO.new
+    a = Numo::Int32[1, 2, 3]
+    b = Numo::DFloat[[4], [5], [6]]
+    assert { a.dot(b).is_a?(Numo::DFloat) }
+    assert { a.dot(b) == [32] }
+    # no warning message
+    assert { $stderr.string == '' }
+    $stderr = STDERR
   end
 
   FLOAT_TYPES.each do |dtype|

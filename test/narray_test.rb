@@ -359,7 +359,6 @@ class NArrayTest < Test::Unit::TestCase
         assert { (a / 0.5) == [[2, 4, 6], [10, 14, 22]] } # rubocop:disable Lint/FloatComparison
         assert { (-a) == [[-1, -2, -3], [-5, -7, -11]] }
         assert { (a**2) == [[1, 4, 9], [25, 49, 121]] }
-        assert { (dtype[[1, 0], [0, 1]].dot dtype[[4, 1], [2, 2]]) == [[4, 1], [2, 2]] }
         assert { a.swap_byte.swap_byte == src } if dtype != Numo::RObject
       end
     end
@@ -412,35 +411,6 @@ class NArrayTest < Test::Unit::TestCase
       assert { a.transpose(0, 2, 1).fortran_contiguous? == false }
       assert { a.reshape(2, 4).fortran_contiguous? == false }
       assert { a.reshape(2, 4).transpose.fortran_contiguous? }
-    end
-
-    sub_test_case "#{dtype}, #dot" do
-      test 'vector.dot(vector)' do
-        a = dtype[1..3]
-        b = dtype[2..4]
-        assert { a.dot(b) == ((1 * 2) + (2 * 3) + (3 * 4)) }
-      end
-      test 'matrix.dot(vector)' do
-        a = dtype[1..6].reshape(3, 2)
-        b = dtype[1..2]
-        assert { a.dot(b) == [5, 11, 17] }
-      end
-      test 'vector.dot(matrix)' do
-        a = dtype[1..2]
-        b = dtype[1..6].reshape(2, 3)
-        assert { a.dot(b) == [9, 12, 15] }
-      end
-      test 'matrix.dot(matrix)' do
-        a = dtype[1..6].reshape(3, 2)
-        b = dtype[1..6].reshape(2, 3)
-        assert { a.dot(b) == [[9, 12, 15], [19, 26, 33], [29, 40, 51]] }
-        assert { b.dot(a) == [[22, 28], [49, 64]] }
-      end
-      test 'matrix.dot(matrix) with incorrect shape' do
-        a = dtype[1..6].reshape(3, 2)
-        b = dtype[1..9].reshape(3, 3)
-        assert_raise(Numo::NArray::ShapeError) { a.dot(b) }
-      end
     end
 
     sub_test_case "#{dtype}, simd" do
@@ -626,16 +596,6 @@ class NArrayTest < Test::Unit::TestCase
   test 'RObject summation' do
     x = Numo::RObject.cast([1.0, 2.0, 3.0]).sum
     assert { x == 6 }
-  end
-
-  test '#dot with different type arrays' do
-    $stderr = StringIO.new
-    a = Numo::Int32[1, 2, 3]
-    b = Numo::DFloat[[4], [5], [6]]
-    assert { a.dot(b).is_a?(Numo::DFloat) }
-    assert { a.dot(b) == [32] }
-    assert { $stderr.string == '' } # no warning message
-    $stderr = STDERR
   end
 
   test 'Numo::DFloat.cast(Numo::RObject[1, nil, 3])' do
