@@ -484,6 +484,17 @@ class NArrayExtraTest < NArrayTestBase
           assert_in_delta(Math::PI / 4, na[1], 1e-6)
         end
       end
+
+      test "#{dtype}#cov" do
+        a = dtype[1, 2, 3]
+        if [Numo::DComplex, Numo::SComplex].include?(dtype)
+          assert_equal(1.0 + 0.0i, a.cov)
+        else
+          assert_equal(1.0, a.cov)
+        end
+        a = dtype[[1, 2], [3, 4]]
+        assert_equal(dtype[[0.5, 0.5], [0.5, 0.5]], a.cov)
+      end
     end
   end
 
