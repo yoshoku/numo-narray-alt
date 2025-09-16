@@ -511,6 +511,23 @@ class NArrayExtraTest < NArrayTestBase
           assert_raise(Numo::NArray::CastError) { dtype.cast('a') }
         end
       end
+
+      test "#{dtype}.asarray" do
+        a = dtype.asarray(dtype[1, 2, 3])
+        assert_equal(dtype[1, 2, 3], a)
+        a = dtype.asarray([1, 2, 3])
+        assert_equal(dtype[1, 2, 3], a)
+        a = dtype.asarray(dtype.cast(1))
+        assert_equal(dtype[1], a)
+        a = dtype.asarray(1)
+        assert_equal(dtype[1], a)
+        a = dtype.asarray(1..3)
+        assert_equal(dtype[1, 2, 3], a)
+        if [Numo::RObject].include?(dtype)
+          a = dtype.asarray('a')
+          assert_equal(dtype.cast('a'), a)
+        end
+      end
     end
 
     test 'Numo::NArray.cast' do
