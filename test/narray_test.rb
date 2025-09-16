@@ -335,18 +335,6 @@ class NArrayTest < Test::Unit::TestCase
           if dtype != Numo::RObject
             assert { a.sort == src }
             assert { a.sort_index == [[0, 1, 2], [3, 4, 5]] }
-            assert_in_delta(a.percentile(0), 1.0, 1e-14)
-            assert_in_delta(a.percentile(50), 4.0, 1e-14)
-            assert_in_delta(a.percentile(90), 9.0, 1e-14)
-            assert_in_delta(a.percentile(100), 11.0, 1e-14)
-            assert { a.percentile(0, axis: 0) == [1, 2, 3] }
-            assert { a.percentile(50, axis: 0) == [3, 4.5, 7] }
-            assert { a.percentile(90, axis: 0) == [4.6, 6.5, 10.2] }
-            assert { a.percentile(100, axis: 0) == [5, 7, 11] }
-            assert { a.percentile(0, axis: 1) == [1, 5] }
-            assert { a.percentile(50, axis: 1) == [2, 7] }
-            assert { a.percentile(90, axis: 1) == [2.8, 10.2] }
-            assert { a.percentile(100, axis: 1) == [3, 11] }
           end
         end
         assert { a.dup.fill(12) == [[12, 12, 12], [12, 12, 12]] }

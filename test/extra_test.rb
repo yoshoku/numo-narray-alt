@@ -413,6 +413,24 @@ class NArrayExtraTest < NArrayTestBase
       assert_equal(dtype[[3, 6], [4, 8]], b.outer(a, axis: 0))
       assert_raise(ArgumentError) { a.outer(b, axis: 1) }
     end
+
+    test "#{dtype}#percentile" do
+      unless [Numo::DComplex, Numo::SComplex, Numo::RObject].include?(dtype)
+        a = dtype[[1, 2, 3], [5, 7, 11]]
+        assert_in_delta(a.percentile(0), 1.0, 1e-14)
+        assert_in_delta(a.percentile(50), 4.0, 1e-14)
+        assert_in_delta(a.percentile(90), 9.0, 1e-14)
+        assert_in_delta(a.percentile(100), 11.0, 1e-14)
+        assert { a.percentile(0, axis: 0) == [1, 2, 3] }
+        assert { a.percentile(50, axis: 0) == [3, 4.5, 7] }
+        assert { a.percentile(90, axis: 0) == [4.6, 6.5, 10.2] }
+        assert { a.percentile(100, axis: 0) == [5, 7, 11] }
+        assert { a.percentile(0, axis: 1) == [1, 5] }
+        assert { a.percentile(50, axis: 1) == [2, 7] }
+        assert { a.percentile(90, axis: 1) == [2.8, 10.2] }
+        assert { a.percentile(100, axis: 1) == [3, 11] }
+      end
+    end
   end
 
   test '#dot with different type arrays' do
