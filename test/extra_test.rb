@@ -573,6 +573,15 @@ class NArrayExtraTest < NArrayTestBase
         na = dtype.dstack([a, b])
         assert_equal(dtype[[[1, 3], [2, 4]]], na)
       end
+
+      test "#{dtype}.column_stack" do
+        a = dtype.column_stack([dtype[1, 2], dtype[3, 4]])
+        assert_equal(dtype[[1, 3], [2, 4]], a)
+        a = dtype.column_stack([dtype.cast(1), dtype.cast(2)])
+        assert_equal(dtype[[1, 2]], a)
+        a = dtype.column_stack([dtype[[1, 2], [3, 4]], dtype[[5, 6], [7, 8]]])
+        assert_equal(dtype[[1, 2, 5, 6], [3, 4, 7, 8]], a)
+      end
     end
 
     test 'Numo::NArray.cast' do
