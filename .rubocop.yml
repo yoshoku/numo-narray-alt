@@ -10,6 +10,7 @@
 # See https://docs.rubocop.org/rubocop/configuration
 
 plugins:
+  - rubocop-minitest
   - rubocop-performance
   - rubocop-rake
 
