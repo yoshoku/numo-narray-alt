@@ -537,6 +537,21 @@ class NArrayExtraTest < NArrayTestBase
         a = dtype.parse('1 2; 3 4 & 5 6; 7 8', split3d: '&')
         assert_equal(dtype[[[1, 2], [3, 4]], [[5, 6], [7, 8]]], a)
       end
+
+      test "#{dtype}.concatenate" do
+        a = dtype[[1, 2], [3, 4]]
+        b = dtype[[5, 6]]
+        na = dtype.concatenate([a, b], axis: 0)
+        assert_equal(dtype[[1, 2], [3, 4], [5, 6]], na)
+        na = dtype.concatenate([a, b.transpose], axis: 1)
+        assert_equal(dtype[[1, 2, 5], [3, 4, 6]], na)
+        a = dtype[1, 2]
+        na = dtype.concatenate([a, [3, 4]])
+        assert_equal(dtype[1, 2, 3, 4], na)
+        na = dtype.concatenate([a, 3])
+        assert_equal(dtype[1, 2, 3], na)
+        assert_raise(TypeError) { dtype.concatenate([a, '3']) }
+      end
     end
 
     test 'Numo::NArray.cast' do
