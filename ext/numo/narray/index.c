@@ -473,9 +473,11 @@ static size_t na_index_parse_args(VALUE args, narray_t* na, na_index_arg_t* q, i
 
 static void na_get_strides_nadata(const narray_data_t* na, ssize_t* strides, ssize_t elmsz) {
   int i = na->base.ndim - 1;
-  strides[i] = elmsz;
-  for (; i > 0; i--) {
-    strides[i - 1] = strides[i] * na->base.shape[i];
+  if (i >= 0) {
+    strides[i] = elmsz;
+    for (; i > 0; i--) {
+      strides[i - 1] = strides[i] * na->base.shape[i];
+    }
   }
 }
 
