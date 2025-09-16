@@ -405,6 +405,14 @@ class NArrayExtraTest < NArrayTestBase
       b = dtype[4, 5, 6]
       assert_equal(32, a.inner(b))
     end
+
+    test "#{dtype}#outer" do
+      a = dtype[1, 2]
+      b = dtype[3, 4]
+      assert_equal(dtype[[3, 4], [6, 8]], a.outer(b))
+      assert_equal(dtype[[3, 6], [4, 8]], b.outer(a, axis: 0))
+      assert_raise(ArgumentError) { a.outer(b, axis: 1) }
+    end
   end
 
   test '#dot with different type arrays' do
