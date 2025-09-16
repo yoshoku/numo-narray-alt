@@ -399,6 +399,12 @@ class NArrayExtraTest < NArrayTestBase
         assert_raise(Numo::NArray::ShapeError) { a.dot(b) }
       end
     end
+
+    test "#{dtype}#inner" do
+      a = dtype[1, 2, 3]
+      b = dtype[4, 5, 6]
+      assert_equal(32, a.inner(b))
+    end
   end
 
   test '#dot with different type arrays' do
