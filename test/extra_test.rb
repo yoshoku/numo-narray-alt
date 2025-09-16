@@ -431,6 +431,13 @@ class NArrayExtraTest < NArrayTestBase
         assert { a.percentile(100, axis: 1) == [3, 11] }
       end
     end
+
+    test "#{dtype}#kron" do
+      a = dtype[1, 10, 100]
+      assert_equal(dtype[5, 6, 7, 50, 60, 70, 500, 600, 700], a.kron(dtype[5, 6, 7]))
+      assert_equal(dtype[[1, 1, 0, 0], [1, 1, 0, 0], [0, 0, 1, 1], [0, 0, 1, 1]],
+                   dtype.eye(2).kron(dtype.ones(2, 2)))
+    end
   end
 
   test '#dot with different type arrays' do
