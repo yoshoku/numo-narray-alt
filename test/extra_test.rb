@@ -486,4 +486,43 @@ class NArrayExtraTest < NArrayTestBase
       end
     end
   end
+
+  sub_test_case 'class methods' do
+    TYPES.each do |dtype|
+      test "#{dtype}.cast" do
+        a = dtype.cast(dtype[1, 2, 3])
+        assert { a.is_a?(dtype) }
+        assert_equal(1, a.ndim)
+        assert_equal(3, a.size)
+        a = dtype.cast([1, 2, 3])
+        assert { a.is_a?(dtype) }
+        assert_equal(1, a.ndim)
+        assert_equal(3, a.size)
+        a = dtype.cast(1)
+        assert { a.is_a?(dtype) }
+        assert_equal(0, a.ndim)
+        assert_equal(1, a.size)
+        if [Numo::RObject].include?(dtype)
+          a = dtype.cast('a')
+          assert { a.is_a?(dtype) }
+          assert_equal(0, a.ndim)
+          assert_equal(1, a.size)
+        else
+          assert_raise(Numo::NArray::CastError) { dtype.cast('a') }
+        end
+      end
+    end
+
+    test 'Numo::NArray.cast' do
+      a = Numo::NArray.cast([1, 2, 3])
+      assert { a.is_a?(Numo::Int32) }
+      assert_equal(1, a.ndim)
+      assert_equal(3, a.size)
+      a = Numo::NArray.cast(1)
+      assert { a.is_a?(Numo::Int32) }
+      assert_equal(0, a.ndim)
+      assert_equal(1, a.size)
+      assert_raise(TypeError) { Numo::NArray.cast('1') }
+    end
+  end
 end
