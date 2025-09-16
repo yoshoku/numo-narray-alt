@@ -528,6 +528,15 @@ class NArrayExtraTest < NArrayTestBase
           assert_equal(dtype.cast('a'), a)
         end
       end
+
+      test "#{dtype}.parse" do
+        a = dtype.parse('1 2 3')
+        assert_equal(dtype[[1, 2, 3]], a)
+        a = dtype.parse('1 2 3; 4 5 6')
+        assert_equal(dtype[[1, 2, 3], [4, 5, 6]], a)
+        a = dtype.parse('1 2; 3 4 & 5 6; 7 8', split3d: '&')
+        assert_equal(dtype[[[1, 2], [3, 4]], [[5, 6], [7, 8]]], a)
+      end
     end
 
     test 'Numo::NArray.cast' do
