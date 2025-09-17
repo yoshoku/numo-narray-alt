@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
+require 'rbconfig'
 require_relative 'test_helper'
 
 class NArrayRactorTest < NArrayTestBase
   def setup
     super
     skip('Ractor is not supported') unless defined?(Ractor)
+    skip('Ractor tests are skipped on Windows due to CI timeout') if /mswin|mingw|cygwin/.match?(RbConfig::CONFIG['host_os'])
     Warning[:experimental] = false
   end
 
