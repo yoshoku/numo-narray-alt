@@ -11,11 +11,25 @@ task :doc do
   sh "rm -rf yard .yardoc; yard doc -o yard -m markdown -r README.md #{src.join(' ')}"
 end
 
+require 'ruby_memcheck' if ENV['BUNDLE_WITH'] == 'memcheck'
 require 'rake/testtask'
-Rake::TestTask.new(:test) do |t|
-  t.libs << 'test'
-  t.libs << 'lib'
-  t.test_files = FileList['test/**/test_*.rb']
+
+if ENV['BUNDLE_WITH'] == 'memcheck'
+  test_config = lambda do |t|
+    t.libs << 'test'
+    t.libs << 'lib'
+    t.test_files = FileList['test/**/test_*.rb']
+  end
+  Rake::TestTask.new(test: :compile, &test_config)
+  namespace :test do
+    RubyMemcheck::TestTask.new(valgrind: :compile, &test_config)
+  end
+else
+  Rake::TestTask.new(:test) do |t|
+    t.libs << 'test'
+    t.libs << 'lib'
+    t.test_files = FileList['test/**/test_*.rb']
+  end
 end
 
 require 'rake/extensiontask'
