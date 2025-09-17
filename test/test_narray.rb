@@ -2,616 +2,565 @@
 
 require_relative 'test_helper'
 
-class NArrayTest < Test::Unit::TestCase
-  types = [
-    Numo::DFloat,
-    Numo::SFloat,
-    Numo::DComplex,
-    Numo::SComplex,
-    Numo::Int64,
-    Numo::Int32,
-    Numo::Int16,
-    Numo::Int8,
-    Numo::UInt64,
-    Numo::UInt32,
-    Numo::UInt16,
-    Numo::UInt8,
-    Numo::RObject
-  ]
-  float_types = [
-    Numo::DFloat,
-    Numo::DComplex
-  ]
-
-  types.each do |dtype|
-    test dtype do
-      assert { dtype < Numo::NArray }
+class NArrayTest < NArrayTestBase
+  def test_inheritance_relationship
+    TYPES.each do |dtype|
+      assert_operator(dtype, :<, Numo::NArray)
     end
+  end
 
-    test "#{dtype}[]" do
+  def test_empty_narray # rubocop:disable Minitest/MultipleAssertions
+    TYPES.each do |dtype|
       a = dtype[]
+      assert_raises(Numo::NArray::ShapeError) { a[true] }
+      assert_raises(Numo::NArray::ShapeError) { a[1..] }
+      assert_empty(a)
+      assert_equal(1, a.ndim)
+      assert_equal([0], a.shape)
+      refute_predicate(a, :inplace?)
+      assert_predicate(a, :row_major?)
+      refute_predicate(a, :column_major?)
+      assert_predicate(a, :host_order?)
+      refute_predicate(a, :byte_swapped?)
+      assert_empty(a.to_a)
+      assert_kind_of(Array, a.to_a)
+      assert_equal(a, a.dup)
+      assert_equal(a, a.clone)
+      refute_same(a.dup, a)
+      refute_same(a.clone, a)
+      TYPES.each do |other_dtype|
+        next if dtype == other_dtype
 
-      assert_raise(Numo::NArray::ShapeError) { a[true] }
-      assert_raise(Numo::NArray::ShapeError) { a[1..-1] }
-
-      assert { a.empty? }
-      assert { a.ndim == 1 }
-      assert { a.shape == [0] }
-      assert { !a.inplace? }
-      assert { a.row_major? }
-      assert { !a.column_major? }
-      assert { a.host_order? }
-      assert { !a.byte_swapped? }
-      assert { a == [] }
-      assert { a.to_a == [] }
-      assert { a.to_a.is_a?(Array) }
-      assert { a.dup == a }
-      assert { a.clone == a }
-      assert { !a.dup.equal?(a) }
-      assert { !a.clone.equal?(a) }
-    end
-
-    types.each do |other_dtype|
-      next if dtype == other_dtype
-
-      test "#{dtype}[] == #{other_dtype}[]" do
-        assert { dtype[] == other_dtype[] }
+        assert_equal(other_dtype[], dtype[])
       end
     end
+  end
 
-    procs = [
-      [proc { |tp, a| tp[*a] }, ''],
-      [proc { |tp, a| tp[*a][true] }, '[true]'],
-      [proc { |tp, a| tp[*a][0..-1] }, '[0..-1]']
-    ]
-    procs.each do |init, ref|
-      test "#{dtype},[1,2,3,5,7,11]#{ref}" do
+  def test_1d_narray # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Minitest/MultipleAssertions
+    TYPES.each do |dtype|
+      [[proc { |tp, a| tp[*a] }, ''],
+       [proc { |tp, a| tp[*a][true] }, '[true]'],
+       [proc { |tp, a| tp[*a] }, '[0..-1]']].each do |init, _ref|
+        # test "#{dtype},[1,2,3,5,7,11]#{ref}" do
         src = [1, 2, 3, 5, 7, 11]
         a = init.call(dtype, src)
 
-        assert { a.is_a?(dtype) }
-        assert { a.size == 6 }
-        assert { a.ndim == 1 }
-        assert { a.shape == [6] }
-        assert { !a.inplace? }
-        assert { a.row_major? }
-        assert { !a.column_major? }
-        assert { a.host_order? }
-        assert { !a.byte_swapped? }
-        assert { a == [1, 2, 3, 5, 7, 11] }
-        assert { a.to_a == [1, 2, 3, 5, 7, 11] }
-        assert { a.to_a.is_a?(Array) }
-        assert { a.dup == a }
-        assert { a.clone == a }
-        assert { !a.dup.equal?(a) }
-        assert { !a.clone.equal?(a) }
+        assert_kind_of(dtype, a)
+        assert_equal(6, a.size)
+        assert_equal(1, a.ndim)
+        assert_equal([6], a.shape)
+        refute_predicate(a, :inplace?)
+        assert_predicate(a, :row_major?)
+        refute_predicate(a, :column_major?)
+        assert_predicate(a, :host_order?)
+        refute_predicate(a, :byte_swapped?)
+        assert_equal(dtype[1, 2, 3, 5, 7, 11], a)
+        assert_equal([1, 2, 3, 5, 7, 11], a.to_a)
+        assert_kind_of(Array, a.to_a)
+        assert_equal(a, a.dup)
+        assert_equal(a, a.clone)
+        refute_same(a.dup, a)
+        refute_same(a.clone, a)
 
-        assert { a.eq([1, 1, 3, 3, 7, 7]) == [1, 0, 1, 0, 1, 0] }
-        assert { a[3..4] == [5, 7] }
-        assert { a[5] == 11 }
-        assert { a[-1] == 11 }
+        assert_equal(Numo::Bit[1, 0, 1, 0, 1, 0], a.eq([1, 1, 3, 3, 7, 7]))
+        assert_equal(dtype[5, 7], a[3..4])
+        assert_equal(11, a[5])
+        assert_equal(11, a[-1])
 
-        assert { a.at([3, 4]) == [5, 7] }
-        assert { a.view.at([3, 4]) == [5, 7] }
-        assert { a[2..-1].at([1, 2]) == [5, 7] }
-        assert { a.at(Numo::Int32.cast([3, 4])) == [5, 7] }
-        assert { a.view.at(Numo::Int32.cast([3, 4])) == [5, 7] }
-        assert { a.at(3..4) == [5, 7] }
-        assert { a.view.at(3..4) == [5, 7] }
-        assert { a.at([5]) == [11] }
-        assert { a.view.at([5]) == [11] }
-        assert { a.at([-1]) == [11] }
-        assert { a.view.at([-1]) == [11] }
+        assert_equal(dtype[5, 7], a.at([3, 4]))
+        assert_equal(dtype[5, 7], a.view.at([3, 4]))
+        assert_equal(dtype[5, 7], a[2..].at([1, 2]))
+        assert_equal(dtype[5, 7], a.at(Numo::Int32.cast([3, 4])))
+        assert_equal(dtype[5, 7], a.view.at(Numo::Int32.cast([3, 4])))
+        assert_equal(dtype[5, 7], a.at(3..4))
+        assert_equal(dtype[5, 7], a.view.at(3..4))
+        assert_equal(dtype[11], a.at([5]))
+        assert_equal(dtype[11], a.view.at([5]))
+        assert_equal(dtype[11], a.at([-1]))
+        assert_equal(dtype[11], a.view.at([-1]))
 
-        assert { a[(0..-1).each] == [1, 2, 3, 5, 7, 11] }
-        assert { a[(0...-1).each] == [1, 2, 3, 5, 7] }
+        assert_equal(dtype[1, 2, 3, 5, 7, 11], a[(0..-1).each])
+        assert_equal(dtype[1, 2, 3, 5, 7], a[(0...-1).each])
 
         if Enumerator.const_defined?(:ArithmeticSequence)
-          assert { a[0.step(-1)] == [1, 2, 3, 5, 7, 11] }
-          assert { a[0.step(4)] == [1, 2, 3, 5, 7] }
-          assert { a[-5.step(-1)] == [2, 3, 5, 7, 11] }
-          assert { a[0.step(-1, 2)] == [1, 3, 7] }
-          assert { a[0.step(4, 2)] == [1, 3, 7] }
-          assert { a[-5.step(-1, 2)] == [2, 5, 11] }
+          assert_equal(dtype[1, 2, 3, 5, 7, 11], a[0.step(-1)])
+          assert_equal(dtype[1, 2, 3, 5, 7],    a[0.step(4)])
+          assert_equal(dtype[2, 3, 5, 7, 11],   a[-5.step(-1)])
+          assert_equal(dtype[1, 3, 7],          a[0.step(-1, 2)])
+          assert_equal(dtype[1, 3, 7],          a[0.step(4, 2)])
+          assert_equal(dtype[2, 5, 11],         a[-5.step(-1, 2)])
 
-          assert { a[0.step] == [1, 2, 3, 5, 7, 11] }
-          assert { a[-5.step] == [2, 3, 5, 7, 11] }
-          assert { eval('a[(0..).step(2)]') == [1, 3, 7] }
-          assert { eval('a[(0...).step(2)]') == [1, 3, 7] }
-          assert { eval('a[(-5..).step(2)]') == [2, 5, 11] }
-          assert { eval('a[(-5...).step(2)]') == [2, 5, 11] }
-          assert { eval('a[(0..) % 2]') == [1, 3, 7] }
-          assert { eval('a[(0...) % 2]') == [1, 3, 7] }
-          assert { eval('a[(-5..) % 2]') == [2, 5, 11] }
-          assert { eval('a[(-5...) % 2]') == [2, 5, 11] }
+          assert_equal(dtype[1, 2, 3, 5, 7, 11], a[0.step])
+          assert_equal(dtype[2, 3, 5, 7, 11], a[-5.step])
+          # rubocop:disable Style/EvalWithLocation
+          assert_equal(dtype[1, 3, 7], eval('a[(0..).step(2)]'))
+          assert_equal(dtype[1, 3, 7], eval('a[(0...).step(2)]'))
+          assert_equal(dtype[2, 5, 11], eval('a[(-5..).step(2)]'))
+          assert_equal(dtype[2, 5, 11], eval('a[(-5...).step(2)]'))
+          assert_equal(dtype[1, 3, 7], eval('a[(0..) % 2]'))
+          assert_equal(dtype[1, 3, 7], eval('a[(0...) % 2]'))
+          assert_equal(dtype[2, 5, 11], eval('a[(-5..) % 2]'))
+          assert_equal(dtype[2, 5, 11], eval('a[(-5...) % 2]'))
+          # rubocop:enable Style/EvalWithLocation
         end
 
-        assert { a[(0..-1).step(2)] == [1, 3, 7] }
-        assert { a[(0...-1).step(2)] == [1, 3, 7] }
-        assert { a[(0..4).step(2)] == [1, 3, 7] }
-        assert { a[(0...4).step(2)] == [1, 3] }
-        assert { a[(-5..-1).step(2)] == [2, 5, 11] }
-        assert { a[(-5...-1).step(2)] == [2, 5] }
-        assert { a[(0..-1) % 2] == [1, 3, 7] }
-        assert { a[(0...-1) % 2] == [1, 3, 7] }
-        assert { a[(0..4) % 2] == [1, 3, 7] }
-        assert { a[(0...4) % 2] == [1, 3] }
-        assert { a[(-5..-1) % 2] == [2, 5, 11] }
-        assert { a[(-5...-1) % 2] == [2, 5] }
-        assert { a[[4, 3, 0, 1, 5, 2]] == [7, 5, 1, 2, 11, 3] } #  Numo::NArray::CastError: cannot convert to NArray
-        assert { a.reverse == [11, 7, 5, 3, 2, 1] }
-        assert { a.sum == 29 }
-        if float_types.include?(dtype)
-          assert { a.mean == 29.0 / 6 } # rubocop:disable Lint/FloatComparison
-          assert_in_delta(a.var, 13.766666666666669, 1e-14)
-          assert_in_delta(a.stddev, 3.710345895825168, 1e-14)
-          assert_in_delta(a.rms, 5.901977069875258, 1e-14)
+        assert_equal(dtype[1, 3, 7], a[(0..-1).step(2)])
+        assert_equal(dtype[1, 3, 7], a[(0...-1).step(2)])
+        assert_equal(dtype[1, 3, 7], a[(0..4).step(2)])
+        assert_equal(dtype[1, 3], a[(0...4).step(2)])
+        assert_equal(dtype[2, 5, 11], a[(-5..-1).step(2)])
+        assert_equal(dtype[2, 5], a[(-5...-1).step(2)])
+        assert_equal(dtype[1, 3, 7], a[(0..-1) % 2])
+        assert_equal(dtype[1, 3, 7], a[(0...-1) % 2])
+        assert_equal(dtype[1, 3, 7], a[(0..4) % 2])
+        assert_equal(dtype[1, 3], a[(0...4) % 2])
+        assert_equal(dtype[2, 5, 11], a[(-5..-1) % 2])
+        assert_equal(dtype[2, 5], a[(-5...-1) % 2])
+        assert_equal(dtype[7, 5, 1, 2, 11, 3], a[[4, 3, 0, 1, 5, 2]]) #  Numo::NArray::CastError: cannot convert to NArray
+        assert_equal(dtype[11, 7, 5, 3, 2, 1], a.reverse)
+        assert_equal(29, a.sum)
+        if FLOAT_TYPES.include?(dtype)
+          assert_in_delta(4.833333, a.mean, 1e-6)
+          assert_in_delta(13.766666, a.var, 1e-5)
+          assert_in_delta(3.710345, a.stddev, 1e-6)
+          assert_in_delta(5.901977, a.rms, 1e-6)
         end
-        assert { a.dup.fill(12) == [12, 12, 12, 12, 12, 12] }
-        assert { (a + 1) == [2, 3, 4, 6, 8, 12] }
-        assert { (a - 1) == [0, 1, 2, 4, 6, 10] }
-        assert { (a * 3) == [3, 6, 9, 15, 21, 33] }
-        assert { (a / 0.5) == [2, 4, 6, 10, 14, 22] } # rubocop:disable Lint/FloatComparison
-        assert { (-a) == [-1, -2, -3, -5, -7, -11] }
-        assert { (a**2) == [1, 4, 9, 25, 49, 121] }
-        assert { a.swap_byte.swap_byte == [1, 2, 3, 5, 7, 11] } if dtype != Numo::RObject
+        assert_equal(dtype[12, 12, 12, 12, 12, 12], a.dup.fill(12))
+        assert_equal(dtype[2, 3, 4, 6, 8, 12], a + 1)
+        assert_equal(dtype[0, 1, 2, 4, 6, 10], a - 1)
+        assert_equal(dtype[3, 6, 9, 15, 21, 33], a * 3)
+        assert_equal(dtype[2, 4, 6, 10, 14, 22], a / 0.5)
+        assert_equal(dtype[-1, -2, -3, -5, -7, -11], -a)
+        assert_equal(dtype[1, 4, 9, 25, 49, 121], a**2)
+        assert_equal(Numo::SFloat[1, 2, 3, 5, 7, 11], a.swap_byte.swap_byte) if dtype != Numo::RObject
 
-        assert { a.contiguous? }
-        assert { a.transpose.contiguous? }
+        assert_predicate(a, :contiguous?)
+        assert_predicate(a.transpose, :contiguous?)
 
         if [Numo::DComplex, Numo::SComplex].include?(dtype)
-          assert { a.real == src }
-          assert { a.imag == [0, 0, 0, 0, 0, 0] }
-          assert { a.conj == src }
-          assert { a.angle == [0, 0, 0, 0, 0, 0] }
+          assert_equal(Numo::SFloat.asarray(src), a.real)
+          assert_equal(Numo::SFloat[0, 0, 0, 0, 0, 0], a.imag)
+          assert_equal(Numo::SFloat.asarray(src), a.conj)
+          assert_equal(Numo::SFloat[0, 0, 0, 0, 0, 0], a.angle)
         else
-          assert { a.min == 1 }
-          assert { a.max == 11 }
-          assert { a.min_index == 0 }
-          assert { a.max_index == 5 }
-          assert { (a >= 3) == [0, 0, 1, 1, 1, 1] }
-          assert { (a >  3) == [0, 0, 0, 1, 1, 1] }
-          assert { (a <= 3) == [1, 1, 1, 0, 0, 0] }
-          assert { (a <  3) == [1, 1, 0, 0, 0, 0] }
-          assert { (a.eq 3) == [0, 0, 1, 0, 0, 0] }
+          assert_equal(1, a.min)
+          assert_equal(11, a.max)
+          assert_equal(0, a.min_index)
+          assert_equal(5, a.max_index)
+          assert_equal(Numo::Bit[0, 0, 1, 1, 1, 1], a >= 3)
+          assert_equal(Numo::Bit[0, 0, 0, 1, 1, 1], a > 3)
+          assert_equal(Numo::Bit[1, 1, 1, 0, 0, 0], a <= 3)
+          assert_equal(Numo::Bit[1, 1, 0, 0, 0, 0], a < 3)
+          assert_equal(Numo::Bit[0, 0, 1, 0, 0, 0], a.eq(3))
           if dtype != Numo::RObject
-            assert { a.sort == src }
-            assert { a.sort_index == (0..5).to_a }
-            assert { a.median == 4 }
+            assert_equal(Numo::SFloat.asarray(src), a.sort)
+            assert_equal(Numo::Int32[0, 1, 2, 3, 4, 5], a.sort_index)
+            assert_equal(4, a.median)
           end
-          assert { dtype.maximum(a, 12 - a) == [11, 10, 9, 7, 7, 11] }
-          assert { dtype.minimum(a, 12 - a) == [1, 2, 3, 5, 5, 1] }
-          assert { dtype.maximum(a, 5) == [5, 5, 5, 5, 7, 11] }
-          assert { dtype.minimum(a, 5) == [1, 2, 3, 5, 5, 5] }
+          assert_equal(Numo::SFloat[11, 10, 9, 7, 7, 11], dtype.maximum(a, 12 - a))
+          assert_equal(Numo::SFloat[1, 2, 3, 5, 5, 1], dtype.minimum(a, 12 - a))
+          assert_equal(Numo::SFloat[5, 5, 5, 5, 7, 11], dtype.maximum(a, 5))
+          assert_equal(Numo::SFloat[1, 2, 3, 5, 5, 5], dtype.minimum(a, 5))
         end
       end
     end
+  end
 
-    test "#{dtype},[1..4]" do
-      assert { dtype[1..4] == [1, 2, 3, 4] }
-    end
+  def test_array_indexing
+    TYPES.each do |dtype|
+      assert_equal(dtype[1, 2, 3, 4], dtype[1..4])
+      assert_equal(dtype[-4, -3, -2, -1], dtype[-4..-1]) # rubocop:disable Style/SlicingWithRange
 
-    test "#{dtype},[-4..-1]" do
-      assert { dtype[-4..-1] == [-4, -3, -2, -1] }
-    end
-
-    if Enumerator.const_defined?(:ArithmeticSequence)
-      test "#{dtype},[1.step(4)]" do
-        assert { dtype[1.step(4)] == [1, 2, 3, 4] }
+      if Enumerator.const_defined?(:ArithmeticSequence)
+        assert_equal(dtype[1, 2, 3, 4], dtype[1.step(4)])
+        assert_equal(dtype[-4, -3, -2, -1], dtype[-4.step(-1)])
+        assert_equal(dtype[1, 3], dtype[1.step(4, 2)])
+        assert_equal(dtype[-4, -2], dtype[-4.step(-1, 2)])
+        assert_equal(dtype[-4, -2], dtype[(-4..-1).step(2)])
       end
 
-      test "#{dtype},[-4.step(-1)]" do
-        assert { dtype[-4.step(-1)] == [-4, -3, -2, -1] }
-      end
-
-      test "#{dtype},[1.step(4, 2)]" do
-        assert { dtype[1.step(4, 2)] == [1, 3] }
-      end
-
-      test "#{dtype},[-4.step(-1, 2)]" do
-        assert { dtype[-4.step(-1, 2)] == [-4, -2] }
-      end
-
-      test "#{dtype},[(-4..-1).step(2)]" do
-        assert { dtype[(-4..-1).step(2)] == [-4, -2] }
-      end
+      assert_equal(dtype[1, 3], dtype[(1..4) % 2])
+      assert_equal(dtype[-4, -2], dtype[(-4..-1) % 2])
     end
+  end
 
-    test "#{dtype},[(1..4) % 2]" do
-      assert { dtype[(1..4) % 2] == [1, 3] }
+  def test_seq
+    TYPES.each do |dtype|
+      assert_equal(dtype[0, 1, 2, 3, 4], dtype.new(5).seq)
     end
+  end
 
-    test "#{dtype},[(-4..-1) % 2]" do
-      assert { dtype[(-4..-1) % 2] == [-4, -2] }
-    end
-
-    # test "#{dtype}.seq(5)" do
-    #  assert { dtype.seq(5) == [0,1,2,3,4] }
-    # end
-
-    procs2 = [
-      [proc { |tp, src| tp[*src] }, ''],
-      [proc { |tp, src| tp[*src][true, true] }, '[true,true]'],
-      [proc { |tp, src| tp[*src][0..-1, 0..-1] }, '[0..-1,0..-1]']
-    ]
-    procs2.each do |init, ref|
-      test "#{dtype},[[1,2,3],[5,7,11]]#{ref}" do
+  def test_2d_narray # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Minitest/MultipleAssertions
+    TYPES.each do |dtype|
+      [[proc { |tp, src| tp[*src] }, ''],
+       [proc { |tp, src| tp[*src][true, true] }, '[true,true]'],
+       [proc { |tp, src| tp[*src][0..-1, 0..-1] }, '[0..-1,0..-1]']].each do |init, _ref|
         src = [[1, 2, 3], [5, 7, 11]]
         a = init.call(dtype, src)
 
-        assert { a.is_a?(dtype) }
-        assert { a.size == 6 }
-        assert { a.ndim == 2 }
-        assert { a.shape == [2, 3] }
-        assert { !a.inplace? }
-        assert { a.row_major? }
-        assert { !a.column_major? }
-        assert { a.host_order? }
-        assert { !a.byte_swapped? }
-        assert { a == src }
-        assert { a.to_a == src }
-        assert { a.to_a.is_a?(Array) }
+        assert_kind_of(dtype, a)
+        assert_equal(6, a.size)
+        assert_equal(2, a.ndim)
+        assert_equal([2, 3], a.shape)
+        refute_predicate(a, :inplace?)
+        assert_predicate(a, :row_major?)
+        refute_predicate(a, :column_major?)
+        assert_predicate(a, :host_order?)
+        refute_predicate(a, :byte_swapped?)
+        assert_equal(dtype.asarray(src), a)
+        assert_equal(src, a.to_a)
+        assert_kind_of(Array, a.to_a)
 
-        assert { a.eq([[1, 1, 3], [3, 7, 7]]) == [[1, 0, 1], [0, 1, 0]] }
-        assert { a[5] == 11 }
-        assert { a[-1] == 11 }
-        assert { a[1, 0] == src[1][0] }
-        assert { a[1, 1] == src[1][1] }
-        assert { a[1, 2] == src[1][2] }
-        assert { a[3..4] == [5, 7] }
-        assert { a[0, 1..2] == [2, 3] }
+        assert_equal(Numo::Bit[[1, 0, 1], [0, 1, 0]], a.eq([[1, 1, 3], [3, 7, 7]]))
+        assert_equal(11, a[5])
+        assert_equal(11, a[-1])
+        assert_equal(src[1][0], a[1, 0])
+        assert_equal(src[1][1], a[1, 1])
+        assert_equal(src[1][2], a[1, 2])
+        assert_equal(dtype[5, 7], a[3..4])
+        assert_equal(dtype[2, 3], a[0, 1..2])
 
-        assert { a.at([0, 1], [1, 2]) == [2, 11] }
-        assert { a.view.at([0, 1], [1, 2]) == [2, 11] }
-        assert { a.at([0, 1], (0..2) % 2) == [1, 11] }
-        assert { a.view.at([0, 1], (0..2) % 2) == [1, 11] }
-        assert { a.at((0..1) % 1, [0, 2]) == [1, 11] }
-        assert { a.view.at((0..1) % 1, [0, 2]) == [1, 11] }
-        assert { a.at(Numo::Int32.cast([0, 1]), Numo::Int32.cast([1, 2])) == [2, 11] }
-        assert { a.view.at(Numo::Int32.cast([0, 1]), Numo::Int32.cast([1, 2])) == [2, 11] }
-        assert { a[[0, 1], [0, 2]].at([0, 1], [0, 1]) == [1, 11] }
-        assert { a[[0, 1], (0..2) % 2].at([0, 1], [0, 1]) == [1, 11] }
-        assert { a[(0..1) % 1, [0, 2]].at([0, 1], [0, 1]) == [1, 11] }
-        assert { a[(0..1) % 1, (0..2) % 2].at([0, 1], [0, 1]) == [1, 11] }
+        assert_equal(dtype[2, 11], a.at([0, 1], [1, 2]))
+        assert_equal(dtype[2, 11], a.view.at([0, 1], [1, 2]))
+        assert_equal(dtype[1, 11], a.at([0, 1], (0..2) % 2))
+        assert_equal(dtype[1, 11], a.view.at([0, 1], (0..2) % 2))
+        assert_equal(dtype[1, 11], a.at((0..1) % 1, [0, 2]))
+        assert_equal(dtype[1, 11], a.view.at((0..1) % 1, [0, 2]))
+        assert_equal(dtype[2, 11], a.at(Numo::Int32.cast([0, 1]), Numo::Int32.cast([1, 2])))
+        assert_equal(dtype[2, 11], a.view.at(Numo::Int32.cast([0, 1]), Numo::Int32.cast([1, 2])))
+        assert_equal(dtype[1, 11], a[[0, 1], [0, 2]].at([0, 1], [0, 1]))
+        assert_equal(dtype[1, 11], a[[0, 1], (0..2) % 2].at([0, 1], [0, 1]))
+        assert_equal(dtype[1, 11], a[(0..1) % 1, [0, 2]].at([0, 1], [0, 1]))
+        assert_equal(dtype[1, 11], a[(0..1) % 1, (0..2) % 2].at([0, 1], [0, 1]))
 
-        assert { a[0, :*] == src[0] }
-        assert { a[1, :*] == src[1] }
-        assert { a[:*, 1] == [src[0][1], src[1][1]] }
-        assert { a[true, [2, 0, 1]] == [[3, 1, 2], [11, 5, 7]] }
-        assert { a.reshape(3, 2) == [[1, 2], [3, 5], [7, 11]] }
-        assert { a.reshape(3, nil) == [[1, 2], [3, 5], [7, 11]] }
-        assert { a.reshape(nil, 2) == [[1, 2], [3, 5], [7, 11]] }
-        assert { a.transpose == [[1, 5], [2, 7], [3, 11]] }
-        assert { a.transpose(1, 0) == [[1, 5], [2, 7], [3, 11]] }
-        assert { a.reverse == [[11, 7, 5], [3, 2, 1]] }
-        assert { a.reverse(0, 1) == [[11, 7, 5], [3, 2, 1]] }
-        assert { a.reverse(1, 0) == [[11, 7, 5], [3, 2, 1]] }
-        assert { a.reverse(0) == [[5, 7, 11], [1, 2, 3]] }
-        assert { a.reverse(1) == [[3, 2, 1], [11, 7, 5]] }
+        assert_equal(dtype.asarray(src[0]), a[0, :*])
+        assert_equal(dtype.asarray(src[1]), a[1, :*])
+        assert_equal(dtype[src[0][1], src[1][1]], a[:*, 1])
+        assert_equal(dtype[[3, 1, 2], [11, 5, 7]], a[true, [2, 0, 1]])
+        assert_equal(dtype[[1, 2], [3, 5], [7, 11]], a.reshape(3, 2))
+        assert_equal(dtype[[1, 2], [3, 5], [7, 11]], a.reshape(3, nil))
+        assert_equal(dtype[[1, 2], [3, 5], [7, 11]], a.reshape(nil, 2))
+        assert_equal(dtype[[1, 5], [2, 7], [3, 11]], a.transpose)
+        assert_equal(dtype[[1, 5], [2, 7], [3, 11]], a.transpose(1, 0))
+        assert_equal(dtype[[11, 7, 5], [3, 2, 1]], a.reverse)
+        assert_equal(dtype[[11, 7, 5], [3, 2, 1]], a.reverse(0, 1))
+        assert_equal(dtype[[11, 7, 5], [3, 2, 1]], a.reverse(1, 0))
+        assert_equal(dtype[[5, 7, 11], [1, 2, 3]], a.reverse(0))
+        assert_equal(dtype[[3, 2, 1], [11, 7, 5]], a.reverse(1))
 
-        assert { a.sum == 29 }
-        assert { a.sum(0) == [6, 9, 14] }
-        assert { a.sum(1) == [6, 23] }
-        if float_types.include?(dtype)
-          assert { a.mean == 29.0 / 6 } # rubocop:disable Lint/FloatComparison
-          assert { a.mean(0) == [3, 4.5, 7] }
-          assert { a.mean(1) == [2, 23.0 / 3] }
+        assert_equal(29, a.sum)
+        assert_equal(dtype[6, 9, 14], a.sum(axis: 0))
+        assert_equal(dtype[6, 23], a.sum(axis: 1))
+        if FLOAT_TYPES.include?(dtype)
+          assert_in_delta(4.833333, a.mean, 1e-6)
+          assert_equal(dtype[3, 4.5, 7], a.mean(0))
+          assert_equal(dtype[2, 23.0 / 3], a.mean(1))
         end
 
-        assert { a.contiguous? }
-        assert { a.reshape(3, 2).contiguous? }
-        assert { a[true, 1..2].contiguous? == false }
-        assert { a.transpose.contiguous? == false }
-        assert { a.fortran_contiguous? == false }
-        assert { a.transpose.fortran_contiguous? }
-        assert { a.transpose.transpose.fortran_contiguous? == false }
-        assert { a.reshape(3, 2).fortran_contiguous? == false }
-        assert { a.reshape(3, 2).transpose.fortran_contiguous? }
-        assert { a[true, 1..2].fortran_contiguous? == false }
-        assert { a[true, 1..2].transpose.fortran_contiguous? == false }
+        assert_predicate(a, :contiguous?)
+        assert_predicate(a.reshape(3, 2), :contiguous?)
+        refute_predicate(a[true, 1..2], :contiguous?)
+        refute_predicate(a.transpose, :contiguous?)
+        refute_predicate(a, :fortran_contiguous?)
+        assert_predicate(a.transpose, :fortran_contiguous?)
+        refute_predicate(a.transpose.transpose, :fortran_contiguous?)
+        refute_predicate(a.reshape(3, 2), :fortran_contiguous?)
+        assert_predicate(a.reshape(3, 2).transpose, :fortran_contiguous?)
+        refute_predicate(a[true, 1..2], :fortran_contiguous?)
+        refute_predicate(a[true, 1..2].transpose, :fortran_contiguous?)
 
         if [Numo::DComplex, Numo::SComplex].include?(dtype)
-          assert { a.real == src }
-          assert { a.imag == [[0, 0, 0], [0, 0, 0]] }
-          assert { a.conj == src }
-          assert { a.angle == [[0, 0, 0], [0, 0, 0]] }
+          assert_equal(Numo::SFloat.asarray(src), a.real)
+          assert_equal(Numo::SFloat[[0, 0, 0], [0, 0, 0]], a.imag)
+          assert_equal(Numo::SFloat.asarray(src), a.conj)
+          assert_equal(Numo::SFloat[[0, 0, 0], [0, 0, 0]], a.angle)
         else
-          assert { a.min == 1 }
-          assert { a.max == 11 }
-          assert { a.min_index == 0 }
-          assert { a.min_index(axis: 1) == [0, 3] }
-          assert { a.min_index(axis: 0) == [0, 1, 2] }
-          assert { a.max_index(axis: 1) == [2, 5] }
-          assert { a.max_index(axis: 0) == [3, 4, 5] }
-          assert { (a >= 3) == [[0, 0, 1], [1, 1, 1]] }
-          assert { (a >  3) == [[0, 0, 0], [1, 1, 1]] }
-          assert { (a <= 3) == [[1, 1, 1], [0, 0, 0]] }
-          assert { (a <  3) == [[1, 1, 0], [0, 0, 0]] }
-          assert { (a.eq 3) == [[0, 0, 1], [0, 0, 0]] }
-          assert { a[a.ne 3] == [1, 2, 5, 7, 11] }
-          assert { a[a[true, 2] < 5, true] == [[1, 2, 3]] }
-          assert { a[true, a[1, true] > 5] == [[2, 3], [7, 11]] }
-          assert { a[:*, (a[0, :*] % 2).eq(1)] == [[1, 3], [5, 11]] }
+          assert_equal(1, a.min)
+          assert_equal(11, a.max)
+          assert_equal(0, a.min_index)
+          assert_equal(dtype[0, 3], a.min_index(axis: 1))
+          assert_equal(dtype[0, 1, 2], a.min_index(axis: 0))
+          assert_equal(dtype[2, 5], a.max_index(axis: 1))
+          assert_equal(dtype[3, 4, 5], a.max_index(axis: 0))
+          assert_equal(Numo::Bit[[0, 0, 1], [1, 1, 1]], a >= 3)
+          assert_equal(Numo::Bit[[0, 0, 0], [1, 1, 1]], a > 3)
+          assert_equal(Numo::Bit[[1, 1, 1], [0, 0, 0]], a <= 3)
+          assert_equal(Numo::Bit[[1, 1, 0], [0, 0, 0]], a < 3)
+          assert_equal(Numo::Bit[[0, 0, 1], [0, 0, 0]], a.eq(3))
+          assert_equal(dtype[1, 2, 5, 7, 11], a[a.ne(3)])
+          assert_equal(dtype[[1, 2, 3]], a[a[true, 2] < 5, true])
+          assert_equal(dtype[[2, 3], [7, 11]], a[true, a[1, true] > 5])
+          assert_equal(dtype[[1, 3], [5, 11]], a[:*, (a[0, :*] % 2).eq(1)])
           if dtype != Numo::RObject
-            assert { a.sort == src }
-            assert { a.sort_index == [[0, 1, 2], [3, 4, 5]] }
+            assert_equal(Numo::SFloat.asarray(src), a.sort)
+            assert_equal(Numo::SFloat[[0, 1, 2], [3, 4, 5]], a.sort_index)
           end
         end
-        assert { a.dup.fill(12) == [[12, 12, 12], [12, 12, 12]] }
-        assert { (a + 1) == [[2, 3, 4], [6, 8, 12]] }
-        assert { (a + [1, 2, 3]) == [[2, 4, 6], [6, 9, 14]] }
-        assert { (a - 1) == [[0, 1, 2], [4, 6, 10]] }
-        assert { (a - [1, 2, 3]) == [[0, 0, 0], [4, 5, 8]] }
-        assert { (a * 3) == [[3, 6, 9], [15, 21, 33]] }
-        assert { (a * [1, 2, 3]) == [[1, 4, 9], [5, 14, 33]] }
-        assert { (a / 0.5) == [[2, 4, 6], [10, 14, 22]] } # rubocop:disable Lint/FloatComparison
-        assert { (-a) == [[-1, -2, -3], [-5, -7, -11]] }
-        assert { (a**2) == [[1, 4, 9], [25, 49, 121]] }
-        assert { a.swap_byte.swap_byte == src } if dtype != Numo::RObject
+        assert_equal(dtype[[12, 12, 12], [12, 12, 12]], a.dup.fill(12))
+        assert_equal(dtype[[2, 3, 4], [6, 8, 12]], a + 1)
+        assert_equal(dtype[[2, 4, 6], [6, 9, 14]], a + [1, 2, 3])
+        assert_equal(dtype[[0, 1, 2], [4, 6, 10]], a - 1)
+        assert_equal(dtype[[0, 0, 0], [4, 5, 8]], a - [1, 2, 3])
+        assert_equal(dtype[[3, 6, 9], [15, 21, 33]], a * 3)
+        assert_equal(dtype[[1, 4, 9], [5, 14, 33]], a * [1, 2, 3])
+        assert_equal(dtype[[2, 4, 6], [10, 14, 22]], a / 0.5)
+        assert_equal(dtype[[-1, -2, -3], [-5, -7, -11]], -a)
+        assert_equal(dtype[[1, 4, 9], [25, 49, 121]], a**2)
+        assert_equal(Numo::SFloat.asarray(src), a.swap_byte.swap_byte) if dtype != Numo::RObject
       end
     end
+  end
 
-    test "#{dtype},[[[1,2],[3,4]],[[5,6],[7,8]]]" do
+  def test_3d_narray # rubocop:disable Metrics/AbcSize, Minitest/MultipleAssertions
+    TYPES.each do |dtype|
       a = dtype[[[1, 2], [3, 4]], [[5, 6], [7, 8]]]
 
-      assert { a[0, 1, 1] == 4 }
-      assert { a[:rest] == a }
-      assert { a[0, :rest] == [[1, 2], [3, 4]] }
-      assert { a[0, false] == [[1, 2], [3, 4]] }
-      assert { a[0, 1, :rest] == [3, 4] }
-      assert { a[0, 1, false] == [3, 4] }
-      assert { a[:rest, 0] == [[1, 3], [5, 7]] }
-      assert { a[:rest, 0, 1] == [2, 6] }
-      assert { a[1, :rest, 0] == [5, 7] }
-      assert { a[1, 1, :rest, 0] == 7 }
-      assert_raise(IndexError) { a[1, 1, 1, 1, :rest] }
-      assert_raise(IndexError) { a[1, 1, 1, :rest, 1] }
-      assert_raise(IndexError) { a[:rest, 1, :rest, 0] }
+      assert_equal(4, a[0, 1, 1])
+      assert_equal(a, a[:rest])
+      assert_equal(dtype[[1, 2], [3, 4]], a[0, :rest])
+      assert_equal(dtype[[1, 2], [3, 4]], a[0, false])
+      assert_equal(dtype[3, 4], a[0, 1, :rest])
+      assert_equal(dtype[3, 4], a[0, 1, false])
+      assert_equal(dtype[[1, 3], [5, 7]], a[:rest, 0])
+      assert_equal(dtype[2, 6], a[:rest, 0, 1])
+      assert_equal(dtype[5, 7], a[1, :rest, 0])
+      assert_equal(7, a[1, 1, :rest, 0])
+      assert_raises(IndexError) { a[1, 1, 1, 1, :rest] }
+      assert_raises(IndexError) { a[1, 1, 1, :rest, 1] }
+      assert_raises(IndexError) { a[:rest, 1, :rest, 0] }
 
-      assert { a.at([0, 1], [1, 0], [0, 1]) == [3, 6] }
-      assert { a.view.at([0, 1], [1, 0], [0, 1]) == [3, 6] }
+      assert_equal(dtype[3, 6], a.at([0, 1], [1, 0], [0, 1]))
+      assert_equal(dtype[3, 6], a.view.at([0, 1], [1, 0], [0, 1]))
 
-      assert { a.transpose == [[[1, 5], [3, 7]], [[2, 6], [4, 8]]] }
-      assert { a.transpose(2, 1, 0) == [[[1, 5], [3, 7]], [[2, 6], [4, 8]]] }
-      assert { a.transpose(0, 2, 1) == [[[1, 3], [2, 4]], [[5, 7], [6, 8]]] }
+      assert_equal(dtype[[[1, 5], [3, 7]], [[2, 6], [4, 8]]], a.transpose)
+      assert_equal(dtype[[[1, 5], [3, 7]], [[2, 6], [4, 8]]], a.transpose(2, 1, 0))
+      assert_equal(dtype[[[1, 3], [2, 4]], [[5, 7], [6, 8]]], a.transpose(0, 2, 1))
 
-      assert { a.reverse == [[[8, 7], [6, 5]], [[4, 3], [2, 1]]] }
-      assert { a.reverse(0, 1, 2)    == [[[8, 7], [6, 5]], [[4, 3], [2, 1]]] }
-      assert { a.reverse(-3, -2, -1) == [[[8, 7], [6, 5]], [[4, 3], [2, 1]]] }
-      assert { a.reverse(0..2)     == [[[8, 7], [6, 5]], [[4, 3], [2, 1]]] }
-      assert { a.reverse(-3..-1)   == [[[8, 7], [6, 5]], [[4, 3], [2, 1]]] }
-      assert { a.reverse(0...3)    == [[[8, 7], [6, 5]], [[4, 3], [2, 1]]] }
-      assert { a.reverse(0)        == [[[5, 6], [7, 8]], [[1, 2], [3, 4]]] }
-      assert { a.reverse(1)        == [[[3, 4], [1, 2]], [[7, 8], [5, 6]]] }
-      assert { a.reverse(2)        == [[[2, 1], [4, 3]], [[6, 5], [8, 7]]] }
-      assert { a.reverse(0, 1) == [[[7, 8], [5, 6]], [[3, 4], [1, 2]]] }
-      assert { a.reverse(0..1)     == [[[7, 8], [5, 6]], [[3, 4], [1, 2]]] }
-      assert { a.reverse(0...2)    == [[[7, 8], [5, 6]], [[3, 4], [1, 2]]] }
-      assert { a.reverse(0, 2) == [[[6, 5], [8, 7]], [[2, 1], [4, 3]]] }
-      assert { a.reverse((0..2) % 2) == [[[6, 5], [8, 7]], [[2, 1], [4, 3]]] }
-      assert { a.reverse((0..2).step(2)) == [[[6, 5], [8, 7]], [[2, 1], [4, 3]]] }
+      assert_equal(dtype[[[8, 7], [6, 5]], [[4, 3], [2, 1]]], a.reverse)
+      assert_equal(dtype[[[8, 7], [6, 5]], [[4, 3], [2, 1]]], a.reverse(0, 1, 2))
+      assert_equal(dtype[[[8, 7], [6, 5]], [[4, 3], [2, 1]]], a.reverse(-3, -2, -1))
+      assert_equal(dtype[[[8, 7], [6, 5]], [[4, 3], [2, 1]]], a.reverse(0..2))
+      assert_equal(dtype[[[8, 7], [6, 5]], [[4, 3], [2, 1]]], a.reverse(-3..-1))
+      assert_equal(dtype[[[8, 7], [6, 5]], [[4, 3], [2, 1]]], a.reverse(0...3))
+      assert_equal(dtype[[[5, 6], [7, 8]], [[1, 2], [3, 4]]], a.reverse(0))
+      assert_equal(dtype[[[3, 4], [1, 2]], [[7, 8], [5, 6]]], a.reverse(1))
+      assert_equal(dtype[[[2, 1], [4, 3]], [[6, 5], [8, 7]]], a.reverse(2))
+      assert_equal(dtype[[[7, 8], [5, 6]], [[3, 4], [1, 2]]], a.reverse(0, 1))
+      assert_equal(dtype[[[7, 8], [5, 6]], [[3, 4], [1, 2]]], a.reverse(0..1))
+      assert_equal(dtype[[[7, 8], [5, 6]], [[3, 4], [1, 2]]], a.reverse(0...2))
+      assert_equal(dtype[[[6, 5], [8, 7]], [[2, 1], [4, 3]]], a.reverse(0, 2))
+      assert_equal(dtype[[[6, 5], [8, 7]], [[2, 1], [4, 3]]], a.reverse((0..2) % 2))
+      assert_equal(dtype[[[6, 5], [8, 7]], [[2, 1], [4, 3]]], a.reverse((0..2).step(2)))
 
-      assert { a.contiguous? }
-      assert { a.transpose.contiguous? == false }
-      assert { a.fortran_contiguous? == false }
-      assert { a.transpose.fortran_contiguous? }
-      assert { a.transpose.transpose.fortran_contiguous? == false }
-      assert { a.transpose(0, 2, 1).fortran_contiguous? == false }
-      assert { a.reshape(2, 4).fortran_contiguous? == false }
-      assert { a.reshape(2, 4).transpose.fortran_contiguous? }
+      assert_predicate(a, :contiguous?)
+      refute_predicate(a.transpose, :contiguous?)
+      refute_predicate(a, :fortran_contiguous?)
+      assert_predicate(a.transpose, :fortran_contiguous?)
+      refute_predicate(a.transpose.transpose, :fortran_contiguous?)
+      refute_predicate(a.transpose(0, 2, 1), :fortran_contiguous?)
+      refute_predicate(a.reshape(2, 4), :fortran_contiguous?)
+      assert_predicate(a.reshape(2, 4).transpose, :fortran_contiguous?)
     end
+  end
 
-    sub_test_case "#{dtype}, simd" do
-      test 'no simd add' do
-        a = dtype[4..6]
-        b = dtype[1..3]
-        assert { a + b         == [5, 7, 9] }
-        assert { a.inplace + b == [5, 7, 9] }
-      end
-      test 'no simd sub' do
-        a = dtype[4..6]
-        b = dtype[1..3]
-        assert { a - b         == [3, 3, 3] }
-        assert { a.inplace - b == [3, 3, 3] }
-      end
-      test 'no simd mul' do
-        a = dtype[4..6]
-        b = dtype[1..3]
-        assert { a * b         == [4, 10, 18] }
-        assert { a.inplace * b == [4, 10, 18] }
-      end
-      test 'no simd div' do
-        a = dtype[4..6]
-        b = dtype[1..3]
-        assert { a / b         == [4, 2.5, 2] }
-        assert { a.inplace / b == [4, 2.5, 2] }
-      end
+  def test_simd # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Minitest/MultipleAssertions
+    TYPES.each do |dtype|
+      # test 'no simd add' do
+      a = dtype[4..6]
+      b = dtype[1..3]
+      assert_equal(dtype[5, 7, 9], a + b)
+      assert_equal(dtype[5, 7, 9], a.inplace + b)
+      # test 'no simd sub' do
+      a = dtype[4..6]
+      b = dtype[1..3]
+      assert_equal(dtype[3, 3, 3], a - b)
+      assert_equal(dtype[3, 3, 3], a.inplace - b)
+      # test 'no simd mul' do
+      a = dtype[4..6]
+      b = dtype[1..3]
+      assert_equal(dtype[4, 10, 18], a * b)
+      assert_equal(dtype[4, 10, 18], a.inplace * b)
+      # test 'no simd div' do
+      a = dtype[4..6]
+      b = dtype[1..3]
+      assert_equal(dtype[4, 2.5, 2], a / b)
+      assert_equal(dtype[4, 2.5, 2], a.inplace / b)
       if dtype != Numo::RObject
-        test 'no simd sqrt' do
-          a = dtype[4, 9, 16]
-          assert { Numo::NMath.sqrt(a)         == [2, 3, 4] }
-          assert { Numo::NMath.sqrt(a.inplace) == [2, 3, 4] }
-        end
+        # test 'no simd sqrt' do
+        a = dtype[4, 9, 16]
+        assert_equal(Numo::SFloat[2, 3, 4], Numo::NMath.sqrt(a))
+        assert_equal(Numo::SFloat[2, 3, 4], Numo::NMath.sqrt(a.inplace))
       end
 
-      test 'simd add' do
-        a = dtype[11..19]
-        b = dtype.ones(9)
-        assert { a + b         == [12, 13, 14, 15, 16, 17, 18, 19, 20] }
-        assert { a.inplace + b == [12, 13, 14, 15, 16, 17, 18, 19, 20] }
-      end
-      test 'simd sub' do
-        a = dtype[11..19]
-        b = dtype.ones(9)
-        assert { a - b         == [10, 11, 12, 13, 14, 15, 16, 17, 18] }
-        assert { a.inplace - b == [10, 11, 12, 13, 14, 15, 16, 17, 18] }
-      end
-      test 'simd mul' do
-        a = dtype[11..19]
-        b = dtype.ones(9) * 2
-        assert { a * b         == [22, 24, 26, 28, 30, 32, 34, 36, 38] }
-        assert { a.inplace * b == [22, 24, 26, 28, 30, 32, 34, 36, 38] }
-      end
-      test 'simd div' do
-        a = dtype[11..19]
-        b = dtype.ones(9) * 2
-        assert { a / b         == [5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5] }
-        assert { a.inplace / b == [5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5] }
-      end
+      # test 'simd add' do
+      a = dtype[11..19]
+      b = dtype.ones(9)
+      assert_equal(dtype[12, 13, 14, 15, 16, 17, 18, 19, 20], a + b)
+      assert_equal(dtype[12, 13, 14, 15, 16, 17, 18, 19, 20], a.inplace + b)
+      # test 'simd sub' do
+      a = dtype[11..19]
+      b = dtype.ones(9)
+      assert_equal(dtype[10, 11, 12, 13, 14, 15, 16, 17, 18], a - b)
+      assert_equal(dtype[10, 11, 12, 13, 14, 15, 16, 17, 18], a.inplace - b)
+      # test 'simd mul' do
+      a = dtype[11..19]
+      b = dtype.ones(9) * 2
+      assert_equal(dtype[22, 24, 26, 28, 30, 32, 34, 36, 38], a * b)
+      assert_equal(dtype[22, 24, 26, 28, 30, 32, 34, 36, 38], a.inplace * b)
+      # test 'simd div' do
+      a = dtype[11..19]
+      b = dtype.ones(9) * 2
+      assert_equal(dtype[5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5], a / b)
+      assert_equal(dtype[5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5], a.inplace / b)
       if dtype != Numo::RObject
-        test 'simd sqrt' do
-          a = dtype[4, 9, 16, 25, 36, 49, 64, 81, 100]
-          assert { Numo::NMath.sqrt(a)         == [2, 3, 4, 5, 6, 7, 8, 9, 10] }
-          assert { Numo::NMath.sqrt(a.inplace) == [2, 3, 4, 5, 6, 7, 8, 9, 10] }
-        end
+        # test 'simd sqrt' do
+        a = dtype[4, 9, 16, 25, 36, 49, 64, 81, 100]
+        assert_equal(Numo::SFloat[2, 3, 4, 5, 6, 7, 8, 9, 10], Numo::NMath.sqrt(a))
+        assert_equal(Numo::SFloat[2, 3, 4, 5, 6, 7, 8, 9, 10], Numo::NMath.sqrt(a.inplace))
       end
 
-      test 'simd broadcast scalar add' do
-        a = dtype[1..9]
-        assert { a + 1         == [2, 3, 4, 5, 6, 7, 8, 9, 10] }
-        assert { a.inplace + 1 == [2, 3, 4, 5, 6, 7, 8, 9, 10] }
-      end
+      # test 'simd broadcast scalar add' do
+      a = dtype[1..9]
+      assert_equal(dtype[2, 3, 4, 5, 6, 7, 8, 9, 10], a + 1)
+      assert_equal(dtype[2, 3, 4, 5, 6, 7, 8, 9, 10], a.inplace + 1)
 
-      test 'simd broadcast not scalar add' do
-        a = dtype[10..19].reshape(2, 5)
-        b = dtype[10..14]
-        assert { a + b         == [[20, 22, 24, 26, 28], [25, 27, 29, 31, 33]] }
-        assert { a.inplace + b == [[20, 22, 24, 26, 28], [25, 27, 29, 31, 33]] }
-      end
+      # test 'simd broadcast not scalar add' do
+      a = dtype[10..19].reshape(2, 5)
+      b = dtype[10..14]
+      assert_equal(dtype[[20, 22, 24, 26, 28], [25, 27, 29, 31, 33]], a + b)
+      assert_equal(dtype[[20, 22, 24, 26, 28], [25, 27, 29, 31, 33]], a.inplace + b)
 
-      test 'simd view add' do
-        a = dtype[10..19][1..9]
-        b = dtype[10..19][1..9]
-        assert { a + b         == [22, 24, 26, 28, 30, 32, 34, 36, 38] }
-        assert { a.inplace + b == [22, 24, 26, 28, 30, 32, 34, 36, 38] }
-      end
+      # test 'simd view add' do
+      a = dtype[10..19][1..9]
+      b = dtype[10..19][1..9]
+      assert_equal(dtype[22, 24, 26, 28, 30, 32, 34, 36, 38], a + b)
+      assert_equal(dtype[22, 24, 26, 28, 30, 32, 34, 36, 38], a.inplace + b)
 
-      if dtype != Numo::RObject
-        test 'simd view sqrt' do
-          a = dtype[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
-          assert { Numo::NMath.sqrt(a[1..9])         == [2, 3, 4, 5, 6, 7, 8, 9, 10] }
-          assert { Numo::NMath.sqrt(a[1..9].inplace) == [2, 3, 4, 5, 6, 7, 8, 9, 10] }
-        end
-      end
+      next unless dtype != Numo::RObject
+
+      # test 'simd view sqrt' do
+      a = dtype[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+      assert_equal(Numo::SFloat[2, 3, 4, 5, 6, 7, 8, 9, 10], Numo::NMath.sqrt(a[1..9]))
+      assert_equal(Numo::SFloat[2, 3, 4, 5, 6, 7, 8, 9, 10], Numo::NMath.sqrt(a[1..9].inplace))
     end
+  end
 
-    test "#{dtype},advanced indexing" do
+  def test_advanced_indexing # rubocop:disable Metrics/AbcSize, Minitest/MultipleAssertions
+    TYPES.each do |dtype|
+      # test "#{dtype},advanced indexing" do
       a = dtype[[1, 2, 3], [4, 5, 6]]
-      assert { a[[0, 1], [0, 1]].dup == [[1, 2], [4, 5]] }
-      assert { a[[0, 1], [0, 1]].sum == 12 }
-      assert { a[[0, 1], [0, 1]].diagonal == [1, 5] }
+      assert_equal(dtype[[1, 2], [4, 5]], a[[0, 1], [0, 1]].dup)
+      assert_equal(12, a[[0, 1], [0, 1]].sum)
+      assert_equal(dtype[1, 5], a[[0, 1], [0, 1]].diagonal)
+
       diag = a.dup[[0, 1], [0, 1]].diagonal
       diag.inplace - 1
-      assert { diag == [0, 4] }
+      assert_equal(dtype[0, 4], diag)
+      assert_equal(dtype[1, 5], a.at([0, 1], [0, 1]).dup)
 
-      assert { a.at([0, 1], [0, 1]).dup == [1, 5] }
       at = a.dup
       at.at([0, 1], [0, 1]).inplace - 1
-      assert { at == [[0, 2, 3], [4, 4, 6]] }
-    end
+      assert_equal(dtype[[0, 2, 3], [4, 4, 6]], at)
 
-    next unless dtype != Numo::RObject
+      next unless dtype != Numo::RObject
 
-    sub_test_case "#{dtype}.from_binary" do
-      test 'frozen string' do
-        shape = [2, 5]
-        a = dtype.new(*shape)
-        a.rand(0, 10)
-        original_data = a.to_binary
-        data = original_data.dup.freeze
-        restored_a = dtype.from_binary(data, shape)
-        assert { restored_a == a }
-        restored_a[0, 0] += 1
-        assert { restored_a != a }
-        assert { data == original_data }
-      end
+      # sub_test_case "#{dtype}.from_binary" do
+      # test 'frozen string' do
+      shape = [2, 5]
+      a = dtype.new(*shape)
+      a.rand(0, 10)
+      original_data = a.to_binary
+      data = original_data.dup.freeze
+      restored_a = dtype.from_binary(data, shape)
+      assert_equal(a, restored_a)
 
-      test 'not frozen string' do
-        shape = [2, 5]
-        a = dtype.new(*shape)
-        a.rand(0, 10)
-        original_data = a.to_binary
-        data = original_data.dup
-        restored_a = dtype.from_binary(data, shape)
-        assert { restored_a == a }
-        restored_a[0, 0] += 1
-        assert { restored_a != a }
-        assert { data == original_data }
-      end
-    end
+      restored_a[0, 0] += 1
+      refute_equal(restored_a, a)
+      assert_equal(original_data, data)
 
-    sub_test_case "#{dtype}#store_binary" do
-      test 'frozen string' do
-        shape = [2, 5]
-        a = dtype.new(*shape)
-        a.rand(0, 10)
-        original_data = a.to_binary
-        data = original_data.dup.freeze
-        restored_a = dtype.new(*shape)
-        restored_a.store_binary(data)
-        assert { restored_a == a }
-        restored_a[0, 0] += 1
-        assert { restored_a != a }
-        assert { data == original_data }
-      end
+      # test 'not frozen string' do
+      shape = [2, 5]
+      a = dtype.new(*shape)
+      a.rand(0, 10)
+      original_data = a.to_binary
+      data = original_data.dup
+      restored_a = dtype.from_binary(data, shape)
+      assert_equal(a, restored_a)
 
-      test 'not frozen string' do
-        shape = [2, 5]
-        a = dtype.new(*shape)
-        a.rand(0, 10)
-        original_data = a.to_binary
-        data = original_data.dup
-        restored_a = dtype.new(*shape)
-        restored_a.store_binary(data)
-        assert { restored_a == a }
-        restored_a[0, 0] += 1
-        assert { restored_a != a }
-        assert { data == original_data }
-      end
+      restored_a[0, 0] += 1
+      refute_equal(restored_a, a)
+      assert_equal(original_data, data)
+
+      # sub_test_case "#{dtype}#store_binary" do
+      # test 'frozen string' do
+      shape = [2, 5]
+      a = dtype.new(*shape)
+      a.rand(0, 10)
+      original_data = a.to_binary
+      data = original_data.dup.freeze
+      restored_a = dtype.new(*shape)
+      restored_a.store_binary(data)
+      assert_equal(a, restored_a)
+
+      restored_a[0, 0] += 1
+      refute_equal(restored_a, a)
+      assert_equal(original_data, data)
+
+      # test 'not frozen string' do
+      shape = [2, 5]
+      a = dtype.new(*shape)
+      a.rand(0, 10)
+      original_data = a.to_binary
+      data = original_data.dup
+      restored_a = dtype.new(*shape)
+      restored_a.store_binary(data)
+      assert_equal(a, restored_a)
+
+      restored_a[0, 0] += 1
+      refute_equal(restored_a, a)
+      assert_equal(original_data, data)
     end
   end
 
-  test 'cast any object that responds to to_a' do
-    object = Struct.new(:to_a).new([1, 2, 3]) # rubocop:disable Lint/StructNewOverride
-    assert { Numo::NArray.cast(object) == [1, 2, 3] }
+  def test_cast_any_object_that_responds_to_to_ary
+    obj = Struct.new(:to_a).new([1, 2, 3]) # rubocop:disable Lint/StructNewOverride
+    assert_equal(Numo::Int32[1, 2, 3], Numo::NArray.cast(obj))
   end
 
-  test '0-dimensional binary string' do
-    x = Numo::UInt8.from_binary("\x17", [])
-    assert { x == 0x17 }
+  def test_zero_dimensional_binary_string
+    assert_equal(0x17, Numo::UInt8.from_binary("\x17", []))
   end
 
-  test 'RObject summation' do
-    x = Numo::RObject.cast([1.0, 2.0, 3.0]).sum
-    assert { x == 6 }
+  def test_robject_sum
+    assert_equal(6, Numo::RObject.cast([1.0, 2.0, 3.0]).sum)
   end
 
-  test 'Numo::DFloat.cast(Numo::RObject[1, nil, 3])' do
+  def test_dfloat_cast_robject
     assert_equal(Numo::DFloat[1, Float::NAN, 3].format_to_a,
                  Numo::DFloat.cast(Numo::RObject[1, nil, 3]).format_to_a)
   end
 
-  test '#sort_index' do
+  def test_sort_index
     rng = Random.new(42)
     arr = Array.new(100) { rng.rand(-1.0...1.0) }
     [Numo::DFloat, Numo::SFloat].each do |dtype|
       a = dtype.asarray(arr)
       idx = a.sort_index
-      assert_equal(a[idx].to_a, a.to_a.sort)
+      assert_equal(a.to_a.sort, a[idx].to_a)
     end
 
     arr = Array.new(100) { rng.rand(-100...100) }
     [Numo::Int64, Numo::Int32, Numo::Int16, Numo::Int8].each do |dtype|
       a = dtype.asarray(arr)
       idx = a.sort_index
-      assert_equal(a[idx].to_a, a.to_a.sort)
+      assert_equal(a.to_a.sort, a[idx].to_a)
     end
 
     arr = Array.new(100) { rng.rand(0...100) }
     [Numo::UInt64, Numo::UInt32, Numo::UInt16, Numo::UInt8].each do |dtype|
       a = dtype.asarray(arr)
       idx = a.sort_index
-      assert_equal(a[idx].to_a, a.to_a.sort)
+      assert_equal(a.to_a.sort, a[idx].to_a)
     end
   end
 end

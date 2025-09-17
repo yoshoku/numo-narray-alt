@@ -2,110 +2,88 @@
 
 require_relative 'test_helper'
 
-class BitTest < Test::Unit::TestCase
-  dtype = Numo::Bit
+class NArrayBitTest < NArrayTestBase
+  def test_numo_bit # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Minitest/MultipleAssertions
+    assert_operator(Numo::Bit, :<, Numo::NArray)
 
-  test dtype do
-    assert { dtype < Numo::NArray }
-  end
-
-  procs = [
-    [proc { |tp, a| tp[*a] }, ''],
-    [proc { |tp, a| tp[*a][true] }, '[true]'],
-    [proc { |tp, a| tp[*a] }, '[0..-1]']
-  ]
-  procs.each do |init, ref|
-    test "#{dtype},[0,1,1,0,1,0,0,1]#{ref}" do
+    [[proc { |tp, a| tp[*a] }, ''],
+     [proc { |tp, a| tp[*a][true] }, '[true]'],
+     [proc { |tp, a| tp[*a] }, '[0..-1]']].each do |init, _ref|
+      # test "Numo::Bit,[0,1,1,0,1,0,0,1]#{ref}" do
       src = [0, 1, 1, 0, 1, 0, 0, 1]
-      n = src.size
-      a = init.call(dtype, src)
-
-      assert { a == src }
-      assert { (a & 0) == [0] * n } # rubocop:disable Performance/CollectionLiteralInLoop
-      assert { (a & 1) == src }
-      assert { (a | 0) == src }
-      assert { (a | 1) == [1] * n } # rubocop:disable Performance/CollectionLiteralInLoop
-      assert { (a ^ 0) == src.map { |x| x ^ 0 } }
-      assert { (a ^ 1) == src.map { |x| x ^ 1 } }
-      assert { ~a == src.map { |x| 1 - x } }
-
-      assert { a.count_true == 4 }
-      assert { a.count_false == 4 }
-      assert { a.where == [1, 2, 4, 7] }
-      assert { a.where2 == [[1, 2, 4, 7], [0, 3, 5, 6]] }
-      assert { a.mask(Numo::DFloat[1, 2, 3, 4, 5, 6, 7, 8]) == [2, 3, 5, 8] }
-      assert { !a.all? }
-      assert { a.any? }
-      assert { a.any? }
+      a = init.call(Numo::Bit, src)
+      assert_equal(Numo::Bit.asarray(src), a)
+      assert_equal(Numo::Bit[0, 0, 0, 0, 0, 0, 0, 0], a & 0)
+      assert_equal(Numo::Bit.asarray(src), a & 1)
+      assert_equal(Numo::Bit.asarray(src), a | 0)
+      assert_equal(Numo::Bit[1, 1, 1, 1, 1, 1, 1, 1], a | 1)
+      assert_equal(Numo::Bit.asarray(src.map { |x| x ^ 0 }), a ^ 0)
+      assert_equal(Numo::Bit.asarray(src.map { |x| x ^ 1 }), a ^ 1)
+      assert_equal(Numo::Bit.asarray(src.map { |x| 1 - x }), ~a)
+      assert_equal(4, a.count_true)
+      assert_equal(4, a.count_false)
+      assert_equal(Numo::Int32[1, 2, 4, 7], a.where)
+      assert_equal(Numo::Int32[[1, 2, 4, 7], [0, 3, 5, 6]], a.where2)
+      assert_equal(Numo::Int32[2, 3, 5, 8], a.mask(Numo::DFloat[1, 2, 3, 4, 5, 6, 7, 8]))
+      refute_predicate(a, :all?)
+      assert_predicate(a, :any?)
+      assert_predicate(a, :any?)
     end
-  end
 
-  procs = [
-    [proc { |tp, a| tp[*a] }, ''],
-    [proc { |tp, a| tp[*a][true, 0..-1] }, '[true,true]']
-  ]
-  procs.each do |init, ref|
-    test "#{dtype},[[0,1,1,0],[1,0,0,1]]#{ref}" do
+    [[proc { |tp, a| tp[*a] }, ''],
+     [proc { |tp, a| tp[*a][true, 0..-1] }, '[true,true]']].each do |init, _ref|
+      # test "Numo::Bit,[[0,1,1,0],[1,0,0,1]]#{ref}" do
       src = [[0, 1, 1, 0], [1, 0, 0, 1]]
       src.size
-      a = init.call(dtype, src)
-
-      assert { a[5] == 0 }
-      assert { a[-1] == 1 }
-      assert { a[1, 0] == src[1][0] }
-      assert { a[1, 1] == src[1][1] }
-      assert { a[1, 2] == src[1][2] }
-      assert { a[3..4] == [0, 1] }
-      assert { a[0, 1..2] == [1, 1] }
-      assert { a[0, :*] == src[0] }
-      assert { a[1, :*] == src[1] }
-      assert { a[:*, 1] == [src[0][1], src[1][1]] }
-
-      assert { a.count_true == 4 }
-      assert { a.count_false == 4 }
-      assert { a.where == [1, 2, 4, 7] }
-      assert { a.where2 == [[1, 2, 4, 7], [0, 3, 5, 6]] }
-      assert { a.mask(Numo::DFloat[[1, 2, 3, 4], [5, 6, 7, 8]]) == [2, 3, 5, 8] }
-      assert { !a.all? }
-      assert { a.any? }
-      assert { a.any? }
+      a = init.call(Numo::Bit, src)
+      assert_equal(0, a[5])
+      assert_equal(1, a[-1])
+      assert_equal(src[1][0], a[1, 0])
+      assert_equal(src[1][1], a[1, 1])
+      assert_equal(src[1][2], a[1, 2])
+      assert_equal(Numo::Bit[0, 1], a[3..4])
+      assert_equal(Numo::Bit[1, 1], a[0, 1..2])
+      assert_equal(Numo::Bit.asarray(src[0]), a[0, :*])
+      assert_equal(Numo::Bit.asarray(src[1]), a[1, :*])
+      assert_equal(Numo::Bit[src[0][1], src[1][1]], a[:*, 1])
+      assert_equal(4, a.count_true)
+      assert_equal(4, a.count_false)
+      assert_equal(Numo::Int32[1, 2, 4, 7], a.where)
+      assert_equal(Numo::Int32[[1, 2, 4, 7], [0, 3, 5, 6]], a.where2)
+      assert_equal(Numo::DFloat[2, 3, 5, 8], a.mask(Numo::DFloat[[1, 2, 3, 4], [5, 6, 7, 8]]))
+      refute_predicate(a, :all?)
+      assert_predicate(a, :any?)
+      refute_predicate(a, :none?)
     end
-  end
 
-  procs = [
-    [proc { |tp, a| tp[*a] }, '']
-  ]
-  procs.each do |init, ref|
-    test "#{dtype},[]#{ref}" do
+    [[proc { |tp, a| tp[*a] }, '']].each do |init, _ref|
+      # test "Numo::Bit,[]#{ref}" do
       src = []
-      n = src.size
-      a = init.call(dtype, src)
-
-      assert { a == src }
-      assert { (a & 0) == [0] * n } # rubocop:disable Performance/CollectionLiteralInLoop
-      assert { (a & 1) == src }
-      assert { (a | 0) == src }
-      assert { (a | 1) == [1] * n } # rubocop:disable Performance/CollectionLiteralInLoop
-      assert { (a ^ 0) == src.map { |x| x ^ 0 } }
-      assert { (a ^ 1) == src.map { |x| x ^ 1 } }
-      assert { ~a == src.map { |x| 1 - x } }
-
-      assert { a.count_true == 0 }
-      assert { a.count_false == 0 }
-      assert { a.where == [] }
-      assert { a.where2 == [[], []] }
-      assert { a.mask(Numo::DFloat[]) == [] }
-      assert { !a.all? }
-      assert { a.none? }
-      assert { a.none? }
+      a = init.call(Numo::Bit, src)
+      assert_equal(Numo::Bit.asarray(src), a)
+      assert_equal(Numo::Bit[], a & 0)
+      assert_equal(Numo::Bit.asarray(src), a & 1)
+      assert_equal(Numo::Bit.asarray(src), a | 0)
+      assert_equal(Numo::Bit[], a | 1)
+      assert_equal(Numo::Bit.asarray(src.map { |x| x ^ 0 }), a ^ 0)
+      assert_equal(Numo::Bit.asarray(src.map { |x| x ^ 1 }), a ^ 1)
+      assert_equal(Numo::Bit.asarray(src.map { |x| 1 - x }), ~a)
+      assert_equal(0, a.count_true)
+      assert_equal(0, a.count_false)
+      assert_empty(a.where)
+      assert_equal([Numo::Int32[], Numo::Int32[]], a.where2)
+      assert_empty(a.mask(Numo::DFloat[]))
+      refute_predicate(a, :all?)
+      refute_predicate(a, :any?)
+      assert_predicate(a, :none?)
     end
   end
 
-  test 'store to view' do
+  def test_store_to_view
     n = 14
     x = Numo::Bit.zeros(n + 2, n + 2, 3)
-    ~x[1..-2, 1..-2, 0].inplace
-    assert { x.where.size == n * n }
+    ~x[1..-2, 1..-2, 0].inplace # rubocop:disable Lint/Void
+    assert_equal(n * n, x.where.size)
 
     x1 = Numo::Bit.ones(n, n)
     x0 = Numo::Bit.zeros(n, n)
@@ -113,28 +91,31 @@ class BitTest < Test::Unit::TestCase
     x = Numo::NArray.dstack([x1, x0, x0])
     y = Numo::NArray.dstack([y0, y0, y0])
     y[1..-2, 1..-2, true] = x
-    assert { (~y[1..-2, 1..-2, 0]).where.empty? }
-    assert { y[true, true, 1].where.empty? }
+    assert_empty((~y[1..-2, 1..-2, 0]).where)
+    assert_empty(y[true, true, 1].where)
   end
 
-  test 'assign nil' do
+  def test_assign_nil
     x = Numo::RObject.cast([1, 2, 3])
     x[Numo::Bit.cast([0, 1, 0])] = nil
-    assert { x.to_a == [1, nil, 3] }
+    assert_equal([1, nil, 3], x.to_a)
   end
 
-  test 'flipped matrices > 6x6' do
+  def test_flipud
     m = Numo::Bit.zeros(7, 7)
     m = m.flipud
     m[true, 1] = 1
-    assert do
-      m == [[0, 1, 0, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0, 0]]
-    end
+    assert_equal(
+      Numo::Bit[
+        [0, 1, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0, 0]
+      ],
+      m
+    )
   end
 end

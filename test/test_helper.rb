@@ -3,12 +3,11 @@
 require 'simplecov'
 SimpleCov.start
 
-$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
-require 'numo/narray'
-require 'test/unit'
-require 'stringio'
+require_relative '../lib/numo/narray'
 
-class NArrayTestBase < Test::Unit::TestCase
+require 'minitest/autorun'
+
+class NArrayTestBase < Minitest::Test
   FLOAT_TYPES = [
     Numo::SFloat,
     Numo::SComplex,
