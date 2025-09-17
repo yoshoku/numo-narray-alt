@@ -48,6 +48,7 @@ jobs:
   build-win:
     runs-on: windows-latest
     name: Ruby 3.4 (Windows)
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v5
       - name: Set up Ruby 3.4
