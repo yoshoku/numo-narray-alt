@@ -57,6 +57,12 @@ Metrics/MethodLength:
 Metrics/PerceivedComplexity:
   Max: 18
 
+Minitest/EmptyLineBeforeAssertionMethods:
+  Enabled: false
+
+Minitest/MultipleAssertions:
+  Max: 16
+
 Naming/MethodParameterName:
   Enabled: false
 
