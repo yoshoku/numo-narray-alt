@@ -63,6 +63,14 @@ void nary_step_array_index(VALUE obj, size_t ary_size, size_t* plen, ssize_t* pb
   vbeg = rb_funcall(obj, id_beg, 0);
   vend = rb_funcall(obj, id_end, 0);
 #endif
+  // Range does not have a length instance variable, which causes rb_ivar_get
+  // to output a warning when retrieving the length instance variable in Ruby 2.7.
+  // Since Range is not frozen in Ruby 2.7, we set the length instance variable.
+  if (RUBY_API_VERSION_MAJOR < 3) {
+    if (!RTEST(rb_ivar_defined(obj, id_len))) {
+      rb_ivar_set(obj, id_len, Qnil);
+    }
+  }
   vlen = rb_ivar_get(obj, id_len);
 
   if (RTEST(vbeg)) {
@@ -203,6 +211,14 @@ void nary_step_sequence(VALUE obj, size_t* plen, double* pbeg, double* pstep) {
   dbeg = NUM2DBL(rb_funcall(obj, id_beg, 0));
   vend = rb_funcall(obj, id_end, 0);
 #endif
+  // Range does not have a length instance variable, which causes rb_ivar_get
+  // to output a warning when retrieving the length instance variable in Ruby 2.7.
+  // Since Range is not frozen in Ruby 2.7, we set the length instance variable.
+  if (RUBY_API_VERSION_MAJOR < 3) {
+    if (!RTEST(rb_ivar_defined(obj, id_len))) {
+      rb_ivar_set(obj, id_len, Qnil);
+    }
+  }
   vlen = rb_ivar_get(obj, id_len);
 
   if (RTEST(vlen)) {
