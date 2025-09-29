@@ -1538,7 +1538,6 @@ static VALUE na_get_reduce_flag_from_axes(VALUE na_obj, VALUE axes) {
   narg = RARRAY_LEN(axes);
   for (i = 0; i < narg; i++) {
     v = RARRAY_AREF(axes, i);
-    // printf("argv[%d]=",i);rb_p(v);
     if (TYPE(v) == T_FIXNUM) {
       beg = FIX2INT(v);
       if (beg < 0) beg += ndim;
@@ -1547,7 +1546,6 @@ static VALUE na_get_reduce_flag_from_axes(VALUE na_obj, VALUE axes) {
       }
       len = 1;
       step = 0;
-      // printf("beg=%d step=%d len=%d\n",beg,step,len);
     } else if (rb_obj_is_kind_of(v, rb_cRange)
 #ifdef HAVE_RB_ARITHMETIC_SEQUENCE_EXTRACT
                || rb_obj_is_kind_of(v, rb_cArithSeq)

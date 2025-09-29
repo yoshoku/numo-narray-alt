@@ -268,7 +268,6 @@ static VALUE nst_s_new(int argc, VALUE* argv, VALUE klass) {
 
   size = rb_iv_get(st, "__offset__");
   members = rb_iv_get(st, "__members__");
-  // printf("size=%d\n",NUM2INT(size));
   rb_define_const(st, CONTIGUOUS_STRIDE, size);
   rb_define_const(st, ELEMENT_BYTE_SIZE, size);
   rb_define_const(st, ELEMENT_BIT_SIZE, rb_funcall(size, '*', 1, INT2FIX(8)));
@@ -584,16 +583,12 @@ static VALUE nary_struct_cast_array(VALUE klass, VALUE rary) {
   ndfunc_arg_in_t ain[3] = {{OVERWRITE, 0}, {rb_cArray, 0}, {sym_option}};
   ndfunc_t ndf = {iter_nstruct_from_a, NO_LOOP, 3, 0, ain, 0};
 
-  // fprintf(stderr,"rary:");rb_p(rary);
-  // fprintf(stderr,"class_of(rary):");rb_p(rb_obj_class(rary));
 
   // vnc = na_ary_composition_for_struct(klass, rary);
   // Data_Get_Struct(vnc, na_compose_t, nc);
   // nary = nary_new(klass, nc->ndim, nc->shape);
   nary = na_s_new_like(klass, rary);
   GetNArray(nary, na);
-  // fprintf(stderr,"na->size=%lu\n",na->size);
-  // fprintf(stderr,"na->ndim=%d\n",na->ndim);
   if (na->size > 0) {
     opt = nst_create_member_views(nary);
     rb_funcall(nary, rb_intern("allocate"), 0);

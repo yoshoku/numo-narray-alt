@@ -422,7 +422,6 @@ static VALUE ndloop_release(VALUE vlp) {
     }
   }
   for (j = 0; j < lp->narg; j++) {
-    // printf("lp->xargs[%d].bufcp=%lx\n",j,(size_t)(lp->xargs[j].bufcp));
     if (lp->xargs[j].bufcp) {
       xfree(lp->xargs[j].bufcp->buf_iter);
       xfree(lp->xargs[j].bufcp->buf_ptr);
@@ -498,7 +497,6 @@ static void ndloop_set_stepidx(na_md_loop_t* lp, int j, VALUE vna, int* dim_map,
       n = na->shape[k];
       if (n > 1 || nd > 0) {
         i = dim_map[k];
-        // printf("n=%d k=%d i=%d\n",n,k,i);
         LITER(lp, i, j).step = s;
         // LITER(lp,i,j).idx = NULL;
       }
@@ -570,7 +568,6 @@ static void ndloop_init_args(ndfunc_t* nf, na_md_loop_t* lp, VALUE args) {
       dim_beg = lp->ndim + nf->ain[j].dim - na->ndim;
       for (i = 0; i < na->ndim; i++) {
         dim_map[i] = lp->trans_map[i + dim_beg];
-        // printf("dim_map[%d]=%d na->shape[%d]=%d\n",i,dim_map[i],i,na->shape[i]);
       }
       if (nf->ain[j].type == OVERWRITE) {
         lp->xargs[j].flag = flag = NDL_WRITE;
@@ -687,14 +684,12 @@ static VALUE ndloop_set_output_narray(ndfunc_t* nf, na_md_loop_t* lp, int k, VAL
   na_shape = ALLOCA_N(size_t, max_nd);
   dim_map = ALLOCA_N(int, max_nd);
 
-  // printf("max_nd=%d lp->ndim=%d\n",max_nd,lp->ndim);
 
   // md-loop shape
   na_ndim = 0;
   for (i = 0; i < lp->ndim; i++) {
     // na_shape[i] == lp->n[lp->trans_map[i]]
     lp_dim = lp->trans_map[i];
-    // printf("i=%d lp_dim=%d\n",i,lp_dim);
     if (NDF_TEST(nf, NDF_CUM)) { // cumulate with shape kept
       na_shape[na_ndim] = lp->n[lp_dim];
     } else if (na_test_reduce(lp->reduce, lp_dim)) { // accumulate dimension
@@ -706,7 +701,6 @@ static VALUE ndloop_set_output_narray(ndfunc_t* nf, na_md_loop_t* lp, int k, VAL
     } else {
       na_shape[na_ndim] = lp->n[lp_dim];
     }
-    // printf("i=%d lp_dim=%d na_shape[%d]=%ld\n",i,lp_dim,i,na_shape[i]);
     dim_map[na_ndim++] = lp_dim;
     // dim_map[lp_dim] = na_ndim++;
   }
@@ -789,13 +783,11 @@ static void ndfunc_contract_loop(na_md_loop_t* lp) {
   redi = na_test_reduce(lp->reduce, 0);
 
   // for (i=0; i<lp->ndim; i++) {
-  //     printf("lp->n[%d]=%lu\n",i,lp->n[i]);
   // }
 
   for (i = 1; i < lp->ndim; i++) {
     red0 = redi;
     redi = na_test_reduce(lp->reduce, i);
-    // printf("contract i=%d reduce_cond=%d %d\n",i,red0,redi);
     if (red0 != redi) {
       continue;
     }
@@ -808,7 +800,6 @@ static void ndfunc_contract_loop(na_md_loop_t* lp) {
       }
     }
     if (success) {
-      // printf("contract i=%d-th and %d-th, lp->n[%d]=%"SZF"d, lp->n[%d]=%"SZF"d\n",
       //        i-1,i, i,lp->n[i], i-1,lp->n[i-1]);
       //  contract (i-1)-th and i-th dimension
       lp->n[i] *= lp->n[i - 1];
@@ -816,7 +807,6 @@ static void ndfunc_contract_loop(na_md_loop_t* lp) {
       for (k = i - 1; k > cnt; k--) {
         lp->n[k] = lp->n[k - 1];
       }
-      // printf("k=%d\n",k);
       for (; k >= 0; k--) {
         lp->n[k] = 1;
       }
@@ -831,7 +821,6 @@ static void ndfunc_contract_loop(na_md_loop_t* lp) {
       cnt++;
     }
   }
-  // printf("contract cnt=%d\n",cnt);
   if (cnt > 0) {
     for (j = 0; j < lp->narg; j++) {
       LITER(lp, cnt, j).pos = LITER(lp, 0, j).pos;
@@ -839,7 +828,6 @@ static void ndfunc_contract_loop(na_md_loop_t* lp) {
     }
     lp->n = &(lp->n[cnt]);
     lp->ndim -= cnt;
-    // for (i=0; i<lp->ndim; i++) {printf("lp->n[%d]=%lu\n",i,lp->n[i]);}
   }
 }
 
@@ -865,15 +853,12 @@ static void ndfunc_set_user_loop(ndfunc_t* nf, na_md_loop_t* lp) {
     }
     LARG(lp, j).ndim += ud;
     LARG(lp, j).shape = &(lp->n[lp->ndim]);
-    // printf("LARG(lp,j).ndim=%d,LARG(lp,j).shape=%lx\n",LARG(lp,j).ndim,(size_t)LARG(lp,j).shape);
   }
-  // printf("lp->reduce_dim=%d lp->user.ndim=%d lp->ndim=%d\n",lp->reduce_dim,lp->user.ndim,lp->ndim);
 
 skip_ud:
   lp->user.n = &(lp->n[lp->ndim]);
   for (j = 0; j < lp->narg; j++) {
     LARG(lp, j).iter = &LITER(lp, lp->ndim, j);
-    // printf("in ndfunc_set_user_loop: lp->user.args[%d].iter=%lx\n",j,(size_t)(LARG(lp,j).iter));
   }
 }
 
@@ -907,11 +892,9 @@ static void ndfunc_set_bufcp(na_md_loop_t* lp, unsigned int loop_spec) {
       if (LARG(lp, j).shape) {
         n = LARG(lp, j).shape[i];
       } else {
-        // printf("shape is NULL\n");
         n = lp->user.n[i];
       }
       stride = sz * n;
-      // printf("{j=%d,i=%d,ndim=%d,nd=%d,idx=%lx,step=%ld,n=%ld,sz=%ld,stride=%ld}\n",j,i,ndim,nd,(size_t)src_iter[i].idx,src_iter[i].step,n,sz,stride);
       if (src_iter[i].idx) {
         f |= 2; // INDEX LOOP
         zero_step = 0;
@@ -931,7 +914,6 @@ static void ndfunc_set_bufcp(na_md_loop_t* lp, unsigned int loop_spec) {
       }
       sz = stride;
     }
-    // printf("[j=%d f=%d loop_spec=%d zero_step=%d]\n",j,f,loop_spec,zero_step);
 
     if (zero_step) {
       // no buffer needed
@@ -942,7 +924,6 @@ static void ndfunc_set_bufcp(na_md_loop_t* lp, unsigned int loop_spec) {
 
     // over loop_spec or reduce_loop is not contiguous
     if (f & loop_spec || (lp->reduce_dim > 1 && ndim > 0)) {
-      // printf("(buf,nd=%d)",nd);
       buf_iter = ALLOC_N(na_loop_iter_t, nd + 3);
       buf_shape = ALLOC_N(size_t, nd);
       buf_iter[nd].pos = 0;
@@ -967,10 +948,8 @@ static void ndfunc_set_bufcp(na_md_loop_t* lp, unsigned int loop_spec) {
       LBUFCP(lp, j)->src_iter = src_iter;
       LBUFCP(lp, j)->buf_iter = buf_iter;
       LARG(lp, j).iter = buf_iter;
-      // printf("in ndfunc_set_bufcp(1): lp->user.args[%d].iter=%lx\n",j,(size_t)(LARG(lp,j).iter));
       LBUFCP(lp, j)->src_ptr = LARG(lp, j).ptr;
       LARG(lp, j).ptr = LBUFCP(lp, j)->buf_ptr = xmalloc(sz);
-      // printf("(LBUFCP(lp,%d)->buf_ptr=%lx)\n",j,(size_t)(LBUFCP(lp,j)->buf_ptr));
     }
   }
 
@@ -980,7 +959,6 @@ static void ndfunc_set_bufcp(na_md_loop_t* lp, unsigned int loop_spec) {
         src_iter = LARG(lp,j).iter;
         last_step = src_iter[ndim-1].step;
         if (lp->reduce_dim>1) {
-            //printf("(reduce_dim=%d,ndim=%d,nd=%d,n=%ld,lst=%ld)\n",lp->reduce_dim,ndim,nd,n_total,last_step);
             buf_iter = ALLOC_N(na_loop_iter_t,2);
             buf_iter[0].pos = LARG(lp,j).iter[0].pos;
             buf_iter[0].step = last_step;
@@ -989,7 +967,6 @@ static void ndfunc_set_bufcp(na_md_loop_t* lp, unsigned int loop_spec) {
             buf_iter[1].step = 0;
             buf_iter[1].idx = NULL;
             LARG(lp,j).iter = buf_iter;
-            //printf("in ndfunc_set_bufcp(2): lp->user.args[%d].iter=%lx\n",j,(size_t)(LARG(lp,j).iter));
             lp->xargs[j].free_user_iter = 1;
         }
     }
@@ -1018,7 +995,6 @@ static void ndloop_copy_to_buffer(na_buffer_copy_t* lp) {
   size_t buf_pos = 0;
   DBG(size_t j);
 
-  // printf("\nto_buf nd=%d elmsz=%ld\n",nd,elmsz);
   DBG(printf("<to buf> ["));
   // zero-dimension
   if (nd == 0) {
@@ -1067,7 +1043,6 @@ static void ndloop_copy_from_buffer(na_buffer_copy_t* lp) {
   size_t buf_pos = 0;
   DBG(size_t j);
 
-  // printf("\nfrom_buf nd=%d elmsz=%ld\n",nd,elmsz);
   DBG(printf("<from buf> ["));
   // zero-dimension
   if (nd == 0) {
@@ -1173,7 +1148,6 @@ static VALUE ndloop_run(VALUE vlp) {
   results = ndloop_set_output(nf, lp, args);
 
   // if (na_debug_flag) {
-  //     printf("-- ndloop_set_output --\n");
   //     print_ndloop(lp);
   // }
 
@@ -1181,7 +1155,6 @@ static VALUE ndloop_run(VALUE vlp) {
   if (lp->loop_func == loop_narray) {
     ndfunc_contract_loop(lp);
     // if (na_debug_flag) {
-    //     printf("-- ndfunc_contract_loop --\n");
     //     print_ndloop(lp);
     // }
   }
@@ -1203,7 +1176,6 @@ static VALUE ndloop_run(VALUE vlp) {
   (*(lp->loop_func))(nf, lp);
 
   // if (na_debug_flag) {
-  //     printf("-- after loop --\n");
   //     print_ndloop(lp);
   // }
 
@@ -1232,14 +1204,12 @@ static void loop_narray(ndfunc_t* nf, na_md_loop_t* lp) {
   if (nd == 0) {
     for (j = 0; j < lp->nin; j++) {
       if (lp->xargs[j].bufcp) {
-        // printf("copy_to_buffer j=%d\n",j);
         ndloop_copy_to_buffer(lp->xargs[j].bufcp);
       }
     }
     (*(nf->func))(&(lp->user));
     for (j = 0; j < lp->narg; j++) {
       if (lp->xargs[j].bufcp && (lp->xargs[j].flag & NDL_WRITE)) {
-        // printf("copy_from_buffer j=%d\n",j);
         //  copy data to work buffer
         ndloop_copy_from_buffer(lp->xargs[j].bufcp);
       }
@@ -1262,14 +1232,12 @@ static void loop_narray(ndfunc_t* nf, na_md_loop_t* lp) {
         } else {
           LITER(lp, i + 1, j).pos = LITER(lp, i, j).pos + LITER(lp, i, j).step * c[i];
         }
-        // printf("j=%d c[i=%d]=%lu pos=%lu\n",j,i,c[i],LITER(lp,i+1,j).pos);
       }
     }
     for (j = 0; j < lp->nin; j++) {
       if (lp->xargs[j].bufcp) {
         // copy data to work buffer
         // cp lp->iter[j][nd..*] to lp->user.args[j].iter[0..*]
-        // printf("copy_to_buffer j=%d\n",j);
         ndloop_copy_to_buffer(lp->xargs[j].bufcp);
       }
     }
@@ -1277,7 +1245,6 @@ static void loop_narray(ndfunc_t* nf, na_md_loop_t* lp) {
     for (j = 0; j < lp->narg; j++) {
       if (lp->xargs[j].bufcp && (lp->xargs[j].flag & NDL_WRITE)) {
         // copy data to work buffer
-        // printf("copy_from_buffer j=%d\n",j);
         ndloop_copy_from_buffer(lp->xargs[j].bufcp);
       }
     }
@@ -1543,7 +1510,6 @@ static void loop_store_subnarray(ndfunc_t* nf, na_md_loop_t* lp, int i0, size_t*
   dim_map = ALLOCA_N(int, na->ndim);
   for (i = 0; i < na->ndim; i++) {
     dim_map[i] = lp->trans_map[i + i0];
-    // printf("dim_map[i=%d] = %d, i0=%d\n", i, dim_map[i], i0);
   }
   ndloop_set_stepidx(lp, 1, a, dim_map, NDL_READ);
   LARG(lp, 1).shape = &(na->shape[na->ndim - 1]);
@@ -1609,7 +1575,6 @@ static void loop_store_rarray(ndfunc_t* nf, na_md_loop_t* lp) {
           a[i + 1] = Qnil;
         }
       } else if (IsNArray(a[i])) {
-        // printf("a[i=%d]=0x%lx\n",i,a[i]);
         loop_store_subnarray(nf, lp, i, c, a[i]);
         goto loop_next;
       } else {
@@ -1619,10 +1584,8 @@ static void loop_store_rarray(ndfunc_t* nf, na_md_loop_t* lp) {
           a[i + 1] = Qnil;
         }
       }
-      // printf("c[%d]=%lu\n",i,c[i]);
     }
 
-    // printf("a[i=%d]=0x%lx\n",i,a[i]);
     if (IsNArray(a[i])) {
       loop_store_subnarray(nf, lp, i, c, a[i]);
     } else {
@@ -1695,7 +1658,6 @@ static void loop_narray_to_rarray(ndfunc_t* nf, na_md_loop_t* lp) {
   c = ALLOCA_N(size_t, nd + 1);
   for (i = 0; i <= nd; i++) c[i] = 0;
   // c[i]=1; // for zero-dim
-  // fprintf(stderr,"in loop_narray_to_rarray, nd=%d\n",nd);
 
   a = ALLOCA_N(VALUE, nd + 1);
   a[0] = a0 = lp->loop_opt;
@@ -1780,7 +1742,6 @@ static void loop_narray_with_index(ndfunc_t* nf, na_md_loop_t* lp) {
         } else {
           LITER(lp, i + 1, j).pos = LITER(lp, i, j).pos + LITER(lp, i, j).step * c[i];
         }
-        // printf("j=%d c[i=%d]=%lu pos=%lu\n",j,i,c[i],LITER(lp,i+1,j).pos);
       }
     }
 

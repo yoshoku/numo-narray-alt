@@ -462,7 +462,6 @@ na_mdai_for_struct(na_mdai_t *mdai, int ndim)
     VALUE  val;
     narray_t *na;
 
-    //fprintf(stderr,"ndim=%d\n",ndim);    rb_p(mdai->na_type);
     if (ndim>4) { abort(); }
     val = mdai->item[ndim].val;
 
@@ -488,7 +487,6 @@ na_mdai_for_struct(na_mdai_t *mdai, int ndim)
                 rb_raise(rb_eStandardError,
                          "cannot convert from a recursive Array to NArray");
         }
-        //fprintf(stderr,"check:");        rb_p(val);
         // val is a Struct recort
         if (RTEST( nst_check_compatibility(mdai->na_type, val) )) {
             //fputs("compati\n",stderr);
@@ -496,7 +494,6 @@ na_mdai_for_struct(na_mdai_t *mdai, int ndim)
         }
         // otherwise, multi-dimension
         if (ndim >= mdai->capa) {
-            //fprintf(stderr,"exeed capa\n");            abort();
             na_mdai_realloc(mdai,4);
         }
         // finally, multidimension-check
@@ -510,10 +507,8 @@ na_mdai_for_struct(na_mdai_t *mdai, int ndim)
         }
         for (i=0; i < len; i++) {
             v = RARRAY_AREF(val,i);
-            //fprintf(stderr,"check:");            rb_p(v);
             mdai->item[ndim+1].val = v;
             if ( na_mdai_for_struct( mdai, ndim+1 ) == 0 ) {
-                //fprintf(stderr,"not struct:");                rb_p(v);
                 //abort();
                 return 0;
             }
@@ -524,7 +519,6 @@ na_mdai_for_struct(na_mdai_t *mdai, int ndim)
         return 1;
     }
 
-    //fprintf(stderr,"invalid for struct:");    rb_p(val);    abort();
     return 0;
 }
 */
@@ -544,7 +538,6 @@ na_ary_composition_for_struct(VALUE nstruct, VALUE ary)
     nc = na_compose_alloc();
     vnc = WrapCompose(nc);
     na_mdai_result(mdai, nc);
-    //fprintf(stderr,"nc->ndim=%d\n",nc->ndim);
     rb_gc_force_recycle(vmdai);
     return vnc;
 }

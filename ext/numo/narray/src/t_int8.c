@@ -4208,16 +4208,13 @@ static void iter_int8_cumsum(na_loop_t* const lp) {
   INIT_COUNTER(lp, i);
   INIT_PTR(lp, 0, p1, s1);
   INIT_PTR(lp, 1, p2, s2);
-  // printf("i=%lu p1=%lx s1=%lu p2=%lx s2=%lu\n",i,(size_t)p1,s1,(size_t)p2,s2);
 
   GET_DATA_STRIDE(p1, s1, dtype, x);
   SET_DATA_STRIDE(p2, s2, dtype, x);
-  // printf("i=%lu x=%f\n",i,x);
   for (i--; i--;) {
     GET_DATA_STRIDE(p1, s1, dtype, y);
     m_cumsum(x, y);
     SET_DATA_STRIDE(p2, s2, dtype, x);
-    // printf("i=%lu x=%f\n",i,x);
   }
 }
 
@@ -4248,16 +4245,13 @@ static void iter_int8_cumprod(na_loop_t* const lp) {
   INIT_COUNTER(lp, i);
   INIT_PTR(lp, 0, p1, s1);
   INIT_PTR(lp, 1, p2, s2);
-  // printf("i=%lu p1=%lx s1=%lu p2=%lx s2=%lu\n",i,(size_t)p1,s1,(size_t)p2,s2);
 
   GET_DATA_STRIDE(p1, s1, dtype, x);
   SET_DATA_STRIDE(p2, s2, dtype, x);
-  // printf("i=%lu x=%f\n",i,x);
   for (i--; i--;) {
     GET_DATA_STRIDE(p1, s1, dtype, y);
     m_cumprod(x, y);
     SET_DATA_STRIDE(p2, s2, dtype, x);
-    // printf("i=%lu x=%f\n",i,x);
   }
 }
 
@@ -5044,7 +5038,6 @@ static void int8_index64_qsort(na_loop_t* const lp) {
 
   ptr = (char**)(lp->opt_ptr);
 
-  // printf("(ptr=%lx, d_ptr=%lx,d_step=%ld, i_ptr=%lx,i_step=%ld,
   // o_ptr=%lx,o_step=%ld)\n",(size_t)ptr,(size_t)d_ptr,(ssize_t)d_step,(size_t)i_ptr,(ssize_t)i_step,(size_t)o_ptr,(ssize_t)o_step);
 
   if (n == 1) {
@@ -5054,21 +5047,17 @@ static void int8_index64_qsort(na_loop_t* const lp) {
 
   for (i = 0; i < n; i++) {
     ptr[i] = d_ptr + d_step * i;
-    // printf("(%ld,%.3f)",i,*(double*)ptr[i]);
   }
 
   int8_index_qsort(ptr, n, sizeof(dtype*));
 
   // d_ptr = lp->args[0].ptr;
-  // printf("(d_ptr=%lx)\n",(size_t)d_ptr);
 
   for (i = 0; i < n; i++) {
     idx = (ptr[i] - d_ptr) / d_step;
     *(idx_t*)o_ptr = *(idx_t*)(i_ptr + i_step * idx);
-    // printf("(idx[%ld]=%ld,%d)",i,idx,*(idx_t*)o_ptr);
     o_ptr += o_step;
   }
-  // printf("\n");
 }
 #undef idx_t
 
@@ -5086,7 +5075,6 @@ static void int8_index32_qsort(na_loop_t* const lp) {
 
   ptr = (char**)(lp->opt_ptr);
 
-  // printf("(ptr=%lx, d_ptr=%lx,d_step=%ld, i_ptr=%lx,i_step=%ld,
   // o_ptr=%lx,o_step=%ld)\n",(size_t)ptr,(size_t)d_ptr,(ssize_t)d_step,(size_t)i_ptr,(ssize_t)i_step,(size_t)o_ptr,(ssize_t)o_step);
 
   if (n == 1) {
@@ -5096,21 +5084,17 @@ static void int8_index32_qsort(na_loop_t* const lp) {
 
   for (i = 0; i < n; i++) {
     ptr[i] = d_ptr + d_step * i;
-    // printf("(%ld,%.3f)",i,*(double*)ptr[i]);
   }
 
   int8_index_qsort(ptr, n, sizeof(dtype*));
 
   // d_ptr = lp->args[0].ptr;
-  // printf("(d_ptr=%lx)\n",(size_t)d_ptr);
 
   for (i = 0; i < n; i++) {
     idx = (ptr[i] - d_ptr) / d_step;
     *(idx_t*)o_ptr = *(idx_t*)(i_ptr + i_step * idx);
-    // printf("(idx[%ld]=%ld,%d)",i,idx,*(idx_t*)o_ptr);
     o_ptr += o_step;
   }
-  // printf("\n");
 }
 #undef idx_t
 

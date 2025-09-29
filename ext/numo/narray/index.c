@@ -444,7 +444,6 @@ static size_t na_index_parse_args(VALUE args, narray_t* na, na_index_arg_t* q, i
     // rest (ellipsis) dimension
     if (v == Qfalse) {
       for (l = ndim - (nidx - 1); l > 0; l--) {
-        // printf("i=%d j=%d k=%d l=%d ndim=%d nidx=%d\n",i,j,k,l,ndim,nidx);
         na_index_parse_each(Qtrue, na->shape[k], k, &q[j]);
         if (q[j].n > 1) {
           total *= q[j].n;
