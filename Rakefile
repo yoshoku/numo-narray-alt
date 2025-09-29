@@ -34,3 +34,5 @@ end
 
 require 'rake/extensiontask'
 Rake::ExtensionTask.new('numo/narray')
+
+task default: %i[clobber compile test]
