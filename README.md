@@ -3,6 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/numo-narray-alt.svg)](https://badge.fury.io/rb/numo-narray-alt)
 [![Build Status](https://github.com/yoshoku/numo-narray-alt/actions/workflows/build.yml/badge.svg)](https://github.com/yoshoku/numo-narray-alt/actions/workflows/build.yml)
 [![BSD 3-Clause License](https://img.shields.io/badge/License-BSD%203--Clause-orange.svg)](https://github.com/yoshoku/numo-narray-alt/blob/main/LICENSE)
+[![Documentation](https://img.shields.io/badge/api-reference-blue.svg)](https://gemdocs.org/gems/numo-narray-alt/)
 
 Numo::NArray Alternative is an experimental project forked from [Numo::NArray](https://github.com/ruby-numo/numo-narray).
 Its goal is to adopt more modern Ruby features and development practices.
