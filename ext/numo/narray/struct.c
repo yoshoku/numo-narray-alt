@@ -583,7 +583,6 @@ static VALUE nary_struct_cast_array(VALUE klass, VALUE rary) {
   ndfunc_arg_in_t ain[3] = {{OVERWRITE, 0}, {rb_cArray, 0}, {sym_option}};
   ndfunc_t ndf = {iter_nstruct_from_a, NO_LOOP, 3, 0, ain, 0};
 
-
   // vnc = na_ary_composition_for_struct(klass, rary);
   // Data_Get_Struct(vnc, na_compose_t, nc);
   // nary = nary_new(klass, nc->ndim, nc->shape);

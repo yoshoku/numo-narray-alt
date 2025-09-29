@@ -684,7 +684,6 @@ static VALUE ndloop_set_output_narray(ndfunc_t* nf, na_md_loop_t* lp, int k, VAL
   na_shape = ALLOCA_N(size_t, max_nd);
   dim_map = ALLOCA_N(int, max_nd);
 
-
   // md-loop shape
   na_ndim = 0;
   for (i = 0; i < lp->ndim; i++) {
