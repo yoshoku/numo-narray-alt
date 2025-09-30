@@ -11,6 +11,12 @@ task :doc do
   sh "rm -rf yard .yardoc; yard doc -o yard -m markdown -r README.md #{src.join(' ')}"
 end
 
+task :'clang-format' do
+  sh 'bash -c "shopt -s globstar && clang-format -style=file -Werror --dry-run ext/numo/narray/**/*.{c,h}"' do |ok, _res|
+    puts 'clang-format violations found, here is the autofix command: clang-format --style=file -i ...' unless ok
+  end
+end
+
 require 'ruby_memcheck' if ENV['BUNDLE_WITH'] == 'memcheck'
 require 'rake/testtask'
 
