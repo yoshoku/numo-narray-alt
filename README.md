@@ -66,9 +66,10 @@ $ clang-format --dry-run --Werror --style=file ext/**/*.h ext/**/*.c
 
 ## Contributing
 
-This project is in an early experimental stage.
-Therefore, we are not accepting any Issues or Pull Requests at this time.
-Thank you for your understanding.
+Bug reports and pull requests are welcome on GitHub at https://github.com/yoshoku/numo-narray-alt.
+This project is intended to be a safe, welcoming space for collaboration,
+and contributors are expected to adhere to
+the [code of conduct](https://github.com/yoshoku/numo-narray-alt/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 
