@@ -45,6 +45,23 @@ jobs:
       - name: Tests
         run: rake test
 
+  build-rocky:
+    runs-on: ubuntu-latest
+    name: Ruby 3.3 (Rocky)
+    container: rockylinux/rockylinux:9
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Ruby
+        run: |
+          dnf update -y
+          dnf module -y enable ruby:3.3
+          dnf install -y gcc make git ruby-devel ruby
+          bundle config silence_root_warning true
+          bundle install
+      - name: Build and test
+        run: |
+          bundle exec rake
+
   build-win:
     runs-on: windows-latest
     name: Ruby 3.4 (Windows)
