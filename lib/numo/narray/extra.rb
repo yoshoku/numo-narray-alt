@@ -1086,7 +1086,7 @@ module Numo
               if am > nx && an > nx && bm > nx && bn > nx &&
                  size > ns && b.size > ns
                 @@warn_slow_dot = true
-                warn "\nwarning: Built-in matrix dot is slow. Consider installing Numo::Linalg.\n\n"
+                warn "\nwarning: Built-in matrix dot is slow. Consider installing numo-linalg-alt gem.\n\n"
               end
             end
             self[false, :new].mulsum(b[false, :new, true, true], axis: -2)
