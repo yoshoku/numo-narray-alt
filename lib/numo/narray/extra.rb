@@ -1209,8 +1209,37 @@ module Numo
       (self[*adim] * b[*bdim]).reshape(*shpr)
     end
 
-    # under construction
-    def cov(y = nil, ddof: 1, fweights: nil, aweights: nil)
+    # Compute a covariance matrix.
+    #
+    # @param y [Numo::NArray] (optional) If not nil, the covariance matrix of `self` and `y` is computed.
+    # @param ddof [Integer] (optional) Delta degrees of freedom. The divisor used in calculations is `N - ddof`,
+    #   where `N` represents the number of observations.
+    # @param fweights [Numo::NArray] (optional) 1-D array of integer frequency weights.
+    # @param aweights [Numo::NArray] (optional) 1-D array of observation vector weights.
+    # @return [Numo::NArray]  return covariance matrix
+    #
+    # @example
+    #   x = Numo::DFloat[4, 5, 6]
+    #   x.cov
+    #   # => 1.0
+    #
+    #   x = Numo::DFloat[[4, 5, 6], [3, 2, 1]]
+    #   x.cov
+    #   # => Numo::DFloat#shape=[2,2]
+    #   # [[1, -1],
+    #   #  [-1, 1]]
+    #
+    #   y = Numo::DFloat[7, 9, 8]
+    #   x.cov(y)
+    #   # => Numo::DFloat#shape=[3,3]
+    #   # [[1, -1, 0.5],
+    #   #  [-1, 1, -0.5],
+    #   #  [0.5, -0.5, 1]]
+    def cov(y = nil, ddof: 1, fweights: nil, aweights: nil) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      raise Numo::NArray::ShapeError, 'ndim must be <= 2' if ndim > 2
+      raise Numo::NArray::ShapeError, 'y.ndim must be <= 2' if !y.nil? && (y.ndim > 2)
+      raise ArgumentError, 'ddof must be 0 or 1' unless [0, 1].include?(ddof)
+
       m = if y
             NArray.vstack([self, y])
           else
@@ -1218,36 +1247,48 @@ module Numo
           end
       w = nil
       if fweights
-        f = fweights
-        w = f
+        fweights = Numo::NArray.cast(fweights) unless fweights.is_a?(Numo::NArray)
+        raise ArgumentError, 'fweights must be 1-D array' unless fweights.ndim == 1
+        raise ArgumentError, 'fweights size is wrong' unless fweights.size == m.shape[1]
+        raise ArgumentError, 'fweights must be non-negative' if (fweights < 0).any?
+        raise ArgumentError, 'fweights must be integer' unless fweights == fweights.floor
+
+        w = fweights
       end
       if aweights
-        a = aweights
-        w = w ? w * a : a
-      end
-      if w
-        w_sum = w.sum(axis: -1, keepdims: true)
-        if ddof == 0
-          fact = w_sum
-        elsif aweights.nil?
-          fact = w_sum - ddof
+        aweights = Numo::NArray.cast(aweights) unless aweights.is_a?(Numo::NArray)
+        raise ArgumentError, 'aweights must be 1-D array' unless aweights.ndim == 1
+        raise ArgumentError, 'aweights size is wrong' unless aweights.size == m.shape[1]
+        raise ArgumentError, 'aweights must be non-negative' if (aweights < 0).any?
+
+        if w.nil?
+          w = aweights
         else
-          wa_sum = (w * a).sum(axis: -1, keepdims: true)
-          fact = w_sum - (ddof * wa_sum / w_sum)
+          w *= aweights
         end
-        raise StandardError, 'Degrees of freedom <= 0 for slice' if (fact <= 0).any?
-      else
-        fact = m.shape[-1] - ddof
       end
-      if w
-        m -= (m * w).sum(axis: -1, keepdims: true) / w_sum
-        mw = m * w
-      else
+      fact = if w.nil?
+               m.shape[-1] - ddof
+             elsif ddof == 0
+               w.sum
+             elsif aweights.nil?
+               w.sum - ddof
+             else
+               w_sum = w.sum
+               w_sum - (ddof * (w * aweights).sum / w_sum)
+             end
+      if fact <= 0
+        warn('Degrees of freedom <= 0 for slice')
+        fact = 0.0
+      end
+      if w.nil?
         m -= m.mean(axis: -1, keepdims: true)
         mw = m
+      else
+        m -= (m * w).sum(axis: -1, keepdims: true) / w.sum
+        mw = m * w
       end
-      mt = m.ndim < 2 ? m : m.swapaxes(-2, -1)
-      mw.dot(mt.conj) / fact
+      m.dot(mw.transpose.conj) / fact
     end
 
     private

@@ -588,7 +588,7 @@ class NArrayExtraTest < NArrayTestBase
   end
 
   def test_cov
-    FLOAT_TYPES.each do |dtype|
+    TYPES.each do |dtype|
       a = dtype[1, 2, 3]
       if [Numo::DComplex, Numo::SComplex].include?(dtype)
         assert_equal(1.0 + 0.0i, a.cov)
@@ -596,9 +596,41 @@ class NArrayExtraTest < NArrayTestBase
         assert_in_delta(1.0, a.cov)
       end
 
-      a = dtype[[1, 2], [3, 4]]
-      assert_equal(dtype[[0.5, 0.5], [0.5, 0.5]], a.cov)
+      if FLOAT_TYPES.include?(dtype)
+        a = dtype[[1, 2], [3, 4]]
+        assert_equal(dtype[[0.5, 0.5], [0.5, 0.5]], a.cov)
+      else
+        a = Numo::DFloat[[1, 2], [3, 4]]
+        assert_equal(Numo::DFloat[[0.5, 0.5], [0.5, 0.5]], a.cov)
+      end
     end
+
+    # xy
+    x = Numo::DFloat[[3, 2, 7], [4, 2, 3]]
+    y = Numo::DFloat[6, 5, 4]
+    z = Numo::NArray.vstack([x, y])
+    assert_equal(z.cov, x.cov(y))
+    x = Numo::DFloat[[1, 2, 3]]
+    y = Numo::DComplex[[1i, 2i, 3i]]
+    assert_equal(Numo::DComplex[[1, -1i], [1i, 1]], x.cov(y))
+    # ddof
+    x = Numo::DFloat[[3, 1, 2], [2, 5, 8]]
+    assert_equal(Numo::DFloat[[1, -1.5], [-1.5, 9]], x.cov(ddof: 1))
+    assert_equal(Numo::DFloat[[2.fdiv(3), -1], [-1, 6]], x.cov(ddof: 0))
+    # fweights
+    fw = Numo::Int32[1, 4, 2]
+    c = x.cov(fweights: fw)
+    error = (Numo::DFloat[[0.6190476, -0.2857143], [-0.2857143, 4.2857143]] - c).abs.max
+    assert_operator(error, :<, 1e-6)
+    # aweights
+    aw = Numo::DFloat[2, 0.5, 0.25]
+    c = x.cov(aweights: aw)
+    error = (Numo::DFloat[[1.4230769, -2.6538461], [-2.6538461, 8.6538461]] - c).abs.max
+    assert_operator(error, :<, 1e-6)
+    # fweights and aweights
+    c = x.cov(fweights: fw, aweights: aw)
+    error = (Numo::DFloat[[1.1900826, -1.7851240], [-1.7851240, 5.3553719]] - c).abs.max
+    assert_operator(error, :<, 1e-6)
   end
 
   # class methods
