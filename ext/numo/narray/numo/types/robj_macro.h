@@ -17,11 +17,11 @@
 #define m_mul(x, y) rb_funcall(x, '*', 1, y)
 #define m_div(x, y) rb_funcall(x, '/', 1, y)
 #define m_mod(x, y) rb_funcall(x, '%', 1, y)
-#define m_divmod(x, y, a, b)                                                                                                   \
-  {                                                                                                                            \
-    x = rb_funcall(x, id_divmod, 1, y);                                                                                        \
-    a = RARRAY_PTR(x)[0];                                                                                                      \
-    b = RARRAY_PTR(x)[0];                                                                                                      \
+#define m_divmod(x, y, a, b)            \
+  {                                     \
+    x = rb_funcall(x, id_divmod, 1, y); \
+    a = RARRAY_PTR(x)[0];               \
+    b = RARRAY_PTR(x)[0];               \
   }
 #define m_pow(x, y) rb_funcall(x, id_pow, 1, y)
 #define m_pow_int(x, y) rb_funcall(x, id_pow, 1, y)
@@ -53,9 +53,9 @@
 
 #define m_isnan(x) ((rb_respond_to(x, id_nan_p)) ? RTEST(rb_funcall(x, id_nan_p, 0)) : 0)
 #define m_isinf(x) ((rb_respond_to(x, id_infinite_p)) ? RTEST(rb_funcall(x, id_infinite_p, 0)) : 0)
-#define m_isposinf(x)                                                                                                          \
+#define m_isposinf(x) \
   ((rb_respond_to(x, id_infinite_p)) ? ((RTEST(rb_funcall(x, id_infinite_p, 0))) ? m_gt(x, INT2FIX(0)) : 0) : 0)
-#define m_isneginf(x)                                                                                                          \
+#define m_isneginf(x) \
   ((rb_respond_to(x, id_infinite_p)) ? ((RTEST(rb_funcall(x, id_infinite_p, 0))) ? m_lt(x, INT2FIX(0)) : 0) : 0)
 #define m_isfinite(x) ((rb_respond_to(x, id_finite_p)) ? RTEST(rb_funcall(x, id_finite_p, 0)) : 0)
 

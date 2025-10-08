@@ -1724,7 +1724,7 @@ static VALUE int64_abs(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_int64_add(na_loop_t* const lp) {
@@ -1840,7 +1840,7 @@ static VALUE int64_add(VALUE self, VALUE other) {
   }
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_int64_sub(na_loop_t* const lp) {
@@ -1956,7 +1956,7 @@ static VALUE int64_sub(VALUE self, VALUE other) {
   }
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_int64_mul(na_loop_t* const lp) {
@@ -2072,10 +2072,10 @@ static VALUE int64_mul(VALUE self, VALUE other) {
   }
 }
 
-#define check_intdivzero(y)                                                                                                    \
-  if ((y) == 0) {                                                                                                              \
-    lp->err_type = rb_eZeroDivError;                                                                                           \
-    return;                                                                                                                    \
+#define check_intdivzero(y)          \
+  if ((y) == 0) {                    \
+    lp->err_type = rb_eZeroDivError; \
+    return;                          \
   }
 
 static void iter_int64_div(na_loop_t* const lp) {
@@ -2191,10 +2191,10 @@ static VALUE int64_div(VALUE self, VALUE other) {
   }
 }
 
-#define check_intdivzero(y)                                                                                                    \
-  if ((y) == 0) {                                                                                                              \
-    lp->err_type = rb_eZeroDivError;                                                                                           \
-    return;                                                                                                                    \
+#define check_intdivzero(y)          \
+  if ((y) == 0) {                    \
+    lp->err_type = rb_eZeroDivError; \
+    return;                          \
   }
 
 static void iter_int64_mod(na_loop_t* const lp) {
@@ -2821,7 +2821,7 @@ static VALUE int64_ne(VALUE self, VALUE other) {
   }
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_int64_bit_and(na_loop_t* const lp) {
@@ -2937,7 +2937,7 @@ static VALUE int64_bit_and(VALUE self, VALUE other) {
   }
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_int64_bit_or(na_loop_t* const lp) {
@@ -3053,7 +3053,7 @@ static VALUE int64_bit_or(VALUE self, VALUE other) {
   }
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_int64_bit_xor(na_loop_t* const lp) {
@@ -3244,7 +3244,7 @@ static VALUE int64_bit_not(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_int64_left_shift(na_loop_t* const lp) {
@@ -3360,7 +3360,7 @@ static VALUE int64_left_shift(VALUE self, VALUE other) {
   }
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_int64_right_shift(na_loop_t* const lp) {
@@ -5158,22 +5158,22 @@ static VALUE int64_poly(VALUE self, VALUE args) {
  * We have modified their original by adding a check for already-sorted input,
  * which seems to be a win per discussions on pgsql-hackers around 2006-03-21.
  */
-#define swapcode(TYPE, parmi, parmj, n)                                                                                        \
-  do {                                                                                                                         \
-    size_t i = (n) / sizeof(TYPE);                                                                                             \
-    TYPE* pi = (TYPE*)(void*)(parmi);                                                                                          \
-    TYPE* pj = (TYPE*)(void*)(parmj);                                                                                          \
-    do {                                                                                                                       \
-      TYPE t = *pi;                                                                                                            \
-      *pi++ = *pj;                                                                                                             \
-      *pj++ = t;                                                                                                               \
-    } while (--i > 0);                                                                                                         \
+#define swapcode(TYPE, parmi, parmj, n) \
+  do {                                  \
+    size_t i = (n) / sizeof(TYPE);      \
+    TYPE* pi = (TYPE*)(void*)(parmi);   \
+    TYPE* pj = (TYPE*)(void*)(parmj);   \
+    do {                                \
+      TYPE t = *pi;                     \
+      *pi++ = *pj;                      \
+      *pj++ = t;                        \
+    } while (--i > 0);                  \
   } while (0)
 
 #ifdef HAVE_STDINT_H
 #define SWAPINIT(a, es) swaptype = (uintptr_t)(a) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
 #else
-#define SWAPINIT(a, es)                                                                                                        \
+#define SWAPINIT(a, es) \
   swaptype = ((char*)(a) - (char*)0) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
 #endif
 
@@ -5184,18 +5184,18 @@ static inline void swapfunc(char* a, char* b, size_t n, int swaptype) {
     swapcode(char, a, b, n);
 }
 
-#define swap(a, b)                                                                                                             \
-  if (swaptype == 0) {                                                                                                         \
-    long t = *(long*)(void*)(a);                                                                                               \
-    *(long*)(void*)(a) = *(long*)(void*)(b);                                                                                   \
-    *(long*)(void*)(b) = t;                                                                                                    \
-  } else                                                                                                                       \
+#define swap(a, b)                           \
+  if (swaptype == 0) {                       \
+    long t = *(long*)(void*)(a);             \
+    *(long*)(void*)(a) = *(long*)(void*)(b); \
+    *(long*)(void*)(b) = t;                  \
+  } else                                     \
     swapfunc(a, b, es, swaptype)
 
-#define vecswap(a, b, n)                                                                                                       \
+#define vecswap(a, b, n) \
   if ((n) > 0) swapfunc((a), (b), (size_t)(n), swaptype)
 
-#define med3(a, b, c, _cmp)                                                                                                    \
+#define med3(a, b, c, _cmp) \
   (cmpgt(b, a) ? (cmpgt(c, b) ? b : (cmpgt(c, a) ? c : a)) : (cmpgt(b, c) ? b : (cmpgt(c, a) ? a : c)))
 #endif
 

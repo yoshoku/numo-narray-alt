@@ -1723,7 +1723,7 @@ static VALUE sfloat_abs(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_sfloat_add(na_loop_t* const lp) {
@@ -1952,7 +1952,7 @@ static VALUE sfloat_add(VALUE self, VALUE other) {
   }
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_sfloat_sub(na_loop_t* const lp) {
@@ -2181,7 +2181,7 @@ static VALUE sfloat_sub(VALUE self, VALUE other) {
   }
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_sfloat_mul(na_loop_t* const lp) {
@@ -2410,7 +2410,7 @@ static VALUE sfloat_mul(VALUE self, VALUE other) {
   }
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_sfloat_div(na_loop_t* const lp) {
@@ -2639,7 +2639,7 @@ static VALUE sfloat_div(VALUE self, VALUE other) {
   }
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_sfloat_mod(na_loop_t* const lp) {
@@ -3684,7 +3684,7 @@ static VALUE sfloat_rint(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_sfloat_copysign(na_loop_t* const lp) {
@@ -6199,22 +6199,22 @@ static VALUE sfloat_poly(VALUE self, VALUE args) {
  * We have modified their original by adding a check for already-sorted input,
  * which seems to be a win per discussions on pgsql-hackers around 2006-03-21.
  */
-#define swapcode(TYPE, parmi, parmj, n)                                                                                        \
-  do {                                                                                                                         \
-    size_t i = (n) / sizeof(TYPE);                                                                                             \
-    TYPE* pi = (TYPE*)(void*)(parmi);                                                                                          \
-    TYPE* pj = (TYPE*)(void*)(parmj);                                                                                          \
-    do {                                                                                                                       \
-      TYPE t = *pi;                                                                                                            \
-      *pi++ = *pj;                                                                                                             \
-      *pj++ = t;                                                                                                               \
-    } while (--i > 0);                                                                                                         \
+#define swapcode(TYPE, parmi, parmj, n) \
+  do {                                  \
+    size_t i = (n) / sizeof(TYPE);      \
+    TYPE* pi = (TYPE*)(void*)(parmi);   \
+    TYPE* pj = (TYPE*)(void*)(parmj);   \
+    do {                                \
+      TYPE t = *pi;                     \
+      *pi++ = *pj;                      \
+      *pj++ = t;                        \
+    } while (--i > 0);                  \
   } while (0)
 
 #ifdef HAVE_STDINT_H
 #define SWAPINIT(a, es) swaptype = (uintptr_t)(a) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
 #else
-#define SWAPINIT(a, es)                                                                                                        \
+#define SWAPINIT(a, es) \
   swaptype = ((char*)(a) - (char*)0) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
 #endif
 
@@ -6225,18 +6225,18 @@ static inline void swapfunc(char* a, char* b, size_t n, int swaptype) {
     swapcode(char, a, b, n);
 }
 
-#define swap(a, b)                                                                                                             \
-  if (swaptype == 0) {                                                                                                         \
-    long t = *(long*)(void*)(a);                                                                                               \
-    *(long*)(void*)(a) = *(long*)(void*)(b);                                                                                   \
-    *(long*)(void*)(b) = t;                                                                                                    \
-  } else                                                                                                                       \
+#define swap(a, b)                           \
+  if (swaptype == 0) {                       \
+    long t = *(long*)(void*)(a);             \
+    *(long*)(void*)(a) = *(long*)(void*)(b); \
+    *(long*)(void*)(b) = t;                  \
+  } else                                     \
     swapfunc(a, b, es, swaptype)
 
-#define vecswap(a, b, n)                                                                                                       \
+#define vecswap(a, b, n) \
   if ((n) > 0) swapfunc((a), (b), (size_t)(n), swaptype)
 
-#define med3(a, b, c, _cmp)                                                                                                    \
+#define med3(a, b, c, _cmp) \
   (cmpgt(b, a) ? (cmpgt(c, b) ? b : (cmpgt(c, a) ? c : a)) : (cmpgt(b, c) ? b : (cmpgt(c, a) ? a : c)))
 #endif
 

@@ -1744,7 +1744,7 @@ static VALUE robject_abs(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_robject_add(na_loop_t* const lp) {
@@ -1821,7 +1821,7 @@ static VALUE robject_add(VALUE self, VALUE other) {
   return robject_add_self(self, other);
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_robject_sub(na_loop_t* const lp) {
@@ -1898,7 +1898,7 @@ static VALUE robject_sub(VALUE self, VALUE other) {
   return robject_sub_self(self, other);
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_robject_mul(na_loop_t* const lp) {
@@ -1975,10 +1975,10 @@ static VALUE robject_mul(VALUE self, VALUE other) {
   return robject_mul_self(self, other);
 }
 
-#define check_intdivzero(y)                                                                                                    \
-  if ((y) == 0) {                                                                                                              \
-    lp->err_type = rb_eZeroDivError;                                                                                           \
-    return;                                                                                                                    \
+#define check_intdivzero(y)          \
+  if ((y) == 0) {                    \
+    lp->err_type = rb_eZeroDivError; \
+    return;                          \
   }
 
 static void iter_robject_div(na_loop_t* const lp) {
@@ -2055,10 +2055,10 @@ static VALUE robject_div(VALUE self, VALUE other) {
   return robject_div_self(self, other);
 }
 
-#define check_intdivzero(y)                                                                                                    \
-  if ((y) == 0) {                                                                                                              \
-    lp->err_type = rb_eZeroDivError;                                                                                           \
-    return;                                                                                                                    \
+#define check_intdivzero(y)          \
+  if ((y) == 0) {                    \
+    lp->err_type = rb_eZeroDivError; \
+    return;                          \
   }
 
 static void iter_robject_mod(na_loop_t* const lp) {
@@ -2585,7 +2585,7 @@ static VALUE robject_nearly_eq(VALUE self, VALUE other) {
   return robject_nearly_eq_self(self, other);
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_robject_bit_and(na_loop_t* const lp) {
@@ -2662,7 +2662,7 @@ static VALUE robject_bit_and(VALUE self, VALUE other) {
   return robject_bit_and_self(self, other);
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_robject_bit_or(na_loop_t* const lp) {
@@ -2739,7 +2739,7 @@ static VALUE robject_bit_or(VALUE self, VALUE other) {
   return robject_bit_or_self(self, other);
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_robject_bit_xor(na_loop_t* const lp) {
@@ -2874,7 +2874,7 @@ static VALUE robject_bit_not(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_robject_left_shift(na_loop_t* const lp) {
@@ -2951,7 +2951,7 @@ static VALUE robject_left_shift(VALUE self, VALUE other) {
   return robject_left_shift_self(self, other);
 }
 
-#define check_intdivzero(y)                                                                                                    \
+#define check_intdivzero(y) \
   {}
 
 static void iter_robject_right_shift(na_loop_t* const lp) {

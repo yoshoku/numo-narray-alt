@@ -735,10 +735,10 @@ static VALUE nst_s_add_type(int argc, VALUE* argv, VALUE mod) {
   return Qnil;
 }
 
-#define NST_TYPEDEF(tpname, tpclass)                                                                                           \
-  static VALUE nst_s_##tpname(int argc, VALUE* argv, VALUE mod) {                                                              \
-    nstruct_add_type(tpclass, argc, argv, mod);                                                                                \
-    return Qnil;                                                                                                               \
+#define NST_TYPEDEF(tpname, tpclass)                              \
+  static VALUE nst_s_##tpname(int argc, VALUE* argv, VALUE mod) { \
+    nstruct_add_type(tpclass, argc, argv, mod);                   \
+    return Qnil;                                                  \
   }
 
 NST_TYPEDEF(int8, numo_cInt8)

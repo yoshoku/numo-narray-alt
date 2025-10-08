@@ -15,10 +15,10 @@ struct RBasicRaw {
   VALUE klass;
 };
 
-#define RBASIC_SET_CLASS(obj, cls)                                                                                             \
-  do {                                                                                                                         \
-    VALUE _obj_ = (obj);                                                                                                       \
-    RB_OBJ_WRITE(_obj_, &((struct RBasicRaw*)(_obj_))->klass, cls);                                                            \
+#define RBASIC_SET_CLASS(obj, cls)                                  \
+  do {                                                              \
+    VALUE _obj_ = (obj);                                            \
+    RB_OBJ_WRITE(_obj_, &((struct RBasicRaw*)(_obj_))->klass, cls); \
   } while (0)
 
 /* from class.c */
@@ -90,8 +90,8 @@ int rb_get_kwargs(VALUE keyword_hash, const ID* table, int required, int optiona
   VALUE missing = Qnil;
   st_data_t key;
 
-#define extract_kwarg(keyword, val)                                                                                            \
-  (key = (st_data_t)(keyword),                                                                                                 \
+#define extract_kwarg(keyword, val) \
+  (key = (st_data_t)(keyword),      \
    values ? st_delete(rb_hash_tbl_raw(keyword_hash), &key, (val)) : st_lookup(rb_hash_tbl_raw(keyword_hash), key, (val)))
 
   if (NIL_P(keyword_hash)) keyword_hash = 0;

@@ -17,10 +17,10 @@
 #define m_mul(x, y) ((x) * (y))
 #define m_div(x, y) ((x) / (y))
 #define m_mod(x, y) ((x) % (y))
-#define m_divmod(x, y, a, b)                                                                                                   \
-  {                                                                                                                            \
-    a = (x) / (y);                                                                                                             \
-    b = m_mod(x, y);                                                                                                           \
+#define m_divmod(x, y, a, b) \
+  {                          \
+    a = (x) / (y);           \
+    b = m_mod(x, y);         \
   }
 #define m_pow(x, y) pow_int(x, y)
 #define m_pow_int(x, y) pow_int(x, y)
@@ -45,12 +45,12 @@
 
 #define m_isnan(x) 0
 
-#define m_mulsum(x, y, z)                                                                                                      \
+#define m_mulsum(x, y, z) \
   { z += x * y; }
 #define m_mulsum_init INT2FIX(0)
-#define m_cumsum(x, y)                                                                                                         \
+#define m_cumsum(x, y) \
   { x += y; }
-#define m_cumprod(x, y)                                                                                                        \
+#define m_cumprod(x, y) \
   { x *= y; }
 
 #define cmp(a, b) ((qsort_cast(a) == qsort_cast(b)) ? 0 : (qsort_cast(a) > qsort_cast(b)) ? 1 : -1)
