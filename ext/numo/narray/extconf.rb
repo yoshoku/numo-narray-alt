@@ -45,6 +45,7 @@ srcs = %w[
   t_scomplex
   t_dcomplex
   t_robject
+  t_mean
   math
   SFMT
   struct

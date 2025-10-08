@@ -119,8 +119,8 @@ class NArrayTest < NArrayTestBase
         assert_equal(dtype[7, 5, 1, 2, 11, 3], a[[4, 3, 0, 1, 5, 2]]) #  Numo::NArray::CastError: cannot convert to NArray
         assert_equal(dtype[11, 7, 5, 3, 2, 1], a.reverse)
         assert_equal(29, a.sum)
+        assert_in_delta(4.833333, a.mean, 1e-6)
         if FLOAT_TYPES.include?(dtype)
-          assert_in_delta(4.833333, a.mean, 1e-6)
           assert_in_delta(13.766666, a.var, 1e-5)
           assert_in_delta(3.710345, a.stddev, 1e-6)
           assert_in_delta(5.901977, a.rms, 1e-6)
@@ -251,10 +251,13 @@ class NArrayTest < NArrayTestBase
         assert_equal(29, a.sum)
         assert_equal(dtype[6, 9, 14], a.sum(axis: 0))
         assert_equal(dtype[6, 23], a.sum(axis: 1))
+        assert_in_delta(4.833333, a.mean, 1e-6)
         if FLOAT_TYPES.include?(dtype)
-          assert_in_delta(4.833333, a.mean, 1e-6)
           assert_equal(dtype[3, 4.5, 7], a.mean(0))
           assert_equal(dtype[2, 23.0 / 3], a.mean(1))
+        else
+          assert_equal(Numo::DFloat[3, 4.5, 7], a.mean(0))
+          assert_equal(Numo::DFloat[2, 23.0 / 3], a.mean(1))
         end
 
         assert_predicate(a, :contiguous?)
