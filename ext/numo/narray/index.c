@@ -1045,8 +1045,8 @@ static VALUE na_slice(int argc, VALUE* argv, VALUE self) {
   Similar to numpy's tuple indexing, i.e., `a[[1,2,..],[3,4,..]]`
   Same as Numo::NArray#[] for one-dimensional NArray.
   @overload at(dim0,...,dimL)
-  @param [Range,Array,Numo::Int32,Numo::Int64] dim0,...,dimL  multi-dimensional index arrays.
-  @return [Numo::NArray] one-dimensional NArray view.
+    @param [Range,Array,Numo::Int32,Numo::Int64] dim0,...,dimL  multi-dimensional index arrays.
+    @return [Numo::NArray] one-dimensional NArray view.
   @see #[]
 
   @example

@@ -151,9 +151,9 @@ static VALUE sfloat_allocate(VALUE self) {
 /*
   Extract an element only if self is a dimensionless NArray.
   @overload extract
-  @return [Numeric,Numo::NArray]
-  --- Extract element value as Ruby Object if self is a dimensionless NArray,
-  otherwise returns self.
+    @return [Numeric,Numo::NArray]
+    --- Extract element value as Ruby Object if self is a dimensionless NArray,
+    otherwise returns self.
 */
 static VALUE sfloat_extract(VALUE self) {
   volatile VALUE v;
@@ -895,8 +895,8 @@ static VALUE sfloat_store_array(VALUE self, VALUE rary) {
 /*
   Store elements to Numo::SFloat from other.
   @overload store(other)
-  @param [Object] other
-  @return [Numo::SFloat] self
+    @param [Object] other
+    @return [Numo::SFloat] self
 */
 static VALUE sfloat_store(VALUE self, VALUE obj) {
   VALUE r, klass;
@@ -1108,9 +1108,9 @@ static VALUE sfloat_cast_array(VALUE rary) {
   Cast object to Numo::SFloat.
   @overload [](elements)
   @overload cast(array)
-  @param [Numeric,Array] elements
-  @param [Array] array
-  @return [Numo::SFloat]
+    @param [Numeric,Array] elements
+    @param [Array] array
+    @return [Numo::SFloat]
 */
 static VALUE sfloat_s_cast(VALUE type, VALUE obj) {
   VALUE v;
@@ -1150,9 +1150,9 @@ static VALUE sfloat_s_cast(VALUE type, VALUE obj) {
 /*
   Multi-dimensional element reference.
   @overload [](dim0,...,dimL)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
-  dim0,...,dimL  multi-dimensional indices.
-  @return [Numeric,Numo::SFloat] an element or NArray view.
+    @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+    dim0,...,dimL  multi-dimensional indices.
+    @return [Numeric,Numo::SFloat] an element or NArray view.
   @see Numo::NArray#[]
   @see #[]=
  */
@@ -1173,10 +1173,10 @@ static VALUE sfloat_aref(int argc, VALUE* argv, VALUE self) {
 /*
   Multi-dimensional element assignment.
   @overload []=(dim0,...,dimL,val)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
-  dim0,...,dimL  multi-dimensional indices.
-  @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
-  @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
+    @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+    dim0,...,dimL  multi-dimensional indices.
+    @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
+    @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
   @see Numo::NArray#[]=
   @see #[]
 */
@@ -1207,7 +1207,7 @@ static VALUE sfloat_aset(int argc, VALUE* argv, VALUE self) {
 /*
   return NArray with cast to the type of self.
   @overload coerce_cast(type)
-  @return [nil]
+    @return [nil]
 */
 static VALUE sfloat_coerce_cast(VALUE self, VALUE type) {
   return Qnil;
@@ -1242,7 +1242,7 @@ static void iter_sfloat_to_a(na_loop_t* const lp) {
 /*
   Convert self to Array.
   @overload to_a
-  @return [Array]
+    @return [Array]
 */
 static VALUE sfloat_to_a(VALUE self) {
   ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
@@ -1275,8 +1275,8 @@ static void iter_sfloat_fill(na_loop_t* const lp) {
 /*
   Fill elements with other.
   @overload fill other
-  @param [Numeric] other
-  @return [Numo::SFloat] self.
+    @param [Numeric] other
+    @return [Numo::SFloat] self.
 */
 static VALUE sfloat_fill(VALUE self, VALUE val) {
   ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { sym_option } };
@@ -1329,8 +1329,8 @@ static void iter_sfloat_format(na_loop_t* const lp) {
 /*
   Format elements into strings.
   @overload format format
-  @param [String] format
-  @return [Numo::RObject] array of formatted strings.
+    @param [String] format
+    @return [Numo::RObject] array of formatted strings.
 */
 static VALUE sfloat_format(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
@@ -1376,8 +1376,8 @@ static void iter_sfloat_format_to_a(na_loop_t* const lp) {
 /*
   Format elements into strings.
   @overload format_to_a format
-  @param [String] format
-  @return [Array] array of formatted strings.
+    @param [String] format
+    @return [Array] array of formatted strings.
 */
 static VALUE sfloat_format_to_a(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
@@ -1396,7 +1396,7 @@ static VALUE iter_sfloat_inspect(char* ptr, size_t pos, VALUE fmt) {
 /*
   Returns a string containing a human-readable representation of NArray.
   @overload inspect
-  @return [String]
+    @return [String]
 */
 static VALUE sfloat_inspect(VALUE ary) {
   return na_ndloop_inspect(ary, iter_sfloat_inspect, Qnil);
@@ -1430,9 +1430,9 @@ static void iter_sfloat_each(na_loop_t* const lp) {
   Calls the given block once for each element in self,
   passing that element as a parameter.
   @overload each
-  @return [Numo::NArray] self
-  For a block `{|x| ... }`,
-  @yieldparam [Numeric] x  an element of NArray.
+    @return [Numo::NArray] self
+    For a block `{|x| ... }`,
+    @yieldparam [Numeric] x  an element of NArray.
   @see #each_with_index
   @see #map
 */
@@ -1509,7 +1509,7 @@ static void iter_sfloat_map(na_loop_t* const lp) {
 /*
   Unary map.
   @overload map
-  @return [Numo::SFloat] map of self.
+    @return [Numo::SFloat] map of self.
 */
 static VALUE sfloat_map(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -1568,10 +1568,10 @@ static void iter_sfloat_each_with_index(na_loop_t* const lp) {
   Invokes the given block once for each element of self,
   passing that element and indices along each axis as parameters.
   @overload each_with_index
-  For a block `{|x,i,j,...| ... }`,
-  @yieldparam [Numeric] x  an element
-  @yieldparam [Integer] i,j,...  multitimensional indices
-  @return [Numo::NArray] self
+    For a block `{|x,i,j,...| ... }`,
+    @yieldparam [Numeric] x  an element
+    @yieldparam [Integer] i,j,...  multitimensional indices
+    @return [Numo::NArray] self
   @see #each
   @see #map_with_index
 */
@@ -1659,10 +1659,10 @@ static void iter_sfloat_map_with_index(na_loop_t* const lp) {
   Creates a new NArray containing the values returned by the block.
   Inplace option is allowed, i.e., `nary.inplace.map` overwrites `nary`.
   @overload map_with_index
-  For a block `{|x,i,j,...| ... }`,
-  @yieldparam [Numeric] x  an element
-  @yieldparam [Integer] i,j,...  multitimensional indices
-  @return [Numo::NArray] mapped array
+    For a block `{|x,i,j,...| ... }`,
+    @yieldparam [Numeric] x  an element
+    @yieldparam [Integer] i,j,...  multitimensional indices
+    @return [Numo::NArray] mapped array
   @see #map
   @see #each_with_index
 */
@@ -1718,7 +1718,7 @@ static void iter_sfloat_abs(na_loop_t* const lp) {
 /*
   abs of self.
   @overload abs
-  @return [Numo::SFloat] abs of self.
+    @return [Numo::SFloat] abs of self.
 */
 static VALUE sfloat_abs(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -1951,8 +1951,8 @@ static VALUE sfloat_add_self(VALUE self, VALUE other) {
 /*
   Binary add.
   @overload + other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self + other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self + other
 */
 static VALUE sfloat_add(VALUE self, VALUE other) {
 
@@ -2190,8 +2190,8 @@ static VALUE sfloat_sub_self(VALUE self, VALUE other) {
 /*
   Binary sub.
   @overload - other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self - other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self - other
 */
 static VALUE sfloat_sub(VALUE self, VALUE other) {
 
@@ -2429,8 +2429,8 @@ static VALUE sfloat_mul_self(VALUE self, VALUE other) {
 /*
   Binary mul.
   @overload * other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self * other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self * other
 */
 static VALUE sfloat_mul(VALUE self, VALUE other) {
 
@@ -2668,8 +2668,8 @@ static VALUE sfloat_div_self(VALUE self, VALUE other) {
 /*
   Binary div.
   @overload / other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self / other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self / other
 */
 static VALUE sfloat_div(VALUE self, VALUE other) {
 
@@ -2786,8 +2786,8 @@ static VALUE sfloat_mod_self(VALUE self, VALUE other) {
 /*
   Binary mod.
   @overload % other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self % other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self % other
 */
 static VALUE sfloat_mod(VALUE self, VALUE other) {
 
@@ -2832,8 +2832,8 @@ static VALUE sfloat_divmod_self(VALUE self, VALUE other) {
 /*
   Binary divmod.
   @overload divmod other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] divmod of self and other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] divmod of self and other.
 */
 static VALUE sfloat_divmod(VALUE self, VALUE other) {
 
@@ -2900,8 +2900,8 @@ static VALUE sfloat_pow_self(VALUE self, VALUE other) {
 /*
   Binary power.
   @overload ** other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self to the other-th power.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self to the other-th power.
 */
 static VALUE sfloat_pow(VALUE self, VALUE other) {
 
@@ -2980,7 +2980,7 @@ static void iter_sfloat_minus(na_loop_t* const lp) {
 /*
   Unary minus.
   @overload -@
-  @return [Numo::SFloat] minus of self.
+    @return [Numo::SFloat] minus of self.
 */
 static VALUE sfloat_minus(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3055,7 +3055,7 @@ static void iter_sfloat_reciprocal(na_loop_t* const lp) {
 /*
   Unary reciprocal.
   @overload reciprocal
-  @return [Numo::SFloat] reciprocal of self.
+    @return [Numo::SFloat] reciprocal of self.
 */
 static VALUE sfloat_reciprocal(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3130,7 +3130,7 @@ static void iter_sfloat_sign(na_loop_t* const lp) {
 /*
   Unary sign.
   @overload sign
-  @return [Numo::SFloat] sign of self.
+    @return [Numo::SFloat] sign of self.
 */
 static VALUE sfloat_sign(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3205,7 +3205,7 @@ static void iter_sfloat_square(na_loop_t* const lp) {
 /*
   Unary square.
   @overload square
-  @return [Numo::SFloat] square of self.
+    @return [Numo::SFloat] square of self.
 */
 static VALUE sfloat_square(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3247,8 +3247,8 @@ static VALUE sfloat_eq_self(VALUE self, VALUE other) {
 /*
   Comparison eq other.
   @overload eq other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self eq other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self eq other.
 */
 static VALUE sfloat_eq(VALUE self, VALUE other) {
 
@@ -3294,8 +3294,8 @@ static VALUE sfloat_ne_self(VALUE self, VALUE other) {
 /*
   Comparison ne other.
   @overload ne other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self ne other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self ne other.
 */
 static VALUE sfloat_ne(VALUE self, VALUE other) {
 
@@ -3341,8 +3341,8 @@ static VALUE sfloat_nearly_eq_self(VALUE self, VALUE other) {
 /*
   Comparison nearly_eq other.
   @overload nearly_eq other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self nearly_eq other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self nearly_eq other.
 */
 static VALUE sfloat_nearly_eq(VALUE self, VALUE other) {
 
@@ -3421,7 +3421,7 @@ static void iter_sfloat_floor(na_loop_t* const lp) {
 /*
   Unary floor.
   @overload floor
-  @return [Numo::SFloat] floor of self.
+    @return [Numo::SFloat] floor of self.
 */
 static VALUE sfloat_floor(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3496,7 +3496,7 @@ static void iter_sfloat_round(na_loop_t* const lp) {
 /*
   Unary round.
   @overload round
-  @return [Numo::SFloat] round of self.
+    @return [Numo::SFloat] round of self.
 */
 static VALUE sfloat_round(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3571,7 +3571,7 @@ static void iter_sfloat_ceil(na_loop_t* const lp) {
 /*
   Unary ceil.
   @overload ceil
-  @return [Numo::SFloat] ceil of self.
+    @return [Numo::SFloat] ceil of self.
 */
 static VALUE sfloat_ceil(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3646,7 +3646,7 @@ static void iter_sfloat_trunc(na_loop_t* const lp) {
 /*
   Unary trunc.
   @overload trunc
-  @return [Numo::SFloat] trunc of self.
+    @return [Numo::SFloat] trunc of self.
 */
 static VALUE sfloat_trunc(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3721,7 +3721,7 @@ static void iter_sfloat_rint(na_loop_t* const lp) {
 /*
   Unary rint.
   @overload rint
-  @return [Numo::SFloat] rint of self.
+    @return [Numo::SFloat] rint of self.
 */
 static VALUE sfloat_rint(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3833,8 +3833,8 @@ static VALUE sfloat_copysign_self(VALUE self, VALUE other) {
 /*
   Binary copysign.
   @overload copysign other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self copysign other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self copysign other
 */
 static VALUE sfloat_copysign(VALUE self, VALUE other) {
 
@@ -3881,7 +3881,7 @@ static void iter_sfloat_signbit(na_loop_t* const lp) {
 /*
   Condition of signbit.
   @overload signbit
-  @return [Numo::Bit] Condition of signbit.
+    @return [Numo::Bit] Condition of signbit.
 */
 static VALUE sfloat_signbit(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3911,7 +3911,7 @@ static void iter_sfloat_modf(na_loop_t* const lp) {
 /*
   modf of self.
   @overload modf
-  @return [Numo::SFloat] modf of self.
+    @return [Numo::SFloat] modf of self.
 */
 static VALUE sfloat_modf(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3953,8 +3953,8 @@ static VALUE sfloat_gt_self(VALUE self, VALUE other) {
 /*
   Comparison gt other.
   @overload gt other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self gt other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self gt other.
 */
 static VALUE sfloat_gt(VALUE self, VALUE other) {
 
@@ -4000,8 +4000,8 @@ static VALUE sfloat_ge_self(VALUE self, VALUE other) {
 /*
   Comparison ge other.
   @overload ge other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self ge other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self ge other.
 */
 static VALUE sfloat_ge(VALUE self, VALUE other) {
 
@@ -4047,8 +4047,8 @@ static VALUE sfloat_lt_self(VALUE self, VALUE other) {
 /*
   Comparison lt other.
   @overload lt other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self lt other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self lt other.
 */
 static VALUE sfloat_lt(VALUE self, VALUE other) {
 
@@ -4094,8 +4094,8 @@ static VALUE sfloat_le_self(VALUE self, VALUE other) {
 /*
   Comparison le other.
   @overload le other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self le other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self le other.
 */
 static VALUE sfloat_le(VALUE self, VALUE other) {
 
@@ -4178,9 +4178,9 @@ static void iter_sfloat_clip_max(na_loop_t* const lp) {
   Clip array elements by [min,max].
   If either of min or max is nil, one side is clipped.
   @overload clip(min,max)
-  @param [Numo::NArray,Numeric] min
-  @param [Numo::NArray,Numeric] max
-  @return [Numo::NArray] result of clip.
+    @param [Numo::NArray,Numeric] min
+    @param [Numo::NArray,Numeric] max
+    @return [Numo::NArray] result of clip.
 
   @example
       a = Numo::Int32.new(10).seq
@@ -4258,7 +4258,7 @@ static void iter_sfloat_isnan(na_loop_t* const lp) {
 /*
   Condition of isnan.
   @overload isnan
-  @return [Numo::Bit] Condition of isnan.
+    @return [Numo::Bit] Condition of isnan.
 */
 static VALUE sfloat_isnan(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -4300,7 +4300,7 @@ static void iter_sfloat_isinf(na_loop_t* const lp) {
 /*
   Condition of isinf.
   @overload isinf
-  @return [Numo::Bit] Condition of isinf.
+    @return [Numo::Bit] Condition of isinf.
 */
 static VALUE sfloat_isinf(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -4342,7 +4342,7 @@ static void iter_sfloat_isposinf(na_loop_t* const lp) {
 /*
   Condition of isposinf.
   @overload isposinf
-  @return [Numo::Bit] Condition of isposinf.
+    @return [Numo::Bit] Condition of isposinf.
 */
 static VALUE sfloat_isposinf(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -4384,7 +4384,7 @@ static void iter_sfloat_isneginf(na_loop_t* const lp) {
 /*
   Condition of isneginf.
   @overload isneginf
-  @return [Numo::Bit] Condition of isneginf.
+    @return [Numo::Bit] Condition of isneginf.
 */
 static VALUE sfloat_isneginf(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -4426,7 +4426,7 @@ static void iter_sfloat_isfinite(na_loop_t* const lp) {
 /*
   Condition of isfinite.
   @overload isfinite
-  @return [Numo::Bit] Condition of isfinite.
+    @return [Numo::Bit] Condition of isfinite.
 */
 static VALUE sfloat_isfinite(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -4462,12 +4462,12 @@ static void iter_sfloat_sum_nan(na_loop_t* const lp) {
 /*
   sum of self.
   @overload sum(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs sum along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::SFloat] returns result of sum.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs sum along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::SFloat] returns result of sum.
 */
 static VALUE sfloat_sum(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -4508,12 +4508,12 @@ static void iter_sfloat_prod_nan(na_loop_t* const lp) {
 /*
   prod of self.
   @overload prod(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs prod along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::SFloat] returns result of prod.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs prod along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::SFloat] returns result of prod.
 */
 static VALUE sfloat_prod(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -4554,12 +4554,12 @@ static void iter_sfloat_mean_nan(na_loop_t* const lp) {
 /*
   mean of self.
   @overload mean(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs mean along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::SFloat] returns result of mean.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs mean along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::SFloat] returns result of mean.
 */
 static VALUE sfloat_mean(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -4600,12 +4600,12 @@ static void iter_sfloat_stddev_nan(na_loop_t* const lp) {
 /*
   stddev of self.
   @overload stddev(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs stddev along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::SFloat] returns result of stddev.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs stddev along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::SFloat] returns result of stddev.
 */
 static VALUE sfloat_stddev(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -4646,12 +4646,12 @@ static void iter_sfloat_var_nan(na_loop_t* const lp) {
 /*
   var of self.
   @overload var(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs var along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::SFloat] returns result of var.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs var along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::SFloat] returns result of var.
 */
 static VALUE sfloat_var(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -4692,12 +4692,12 @@ static void iter_sfloat_rms_nan(na_loop_t* const lp) {
 /*
   rms of self.
   @overload rms(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs rms along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::SFloat] returns result of rms.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs rms along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::SFloat] returns result of rms.
 */
 static VALUE sfloat_rms(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -4738,12 +4738,12 @@ static void iter_sfloat_min_nan(na_loop_t* const lp) {
 /*
   min of self.
   @overload min(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs min along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::SFloat] returns result of min.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs min along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::SFloat] returns result of min.
 */
 static VALUE sfloat_min(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -4784,12 +4784,12 @@ static void iter_sfloat_max_nan(na_loop_t* const lp) {
 /*
   max of self.
   @overload max(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs max along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::SFloat] returns result of max.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs max along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::SFloat] returns result of max.
 */
 static VALUE sfloat_max(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -4830,12 +4830,12 @@ static void iter_sfloat_ptp_nan(na_loop_t* const lp) {
 /*
   ptp of self.
   @overload ptp(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs ptp along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::SFloat] returns result of ptp.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs ptp along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::SFloat] returns result of ptp.
 */
 static VALUE sfloat_ptp(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -4921,10 +4921,10 @@ static void iter_sfloat_max_index_index32_nan(na_loop_t* const lp) {
 /*
   Index of the maximum value.
   @overload max_index(axis:nil, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **flat 1-d
-  indices**.
-  @return [Integer,Numo::Int] returns result indices.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
+    @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **flat
+    1-d indices**.
+    @return [Integer,Numo::Int] returns result indices.
   @see #argmax
   @see #max
 
@@ -5039,10 +5039,10 @@ static void iter_sfloat_min_index_index32_nan(na_loop_t* const lp) {
 /*
   Index of the minimum value.
   @overload min_index(axis:nil, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **flat 1-d
-  indices**.
-  @return [Integer,Numo::Int] returns result indices.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
+    @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **flat
+    1-d indices**.
+    @return [Integer,Numo::Int] returns result indices.
   @see #argmin
   @see #min
 
@@ -5153,10 +5153,10 @@ static void iter_sfloat_argmax_arg32_nan(na_loop_t* const lp) {
 /*
   Index of the maximum value.
   @overload argmax(axis:nil, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **indices
-  along the axis**.
-  @return [Integer,Numo::Int] returns the result indices.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
+    @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **indices
+    along the axis**.
+    @return [Integer,Numo::Int] returns the result indices.
   @see #max_index
   @see #max
 
@@ -5264,10 +5264,10 @@ static void iter_sfloat_argmin_arg32_nan(na_loop_t* const lp) {
 /*
   Index of the minimum value.
   @overload argmin(axis:nil, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **indices
-  along the axis**.
-  @return [Integer,Numo::Int] returns the result indices.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
+    @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **indices
+    along the axis**.
+    @return [Integer,Numo::Int] returns the result indices.
   @see #min_index
   @see #min
 
@@ -5340,11 +5340,11 @@ static void iter_sfloat_minmax_nan(na_loop_t* const lp) {
 /*
   minmax of self.
   @overload minmax(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
-  @param [Numeric,Array,Range] axis  Finds min-max along the axis.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
-  as dimensions with size one.
-  @return [Numo::SFloat,Numo::SFloat] min and max of self.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
+    @param [Numeric,Array,Range] axis  Finds min-max along the axis.
+    @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+    as dimensions with size one.
+    @return [Numo::SFloat,Numo::SFloat] min and max of self.
 */
 static VALUE sfloat_minmax(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
@@ -5363,10 +5363,10 @@ static VALUE sfloat_minmax(int argc, VALUE* argv, VALUE self) {
   Element-wise maximum of two arrays.
 
   @overload maximum(a1, a2, nan:false)
-  @param [Numo::NArray,Numeric] a1  The array to be compared.
-  @param [Numo::NArray,Numeric] a2  The array to be compared.
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
-  @return [Numo::SFloat]
+    @param [Numo::NArray,Numeric] a1  The array to be compared.
+    @param [Numo::NArray,Numeric] a2  The array to be compared.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
+    @return [Numo::SFloat]
 */
 
 static void iter_sfloat_s_maximum(na_loop_t* const lp) {
@@ -5432,10 +5432,10 @@ static VALUE sfloat_s_maximum(int argc, VALUE* argv, VALUE mod) {
   Element-wise minimum of two arrays.
 
   @overload minimum(a1, a2, nan:false)
-  @param [Numo::NArray,Numeric] a1  The array to be compared.
-  @param [Numo::NArray,Numeric] a2  The array to be compared.
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
-  @return [Numo::SFloat]
+    @param [Numo::NArray,Numeric] a1  The array to be compared.
+    @param [Numo::NArray,Numeric] a2  The array to be compared.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
+    @return [Numo::SFloat]
 */
 
 static void iter_sfloat_s_minimum(na_loop_t* const lp) {
@@ -5537,9 +5537,9 @@ static void iter_sfloat_cumsum_nan(na_loop_t* const lp) {
 /*
   cumsum of self.
   @overload cumsum(axis:nil, nan:false)
-  @param [Numeric,Array,Range] axis  Performs cumsum along the axis.
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
-  @return [Numo::SFloat] cumsum of self.
+    @param [Numeric,Array,Range] axis  Performs cumsum along the axis.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
+    @return [Numo::SFloat] cumsum of self.
 */
 static VALUE sfloat_cumsum(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
@@ -5594,9 +5594,9 @@ static void iter_sfloat_cumprod_nan(na_loop_t* const lp) {
 /*
   cumprod of self.
   @overload cumprod(axis:nil, nan:false)
-  @param [Numeric,Array,Range] axis  Performs cumprod along the axis.
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
-  @return [Numo::SFloat] cumprod of self.
+    @param [Numeric,Array,Range] axis  Performs cumprod along the axis.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
+    @return [Numo::SFloat] cumprod of self.
 */
 static VALUE sfloat_cumprod(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
@@ -5706,12 +5706,12 @@ static VALUE sfloat_mulsum_self(int argc, VALUE* argv, VALUE self) {
   Binary mulsum.
 
   @overload mulsum(other, axis:nil, keepdims:false, nan:false)
-  @param [Numo::NArray,Numeric] other
-  @param [Numeric,Array,Range] axis  Performs mulsum along the axis.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
-  as dimensions with size one.
-  @param [TrueClass] nan (keyword) If true, apply NaN-aware algorithm (avoid NaN if exists).
-  @return [Numo::NArray] mulsum of self and other.
+    @param [Numo::NArray,Numeric] other
+    @param [Numeric,Array,Range] axis  Performs mulsum along the axis.
+    @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+    as dimensions with size one.
+    @param [TrueClass] nan (keyword) If true, apply NaN-aware algorithm (avoid NaN if exists).
+    @return [Numo::NArray] mulsum of self and other.
 */
 static VALUE sfloat_mulsum(int argc, VALUE* argv, VALUE self) {
   //
@@ -5780,9 +5780,9 @@ static void iter_sfloat_seq(na_loop_t* const lp) {
      beg+i*step
   where i is 1-dimensional index.
   @overload seq([beg,[step]])
-  @param [Numeric] beg  beginning of sequence. (default=0)
-  @param [Numeric] step  step of sequence. (default=1)
-  @return [Numo::SFloat] self.
+    @param [Numeric] beg  beginning of sequence. (default=0)
+    @param [Numeric] step  step of sequence. (default=1)
+    @return [Numo::SFloat] self.
   @example
     Numo::DFloat.new(6).seq(1,-0.2)
     # => Numo::DFloat#shape=[6]
@@ -5861,10 +5861,10 @@ static void iter_sfloat_logseq(na_loop_t* const lp) {
   Applicable classes: DFloat, SFloat, DComplex, SCopmplex.
 
   @overload logseq(beg,step,[base])
-  @param [Numeric] beg  The beginning of sequence.
-  @param [Numeric] step  The step of sequence.
-  @param [Numeric] base  The base of log space. (default=10)
-  @return [Numo::SFloat] self.
+    @param [Numeric] beg  The beginning of sequence.
+    @param [Numeric] step  The step of sequence.
+    @param [Numeric] base  The base of log space. (default=10)
+    @return [Numo::SFloat] self.
 
   @example
     Numo::DFloat.new(5).logseq(4,-1,2)
@@ -5926,11 +5926,11 @@ static void iter_sfloat_eye(na_loop_t* const lp) {
 /*
   Eye: Set a value to diagonal components, set 0 to non-diagonal components.
   @overload eye([element,offset])
-  @param [Numeric] element  Diagonal element to be stored. Default is 1.
-  @param [Integer] offset Diagonal offset from the main diagonal.  The
-      default is 0. k>0 for diagonals above the main diagonal, and k<0
-      for diagonals below the main diagonal.
-  @return [Numo::SFloat] eye of self.
+    @param [Numeric] element  Diagonal element to be stored. Default is 1.
+    @param [Integer] offset Diagonal offset from the main diagonal.  The
+        default is 0. k>0 for diagonals above the main diagonal, and k<0
+        for diagonals below the main diagonal.
+    @return [Numo::SFloat] eye of self.
 */
 static VALUE sfloat_eye(int argc, VALUE* argv, VALUE self) {
   ndfunc_arg_in_t ain[1] = { { OVERWRITE, 2 } };
@@ -6027,10 +6027,10 @@ static void iter_sfloat_rand(na_loop_t* const lp) {
 /*
   Generate uniformly distributed random numbers on self narray.
   @overload rand([[low],high])
-  @param [Numeric] low  lower inclusive boundary of random numbers. (default=0)
-  @param [Numeric] high  upper exclusive boundary of random numbers. (default=1 or 1+1i for
-  complex types)
-  @return [Numo::SFloat] self.
+    @param [Numeric] low  lower inclusive boundary of random numbers. (default=0)
+    @param [Numeric] high  upper exclusive boundary of random numbers. (default=1 or 1+1i for
+    complex types)
+    @return [Numo::SFloat] self.
   @example
     Numo::DFloat.new(6).rand
     # => Numo::DFloat#shape=[6]
@@ -6127,9 +6127,9 @@ static void iter_sfloat_rand_norm(na_loop_t* const lp) {
   Generates random numbers from the normal distribution on self narray
   using Box-Muller Transformation.
   @overload rand_norm([mu,[sigma]])
-  @param [Numeric] mu  mean of normal distribution. (default=0)
-  @param [Numeric] sigma  standard deviation of normal distribution. (default=1)
-  @return [Numo::SFloat] self.
+    @param [Numeric] mu  mean of normal distribution. (default=0)
+    @param [Numeric] sigma  standard deviation of normal distribution. (default=1)
+    @return [Numo::SFloat] self.
   @example
     Numo::DFloat.new(5,5).rand_norm
     # => Numo::DFloat#shape=[5,5]
@@ -6195,8 +6195,8 @@ static void iter_sfloat_poly(na_loop_t* const lp) {
   Calculate polynomial.
     `x.poly(a0,a1,a2,...,an) = a0 + a1*x + a2*x**2 + ... + an*x**n`
   @overload poly a0, a1, ..., an
-  @param [Numo::NArray,Numeric] a0,a1,...,an
-  @return [Numo::SFloat]
+    @param [Numo::NArray,Numeric] a0,a1,...,an
+    @return [Numo::SFloat]
 */
 static VALUE sfloat_poly(VALUE self, VALUE args) {
   int argc, i;
@@ -6559,9 +6559,9 @@ static void iter_sfloat_sort_prnan(na_loop_t* const lp) {
 /*
   sort of self.
   @overload sort(axis:nil, nan:false)
-  @param [TrueClass] nan  If true, propagete NaN. If false, ignore NaN.
-  @param [Numeric,Array,Range] axis  Performs sort along the axis.
-  @return [Numo::SFloat] returns result of sort.
+    @param [TrueClass] nan  If true, propagete NaN. If false, ignore NaN.
+    @param [Numeric,Array,Range] axis  Performs sort along the axis.
+    @return [Numo::SFloat] returns result of sort.
   @example
       Numo::DFloat[3,4,1,2].sort #=> Numo::DFloat[1,2,3,4]
 */
@@ -6984,9 +6984,9 @@ static void sfloat_index32_qsort_prnan(na_loop_t* const lp) {
 /*
   sort_index. Returns an index array of sort result.
   @overload sort_index(axis:nil, nan:false)
-  @param [TrueClass] nan  If true, propagete NaN. If false, ignore NaN.
-  @param [Numeric,Array,Range] axis  Performs sort_index along the axis.
-  @return [Integer,Numo::Int] returns result index of sort_index.
+    @param [TrueClass] nan  If true, propagete NaN. If false, ignore NaN.
+    @param [Numeric,Array,Range] axis  Performs sort_index along the axis.
+    @return [Integer,Numo::Int] returns result index of sort_index.
   @example
       Numo::NArray[3,4,1,2].sort_index #=> Numo::Int32[2,3,0,1]
 */
@@ -7078,11 +7078,11 @@ static void iter_sfloat_median_prnan(na_loop_t* const lp) {
 /*
   median of self.
   @overload median(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan (keyword) If true, propagete NaN. If false, ignore NaN.
-  @param [Numeric,Array,Range] axis  Finds median along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::SFloat] returns median of self.
+    @param [TrueClass] nan (keyword) If true, propagete NaN. If false, ignore NaN.
+    @param [Numeric,Array,Range] axis  Finds median along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::SFloat] returns median of self.
 */
 
 static VALUE sfloat_median(int argc, VALUE* argv, VALUE self) {
@@ -7224,8 +7224,8 @@ static void iter_sfloat_math_s_sqrt(na_loop_t* const lp) {
 /*
   Calculate sqrt(x).
   @overload sqrt(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of sqrt(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of sqrt(x).
 */
 static VALUE sfloat_math_s_sqrt(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -7302,8 +7302,8 @@ static void iter_sfloat_math_s_cbrt(na_loop_t* const lp) {
 /*
   Calculate cbrt(x).
   @overload cbrt(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of cbrt(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of cbrt(x).
 */
 static VALUE sfloat_math_s_cbrt(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -7380,8 +7380,8 @@ static void iter_sfloat_math_s_log(na_loop_t* const lp) {
 /*
   Calculate log(x).
   @overload log(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of log(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of log(x).
 */
 static VALUE sfloat_math_s_log(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -7458,8 +7458,8 @@ static void iter_sfloat_math_s_log2(na_loop_t* const lp) {
 /*
   Calculate log2(x).
   @overload log2(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of log2(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of log2(x).
 */
 static VALUE sfloat_math_s_log2(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -7536,8 +7536,8 @@ static void iter_sfloat_math_s_log10(na_loop_t* const lp) {
 /*
   Calculate log10(x).
   @overload log10(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of log10(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of log10(x).
 */
 static VALUE sfloat_math_s_log10(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -7614,8 +7614,8 @@ static void iter_sfloat_math_s_exp(na_loop_t* const lp) {
 /*
   Calculate exp(x).
   @overload exp(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of exp(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of exp(x).
 */
 static VALUE sfloat_math_s_exp(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -7692,8 +7692,8 @@ static void iter_sfloat_math_s_exp2(na_loop_t* const lp) {
 /*
   Calculate exp2(x).
   @overload exp2(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of exp2(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of exp2(x).
 */
 static VALUE sfloat_math_s_exp2(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -7770,8 +7770,8 @@ static void iter_sfloat_math_s_exp10(na_loop_t* const lp) {
 /*
   Calculate exp10(x).
   @overload exp10(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of exp10(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of exp10(x).
 */
 static VALUE sfloat_math_s_exp10(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -7848,8 +7848,8 @@ static void iter_sfloat_math_s_sin(na_loop_t* const lp) {
 /*
   Calculate sin(x).
   @overload sin(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of sin(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of sin(x).
 */
 static VALUE sfloat_math_s_sin(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -7926,8 +7926,8 @@ static void iter_sfloat_math_s_cos(na_loop_t* const lp) {
 /*
   Calculate cos(x).
   @overload cos(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of cos(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of cos(x).
 */
 static VALUE sfloat_math_s_cos(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -8004,8 +8004,8 @@ static void iter_sfloat_math_s_tan(na_loop_t* const lp) {
 /*
   Calculate tan(x).
   @overload tan(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of tan(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of tan(x).
 */
 static VALUE sfloat_math_s_tan(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -8082,8 +8082,8 @@ static void iter_sfloat_math_s_asin(na_loop_t* const lp) {
 /*
   Calculate asin(x).
   @overload asin(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of asin(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of asin(x).
 */
 static VALUE sfloat_math_s_asin(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -8160,8 +8160,8 @@ static void iter_sfloat_math_s_acos(na_loop_t* const lp) {
 /*
   Calculate acos(x).
   @overload acos(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of acos(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of acos(x).
 */
 static VALUE sfloat_math_s_acos(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -8238,8 +8238,8 @@ static void iter_sfloat_math_s_atan(na_loop_t* const lp) {
 /*
   Calculate atan(x).
   @overload atan(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of atan(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of atan(x).
 */
 static VALUE sfloat_math_s_atan(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -8316,8 +8316,8 @@ static void iter_sfloat_math_s_sinh(na_loop_t* const lp) {
 /*
   Calculate sinh(x).
   @overload sinh(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of sinh(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of sinh(x).
 */
 static VALUE sfloat_math_s_sinh(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -8394,8 +8394,8 @@ static void iter_sfloat_math_s_cosh(na_loop_t* const lp) {
 /*
   Calculate cosh(x).
   @overload cosh(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of cosh(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of cosh(x).
 */
 static VALUE sfloat_math_s_cosh(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -8472,8 +8472,8 @@ static void iter_sfloat_math_s_tanh(na_loop_t* const lp) {
 /*
   Calculate tanh(x).
   @overload tanh(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of tanh(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of tanh(x).
 */
 static VALUE sfloat_math_s_tanh(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -8550,8 +8550,8 @@ static void iter_sfloat_math_s_asinh(na_loop_t* const lp) {
 /*
   Calculate asinh(x).
   @overload asinh(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of asinh(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of asinh(x).
 */
 static VALUE sfloat_math_s_asinh(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -8628,8 +8628,8 @@ static void iter_sfloat_math_s_acosh(na_loop_t* const lp) {
 /*
   Calculate acosh(x).
   @overload acosh(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of acosh(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of acosh(x).
 */
 static VALUE sfloat_math_s_acosh(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -8706,8 +8706,8 @@ static void iter_sfloat_math_s_atanh(na_loop_t* const lp) {
 /*
   Calculate atanh(x).
   @overload atanh(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of atanh(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of atanh(x).
 */
 static VALUE sfloat_math_s_atanh(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -8784,8 +8784,8 @@ static void iter_sfloat_math_s_sinc(na_loop_t* const lp) {
 /*
   Calculate sinc(x).
   @overload sinc(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of sinc(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of sinc(x).
 */
 static VALUE sfloat_math_s_sinc(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -8815,9 +8815,9 @@ static void iter_sfloat_math_s_atan2(na_loop_t* const lp) {
 /*
   Calculate atan2(a1,a2).
   @overload atan2(a1,a2)
-  @param [Numo::NArray,Numeric] a1  first value
-  @param [Numo::NArray,Numeric] a2  second value
-  @return [Numo::SFloat] atan2(a1,a2).
+    @param [Numo::NArray,Numeric] a1  first value
+    @param [Numo::NArray,Numeric] a2  second value
+    @return [Numo::SFloat] atan2(a1,a2).
 */
 static VALUE sfloat_math_s_atan2(VALUE mod, VALUE a1, VALUE a2) {
   ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
@@ -8846,9 +8846,9 @@ static void iter_sfloat_math_s_hypot(na_loop_t* const lp) {
 /*
   Calculate hypot(a1,a2).
   @overload hypot(a1,a2)
-  @param [Numo::NArray,Numeric] a1  first value
-  @param [Numo::NArray,Numeric] a2  second value
-  @return [Numo::SFloat] hypot(a1,a2).
+    @param [Numo::NArray,Numeric] a1  first value
+    @param [Numo::NArray,Numeric] a2  second value
+    @return [Numo::SFloat] hypot(a1,a2).
 */
 static VALUE sfloat_math_s_hypot(VALUE mod, VALUE a1, VALUE a2) {
   ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
@@ -8924,8 +8924,8 @@ static void iter_sfloat_math_s_erf(na_loop_t* const lp) {
 /*
   Calculate erf(x).
   @overload erf(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of erf(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of erf(x).
 */
 static VALUE sfloat_math_s_erf(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -9002,8 +9002,8 @@ static void iter_sfloat_math_s_erfc(na_loop_t* const lp) {
 /*
   Calculate erfc(x).
   @overload erfc(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of erfc(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of erfc(x).
 */
 static VALUE sfloat_math_s_erfc(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -9080,8 +9080,8 @@ static void iter_sfloat_math_s_log1p(na_loop_t* const lp) {
 /*
   Calculate log1p(x).
   @overload log1p(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of log1p(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of log1p(x).
 */
 static VALUE sfloat_math_s_log1p(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -9158,8 +9158,8 @@ static void iter_sfloat_math_s_expm1(na_loop_t* const lp) {
 /*
   Calculate expm1(x).
   @overload expm1(x)
-  @param [Numo::NArray,Numeric] x  input value
-  @return [Numo::SFloat] result of expm1(x).
+    @param [Numo::NArray,Numeric] x  input value
+    @return [Numo::SFloat] result of expm1(x).
 */
 static VALUE sfloat_math_s_expm1(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -9189,9 +9189,9 @@ static void iter_sfloat_math_s_ldexp(na_loop_t* const lp) {
 /*
   Calculate ldexp(a1,a2).
   @overload ldexp(a1,a2)
-  @param [Numo::NArray,Numeric] a1  first value
-  @param [Numo::NArray,Numeric] a2  second value
-  @return [Numo::SFloat] ldexp(a1,a2).
+    @param [Numo::NArray,Numeric] a1  first value
+    @param [Numo::NArray,Numeric] a2  second value
+    @return [Numo::SFloat] ldexp(a1,a2).
 */
 static VALUE sfloat_math_s_ldexp(VALUE mod, VALUE a1, VALUE a2) {
   ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
@@ -9223,9 +9223,8 @@ static void iter_sfloat_math_s_frexp(na_loop_t* const lp) {
   Returns [mantissa, exponent], where x = mantissa * 2**exponent.
 
   @overload frexp(x)
-  @param [Numo::NArray,Numeric]  x
-  @return [Numo::SFloat,Numo::Int32]  mantissa and exponent.
-
+    @param [Numo::NArray,Numeric]  x
+    @return [Numo::SFloat,Numo::Int32]  mantissa and exponent.
 */
 static VALUE sfloat_math_s_frexp(VALUE mod, VALUE a1) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };

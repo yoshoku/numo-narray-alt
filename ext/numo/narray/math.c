@@ -72,9 +72,9 @@ static VALUE nary_mathcast(int argc, VALUE* argv) {
   Dispatches method to Math module of upcasted type,
   eg, Numo::DFloat::Math.
   @overload method_missing(name,x,...)
-  @param [Symbol] name  method name.
-  @param [NArray,Numeric] x  input array.
-  @return [NArray] result.
+    @param [Symbol] name  method name.
+    @param [NArray,Numeric] x  input array.
+    @return [NArray] result.
 */
 static VALUE nary_math_method_missing(int argc, VALUE* argv, VALUE mod) {
   VALUE type, ans, typemod, hash;

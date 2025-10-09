@@ -139,9 +139,9 @@ static VALUE bit_allocate(VALUE self) {
 /*
   Extract an element only if self is a dimensionless NArray.
   @overload extract
-  @return [Numeric,Numo::NArray]
-  --- Extract element value as Ruby Object if self is a dimensionless NArray,
-  otherwise returns self.
+    @return [Numeric,Numo::NArray]
+    --- Extract element value as Ruby Object if self is a dimensionless NArray,
+    otherwise returns self.
 */
 
 static VALUE bit_extract(VALUE self) {
@@ -1000,8 +1000,8 @@ static VALUE bit_store_array(VALUE self, VALUE rary) {
 /*
   Store elements to Numo::Bit from other.
   @overload store(other)
-  @param [Object] other
-  @return [Numo::Bit] self
+    @param [Object] other
+    @return [Numo::Bit] self
 */
 static VALUE bit_store(VALUE self, VALUE obj) {
   VALUE r, klass;
@@ -1213,9 +1213,9 @@ static VALUE bit_cast_array(VALUE rary) {
   Cast object to Numo::Bit.
   @overload [](elements)
   @overload cast(array)
-  @param [Numeric,Array] elements
-  @param [Array] array
-  @return [Numo::Bit]
+    @param [Numeric,Array] elements
+    @param [Array] array
+    @return [Numo::Bit]
 */
 static VALUE bit_s_cast(VALUE type, VALUE obj) {
   VALUE v;
@@ -1255,9 +1255,9 @@ static VALUE bit_s_cast(VALUE type, VALUE obj) {
 /*
   Multi-dimensional element reference.
   @overload [](dim0,...,dimL)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
-  dim0,...,dimL  multi-dimensional indices.
-  @return [Numeric,Numo::Bit] an element or NArray view.
+    @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+    dim0,...,dimL  multi-dimensional indices.
+    @return [Numeric,Numo::Bit] an element or NArray view.
   @see Numo::NArray#[]
   @see #[]=
 
@@ -1302,10 +1302,10 @@ static VALUE bit_aref(int argc, VALUE* argv, VALUE self) {
 /*
   Multi-dimensional element assignment.
   @overload []=(dim0,...,dimL,val)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
-  dim0,...,dimL  multi-dimensional indices.
-  @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
-  @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
+    @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+    dim0,...,dimL  multi-dimensional indices.
+    @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
+    @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
   @see Numo::NArray#[]=
   @see #[]
 
@@ -1352,7 +1352,7 @@ static VALUE bit_aset(int argc, VALUE* argv, VALUE self) {
 /*
   return NArray with cast to the type of self.
   @overload coerce_cast(type)
-  @return [nil]
+    @return [nil]
 */
 static VALUE bit_coerce_cast(VALUE self, VALUE type) {
   return Qnil;
@@ -1391,7 +1391,7 @@ static void iter_bit_to_a(na_loop_t* const lp) {
 /*
   Convert self to Array.
   @overload to_a
-  @return [Array]
+    @return [Array]
 */
 static VALUE bit_to_a(VALUE self) {
   ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
@@ -1452,8 +1452,8 @@ static void iter_bit_fill(na_loop_t* const lp) {
 /*
   Fill elements with other.
   @overload fill other
-  @param [Numeric] other
-  @return [Numo::Bit] self.
+    @param [Numeric] other
+    @return [Numo::Bit] self.
 */
 static VALUE bit_fill(VALUE self, VALUE val) {
   ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { sym_option } };
@@ -1507,8 +1507,8 @@ static void iter_bit_format(na_loop_t* const lp) {
 /*
   Format elements into strings.
   @overload format format
-  @param [String] format
-  @return [Numo::RObject] array of formatted strings.
+    @param [String] format
+    @return [Numo::RObject] array of formatted strings.
 */
 static VALUE bit_format(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
@@ -1555,8 +1555,8 @@ static void iter_bit_format_to_a(na_loop_t* const lp) {
 /*
   Format elements into strings.
   @overload format_to_a format
-  @param [String] format
-  @return [Array] array of formatted strings.
+    @param [String] format
+    @return [Array] array of formatted strings.
 */
 static VALUE bit_format_to_a(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
@@ -1577,7 +1577,7 @@ static VALUE iter_bit_inspect(char* ptr, size_t pos, VALUE fmt) {
 /*
   Returns a string containing a human-readable representation of NArray.
   @overload inspect
-  @return [String]
+    @return [String]
 */
 static VALUE bit_inspect(VALUE ary) {
   return na_ndloop_inspect(ary, iter_bit_inspect, Qnil);
@@ -1614,9 +1614,9 @@ static void iter_bit_each(na_loop_t* const lp) {
   Calls the given block once for each element in self,
   passing that element as a parameter.
   @overload each
-  @return [Numo::NArray] self
-  For a block {|x| ... }
-  @yield [x]  x is element of NArray.
+    @return [Numo::NArray] self
+    For a block {|x| ... }
+    @yield [x]  x is element of NArray.
 */
 static VALUE bit_each(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
@@ -1676,9 +1676,9 @@ static void iter_bit_each_with_index(na_loop_t* const lp) {
   Invokes the given block once for each element of self,
   passing that element and indices along each axis as parameters.
   @overload each_with_index
-  @return [Numo::NArray] self
-  For a block {|x,i,j,...| ... }
-  @yield [x,i,j,...]  x is an element, i,j,... are multidimensional indices.
+    @return [Numo::NArray] self
+    For a block {|x,i,j,...| ... }
+    @yield [x,i,j,...]  x is an element, i,j,... are multidimensional indices.
 */
 static VALUE bit_each_with_index(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
@@ -1772,7 +1772,7 @@ static void iter_bit_copy(na_loop_t* const lp) {
 /*
   Unary copy.
   @overload copy
-  @return [Numo::Bit] copy of self.
+    @return [Numo::Bit] copy of self.
 */
 static VALUE bit_copy(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -1866,7 +1866,7 @@ static void iter_bit_not(na_loop_t* const lp) {
 /*
   Unary not.
   @overload not
-  @return [Numo::Bit] not of self.
+    @return [Numo::Bit] not of self.
 */
 static VALUE bit_not(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -1994,8 +1994,8 @@ static void iter_bit_and(na_loop_t* const lp) {
 /*
   Binary and.
   @overload & other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] and of self and other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] and of self and other.
 */
 static VALUE bit_and(VALUE self, VALUE other) {
   ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
@@ -2123,8 +2123,8 @@ static void iter_bit_or(na_loop_t* const lp) {
 /*
   Binary or.
   @overload | other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] or of self and other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] or of self and other.
 */
 static VALUE bit_or(VALUE self, VALUE other) {
   ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
@@ -2252,8 +2252,8 @@ static void iter_bit_xor(na_loop_t* const lp) {
 /*
   Binary xor.
   @overload ^ other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] xor of self and other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] xor of self and other.
 */
 static VALUE bit_xor(VALUE self, VALUE other) {
   ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
@@ -2381,8 +2381,8 @@ static void iter_bit_eq(na_loop_t* const lp) {
 /*
   Binary eq.
   @overload eq other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] eq of self and other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] eq of self and other.
 */
 static VALUE bit_eq(VALUE self, VALUE other) {
   ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
@@ -2459,10 +2459,10 @@ static void iter_bit_count_true(na_loop_t* const lp) {
   Returns the number of bits.
   If argument is supplied, return Int-array counted along the axes.
   @overload count_true(axis:nil, keepdims:false)
-  @param [Integer,Array,Range] axis (keyword) axes to be counted.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
-  as dimensions with size one.
-  @return [Numo::Int64]
+    @param [Integer,Array,Range] axis (keyword) axes to be counted.
+    @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+    as dimensions with size one.
+    @return [Numo::Int64]
 */
 static VALUE bit_count_true(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -2547,10 +2547,10 @@ static void iter_bit_count_false(na_loop_t* const lp) {
   Returns the number of bits.
   If argument is supplied, return Int-array counted along the axes.
   @overload count_false(axis:nil, keepdims:false)
-  @param [Integer,Array,Range] axis (keyword) axes to be counted.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
-  as dimensions with size one.
-  @return [Numo::Int64]
+    @param [Integer,Array,Range] axis (keyword) axes to be counted.
+    @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+    as dimensions with size one.
+    @return [Numo::Int64]
 */
 static VALUE bit_count_false(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -2662,10 +2662,10 @@ static void iter_bit_all_p(na_loop_t* const lp) {
   Return true if all of bits are one (true).
   If argument is supplied, return Bit-array reduced along the axes.
   @overload all?(axis:nil, keepdims:false)
-  @param [Integer,Array,Range] axis (keyword) axes to be reduced.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
-  as dimensions with size one.
-  @return [Numo::Bit] .
+    @param [Integer,Array,Range] axis (keyword) axes to be reduced.
+    @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+    as dimensions with size one.
+    @return [Numo::Bit] .
 */
 static VALUE bit_all_p(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -2790,10 +2790,10 @@ static void iter_bit_any_p(na_loop_t* const lp) {
   Return true if any of bits is one (true).
   If argument is supplied, return Bit-array reduced along the axes.
   @overload any?(axis:nil, keepdims:false)
-  @param [Integer,Array,Range] axis (keyword) axes to be reduced.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
-  as dimensions with size one.
-  @return [Numo::Bit] .
+    @param [Integer,Array,Range] axis (keyword) axes to be reduced.
+    @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+    as dimensions with size one.
+    @return [Numo::Bit] .
 */
 static VALUE bit_any_p(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -2891,7 +2891,7 @@ static void iter_bit_where(na_loop_t* const lp) {
 /*
   Returns the array of index where the bit is one (true).
   @overload where
-  @return [Numo::Int32,Numo::Int64]
+    @return [Numo::Int32,Numo::Int64]
 */
 static VALUE bit_where(VALUE self) {
   volatile VALUE idx_1;
@@ -2975,7 +2975,7 @@ static void iter_bit_where2(na_loop_t* const lp) {
   The first array contains index where the bit is one (true).
   The second array contains index where the bit is zero (false).
   @overload where2
-  @return [Numo::Int32,Numo::Int64]*2
+    @return [Numo::Int32,Numo::Int64]*2
 */
 static VALUE bit_where2(VALUE self) {
   VALUE idx_1, idx_0;
@@ -3089,8 +3089,8 @@ static void shape_error(void) {
 /*
   Return subarray of argument masked with self bit array.
   @overload mask(array)
-  @param [Numo::NArray] array  narray to be masked.
-  @return [Numo::NArray]  view of masked array.
+    @param [Numo::NArray] array  narray to be masked.
+    @return [Numo::NArray]  view of masked array.
 */
 static VALUE bit_mask(VALUE mask, VALUE val) {
   int i;

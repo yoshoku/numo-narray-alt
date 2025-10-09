@@ -323,9 +323,9 @@ static void na_setup(VALUE self, int ndim, size_t* shape) {
 /*
   @overload initialize(shape)
   @overload initialize(size0, size1, ...)
-  @param [Array] shape (array of sizes along each dimension)
-  @param [Integer] sizeN (size along Nth-dimension)
-  @return [Numo::NArray] unallocated narray.
+    @param [Array] shape (array of sizes along each dimension)
+    @param [Integer] sizeN (size along Nth-dimension)
+    @return [Numo::NArray] unallocated narray.
 
   Constructs an instance of NArray class using the given
   and <i>shape</i> or <i>sizes</i>.
@@ -400,8 +400,8 @@ nary_view_new(VALUE klass, int ndim, size_t* shape) {
   Replaces the contents of self with the contents of other narray.
   Used in dup and clone method.
   @overload initialize_copy(other)
-  @param [Numo::NArray] other
-  @return [Numo::NArray] self
+    @param [Numo::NArray] other
+    @return [Numo::NArray] self
  */
 static VALUE na_initialize_copy(VALUE self, VALUE orig) {
   narray_t* na;
@@ -461,10 +461,10 @@ static VALUE na_s_ones(int argc, VALUE* argv, VALUE klass) {
   but for typed NArray subclasses, e.g., DFloat, Int64.
 
   @overload linspace(x1, x2, [n])
-  @param [Numeric] x1   The start value
-  @param [Numeric] x2   The end value
-  @param [Integer] n    The number of elements. (default is 100).
-  @return [Numo::NArray]  result array.
+    @param [Numeric] x1   The start value
+    @param [Numeric] x2   The end value
+    @param [Integer] n    The number of elements. (default is 100).
+    @return [Numo::NArray]  result array.
 
   @example
     a = Numo::DFloat.linspace(-5,5,7)
@@ -497,11 +497,11 @@ static VALUE na_s_linspace(int argc, VALUE* argv, VALUE klass) {
   i.e., DFloat, SFloat, DComplex, and SComplex.
 
   @overload logspace(a, b, [n, base])
-  @param [Numeric] a  The start value
-  @param [Numeric] b  The end value
-  @param [Integer] n  The number of elements. (default is 50)
-  @param [Numeric] base  The base of log space. (default is 10)
-  @return [Numo::NArray]  result array.
+    @param [Numeric] a  The start value
+    @param [Numeric] b  The end value
+    @param [Integer] n  The number of elements. (default is 50)
+    @param [Numeric] base  The base of log space. (default is 10)
+    @return [Numo::NArray]  result array.
 
   @example
     Numo::DFloat.logspace(4,0,5,2)
@@ -537,8 +537,8 @@ static VALUE na_s_logspace(int argc, VALUE* argv, VALUE klass) {
 /*
   Returns a NArray with shape=(n,n) whose diagonal elements are 1, otherwise 0.
   @overload  eye(n)
-  @param [Integer] n  Size of NArray. Creates 2-D NArray with shape=(n,n)
-  @return [Numo::NArray]  created NArray.
+    @param [Integer] n  Size of NArray. Creates 2-D NArray with shape=(n,n)
+    @return [Numo::NArray]  created NArray.
   @example
     a = Numo::DFloat.eye(3)
     # => Numo::DFloat#shape=[3,3]
@@ -1191,8 +1191,8 @@ numo_na_upcast(VALUE type1, VALUE type2) {
   Note that NArray has distinct UPCAST mechanism.
   Coerce is used for operation between non-NArray and NArray.
   @overload coerce(other)
-  @param [Object] other  numeric object.
-  @return [Array]  NArray-casted [other,self]
+    @param [Object] other  numeric object.
+    @return [Array]  NArray-casted [other,self]
 */
 static VALUE nary_coerce(VALUE x, VALUE y) {
   VALUE type;
@@ -1229,9 +1229,9 @@ static VALUE nary_s_byte_size(VALUE type) {
 /*
   Returns a new 1-D array initialized from binary raw data in a string.
   @overload from_binary(string,[shape])
-  @param [String] string  Binary raw data.
-  @param [Array] shape  array of integers representing array shape.
-  @return [Numo::NArray] NArray containing binary data.
+    @param [String] string  Binary raw data.
+    @param [Array] shape  array of integers representing array shape.
+    @return [Numo::NArray] NArray containing binary data.
  */
 static VALUE nary_s_from_binary(int argc, VALUE* argv, VALUE type) {
   size_t len, str_len, byte_size;
@@ -1304,9 +1304,9 @@ static VALUE nary_s_from_binary(int argc, VALUE* argv, VALUE type) {
 /*
   Returns a new 1-D array initialized from binary raw data in a string.
   @overload store_binary(string,[offset])
-  @param [String] string  Binary raw data.
-  @param [Integer] (optional) offset  Byte offset in string.
-  @return [Integer] stored length.
+    @param [String] string  Binary raw data.
+    @param [Integer] (optional) offset  Byte offset in string.
+    @return [Integer] stored length.
  */
 static VALUE nary_store_binary(int argc, VALUE* argv, VALUE self) {
   size_t size, str_len, byte_size, offset;
@@ -1353,7 +1353,7 @@ static VALUE nary_store_binary(int argc, VALUE* argv, VALUE self) {
 /*
   Returns string containing the raw data bytes in NArray.
   @overload to_binary()
-  @return [String] String object containing binary raw data.
+    @return [String] String object containing binary raw data.
  */
 static VALUE nary_to_binary(VALUE self) {
   size_t len, offset = 0;
@@ -1379,7 +1379,7 @@ static VALUE nary_to_binary(VALUE self) {
 /*
   Dump marshal data.
   @overload marshal_dump()
-  @return [Array] Array containing marshal data.
+    @return [Array] Array containing marshal data.
  */
 static VALUE nary_marshal_dump(VALUE self) {
   VALUE a;
@@ -1413,8 +1413,8 @@ static VALUE na_inplace(VALUE self);
 /*
   Load marshal data.
   @overload marshal_load(data)
-  @param [Array] Array containing marshal data.
-  @return [nil]
+    @param [Array] Array containing marshal data.
+    @return [nil]
  */
 static VALUE nary_marshal_load(VALUE self, VALUE a) {
   VALUE v;
@@ -1463,8 +1463,8 @@ static VALUE nary_marshal_load(VALUE self, VALUE a) {
 /*
   Cast self to another NArray datatype.
   @overload cast_to(datatype)
-  @param [Class] datatype NArray datatype.
-  @return [Numo::NArray]
+    @param [Class] datatype NArray datatype.
+    @return [Numo::NArray]
  */
 static VALUE nary_cast_to(VALUE obj, VALUE type) {
   return rb_funcall(type, id_cast, 1, obj);
@@ -1732,7 +1732,7 @@ static VALUE na_profile_set(VALUE mod, VALUE val) {
 /*
   Returns the number of rows used for NArray#inspect
   @overload inspect_rows
-  @return [Integer or nil]  the number of rows.
+    @return [Integer or nil]  the number of rows.
 */
 static VALUE na_inspect_rows(VALUE mod) {
   if (numo_na_inspect_rows > 0) {
@@ -1745,8 +1745,8 @@ static VALUE na_inspect_rows(VALUE mod) {
 /*
   Set the number of rows used for NArray#inspect
   @overload inspect_rows=(rows)
-  @param [Integer or nil] rows  the number of rows
-  @return [nil]
+    @param [Integer or nil] rows  the number of rows
+    @return [nil]
 */
 static VALUE na_inspect_rows_set(VALUE mod, VALUE num) {
   if (RTEST(num)) {
@@ -1760,7 +1760,7 @@ static VALUE na_inspect_rows_set(VALUE mod, VALUE num) {
 /*
   Returns the number of cols used for NArray#inspect
   @overload inspect_cols
-  @return [Integer or nil]  the number of cols.
+    @return [Integer or nil]  the number of cols.
 */
 static VALUE na_inspect_cols(VALUE mod) {
   if (numo_na_inspect_cols > 0) {
@@ -1773,8 +1773,8 @@ static VALUE na_inspect_cols(VALUE mod) {
 /*
   Set the number of cols used for NArray#inspect
   @overload inspect_cols=(cols)
-  @param [Integer or nil] cols  the number of cols
-  @return [nil]
+    @param [Integer or nil] cols  the number of cols
+    @return [nil]
 */
 static VALUE na_inspect_cols_set(VALUE mod, VALUE num) {
   if (RTEST(num)) {
@@ -1789,8 +1789,8 @@ static VALUE na_inspect_cols_set(VALUE mod, VALUE num) {
   Equality of self and other in view of numerical array.
   i.e., both arrays have same shape and corresponding elements are equal.
   @overload == other
-  @param [Object] other
-  @return [Boolean] true if self and other is equal.
+    @param [Object] other
+    @return [Boolean] true if self and other is equal.
 */
 static VALUE na_equal(VALUE self, volatile VALUE other) {
   volatile VALUE vbool;

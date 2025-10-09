@@ -152,9 +152,9 @@ static VALUE uint8_allocate(VALUE self) {
 /*
   Extract an element only if self is a dimensionless NArray.
   @overload extract
-  @return [Numeric,Numo::NArray]
-  --- Extract element value as Ruby Object if self is a dimensionless NArray,
-  otherwise returns self.
+    @return [Numeric,Numo::NArray]
+    --- Extract element value as Ruby Object if self is a dimensionless NArray,
+    otherwise returns self.
 */
 static VALUE uint8_extract(VALUE self) {
   volatile VALUE v;
@@ -896,8 +896,8 @@ static VALUE uint8_store_array(VALUE self, VALUE rary) {
 /*
   Store elements to Numo::UInt8 from other.
   @overload store(other)
-  @param [Object] other
-  @return [Numo::UInt8] self
+    @param [Object] other
+    @return [Numo::UInt8] self
 */
 static VALUE uint8_store(VALUE self, VALUE obj) {
   VALUE r, klass;
@@ -1109,9 +1109,9 @@ static VALUE uint8_cast_array(VALUE rary) {
   Cast object to Numo::UInt8.
   @overload [](elements)
   @overload cast(array)
-  @param [Numeric,Array] elements
-  @param [Array] array
-  @return [Numo::UInt8]
+    @param [Numeric,Array] elements
+    @param [Array] array
+    @return [Numo::UInt8]
 */
 static VALUE uint8_s_cast(VALUE type, VALUE obj) {
   VALUE v;
@@ -1151,9 +1151,9 @@ static VALUE uint8_s_cast(VALUE type, VALUE obj) {
 /*
   Multi-dimensional element reference.
   @overload [](dim0,...,dimL)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
-  dim0,...,dimL  multi-dimensional indices.
-  @return [Numeric,Numo::UInt8] an element or NArray view.
+    @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+    dim0,...,dimL  multi-dimensional indices.
+    @return [Numeric,Numo::UInt8] an element or NArray view.
   @see Numo::NArray#[]
   @see #[]=
  */
@@ -1174,10 +1174,10 @@ static VALUE uint8_aref(int argc, VALUE* argv, VALUE self) {
 /*
   Multi-dimensional element assignment.
   @overload []=(dim0,...,dimL,val)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
-  dim0,...,dimL  multi-dimensional indices.
-  @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
-  @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
+    @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+    dim0,...,dimL  multi-dimensional indices.
+    @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
+    @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
   @see Numo::NArray#[]=
   @see #[]
 */
@@ -1208,7 +1208,7 @@ static VALUE uint8_aset(int argc, VALUE* argv, VALUE self) {
 /*
   return NArray with cast to the type of self.
   @overload coerce_cast(type)
-  @return [nil]
+    @return [nil]
 */
 static VALUE uint8_coerce_cast(VALUE self, VALUE type) {
   return Qnil;
@@ -1243,7 +1243,7 @@ static void iter_uint8_to_a(na_loop_t* const lp) {
 /*
   Convert self to Array.
   @overload to_a
-  @return [Array]
+    @return [Array]
 */
 static VALUE uint8_to_a(VALUE self) {
   ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
@@ -1276,8 +1276,8 @@ static void iter_uint8_fill(na_loop_t* const lp) {
 /*
   Fill elements with other.
   @overload fill other
-  @param [Numeric] other
-  @return [Numo::UInt8] self.
+    @param [Numeric] other
+    @return [Numo::UInt8] self.
 */
 static VALUE uint8_fill(VALUE self, VALUE val) {
   ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { sym_option } };
@@ -1330,8 +1330,8 @@ static void iter_uint8_format(na_loop_t* const lp) {
 /*
   Format elements into strings.
   @overload format format
-  @param [String] format
-  @return [Numo::RObject] array of formatted strings.
+    @param [String] format
+    @return [Numo::RObject] array of formatted strings.
 */
 static VALUE uint8_format(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
@@ -1377,8 +1377,8 @@ static void iter_uint8_format_to_a(na_loop_t* const lp) {
 /*
   Format elements into strings.
   @overload format_to_a format
-  @param [String] format
-  @return [Array] array of formatted strings.
+    @param [String] format
+    @return [Array] array of formatted strings.
 */
 static VALUE uint8_format_to_a(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
@@ -1397,7 +1397,7 @@ static VALUE iter_uint8_inspect(char* ptr, size_t pos, VALUE fmt) {
 /*
   Returns a string containing a human-readable representation of NArray.
   @overload inspect
-  @return [String]
+    @return [String]
 */
 static VALUE uint8_inspect(VALUE ary) {
   return na_ndloop_inspect(ary, iter_uint8_inspect, Qnil);
@@ -1431,9 +1431,9 @@ static void iter_uint8_each(na_loop_t* const lp) {
   Calls the given block once for each element in self,
   passing that element as a parameter.
   @overload each
-  @return [Numo::NArray] self
-  For a block `{|x| ... }`,
-  @yieldparam [Numeric] x  an element of NArray.
+    @return [Numo::NArray] self
+    For a block `{|x| ... }`,
+    @yieldparam [Numeric] x  an element of NArray.
   @see #each_with_index
   @see #map
 */
@@ -1493,7 +1493,7 @@ static void iter_uint8_map(na_loop_t* const lp) {
 /*
   Unary map.
   @overload map
-  @return [Numo::UInt8] map of self.
+    @return [Numo::UInt8] map of self.
 */
 static VALUE uint8_map(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -1552,10 +1552,10 @@ static void iter_uint8_each_with_index(na_loop_t* const lp) {
   Invokes the given block once for each element of self,
   passing that element and indices along each axis as parameters.
   @overload each_with_index
-  For a block `{|x,i,j,...| ... }`,
-  @yieldparam [Numeric] x  an element
-  @yieldparam [Integer] i,j,...  multitimensional indices
-  @return [Numo::NArray] self
+    For a block `{|x,i,j,...| ... }`,
+    @yieldparam [Numeric] x  an element
+    @yieldparam [Integer] i,j,...  multitimensional indices
+    @return [Numo::NArray] self
   @see #each
   @see #map_with_index
 */
@@ -1643,10 +1643,10 @@ static void iter_uint8_map_with_index(na_loop_t* const lp) {
   Creates a new NArray containing the values returned by the block.
   Inplace option is allowed, i.e., `nary.inplace.map` overwrites `nary`.
   @overload map_with_index
-  For a block `{|x,i,j,...| ... }`,
-  @yieldparam [Numeric] x  an element
-  @yieldparam [Integer] i,j,...  multitimensional indices
-  @return [Numo::NArray] mapped array
+    For a block `{|x,i,j,...| ... }`,
+    @yieldparam [Numeric] x  an element
+    @yieldparam [Integer] i,j,...  multitimensional indices
+    @return [Numo::NArray] mapped array
   @see #map
   @see #each_with_index
 */
@@ -1702,7 +1702,7 @@ static void iter_uint8_abs(na_loop_t* const lp) {
 /*
   abs of self.
   @overload abs
-  @return [Numo::UInt8] abs of self.
+    @return [Numo::UInt8] abs of self.
 */
 static VALUE uint8_abs(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -1782,8 +1782,8 @@ static VALUE uint8_add_self(VALUE self, VALUE other) {
 /*
   Binary add.
   @overload + other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self + other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self + other
 */
 static VALUE uint8_add(VALUE self, VALUE other) {
 
@@ -1868,8 +1868,8 @@ static VALUE uint8_sub_self(VALUE self, VALUE other) {
 /*
   Binary sub.
   @overload - other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self - other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self - other
 */
 static VALUE uint8_sub(VALUE self, VALUE other) {
 
@@ -1954,8 +1954,8 @@ static VALUE uint8_mul_self(VALUE self, VALUE other) {
 /*
   Binary mul.
   @overload * other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self * other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self * other
 */
 static VALUE uint8_mul(VALUE self, VALUE other) {
 
@@ -2043,8 +2043,8 @@ static VALUE uint8_div_self(VALUE self, VALUE other) {
 /*
   Binary div.
   @overload / other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self / other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self / other
 */
 static VALUE uint8_div(VALUE self, VALUE other) {
 
@@ -2132,8 +2132,8 @@ static VALUE uint8_mod_self(VALUE self, VALUE other) {
 /*
   Binary mod.
   @overload % other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self % other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self % other
 */
 static VALUE uint8_mod(VALUE self, VALUE other) {
 
@@ -2182,8 +2182,8 @@ static VALUE uint8_divmod_self(VALUE self, VALUE other) {
 /*
   Binary divmod.
   @overload divmod other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] divmod of self and other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] divmod of self and other.
 */
 static VALUE uint8_divmod(VALUE self, VALUE other) {
 
@@ -2250,8 +2250,8 @@ static VALUE uint8_pow_self(VALUE self, VALUE other) {
 /*
   Binary power.
   @overload ** other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self to the other-th power.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self to the other-th power.
 */
 static VALUE uint8_pow(VALUE self, VALUE other) {
 
@@ -2313,7 +2313,7 @@ static void iter_uint8_minus(na_loop_t* const lp) {
 /*
   Unary minus.
   @overload -@
-  @return [Numo::UInt8] minus of self.
+    @return [Numo::UInt8] minus of self.
 */
 static VALUE uint8_minus(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -2371,7 +2371,7 @@ static void iter_uint8_reciprocal(na_loop_t* const lp) {
 /*
   Unary reciprocal.
   @overload reciprocal
-  @return [Numo::UInt8] reciprocal of self.
+    @return [Numo::UInt8] reciprocal of self.
 */
 static VALUE uint8_reciprocal(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -2429,7 +2429,7 @@ static void iter_uint8_sign(na_loop_t* const lp) {
 /*
   Unary sign.
   @overload sign
-  @return [Numo::UInt8] sign of self.
+    @return [Numo::UInt8] sign of self.
 */
 static VALUE uint8_sign(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -2487,7 +2487,7 @@ static void iter_uint8_square(na_loop_t* const lp) {
 /*
   Unary square.
   @overload square
-  @return [Numo::UInt8] square of self.
+    @return [Numo::UInt8] square of self.
 */
 static VALUE uint8_square(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -2529,8 +2529,8 @@ static VALUE uint8_eq_self(VALUE self, VALUE other) {
 /*
   Comparison eq other.
   @overload eq other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self eq other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self eq other.
 */
 static VALUE uint8_eq(VALUE self, VALUE other) {
 
@@ -2576,8 +2576,8 @@ static VALUE uint8_ne_self(VALUE self, VALUE other) {
 /*
   Comparison ne other.
   @overload ne other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self ne other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self ne other.
 */
 static VALUE uint8_ne(VALUE self, VALUE other) {
 
@@ -2661,8 +2661,8 @@ static VALUE uint8_bit_and_self(VALUE self, VALUE other) {
 /*
   Binary bit_and.
   @overload & other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self & other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self & other
 */
 static VALUE uint8_bit_and(VALUE self, VALUE other) {
 
@@ -2747,8 +2747,8 @@ static VALUE uint8_bit_or_self(VALUE self, VALUE other) {
 /*
   Binary bit_or.
   @overload | other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self | other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self | other
 */
 static VALUE uint8_bit_or(VALUE self, VALUE other) {
 
@@ -2833,8 +2833,8 @@ static VALUE uint8_bit_xor_self(VALUE self, VALUE other) {
 /*
   Binary bit_xor.
   @overload ^ other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self ^ other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self ^ other
 */
 static VALUE uint8_bit_xor(VALUE self, VALUE other) {
 
@@ -2897,7 +2897,7 @@ static void iter_uint8_bit_not(na_loop_t* const lp) {
 /*
   Unary bit_not.
   @overload ~
-  @return [Numo::UInt8] bit_not of self.
+    @return [Numo::UInt8] bit_not of self.
 */
 static VALUE uint8_bit_not(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -2977,8 +2977,8 @@ static VALUE uint8_left_shift_self(VALUE self, VALUE other) {
 /*
   Binary left_shift.
   @overload << other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self << other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self << other
 */
 static VALUE uint8_left_shift(VALUE self, VALUE other) {
 
@@ -3063,8 +3063,8 @@ static VALUE uint8_right_shift_self(VALUE self, VALUE other) {
 /*
   Binary right_shift.
   @overload >> other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self >> other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self >> other
 */
 static VALUE uint8_right_shift(VALUE self, VALUE other) {
 
@@ -3111,8 +3111,8 @@ static VALUE uint8_gt_self(VALUE self, VALUE other) {
 /*
   Comparison gt other.
   @overload gt other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self gt other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self gt other.
 */
 static VALUE uint8_gt(VALUE self, VALUE other) {
 
@@ -3158,8 +3158,8 @@ static VALUE uint8_ge_self(VALUE self, VALUE other) {
 /*
   Comparison ge other.
   @overload ge other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self ge other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self ge other.
 */
 static VALUE uint8_ge(VALUE self, VALUE other) {
 
@@ -3205,8 +3205,8 @@ static VALUE uint8_lt_self(VALUE self, VALUE other) {
 /*
   Comparison lt other.
   @overload lt other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self lt other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self lt other.
 */
 static VALUE uint8_lt(VALUE self, VALUE other) {
 
@@ -3252,8 +3252,8 @@ static VALUE uint8_le_self(VALUE self, VALUE other) {
 /*
   Comparison le other.
   @overload le other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self le other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self le other.
 */
 static VALUE uint8_le(VALUE self, VALUE other) {
 
@@ -3336,9 +3336,9 @@ static void iter_uint8_clip_max(na_loop_t* const lp) {
   Clip array elements by [min,max].
   If either of min or max is nil, one side is clipped.
   @overload clip(min,max)
-  @param [Numo::NArray,Numeric] min
-  @param [Numo::NArray,Numeric] max
-  @return [Numo::NArray] result of clip.
+    @param [Numo::NArray,Numeric] min
+    @param [Numo::NArray,Numeric] max
+    @return [Numo::NArray] result of clip.
 
   @example
       a = Numo::Int32.new(10).seq
@@ -3399,10 +3399,10 @@ static void iter_uint8_sum(na_loop_t* const lp) {
 /*
   sum of self.
   @overload sum(axis:nil, keepdims:false)
-  @param [Numeric,Array,Range] axis  Performs sum along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::UInt8] returns result of sum.
+    @param [Numeric,Array,Range] axis  Performs sum along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::UInt8] returns result of sum.
 */
 static VALUE uint8_sum(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -3432,10 +3432,10 @@ static void iter_uint8_prod(na_loop_t* const lp) {
 /*
   prod of self.
   @overload prod(axis:nil, keepdims:false)
-  @param [Numeric,Array,Range] axis  Performs prod along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::UInt8] returns result of prod.
+    @param [Numeric,Array,Range] axis  Performs prod along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::UInt8] returns result of prod.
 */
 static VALUE uint8_prod(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -3465,10 +3465,10 @@ static void iter_uint8_min(na_loop_t* const lp) {
 /*
   min of self.
   @overload min(axis:nil, keepdims:false)
-  @param [Numeric,Array,Range] axis  Performs min along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::UInt8] returns result of min.
+    @param [Numeric,Array,Range] axis  Performs min along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::UInt8] returns result of min.
 */
 static VALUE uint8_min(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -3498,10 +3498,10 @@ static void iter_uint8_max(na_loop_t* const lp) {
 /*
   max of self.
   @overload max(axis:nil, keepdims:false)
-  @param [Numeric,Array,Range] axis  Performs max along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::UInt8] returns result of max.
+    @param [Numeric,Array,Range] axis  Performs max along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::UInt8] returns result of max.
 */
 static VALUE uint8_max(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -3531,10 +3531,10 @@ static void iter_uint8_ptp(na_loop_t* const lp) {
 /*
   ptp of self.
   @overload ptp(axis:nil, keepdims:false)
-  @param [Numeric,Array,Range] axis  Performs ptp along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::UInt8] returns result of ptp.
+    @param [Numeric,Array,Range] axis  Performs ptp along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::UInt8] returns result of ptp.
 */
 static VALUE uint8_ptp(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -3586,9 +3586,9 @@ static void iter_uint8_max_index_index32(na_loop_t* const lp) {
 /*
   Index of the maximum value.
   @overload max_index(axis:nil)
-  @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **flat 1-d
-  indices**.
-  @return [Integer,Numo::Int] returns result indices.
+    @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **flat
+    1-d indices**.
+    @return [Integer,Numo::Int] returns result indices.
   @see #argmax
   @see #max
 
@@ -3669,9 +3669,9 @@ static void iter_uint8_min_index_index32(na_loop_t* const lp) {
 /*
   Index of the minimum value.
   @overload min_index(axis:nil)
-  @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **flat 1-d
-  indices**.
-  @return [Integer,Numo::Int] returns result indices.
+    @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **flat
+    1-d indices**.
+    @return [Integer,Numo::Int] returns result indices.
   @see #argmin
   @see #min
 
@@ -3750,9 +3750,9 @@ static void iter_uint8_argmax_arg32(na_loop_t* const lp) {
 /*
   Index of the maximum value.
   @overload argmax(axis:nil)
-  @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **indices
-  along the axis**.
-  @return [Integer,Numo::Int] returns the result indices.
+    @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **indices
+    along the axis**.
+    @return [Integer,Numo::Int] returns the result indices.
   @see #max_index
   @see #max
 
@@ -3828,9 +3828,9 @@ static void iter_uint8_argmin_arg32(na_loop_t* const lp) {
 /*
   Index of the minimum value.
   @overload argmin(axis:nil)
-  @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **indices
-  along the axis**.
-  @return [Integer,Numo::Int] returns the result indices.
+    @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **indices
+    along the axis**.
+    @return [Integer,Numo::Int] returns the result indices.
   @see #min_index
   @see #min
 
@@ -3889,10 +3889,10 @@ static void iter_uint8_minmax(na_loop_t* const lp) {
 /*
   minmax of self.
   @overload minmax(axis:nil, keepdims:false)
-  @param [Numeric,Array,Range] axis  Finds min-max along the axis.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
-  as dimensions with size one.
-  @return [Numo::UInt8,Numo::UInt8] min and max of self.
+    @param [Numeric,Array,Range] axis  Finds min-max along the axis.
+    @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+    as dimensions with size one.
+    @return [Numo::UInt8,Numo::UInt8] min and max of self.
 */
 static VALUE uint8_minmax(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
@@ -3911,8 +3911,8 @@ static VALUE uint8_minmax(int argc, VALUE* argv, VALUE self) {
   Element-wise maximum of two arrays.
 
   @overload maximum(a1, a2)
-  @param [Numo::NArray,Numeric] a1,a2  The arrays holding the elements to be compared.
-  @return [Numo::UInt8]
+    @param [Numo::NArray,Numeric] a1,a2  The arrays holding the elements to be compared.
+    @return [Numo::UInt8]
 */
 
 static void iter_uint8_s_maximum(na_loop_t* const lp) {
@@ -3951,8 +3951,8 @@ static VALUE uint8_s_maximum(int argc, VALUE* argv, VALUE mod) {
   Element-wise minimum of two arrays.
 
   @overload minimum(a1, a2)
-  @param [Numo::NArray,Numeric] a1,a2  The arrays holding the elements to be compared.
-  @return [Numo::UInt8]
+    @param [Numo::NArray,Numeric] a1,a2  The arrays holding the elements to be compared.
+    @return [Numo::UInt8]
 */
 
 static void iter_uint8_s_minimum(na_loop_t* const lp) {
@@ -4152,13 +4152,13 @@ static VALUE uint8_bincount_df(VALUE self, VALUE weight, size_t length) {
   Only Integer-types has this method.
 
   @overload bincount([weight], minlength:nil)
-  @param [SFloat or DFloat or Array] weight (optional) Array of
-    float values. Its size along last axis should be same as that of self.
-  @param [Integer] minlength (keyword, optional) Minimum size along
-    last axis for the output array.
-  @return [UInt32 or UInt64 or SFloat or DFloat]
-    Returns Float NArray if weight array is supplied,
-    otherwise returns UInt32 or UInt64 depending on the size along last axis.
+    @param [SFloat or DFloat or Array] weight (optional) Array of
+      float values. Its size along last axis should be same as that of self.
+    @param [Integer] minlength (keyword, optional) Minimum size along
+      last axis for the output array.
+    @return [UInt32 or UInt64 or SFloat or DFloat]
+      Returns Float NArray if weight array is supplied,
+      otherwise returns UInt32 or UInt64 depending on the size along last axis.
   @example
     Numo::Int32[0..4].bincount
     # => Numo::UInt32#shape=[5]
@@ -4238,9 +4238,9 @@ static void iter_uint8_cumsum(na_loop_t* const lp) {
 /*
   cumsum of self.
   @overload cumsum(axis:nil, nan:false)
-  @param [Numeric,Array,Range] axis  Performs cumsum along the axis.
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
-  @return [Numo::UInt8] cumsum of self.
+    @param [Numeric,Array,Range] axis  Performs cumsum along the axis.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
+    @return [Numo::UInt8] cumsum of self.
 */
 static VALUE uint8_cumsum(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
@@ -4277,9 +4277,9 @@ static void iter_uint8_cumprod(na_loop_t* const lp) {
 /*
   cumprod of self.
   @overload cumprod(axis:nil, nan:false)
-  @param [Numeric,Array,Range] axis  Performs cumprod along the axis.
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
-  @return [Numo::UInt8] cumprod of self.
+    @param [Numeric,Array,Range] axis  Performs cumprod along the axis.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
+    @return [Numo::UInt8] cumprod of self.
 */
 static VALUE uint8_cumprod(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
@@ -4355,11 +4355,11 @@ static VALUE uint8_mulsum_self(int argc, VALUE* argv, VALUE self) {
   Binary mulsum.
 
   @overload mulsum(other, axis:nil, keepdims:false)
-  @param [Numo::NArray,Numeric] other
-  @param [Numeric,Array,Range] axis  Performs mulsum along the axis.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
-  as dimensions with size one.
-  @return [Numo::NArray] mulsum of self and other.
+    @param [Numo::NArray,Numeric] other
+    @param [Numeric,Array,Range] axis  Performs mulsum along the axis.
+    @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+    as dimensions with size one.
+    @return [Numo::NArray] mulsum of self and other.
 */
 static VALUE uint8_mulsum(int argc, VALUE* argv, VALUE self) {
   //
@@ -4428,9 +4428,9 @@ static void iter_uint8_seq(na_loop_t* const lp) {
      beg+i*step
   where i is 1-dimensional index.
   @overload seq([beg,[step]])
-  @param [Numeric] beg  beginning of sequence. (default=0)
-  @param [Numeric] step  step of sequence. (default=1)
-  @return [Numo::UInt8] self.
+    @param [Numeric] beg  beginning of sequence. (default=0)
+    @param [Numeric] step  step of sequence. (default=1)
+    @return [Numo::UInt8] self.
   @example
     Numo::DFloat.new(6).seq(1,-0.2)
     # => Numo::DFloat#shape=[6]
@@ -4494,11 +4494,11 @@ static void iter_uint8_eye(na_loop_t* const lp) {
 /*
   Eye: Set a value to diagonal components, set 0 to non-diagonal components.
   @overload eye([element,offset])
-  @param [Numeric] element  Diagonal element to be stored. Default is 1.
-  @param [Integer] offset Diagonal offset from the main diagonal.  The
-      default is 0. k>0 for diagonals above the main diagonal, and k<0
-      for diagonals below the main diagonal.
-  @return [Numo::UInt8] eye of self.
+    @param [Numeric] element  Diagonal element to be stored. Default is 1.
+    @param [Integer] offset Diagonal offset from the main diagonal.  The
+        default is 0. k>0 for diagonals above the main diagonal, and k<0
+        for diagonals below the main diagonal.
+    @return [Numo::UInt8] eye of self.
 */
 static VALUE uint8_eye(int argc, VALUE* argv, VALUE self) {
   ndfunc_arg_in_t ain[1] = { { OVERWRITE, 2 } };
@@ -4630,10 +4630,10 @@ static void iter_uint8_rand(na_loop_t* const lp) {
 /*
   Generate uniformly distributed random numbers on self narray.
   @overload rand([[low],high])
-  @param [Numeric] low  lower inclusive boundary of random numbers. (default=0)
-  @param [Numeric] high  upper exclusive boundary of random numbers. (default=1 or 1+1i for
-  complex types)
-  @return [Numo::UInt8] self.
+    @param [Numeric] low  lower inclusive boundary of random numbers. (default=0)
+    @param [Numeric] high  upper exclusive boundary of random numbers. (default=1 or 1+1i for
+    complex types)
+    @return [Numo::UInt8] self.
   @example
     Numo::DFloat.new(6).rand
     # => Numo::DFloat#shape=[6]
@@ -4693,8 +4693,8 @@ static void iter_uint8_poly(na_loop_t* const lp) {
   Calculate polynomial.
     `x.poly(a0,a1,a2,...,an) = a0 + a1*x + a2*x**2 + ... + an*x**n`
   @overload poly a0, a1, ..., an
-  @param [Numo::NArray,Numeric] a0,a1,...,an
-  @return [Numo::UInt8]
+    @param [Numo::NArray,Numeric] a0,a1,...,an
+    @return [Numo::UInt8]
 */
 static VALUE uint8_poly(VALUE self, VALUE args) {
   int argc, i;
@@ -4915,8 +4915,8 @@ static void iter_uint8_sort(na_loop_t* const lp) {
 /*
   sort of self.
   @overload sort(axis:nil)
-  @param [Numeric,Array,Range] axis  Performs sort along the axis.
-  @return [Numo::UInt8] returns result of sort.
+    @param [Numeric,Array,Range] axis  Performs sort along the axis.
+    @return [Numo::UInt8] returns result of sort.
   @example
       Numo::DFloat[3,4,1,2].sort #=> Numo::DFloat[1,2,3,4]
 */
@@ -5135,8 +5135,8 @@ static void uint8_index32_qsort(na_loop_t* const lp) {
 /*
   sort_index. Returns an index array of sort result.
   @overload sort_index(axis:nil)
-  @param [Numeric,Array,Range] axis  Performs sort_index along the axis.
-  @return [Integer,Numo::Int] returns result index of sort_index.
+    @param [Numeric,Array,Range] axis  Performs sort_index along the axis.
+    @return [Integer,Numo::Int] returns result index of sort_index.
   @example
       Numo::NArray[3,4,1,2].sort_index #=> Numo::Int32[2,3,0,1]
 */
@@ -5200,10 +5200,10 @@ static void iter_uint8_median(na_loop_t* const lp) {
 /*
   median of self.
   @overload median(axis:nil, keepdims:false)
-  @param [Numeric,Array,Range] axis  Finds median along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::UInt8] returns median of self.
+    @param [Numeric,Array,Range] axis  Finds median along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::UInt8] returns median of self.
 */
 
 static VALUE uint8_median(int argc, VALUE* argv, VALUE self) {

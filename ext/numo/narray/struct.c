@@ -670,8 +670,8 @@ static inline VALUE nary_struct_store_array(VALUE self, VALUE obj) {
 /*
   Store elements to Numo::Struct from other.
   @overload store(other)
-  @param [Object] other
-  @return [Numo::Struct] self
+    @param [Object] other
+    @return [Numo::Struct] self
 */
 static VALUE nary_struct_store(VALUE self, VALUE obj) {
   if (TYPE(obj) == T_ARRAY) {

@@ -446,8 +446,8 @@ static VALUE na_s_array_type(VALUE mod, VALUE ary) {
 /*
   Generate NArray object. NArray datatype is automatically selected.
   @overload [](elements)
-  @param [Numeric,Array] elements
-  @return [NArray]
+    @param [Numeric,Array] elements
+    @return [NArray]
 */
 static VALUE nary_s_bracket(VALUE klass, VALUE ary) {
   VALUE dtype = Qnil;

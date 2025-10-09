@@ -156,9 +156,9 @@ static inline int check_axis(int axis, int ndim) {
 /*
   Interchange two axes.
   @overload  swapaxes(axis1,axis2)
-  @param [Integer] axis1
-  @param [Integer] axis2
-  @return [Numo::NArray]  view of NArray.
+    @param [Integer] axis1
+    @param [Integer] axis2
+    @return [Numo::NArray]  view of NArray.
   @example
     x = Numo::Int32[[1,2,3]]
 
@@ -355,8 +355,8 @@ static void na_check_reshape(int argc, VALUE* argv, VALUE self, size_t* shape) {
   Raise exception if self is non-contiguous.
 
   @overload  reshape!(size0,size1,...)
-  @param sizeN [Integer] new shape
-  @return [Numo::NArray] return self.
+    @param sizeN [Integer] new shape
+    @return [Numo::NArray] return self.
   @example
 */
 static VALUE na_reshape_bang(int argc, VALUE* argv, VALUE self) {
@@ -400,8 +400,8 @@ static VALUE na_reshape_bang(int argc, VALUE* argv, VALUE self) {
   Returns a copied NArray.
 
   @overload  reshape(size0,size1,...)
-  @param sizeN [Integer] new shape
-  @return [Numo::NArray] return self.
+    @param sizeN [Integer] new shape
+    @return [Numo::NArray] return self.
   @example
 */
 static VALUE na_reshape(int argc, VALUE* argv, VALUE self) {
@@ -545,13 +545,13 @@ na_flatten(VALUE self) {
 /*
   Returns a diagonal view of NArray
   @overload  diagonal([offset,axes])
-  @param [Integer] offset  Diagonal offset from the main diagonal.
-    The default is 0. k>0 for diagonals above the main diagonal,
-    and k<0 for diagonals below the main diagonal.
-  @param [Array] axes  Array of axes to be used as the 2-d sub-arrays
-    from which the diagonals should be taken. Defaults to last-two
-    axes ([-2,-1]).
-  @return [Numo::NArray]  diagonal view of NArray.
+    @param [Integer] offset  Diagonal offset from the main diagonal.
+      The default is 0. k>0 for diagonals above the main diagonal,
+      and k<0 for diagonals below the main diagonal.
+    @param [Array] axes  Array of axes to be used as the 2-d sub-arrays
+      from which the diagonals should be taken. Defaults to last-two
+      axes ([-2,-1]).
+    @return [Numo::NArray]  diagonal view of NArray.
   @example
     a = Numo::DFloat.new(4,5).seq
     # => Numo::DFloat#shape=[4,5]

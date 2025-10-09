@@ -191,9 +191,9 @@ static VALUE robject_allocate(VALUE self) {
 /*
   Extract an element only if self is a dimensionless NArray.
   @overload extract
-  @return [Numeric,Numo::NArray]
-  --- Extract element value as Ruby Object if self is a dimensionless NArray,
-  otherwise returns self.
+    @return [Numeric,Numo::NArray]
+    --- Extract element value as Ruby Object if self is a dimensionless NArray,
+    otherwise returns self.
 */
 static VALUE robject_extract(VALUE self) {
   volatile VALUE v;
@@ -935,8 +935,8 @@ static VALUE robject_store_array(VALUE self, VALUE rary) {
 /*
   Store elements to Numo::RObject from other.
   @overload store(other)
-  @param [Object] other
-  @return [Numo::RObject] self
+    @param [Object] other
+    @return [Numo::RObject] self
 */
 static VALUE robject_store(VALUE self, VALUE obj) {
   VALUE r, klass;
@@ -1142,9 +1142,9 @@ static VALUE robject_cast_array(VALUE rary) {
   Cast object to Numo::RObject.
   @overload [](elements)
   @overload cast(array)
-  @param [Numeric,Array] elements
-  @param [Array] array
-  @return [Numo::RObject]
+    @param [Numeric,Array] elements
+    @param [Array] array
+    @return [Numo::RObject]
 */
 static VALUE robject_s_cast(VALUE type, VALUE obj) {
   VALUE v;
@@ -1183,9 +1183,9 @@ static VALUE robject_s_cast(VALUE type, VALUE obj) {
 /*
   Multi-dimensional element reference.
   @overload [](dim0,...,dimL)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
-  dim0,...,dimL  multi-dimensional indices.
-  @return [Numeric,Numo::RObject] an element or NArray view.
+    @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+    dim0,...,dimL  multi-dimensional indices.
+    @return [Numeric,Numo::RObject] an element or NArray view.
   @see Numo::NArray#[]
   @see #[]=
  */
@@ -1206,10 +1206,10 @@ static VALUE robject_aref(int argc, VALUE* argv, VALUE self) {
 /*
   Multi-dimensional element assignment.
   @overload []=(dim0,...,dimL,val)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
-  dim0,...,dimL  multi-dimensional indices.
-  @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
-  @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
+    @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+    dim0,...,dimL  multi-dimensional indices.
+    @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
+    @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
   @see Numo::NArray#[]=
   @see #[]
 */
@@ -1240,7 +1240,7 @@ static VALUE robject_aset(int argc, VALUE* argv, VALUE self) {
 /*
   return NArray with cast to the type of self.
   @overload coerce_cast(type)
-  @return [nil]
+    @return [nil]
 */
 static VALUE robject_coerce_cast(VALUE self, VALUE type) {
   return Qnil;
@@ -1275,7 +1275,7 @@ static void iter_robject_to_a(na_loop_t* const lp) {
 /*
   Convert self to Array.
   @overload to_a
-  @return [Array]
+    @return [Array]
 */
 static VALUE robject_to_a(VALUE self) {
   ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
@@ -1308,8 +1308,8 @@ static void iter_robject_fill(na_loop_t* const lp) {
 /*
   Fill elements with other.
   @overload fill other
-  @param [Numeric] other
-  @return [Numo::RObject] self.
+    @param [Numeric] other
+    @return [Numo::RObject] self.
 */
 static VALUE robject_fill(VALUE self, VALUE val) {
   ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { sym_option } };
@@ -1362,8 +1362,8 @@ static void iter_robject_format(na_loop_t* const lp) {
 /*
   Format elements into strings.
   @overload format format
-  @param [String] format
-  @return [Numo::RObject] array of formatted strings.
+    @param [String] format
+    @return [Numo::RObject] array of formatted strings.
 */
 static VALUE robject_format(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
@@ -1409,8 +1409,8 @@ static void iter_robject_format_to_a(na_loop_t* const lp) {
 /*
   Format elements into strings.
   @overload format_to_a format
-  @param [String] format
-  @return [Array] array of formatted strings.
+    @param [String] format
+    @return [Array] array of formatted strings.
 */
 static VALUE robject_format_to_a(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
@@ -1429,7 +1429,7 @@ static VALUE iter_robject_inspect(char* ptr, size_t pos, VALUE fmt) {
 /*
   Returns a string containing a human-readable representation of NArray.
   @overload inspect
-  @return [String]
+    @return [String]
 */
 static VALUE robject_inspect(VALUE ary) {
   return na_ndloop_inspect(ary, iter_robject_inspect, Qnil);
@@ -1463,9 +1463,9 @@ static void iter_robject_each(na_loop_t* const lp) {
   Calls the given block once for each element in self,
   passing that element as a parameter.
   @overload each
-  @return [Numo::NArray] self
-  For a block `{|x| ... }`,
-  @yieldparam [Numeric] x  an element of NArray.
+    @return [Numo::NArray] self
+    For a block `{|x| ... }`,
+    @yieldparam [Numeric] x  an element of NArray.
   @see #each_with_index
   @see #map
 */
@@ -1525,7 +1525,7 @@ static void iter_robject_map(na_loop_t* const lp) {
 /*
   Unary map.
   @overload map
-  @return [Numo::RObject] map of self.
+    @return [Numo::RObject] map of self.
 */
 static VALUE robject_map(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -1584,10 +1584,10 @@ static void iter_robject_each_with_index(na_loop_t* const lp) {
   Invokes the given block once for each element of self,
   passing that element and indices along each axis as parameters.
   @overload each_with_index
-  For a block `{|x,i,j,...| ... }`,
-  @yieldparam [Numeric] x  an element
-  @yieldparam [Integer] i,j,...  multitimensional indices
-  @return [Numo::NArray] self
+    For a block `{|x,i,j,...| ... }`,
+    @yieldparam [Numeric] x  an element
+    @yieldparam [Integer] i,j,...  multitimensional indices
+    @return [Numo::NArray] self
   @see #each
   @see #map_with_index
 */
@@ -1675,10 +1675,10 @@ static void iter_robject_map_with_index(na_loop_t* const lp) {
   Creates a new NArray containing the values returned by the block.
   Inplace option is allowed, i.e., `nary.inplace.map` overwrites `nary`.
   @overload map_with_index
-  For a block `{|x,i,j,...| ... }`,
-  @yieldparam [Numeric] x  an element
-  @yieldparam [Integer] i,j,...  multitimensional indices
-  @return [Numo::NArray] mapped array
+    For a block `{|x,i,j,...| ... }`,
+    @yieldparam [Numeric] x  an element
+    @yieldparam [Integer] i,j,...  multitimensional indices
+    @return [Numo::NArray] mapped array
   @see #map
   @see #each_with_index
 */
@@ -1734,7 +1734,7 @@ static void iter_robject_abs(na_loop_t* const lp) {
 /*
   abs of self.
   @overload abs
-  @return [Numo::RObject] abs of self.
+    @return [Numo::RObject] abs of self.
 */
 static VALUE robject_abs(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -1814,8 +1814,8 @@ static VALUE robject_add_self(VALUE self, VALUE other) {
 /*
   Binary add.
   @overload + other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self + other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self + other
 */
 static VALUE robject_add(VALUE self, VALUE other) {
   return robject_add_self(self, other);
@@ -1891,8 +1891,8 @@ static VALUE robject_sub_self(VALUE self, VALUE other) {
 /*
   Binary sub.
   @overload - other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self - other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self - other
 */
 static VALUE robject_sub(VALUE self, VALUE other) {
   return robject_sub_self(self, other);
@@ -1968,8 +1968,8 @@ static VALUE robject_mul_self(VALUE self, VALUE other) {
 /*
   Binary mul.
   @overload * other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self * other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self * other
 */
 static VALUE robject_mul(VALUE self, VALUE other) {
   return robject_mul_self(self, other);
@@ -2048,8 +2048,8 @@ static VALUE robject_div_self(VALUE self, VALUE other) {
 /*
   Binary div.
   @overload / other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self / other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self / other
 */
 static VALUE robject_div(VALUE self, VALUE other) {
   return robject_div_self(self, other);
@@ -2128,8 +2128,8 @@ static VALUE robject_mod_self(VALUE self, VALUE other) {
 /*
   Binary mod.
   @overload % other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self % other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self % other
 */
 static VALUE robject_mod(VALUE self, VALUE other) {
   return robject_mod_self(self, other);
@@ -2169,8 +2169,8 @@ static VALUE robject_divmod_self(VALUE self, VALUE other) {
 /*
   Binary divmod.
   @overload divmod other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] divmod of self and other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] divmod of self and other.
 */
 static VALUE robject_divmod(VALUE self, VALUE other) {
   return robject_divmod_self(self, other);
@@ -2229,8 +2229,8 @@ static VALUE robject_pow_self(VALUE self, VALUE other) {
 /*
   Binary power.
   @overload ** other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self to the other-th power.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self to the other-th power.
 */
 static VALUE robject_pow(VALUE self, VALUE other) {
   return robject_pow_self(self, other);
@@ -2284,7 +2284,7 @@ static void iter_robject_minus(na_loop_t* const lp) {
 /*
   Unary minus.
   @overload -@
-  @return [Numo::RObject] minus of self.
+    @return [Numo::RObject] minus of self.
 */
 static VALUE robject_minus(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -2342,7 +2342,7 @@ static void iter_robject_reciprocal(na_loop_t* const lp) {
 /*
   Unary reciprocal.
   @overload reciprocal
-  @return [Numo::RObject] reciprocal of self.
+    @return [Numo::RObject] reciprocal of self.
 */
 static VALUE robject_reciprocal(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -2400,7 +2400,7 @@ static void iter_robject_sign(na_loop_t* const lp) {
 /*
   Unary sign.
   @overload sign
-  @return [Numo::RObject] sign of self.
+    @return [Numo::RObject] sign of self.
 */
 static VALUE robject_sign(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -2458,7 +2458,7 @@ static void iter_robject_square(na_loop_t* const lp) {
 /*
   Unary square.
   @overload square
-  @return [Numo::RObject] square of self.
+    @return [Numo::RObject] square of self.
 */
 static VALUE robject_square(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -2500,8 +2500,8 @@ static VALUE robject_eq_self(VALUE self, VALUE other) {
 /*
   Comparison eq other.
   @overload eq other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self eq other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self eq other.
 */
 static VALUE robject_eq(VALUE self, VALUE other) {
   return robject_eq_self(self, other);
@@ -2539,8 +2539,8 @@ static VALUE robject_ne_self(VALUE self, VALUE other) {
 /*
   Comparison ne other.
   @overload ne other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self ne other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self ne other.
 */
 static VALUE robject_ne(VALUE self, VALUE other) {
   return robject_ne_self(self, other);
@@ -2578,8 +2578,8 @@ static VALUE robject_nearly_eq_self(VALUE self, VALUE other) {
 /*
   Comparison nearly_eq other.
   @overload nearly_eq other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self nearly_eq other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self nearly_eq other.
 */
 static VALUE robject_nearly_eq(VALUE self, VALUE other) {
   return robject_nearly_eq_self(self, other);
@@ -2655,8 +2655,8 @@ static VALUE robject_bit_and_self(VALUE self, VALUE other) {
 /*
   Binary bit_and.
   @overload & other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self & other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self & other
 */
 static VALUE robject_bit_and(VALUE self, VALUE other) {
   return robject_bit_and_self(self, other);
@@ -2732,8 +2732,8 @@ static VALUE robject_bit_or_self(VALUE self, VALUE other) {
 /*
   Binary bit_or.
   @overload | other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self | other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self | other
 */
 static VALUE robject_bit_or(VALUE self, VALUE other) {
   return robject_bit_or_self(self, other);
@@ -2809,8 +2809,8 @@ static VALUE robject_bit_xor_self(VALUE self, VALUE other) {
 /*
   Binary bit_xor.
   @overload ^ other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self ^ other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self ^ other
 */
 static VALUE robject_bit_xor(VALUE self, VALUE other) {
   return robject_bit_xor_self(self, other);
@@ -2864,7 +2864,7 @@ static void iter_robject_bit_not(na_loop_t* const lp) {
 /*
   Unary bit_not.
   @overload ~
-  @return [Numo::RObject] bit_not of self.
+    @return [Numo::RObject] bit_not of self.
 */
 static VALUE robject_bit_not(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -2944,8 +2944,8 @@ static VALUE robject_left_shift_self(VALUE self, VALUE other) {
 /*
   Binary left_shift.
   @overload << other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self << other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self << other
 */
 static VALUE robject_left_shift(VALUE self, VALUE other) {
   return robject_left_shift_self(self, other);
@@ -3021,8 +3021,8 @@ static VALUE robject_right_shift_self(VALUE self, VALUE other) {
 /*
   Binary right_shift.
   @overload >> other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::NArray] self >> other
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::NArray] self >> other
 */
 static VALUE robject_right_shift(VALUE self, VALUE other) {
   return robject_right_shift_self(self, other);
@@ -3076,7 +3076,7 @@ static void iter_robject_floor(na_loop_t* const lp) {
 /*
   Unary floor.
   @overload floor
-  @return [Numo::RObject] floor of self.
+    @return [Numo::RObject] floor of self.
 */
 static VALUE robject_floor(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3134,7 +3134,7 @@ static void iter_robject_round(na_loop_t* const lp) {
 /*
   Unary round.
   @overload round
-  @return [Numo::RObject] round of self.
+    @return [Numo::RObject] round of self.
 */
 static VALUE robject_round(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3192,7 +3192,7 @@ static void iter_robject_ceil(na_loop_t* const lp) {
 /*
   Unary ceil.
   @overload ceil
-  @return [Numo::RObject] ceil of self.
+    @return [Numo::RObject] ceil of self.
 */
 static VALUE robject_ceil(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3250,7 +3250,7 @@ static void iter_robject_trunc(na_loop_t* const lp) {
 /*
   Unary trunc.
   @overload trunc
-  @return [Numo::RObject] trunc of self.
+    @return [Numo::RObject] trunc of self.
 */
 static VALUE robject_trunc(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3292,8 +3292,8 @@ static VALUE robject_gt_self(VALUE self, VALUE other) {
 /*
   Comparison gt other.
   @overload gt other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self gt other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self gt other.
 */
 static VALUE robject_gt(VALUE self, VALUE other) {
   return robject_gt_self(self, other);
@@ -3331,8 +3331,8 @@ static VALUE robject_ge_self(VALUE self, VALUE other) {
 /*
   Comparison ge other.
   @overload ge other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self ge other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self ge other.
 */
 static VALUE robject_ge(VALUE self, VALUE other) {
   return robject_ge_self(self, other);
@@ -3370,8 +3370,8 @@ static VALUE robject_lt_self(VALUE self, VALUE other) {
 /*
   Comparison lt other.
   @overload lt other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self lt other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self lt other.
 */
 static VALUE robject_lt(VALUE self, VALUE other) {
   return robject_lt_self(self, other);
@@ -3409,8 +3409,8 @@ static VALUE robject_le_self(VALUE self, VALUE other) {
 /*
   Comparison le other.
   @overload le other
-  @param [Numo::NArray,Numeric] other
-  @return [Numo::Bit] result of self le other.
+    @param [Numo::NArray,Numeric] other
+    @return [Numo::Bit] result of self le other.
 */
 static VALUE robject_le(VALUE self, VALUE other) {
   return robject_le_self(self, other);
@@ -3485,9 +3485,9 @@ static void iter_robject_clip_max(na_loop_t* const lp) {
   Clip array elements by [min,max].
   If either of min or max is nil, one side is clipped.
   @overload clip(min,max)
-  @param [Numo::NArray,Numeric] min
-  @param [Numo::NArray,Numeric] max
-  @return [Numo::NArray] result of clip.
+    @param [Numo::NArray,Numeric] min
+    @param [Numo::NArray,Numeric] max
+    @return [Numo::NArray] result of clip.
 
   @example
       a = Numo::Int32.new(10).seq
@@ -3565,7 +3565,7 @@ static void iter_robject_isnan(na_loop_t* const lp) {
 /*
   Condition of isnan.
   @overload isnan
-  @return [Numo::Bit] Condition of isnan.
+    @return [Numo::Bit] Condition of isnan.
 */
 static VALUE robject_isnan(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3607,7 +3607,7 @@ static void iter_robject_isinf(na_loop_t* const lp) {
 /*
   Condition of isinf.
   @overload isinf
-  @return [Numo::Bit] Condition of isinf.
+    @return [Numo::Bit] Condition of isinf.
 */
 static VALUE robject_isinf(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3649,7 +3649,7 @@ static void iter_robject_isposinf(na_loop_t* const lp) {
 /*
   Condition of isposinf.
   @overload isposinf
-  @return [Numo::Bit] Condition of isposinf.
+    @return [Numo::Bit] Condition of isposinf.
 */
 static VALUE robject_isposinf(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3691,7 +3691,7 @@ static void iter_robject_isneginf(na_loop_t* const lp) {
 /*
   Condition of isneginf.
   @overload isneginf
-  @return [Numo::Bit] Condition of isneginf.
+    @return [Numo::Bit] Condition of isneginf.
 */
 static VALUE robject_isneginf(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3733,7 +3733,7 @@ static void iter_robject_isfinite(na_loop_t* const lp) {
 /*
   Condition of isfinite.
   @overload isfinite
-  @return [Numo::Bit] Condition of isfinite.
+    @return [Numo::Bit] Condition of isfinite.
 */
 static VALUE robject_isfinite(VALUE self) {
   ndfunc_arg_in_t ain[1] = { { cT, 0 } };
@@ -3769,12 +3769,12 @@ static void iter_robject_sum_nan(na_loop_t* const lp) {
 /*
   sum of self.
   @overload sum(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs sum along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::RObject] returns result of sum.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs sum along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::RObject] returns result of sum.
 */
 static VALUE robject_sum(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -3815,12 +3815,12 @@ static void iter_robject_prod_nan(na_loop_t* const lp) {
 /*
   prod of self.
   @overload prod(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs prod along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::RObject] returns result of prod.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs prod along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::RObject] returns result of prod.
 */
 static VALUE robject_prod(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -3861,12 +3861,12 @@ static void iter_robject_mean_nan(na_loop_t* const lp) {
 /*
   mean of self.
   @overload mean(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs mean along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::RObject] returns result of mean.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs mean along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::RObject] returns result of mean.
 */
 static VALUE robject_mean(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -3907,12 +3907,12 @@ static void iter_robject_stddev_nan(na_loop_t* const lp) {
 /*
   stddev of self.
   @overload stddev(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs stddev along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::RObject] returns result of stddev.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs stddev along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::RObject] returns result of stddev.
 */
 static VALUE robject_stddev(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -3953,12 +3953,12 @@ static void iter_robject_var_nan(na_loop_t* const lp) {
 /*
   var of self.
   @overload var(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs var along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::RObject] returns result of var.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs var along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::RObject] returns result of var.
 */
 static VALUE robject_var(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -3999,12 +3999,12 @@ static void iter_robject_rms_nan(na_loop_t* const lp) {
 /*
   rms of self.
   @overload rms(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs rms along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::RObject] returns result of rms.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs rms along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::RObject] returns result of rms.
 */
 static VALUE robject_rms(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -4045,12 +4045,12 @@ static void iter_robject_min_nan(na_loop_t* const lp) {
 /*
   min of self.
   @overload min(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs min along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::RObject] returns result of min.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs min along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::RObject] returns result of min.
 */
 static VALUE robject_min(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -4091,12 +4091,12 @@ static void iter_robject_max_nan(na_loop_t* const lp) {
 /*
   max of self.
   @overload max(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs max along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::RObject] returns result of max.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs max along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::RObject] returns result of max.
 */
 static VALUE robject_max(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -4137,12 +4137,12 @@ static void iter_robject_ptp_nan(na_loop_t* const lp) {
 /*
   ptp of self.
   @overload ptp(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-  return NaN for min/max etc).
-  @param [Numeric,Array,Range] axis  Performs ptp along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-  dimensions with size one.
-  @return [Numo::RObject] returns result of ptp.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+    return NaN for min/max etc).
+    @param [Numeric,Array,Range] axis  Performs ptp along the axis.
+    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+    dimensions with size one.
+    @return [Numo::RObject] returns result of ptp.
 */
 static VALUE robject_ptp(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
@@ -4228,10 +4228,10 @@ static void iter_robject_max_index_index32_nan(na_loop_t* const lp) {
 /*
   Index of the maximum value.
   @overload max_index(axis:nil, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **flat 1-d
-  indices**.
-  @return [Integer,Numo::Int] returns result indices.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
+    @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **flat
+    1-d indices**.
+    @return [Integer,Numo::Int] returns result indices.
   @see #argmax
   @see #max
 
@@ -4348,10 +4348,10 @@ static void iter_robject_min_index_index32_nan(na_loop_t* const lp) {
 /*
   Index of the minimum value.
   @overload min_index(axis:nil, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **flat 1-d
-  indices**.
-  @return [Integer,Numo::Int] returns result indices.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
+    @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **flat
+    1-d indices**.
+    @return [Integer,Numo::Int] returns result indices.
   @see #argmin
   @see #min
 
@@ -4464,10 +4464,10 @@ static void iter_robject_argmax_arg32_nan(na_loop_t* const lp) {
 /*
   Index of the maximum value.
   @overload argmax(axis:nil, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **indices
-  along the axis**.
-  @return [Integer,Numo::Int] returns the result indices.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
+    @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **indices
+    along the axis**.
+    @return [Integer,Numo::Int] returns the result indices.
   @see #max_index
   @see #max
 
@@ -4575,10 +4575,10 @@ static void iter_robject_argmin_arg32_nan(na_loop_t* const lp) {
 /*
   Index of the minimum value.
   @overload argmin(axis:nil, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **indices
-  along the axis**.
-  @return [Integer,Numo::Int] returns the result indices.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
+    @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **indices
+    along the axis**.
+    @return [Integer,Numo::Int] returns the result indices.
   @see #min_index
   @see #min
 
@@ -4651,11 +4651,11 @@ static void iter_robject_minmax_nan(na_loop_t* const lp) {
 /*
   minmax of self.
   @overload minmax(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
-  @param [Numeric,Array,Range] axis  Finds min-max along the axis.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
-  as dimensions with size one.
-  @return [Numo::RObject,Numo::RObject] min and max of self.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
+    @param [Numeric,Array,Range] axis  Finds min-max along the axis.
+    @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+    as dimensions with size one.
+    @return [Numo::RObject,Numo::RObject] min and max of self.
 */
 static VALUE robject_minmax(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
@@ -4674,10 +4674,10 @@ static VALUE robject_minmax(int argc, VALUE* argv, VALUE self) {
   Element-wise maximum of two arrays.
 
   @overload maximum(a1, a2, nan:false)
-  @param [Numo::NArray,Numeric] a1  The array to be compared.
-  @param [Numo::NArray,Numeric] a2  The array to be compared.
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
-  @return [Numo::RObject]
+    @param [Numo::NArray,Numeric] a1  The array to be compared.
+    @param [Numo::NArray,Numeric] a2  The array to be compared.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
+    @return [Numo::RObject]
 */
 
 static void iter_robject_s_maximum(na_loop_t* const lp) {
@@ -4743,10 +4743,10 @@ static VALUE robject_s_maximum(int argc, VALUE* argv, VALUE mod) {
   Element-wise minimum of two arrays.
 
   @overload minimum(a1, a2, nan:false)
-  @param [Numo::NArray,Numeric] a1  The array to be compared.
-  @param [Numo::NArray,Numeric] a2  The array to be compared.
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
-  @return [Numo::RObject]
+    @param [Numo::NArray,Numeric] a1  The array to be compared.
+    @param [Numo::NArray,Numeric] a2  The array to be compared.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
+    @return [Numo::RObject]
 */
 
 static void iter_robject_s_minimum(na_loop_t* const lp) {
@@ -4848,9 +4848,9 @@ static void iter_robject_cumsum_nan(na_loop_t* const lp) {
 /*
   cumsum of self.
   @overload cumsum(axis:nil, nan:false)
-  @param [Numeric,Array,Range] axis  Performs cumsum along the axis.
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
-  @return [Numo::RObject] cumsum of self.
+    @param [Numeric,Array,Range] axis  Performs cumsum along the axis.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
+    @return [Numo::RObject] cumsum of self.
 */
 static VALUE robject_cumsum(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
@@ -4905,9 +4905,9 @@ static void iter_robject_cumprod_nan(na_loop_t* const lp) {
 /*
   cumprod of self.
   @overload cumprod(axis:nil, nan:false)
-  @param [Numeric,Array,Range] axis  Performs cumprod along the axis.
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
-  @return [Numo::RObject] cumprod of self.
+    @param [Numeric,Array,Range] axis  Performs cumprod along the axis.
+    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
+    @return [Numo::RObject] cumprod of self.
 */
 static VALUE robject_cumprod(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
@@ -5017,12 +5017,12 @@ static VALUE robject_mulsum_self(int argc, VALUE* argv, VALUE self) {
   Binary mulsum.
 
   @overload mulsum(other, axis:nil, keepdims:false, nan:false)
-  @param [Numo::NArray,Numeric] other
-  @param [Numeric,Array,Range] axis  Performs mulsum along the axis.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
-  as dimensions with size one.
-  @param [TrueClass] nan (keyword) If true, apply NaN-aware algorithm (avoid NaN if exists).
-  @return [Numo::NArray] mulsum of self and other.
+    @param [Numo::NArray,Numeric] other
+    @param [Numeric,Array,Range] axis  Performs mulsum along the axis.
+    @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+    as dimensions with size one.
+    @param [TrueClass] nan (keyword) If true, apply NaN-aware algorithm (avoid NaN if exists).
+    @return [Numo::NArray] mulsum of self and other.
 */
 static VALUE robject_mulsum(int argc, VALUE* argv, VALUE self) {
   //
@@ -5081,9 +5081,9 @@ static void iter_robject_seq(na_loop_t* const lp) {
      beg+i*step
   where i is 1-dimensional index.
   @overload seq([beg,[step]])
-  @param [Numeric] beg  beginning of sequence. (default=0)
-  @param [Numeric] step  step of sequence. (default=1)
-  @return [Numo::RObject] self.
+    @param [Numeric] beg  beginning of sequence. (default=0)
+    @param [Numeric] step  step of sequence. (default=1)
+    @return [Numo::RObject] self.
   @example
     Numo::DFloat.new(6).seq(1,-0.2)
     # => Numo::DFloat#shape=[6]
@@ -5162,10 +5162,10 @@ static void iter_robject_logseq(na_loop_t* const lp) {
   Applicable classes: DFloat, SFloat, DComplex, SCopmplex.
 
   @overload logseq(beg,step,[base])
-  @param [Numeric] beg  The beginning of sequence.
-  @param [Numeric] step  The step of sequence.
-  @param [Numeric] base  The base of log space. (default=10)
-  @return [Numo::RObject] self.
+    @param [Numeric] beg  The beginning of sequence.
+    @param [Numeric] step  The step of sequence.
+    @param [Numeric] base  The base of log space. (default=10)
+    @return [Numo::RObject] self.
 
   @example
     Numo::DFloat.new(5).logseq(4,-1,2)
@@ -5227,11 +5227,11 @@ static void iter_robject_eye(na_loop_t* const lp) {
 /*
   Eye: Set a value to diagonal components, set 0 to non-diagonal components.
   @overload eye([element,offset])
-  @param [Numeric] element  Diagonal element to be stored. Default is 1.
-  @param [Integer] offset Diagonal offset from the main diagonal.  The
-      default is 0. k>0 for diagonals above the main diagonal, and k<0
-      for diagonals below the main diagonal.
-  @return [Numo::RObject] eye of self.
+    @param [Numeric] element  Diagonal element to be stored. Default is 1.
+    @param [Integer] offset Diagonal offset from the main diagonal.  The
+        default is 0. k>0 for diagonals above the main diagonal, and k<0
+        for diagonals below the main diagonal.
+    @return [Numo::RObject] eye of self.
 */
 static VALUE robject_eye(int argc, VALUE* argv, VALUE self) {
   ndfunc_arg_in_t ain[1] = { { OVERWRITE, 2 } };
@@ -5328,10 +5328,10 @@ static void iter_robject_rand(na_loop_t* const lp) {
 /*
   Generate uniformly distributed random numbers on self narray.
   @overload rand([[low],high])
-  @param [Numeric] low  lower inclusive boundary of random numbers. (default=0)
-  @param [Numeric] high  upper exclusive boundary of random numbers. (default=1 or 1+1i for
-  complex types)
-  @return [Numo::RObject] self.
+    @param [Numeric] low  lower inclusive boundary of random numbers. (default=0)
+    @param [Numeric] high  upper exclusive boundary of random numbers. (default=1 or 1+1i for
+    complex types)
+    @return [Numo::RObject] self.
   @example
     Numo::DFloat.new(6).rand
     # => Numo::DFloat#shape=[6]
@@ -5393,8 +5393,8 @@ static void iter_robject_poly(na_loop_t* const lp) {
   Calculate polynomial.
     `x.poly(a0,a1,a2,...,an) = a0 + a1*x + a2*x**2 + ... + an*x**n`
   @overload poly a0, a1, ..., an
-  @param [Numo::NArray,Numeric] a0,a1,...,an
-  @return [Numo::RObject]
+    @param [Numo::NArray,Numeric] a0,a1,...,an
+    @return [Numo::RObject]
 */
 static VALUE robject_poly(VALUE self, VALUE args) {
   int argc, i;
