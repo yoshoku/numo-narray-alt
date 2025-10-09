@@ -1024,8 +1024,9 @@ na_make_view(VALUE self) {
  *
  *  Expand the shape of an array. Insert a new axis with size=1
  *  at a given dimension.
- *  @param [Integer] dim  dimension at which new axis is inserted.
- *  @return [Numo::NArray]  result narray view.
+ *  @overload expand_dims(dim)
+ *    @param [Integer] dim  dimension at which new axis is inserted.
+ *    @return [Numo::NArray]  result narray view.
  */
 static VALUE na_expand_dims(VALUE self, VALUE vdim) {
   int i, j, nd, dim;
