@@ -36,7 +36,9 @@ static ID id_beg, id_end, id_len, id_step;
  *  <i>array_sizse</i> is given, negative array index is considered.
  */
 
-void nary_step_array_index(VALUE obj, size_t ary_size, size_t* plen, ssize_t* pbeg, ssize_t* pstep) {
+void nary_step_array_index(
+  VALUE obj, size_t ary_size, size_t* plen, ssize_t* pbeg, ssize_t* pstep
+) {
   size_t len;
   ssize_t beg = 0, step = 1;
   VALUE vbeg, vend, vstep, vlen;
@@ -178,7 +180,10 @@ void nary_step_array_index(VALUE obj, size_t ary_size, size_t* plen, ssize_t* pb
   // puts("pass 2");
 
   if (beg < 0 || beg >= (ssize_t)ary_size || end < 0 || end >= (ssize_t)ary_size) {
-    rb_raise(rb_eRangeError, "beg=%" SZF "d,end=%" SZF "d is out of array size (%" SZF "u)", beg, end, ary_size);
+    rb_raise(
+      rb_eRangeError, "beg=%" SZF "d,end=%" SZF "d is out of array size (%" SZF "u)", beg, end,
+      ary_size
+    );
   }
   if (plen) *plen = len;
   if (pbeg) *pbeg = beg;

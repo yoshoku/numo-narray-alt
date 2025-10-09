@@ -82,7 +82,7 @@ static int idx;
  * initialized. */
 static int initialized = 0;
 /** a parity check vector which certificate the period of 2^{MEXP} */
-static uint32_t parity[4] = {PARITY1, PARITY2, PARITY3, PARITY4};
+static uint32_t parity[4] = { PARITY1, PARITY2, PARITY3, PARITY4 };
 
 /*----------------
   STATIC FUNCTIONS
@@ -527,7 +527,8 @@ void init_gen_rand(uint32_t seed) {
 
   psfmt32[idxof(0)] = seed;
   for (i = 1; i < N32; i++) {
-    psfmt32[idxof(i)] = 1812433253UL * (psfmt32[idxof(i - 1)] ^ (psfmt32[idxof(i - 1)] >> 30)) + i;
+    psfmt32[idxof(i)] =
+      1812433253UL * (psfmt32[idxof(i - 1)] ^ (psfmt32[idxof(i - 1)] >> 30)) + i;
   }
   idx = N32;
   period_certification();
@@ -572,7 +573,9 @@ void init_by_array(uint32_t* init_key, int key_length) {
 
   count--;
   for (i = 1, j = 0; (j < count) && (j < key_length); j++) {
-    r = func1(psfmt32[idxof(i)] ^ psfmt32[idxof((i + mid) % N32)] ^ psfmt32[idxof((i + N32 - 1) % N32)]);
+    r = func1(
+      psfmt32[idxof(i)] ^ psfmt32[idxof((i + mid) % N32)] ^ psfmt32[idxof((i + N32 - 1) % N32)]
+    );
     psfmt32[idxof((i + mid) % N32)] += r;
     r += init_key[j] + i;
     psfmt32[idxof((i + mid + lag) % N32)] += r;
@@ -580,7 +583,9 @@ void init_by_array(uint32_t* init_key, int key_length) {
     i = (i + 1) % N32;
   }
   for (; j < count; j++) {
-    r = func1(psfmt32[idxof(i)] ^ psfmt32[idxof((i + mid) % N32)] ^ psfmt32[idxof((i + N32 - 1) % N32)]);
+    r = func1(
+      psfmt32[idxof(i)] ^ psfmt32[idxof((i + mid) % N32)] ^ psfmt32[idxof((i + N32 - 1) % N32)]
+    );
     psfmt32[idxof((i + mid) % N32)] += r;
     r += i;
     psfmt32[idxof((i + mid + lag) % N32)] += r;
@@ -588,7 +593,9 @@ void init_by_array(uint32_t* init_key, int key_length) {
     i = (i + 1) % N32;
   }
   for (j = 0; j < N32; j++) {
-    r = func2(psfmt32[idxof(i)] + psfmt32[idxof((i + mid) % N32)] + psfmt32[idxof((i + N32 - 1) % N32)]);
+    r = func2(
+      psfmt32[idxof(i)] + psfmt32[idxof((i + mid) % N32)] + psfmt32[idxof((i + N32 - 1) % N32)]
+    );
     psfmt32[idxof((i + mid) % N32)] ^= r;
     r -= i;
     psfmt32[idxof((i + mid + lag) % N32)] ^= r;

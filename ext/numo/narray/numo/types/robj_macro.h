@@ -52,12 +52,18 @@
 #define m_right_shift(x, y) rb_funcall(x, id_right_shift, 1, y)
 
 #define m_isnan(x) ((rb_respond_to(x, id_nan_p)) ? RTEST(rb_funcall(x, id_nan_p, 0)) : 0)
-#define m_isinf(x) ((rb_respond_to(x, id_infinite_p)) ? RTEST(rb_funcall(x, id_infinite_p, 0)) : 0)
-#define m_isposinf(x) \
-  ((rb_respond_to(x, id_infinite_p)) ? ((RTEST(rb_funcall(x, id_infinite_p, 0))) ? m_gt(x, INT2FIX(0)) : 0) : 0)
-#define m_isneginf(x) \
-  ((rb_respond_to(x, id_infinite_p)) ? ((RTEST(rb_funcall(x, id_infinite_p, 0))) ? m_lt(x, INT2FIX(0)) : 0) : 0)
-#define m_isfinite(x) ((rb_respond_to(x, id_finite_p)) ? RTEST(rb_funcall(x, id_finite_p, 0)) : 0)
+#define m_isinf(x) \
+  ((rb_respond_to(x, id_infinite_p)) ? RTEST(rb_funcall(x, id_infinite_p, 0)) : 0)
+#define m_isposinf(x)                                                       \
+  ((rb_respond_to(x, id_infinite_p))                                        \
+     ? ((RTEST(rb_funcall(x, id_infinite_p, 0))) ? m_gt(x, INT2FIX(0)) : 0) \
+     : 0)
+#define m_isneginf(x)                                                       \
+  ((rb_respond_to(x, id_infinite_p))                                        \
+     ? ((RTEST(rb_funcall(x, id_infinite_p, 0))) ? m_lt(x, INT2FIX(0)) : 0) \
+     : 0)
+#define m_isfinite(x) \
+  ((rb_respond_to(x, id_finite_p)) ? RTEST(rb_funcall(x, id_finite_p, 0)) : 0)
 
 #define m_mulsum_init INT2FIX(0)
 
@@ -68,7 +74,8 @@ static inline int robj_sprintf(char* s, VALUE x) {
   return sprintf(s, "%s", StringValuePtr(v));
 }
 
-#define m_sqrt(x) rb_funcall(rb_const_get(rb_mKernel, rb_intern("Math")), rb_intern("sqrt"), 1, x);
+#define m_sqrt(x) \
+  rb_funcall(rb_const_get(rb_mKernel, rb_intern("Math")), rb_intern("sqrt"), 1, x);
 
 static inline dtype f_seq(dtype x, dtype y, size_t c) {
   y = m_mul(y, SIZET2NUM(c));

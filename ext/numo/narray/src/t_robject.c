@@ -277,8 +277,8 @@ static void iter_robject_store_bit(na_loop_t* const lp) {
 }
 
 static VALUE robject_store_bit(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_robject_store_bit, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_robject_store_bit, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -326,8 +326,8 @@ static void iter_robject_store_dfloat(na_loop_t* const lp) {
 }
 
 static VALUE robject_store_dfloat(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_robject_store_dfloat, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_robject_store_dfloat, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -375,8 +375,8 @@ static void iter_robject_store_sfloat(na_loop_t* const lp) {
 }
 
 static VALUE robject_store_sfloat(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_robject_store_sfloat, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_robject_store_sfloat, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -424,8 +424,8 @@ static void iter_robject_store_int64(na_loop_t* const lp) {
 }
 
 static VALUE robject_store_int64(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_robject_store_int64, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_robject_store_int64, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -473,8 +473,8 @@ static void iter_robject_store_int32(na_loop_t* const lp) {
 }
 
 static VALUE robject_store_int32(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_robject_store_int32, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_robject_store_int32, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -522,8 +522,8 @@ static void iter_robject_store_int16(na_loop_t* const lp) {
 }
 
 static VALUE robject_store_int16(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_robject_store_int16, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_robject_store_int16, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -571,8 +571,8 @@ static void iter_robject_store_int8(na_loop_t* const lp) {
 }
 
 static VALUE robject_store_int8(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_robject_store_int8, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_robject_store_int8, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -620,8 +620,8 @@ static void iter_robject_store_uint64(na_loop_t* const lp) {
 }
 
 static VALUE robject_store_uint64(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_robject_store_uint64, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_robject_store_uint64, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -669,8 +669,8 @@ static void iter_robject_store_uint32(na_loop_t* const lp) {
 }
 
 static VALUE robject_store_uint32(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_robject_store_uint32, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_robject_store_uint32, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -718,8 +718,8 @@ static void iter_robject_store_uint16(na_loop_t* const lp) {
 }
 
 static VALUE robject_store_uint16(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_robject_store_uint16, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_robject_store_uint16, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -767,8 +767,8 @@ static void iter_robject_store_uint8(na_loop_t* const lp) {
 }
 
 static VALUE robject_store_uint8(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_robject_store_uint8, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_robject_store_uint8, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -816,8 +816,8 @@ static void iter_robject_store_robject(na_loop_t* const lp) {
 }
 
 static VALUE robject_store_robject(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_robject_store_robject, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_robject_store_robject, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -925,8 +925,8 @@ loop_end:
 }
 
 static VALUE robject_store_array(VALUE self, VALUE rary) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {rb_cArray, 0}};
-  ndfunc_t ndf = {iter_robject_store_array, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { rb_cArray, 0 } };
+  ndfunc_t ndf = { iter_robject_store_array, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop_store_rarray(&ndf, self, rary);
   return self;
@@ -1183,8 +1183,8 @@ static VALUE robject_s_cast(VALUE type, VALUE obj) {
 /*
   Multi-dimensional element reference.
   @overload [](dim0,...,dimL)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol] dim0,...,dimL  multi-dimensional
-  indices.
+  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+  dim0,...,dimL  multi-dimensional indices.
   @return [Numeric,Numo::RObject] an element or NArray view.
   @see Numo::NArray#[]
   @see #[]=
@@ -1206,8 +1206,8 @@ static VALUE robject_aref(int argc, VALUE* argv, VALUE self) {
 /*
   Multi-dimensional element assignment.
   @overload []=(dim0,...,dimL,val)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol] dim0,...,dimL  multi-dimensional
-  indices.
+  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+  dim0,...,dimL  multi-dimensional indices.
   @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
   @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
   @see Numo::NArray#[]=
@@ -1278,9 +1278,9 @@ static void iter_robject_to_a(na_loop_t* const lp) {
   @return [Array]
 */
 static VALUE robject_to_a(VALUE self) {
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {sym_loop_opt}, {sym_option}};
-  ndfunc_arg_out_t aout[1] = {{rb_cArray, 0}}; // dummy?
-  ndfunc_t ndf = {iter_robject_to_a, FULL_LOOP_NIP, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
+  ndfunc_arg_out_t aout[1] = { { rb_cArray, 0 } }; // dummy?
+  ndfunc_t ndf = { iter_robject_to_a, FULL_LOOP_NIP, 3, 1, ain, aout };
   return na_ndloop_cast_narray_to_rarray(&ndf, self, Qnil);
 }
 
@@ -1312,8 +1312,8 @@ static void iter_robject_fill(na_loop_t* const lp) {
   @return [Numo::RObject] self.
 */
 static VALUE robject_fill(VALUE self, VALUE val) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {sym_option}};
-  ndfunc_t ndf = {iter_robject_fill, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { sym_option } };
+  ndfunc_t ndf = { iter_robject_fill, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, val);
   return self;
@@ -1368,9 +1368,9 @@ static void iter_robject_format(na_loop_t* const lp) {
 static VALUE robject_format(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
 
-  ndfunc_arg_in_t ain[2] = {{Qnil, 0}, {sym_option}};
-  ndfunc_arg_out_t aout[1] = {{numo_cRObject, 0}};
-  ndfunc_t ndf = {iter_robject_format, FULL_LOOP_NIP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { Qnil, 0 }, { sym_option } };
+  ndfunc_arg_out_t aout[1] = { { numo_cRObject, 0 } };
+  ndfunc_t ndf = { iter_robject_format, FULL_LOOP_NIP, 2, 1, ain, aout };
 
   rb_scan_args(argc, argv, "01", &fmt);
   return na_ndloop(&ndf, 2, self, fmt);
@@ -1414,9 +1414,9 @@ static void iter_robject_format_to_a(na_loop_t* const lp) {
 */
 static VALUE robject_format_to_a(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {sym_loop_opt}, {sym_option}};
-  ndfunc_arg_out_t aout[1] = {{rb_cArray, 0}}; // dummy?
-  ndfunc_t ndf = {iter_robject_format_to_a, FULL_LOOP_NIP, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
+  ndfunc_arg_out_t aout[1] = { { rb_cArray, 0 } }; // dummy?
+  ndfunc_t ndf = { iter_robject_format_to_a, FULL_LOOP_NIP, 3, 1, ain, aout };
 
   rb_scan_args(argc, argv, "01", &fmt);
   return na_ndloop_cast_narray_to_rarray(&ndf, self, fmt);
@@ -1470,8 +1470,8 @@ static void iter_robject_each(na_loop_t* const lp) {
   @see #map
 */
 static VALUE robject_each(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
-  ndfunc_t ndf = {iter_robject_each, FULL_LOOP_NIP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
+  ndfunc_t ndf = { iter_robject_each, FULL_LOOP_NIP, 1, 0, ain, 0 };
 
   na_ndloop(&ndf, 1, self);
   return self;
@@ -1528,9 +1528,9 @@ static void iter_robject_map(na_loop_t* const lp) {
   @return [Numo::RObject] map of self.
 */
 static VALUE robject_map(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_map, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_map, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -1592,8 +1592,8 @@ static void iter_robject_each_with_index(na_loop_t* const lp) {
   @see #map_with_index
 */
 static VALUE robject_each_with_index(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
-  ndfunc_t ndf = {iter_robject_each_with_index, FULL_LOOP_NIP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
+  ndfunc_t ndf = { iter_robject_each_with_index, FULL_LOOP_NIP, 1, 0, ain, 0 };
 
   na_ndloop_with_index(&ndf, 1, self);
   return self;
@@ -1683,9 +1683,9 @@ static void iter_robject_map_with_index(na_loop_t* const lp) {
   @see #each_with_index
 */
 static VALUE robject_map_with_index(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_map_with_index, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_map_with_index, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop_with_index(&ndf, 1, self);
 }
@@ -1737,9 +1737,9 @@ static void iter_robject_abs(na_loop_t* const lp) {
   @return [Numo::RObject] abs of self.
 */
 static VALUE robject_abs(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
-  ndfunc_t ndf = {iter_robject_abs, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
+  ndfunc_t ndf = { iter_robject_abs, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -1804,9 +1804,9 @@ static void iter_robject_add(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE robject_add_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_add, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_add, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -1881,9 +1881,9 @@ static void iter_robject_sub(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE robject_sub_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_sub, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_sub, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -1958,9 +1958,9 @@ static void iter_robject_mul(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE robject_mul_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_mul, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_mul, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2038,9 +2038,9 @@ static void iter_robject_div(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE robject_div_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_div, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_div, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2118,9 +2118,9 @@ static void iter_robject_mod(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE robject_mod_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_mod, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_mod, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2159,9 +2159,9 @@ static void iter_robject_divmod(na_loop_t* const lp) {
 }
 
 static VALUE robject_divmod_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_t ndf = {iter_robject_divmod, STRIDE_LOOP, 2, 2, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_divmod, STRIDE_LOOP, 2, 2, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2212,11 +2212,11 @@ static void iter_robject_pow_int32(na_loop_t* const lp) {
 }
 
 static VALUE robject_pow_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_in_t ain_i[2] = {{cT, 0}, {numo_cInt32, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_pow, STRIDE_LOOP, 2, 1, ain, aout};
-  ndfunc_t ndf_i = {iter_robject_pow_int32, STRIDE_LOOP, 2, 1, ain_i, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_in_t ain_i[2] = { { cT, 0 }, { numo_cInt32, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_pow, STRIDE_LOOP, 2, 1, ain, aout };
+  ndfunc_t ndf_i = { iter_robject_pow_int32, STRIDE_LOOP, 2, 1, ain_i, aout };
 
   // fixme : use na.integer?
   if (FIXNUM_P(other) || rb_obj_is_kind_of(other, numo_cInt32)) {
@@ -2287,9 +2287,9 @@ static void iter_robject_minus(na_loop_t* const lp) {
   @return [Numo::RObject] minus of self.
 */
 static VALUE robject_minus(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_minus, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_minus, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -2345,9 +2345,9 @@ static void iter_robject_reciprocal(na_loop_t* const lp) {
   @return [Numo::RObject] reciprocal of self.
 */
 static VALUE robject_reciprocal(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_reciprocal, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_reciprocal, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -2403,9 +2403,9 @@ static void iter_robject_sign(na_loop_t* const lp) {
   @return [Numo::RObject] sign of self.
 */
 static VALUE robject_sign(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_sign, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_sign, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -2461,9 +2461,9 @@ static void iter_robject_square(na_loop_t* const lp) {
   @return [Numo::RObject] square of self.
 */
 static VALUE robject_square(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_square, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_square, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -2490,9 +2490,9 @@ static void iter_robject_eq(na_loop_t* const lp) {
 }
 
 static VALUE robject_eq_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_robject_eq, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_robject_eq, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2529,9 +2529,9 @@ static void iter_robject_ne(na_loop_t* const lp) {
 }
 
 static VALUE robject_ne_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_robject_ne, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_robject_ne, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2568,9 +2568,9 @@ static void iter_robject_nearly_eq(na_loop_t* const lp) {
 }
 
 static VALUE robject_nearly_eq_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_robject_nearly_eq, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_robject_nearly_eq, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2645,9 +2645,9 @@ static void iter_robject_bit_and(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE robject_bit_and_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_bit_and, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_bit_and, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2722,9 +2722,9 @@ static void iter_robject_bit_or(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE robject_bit_or_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_bit_or, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_bit_or, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2799,9 +2799,9 @@ static void iter_robject_bit_xor(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE robject_bit_xor_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_bit_xor, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_bit_xor, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2867,9 +2867,9 @@ static void iter_robject_bit_not(na_loop_t* const lp) {
   @return [Numo::RObject] bit_not of self.
 */
 static VALUE robject_bit_not(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_bit_not, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_bit_not, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -2934,9 +2934,9 @@ static void iter_robject_left_shift(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE robject_left_shift_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_left_shift, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_left_shift, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3011,9 +3011,9 @@ static void iter_robject_right_shift(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE robject_right_shift_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_right_shift, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_right_shift, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3079,9 +3079,9 @@ static void iter_robject_floor(na_loop_t* const lp) {
   @return [Numo::RObject] floor of self.
 */
 static VALUE robject_floor(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_floor, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_floor, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3137,9 +3137,9 @@ static void iter_robject_round(na_loop_t* const lp) {
   @return [Numo::RObject] round of self.
 */
 static VALUE robject_round(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_round, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_round, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3195,9 +3195,9 @@ static void iter_robject_ceil(na_loop_t* const lp) {
   @return [Numo::RObject] ceil of self.
 */
 static VALUE robject_ceil(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_ceil, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_ceil, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3253,9 +3253,9 @@ static void iter_robject_trunc(na_loop_t* const lp) {
   @return [Numo::RObject] trunc of self.
 */
 static VALUE robject_trunc(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_trunc, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_trunc, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3282,9 +3282,9 @@ static void iter_robject_gt(na_loop_t* const lp) {
 }
 
 static VALUE robject_gt_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_robject_gt, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_robject_gt, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3321,9 +3321,9 @@ static void iter_robject_ge(na_loop_t* const lp) {
 }
 
 static VALUE robject_ge_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_robject_ge, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_robject_ge, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3360,9 +3360,9 @@ static void iter_robject_lt(na_loop_t* const lp) {
 }
 
 static VALUE robject_lt_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_robject_lt, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_robject_lt, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3399,9 +3399,9 @@ static void iter_robject_le(na_loop_t* const lp) {
 }
 
 static VALUE robject_le_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_robject_le, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_robject_le, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3512,11 +3512,11 @@ static void iter_robject_clip_max(na_loop_t* const lp) {
       # [3, 4, 2, 3, 4, 5, 6, 7, 8, 8]
 */
 static VALUE robject_clip(VALUE self, VALUE min, VALUE max) {
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf_min = {iter_robject_clip_min, STRIDE_LOOP, 2, 1, ain, aout};
-  ndfunc_t ndf_max = {iter_robject_clip_max, STRIDE_LOOP, 2, 1, ain, aout};
-  ndfunc_t ndf_both = {iter_robject_clip, STRIDE_LOOP, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf_min = { iter_robject_clip_min, STRIDE_LOOP, 2, 1, ain, aout };
+  ndfunc_t ndf_max = { iter_robject_clip_max, STRIDE_LOOP, 2, 1, ain, aout };
+  ndfunc_t ndf_both = { iter_robject_clip, STRIDE_LOOP, 3, 1, ain, aout };
 
   if (RTEST(min)) {
     if (RTEST(max)) {
@@ -3568,9 +3568,9 @@ static void iter_robject_isnan(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of isnan.
 */
 static VALUE robject_isnan(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_robject_isnan, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_robject_isnan, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3610,9 +3610,9 @@ static void iter_robject_isinf(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of isinf.
 */
 static VALUE robject_isinf(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_robject_isinf, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_robject_isinf, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3652,9 +3652,9 @@ static void iter_robject_isposinf(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of isposinf.
 */
 static VALUE robject_isposinf(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_robject_isposinf, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_robject_isposinf, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3694,9 +3694,9 @@ static void iter_robject_isneginf(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of isneginf.
 */
 static VALUE robject_isneginf(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_robject_isneginf, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_robject_isneginf, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3736,9 +3736,9 @@ static void iter_robject_isfinite(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of isfinite.
 */
 static VALUE robject_isfinite(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_robject_isfinite, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_robject_isfinite, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3769,16 +3769,18 @@ static void iter_robject_sum_nan(na_loop_t* const lp) {
 /*
   sum of self.
   @overload sum(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs sum along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::RObject] returns result of sum.
 */
 static VALUE robject_sum(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_sum, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_sum, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_sum_nan);
 
@@ -3813,16 +3815,18 @@ static void iter_robject_prod_nan(na_loop_t* const lp) {
 /*
   prod of self.
   @overload prod(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs prod along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::RObject] returns result of prod.
 */
 static VALUE robject_prod(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_prod, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_prod, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_prod_nan);
 
@@ -3857,16 +3861,18 @@ static void iter_robject_mean_nan(na_loop_t* const lp) {
 /*
   mean of self.
   @overload mean(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs mean along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::RObject] returns result of mean.
 */
 static VALUE robject_mean(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_mean, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_mean, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_mean_nan);
 
@@ -3901,16 +3907,18 @@ static void iter_robject_stddev_nan(na_loop_t* const lp) {
 /*
   stddev of self.
   @overload stddev(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs stddev along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::RObject] returns result of stddev.
 */
 static VALUE robject_stddev(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
-  ndfunc_t ndf = {iter_robject_stddev, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
+  ndfunc_t ndf = { iter_robject_stddev, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_stddev_nan);
 
@@ -3945,16 +3953,18 @@ static void iter_robject_var_nan(na_loop_t* const lp) {
 /*
   var of self.
   @overload var(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs var along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::RObject] returns result of var.
 */
 static VALUE robject_var(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
-  ndfunc_t ndf = {iter_robject_var, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
+  ndfunc_t ndf = { iter_robject_var, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_var_nan);
 
@@ -3989,16 +3999,18 @@ static void iter_robject_rms_nan(na_loop_t* const lp) {
 /*
   rms of self.
   @overload rms(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs rms along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::RObject] returns result of rms.
 */
 static VALUE robject_rms(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
-  ndfunc_t ndf = {iter_robject_rms, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
+  ndfunc_t ndf = { iter_robject_rms, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_rms_nan);
 
@@ -4033,16 +4045,18 @@ static void iter_robject_min_nan(na_loop_t* const lp) {
 /*
   min of self.
   @overload min(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs min along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::RObject] returns result of min.
 */
 static VALUE robject_min(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_min, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_min, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_min_nan);
 
@@ -4077,16 +4091,18 @@ static void iter_robject_max_nan(na_loop_t* const lp) {
 /*
   max of self.
   @overload max(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs max along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::RObject] returns result of max.
 */
 static VALUE robject_max(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_max, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_max, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_max_nan);
 
@@ -4121,16 +4137,18 @@ static void iter_robject_ptp_nan(na_loop_t* const lp) {
 /*
   ptp of self.
   @overload ptp(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs ptp along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::RObject] returns result of ptp.
 */
 static VALUE robject_ptp(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_ptp, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_ptp, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_ptp_nan);
 
@@ -4211,7 +4229,8 @@ static void iter_robject_max_index_index32_nan(na_loop_t* const lp) {
   Index of the maximum value.
   @overload max_index(axis:nil, nan:false)
   @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **flat 1-d indices**.
+  @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **flat 1-d
+  indices**.
   @return [Integer,Numo::Int] returns result indices.
   @see #argmax
   @see #max
@@ -4229,9 +4248,9 @@ static void iter_robject_max_index_index32_nan(na_loop_t* const lp) {
 static VALUE robject_max_index(int argc, VALUE* argv, VALUE self) {
   narray_t* na;
   VALUE idx, reduce;
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {Qnil, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{0, 0, 0}};
-  ndfunc_t ndf = {0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { Qnil, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { 0, 0, 0 } };
+  ndfunc_t ndf = { 0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 3, 1, ain, aout };
 
   GetNArray(self, na);
   if (na->ndim == 0) {
@@ -4242,14 +4261,16 @@ static VALUE robject_max_index(int argc, VALUE* argv, VALUE self) {
     idx = nary_new(numo_cInt64, na->ndim, na->shape);
     ndf.func = iter_robject_max_index_index64;
 
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_max_index_index64_nan);
+    reduce =
+      na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_max_index_index64_nan);
 
   } else {
     aout[0].type = numo_cInt32;
     idx = nary_new(numo_cInt32, na->ndim, na->shape);
     ndf.func = iter_robject_max_index_index32;
 
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_max_index_index32_nan);
+    reduce =
+      na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_max_index_index32_nan);
   }
   rb_funcall(idx, rb_intern("seq"), 0);
 
@@ -4328,7 +4349,8 @@ static void iter_robject_min_index_index32_nan(na_loop_t* const lp) {
   Index of the minimum value.
   @overload min_index(axis:nil, nan:false)
   @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **flat 1-d indices**.
+  @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **flat 1-d
+  indices**.
   @return [Integer,Numo::Int] returns result indices.
   @see #argmin
   @see #min
@@ -4346,9 +4368,9 @@ static void iter_robject_min_index_index32_nan(na_loop_t* const lp) {
 static VALUE robject_min_index(int argc, VALUE* argv, VALUE self) {
   narray_t* na;
   VALUE idx, reduce;
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {Qnil, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{0, 0, 0}};
-  ndfunc_t ndf = {0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { Qnil, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { 0, 0, 0 } };
+  ndfunc_t ndf = { 0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 3, 1, ain, aout };
 
   GetNArray(self, na);
   if (na->ndim == 0) {
@@ -4359,14 +4381,16 @@ static VALUE robject_min_index(int argc, VALUE* argv, VALUE self) {
     idx = nary_new(numo_cInt64, na->ndim, na->shape);
     ndf.func = iter_robject_min_index_index64;
 
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_min_index_index64_nan);
+    reduce =
+      na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_min_index_index64_nan);
 
   } else {
     aout[0].type = numo_cInt32;
     idx = nary_new(numo_cInt32, na->ndim, na->shape);
     ndf.func = iter_robject_min_index_index32;
 
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_min_index_index32_nan);
+    reduce =
+      na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_min_index_index32_nan);
   }
   rb_funcall(idx, rb_intern("seq"), 0);
 
@@ -4441,7 +4465,8 @@ static void iter_robject_argmax_arg32_nan(na_loop_t* const lp) {
   Index of the maximum value.
   @overload argmax(axis:nil, nan:false)
   @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **indices along the axis**.
+  @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **indices
+  along the axis**.
   @return [Integer,Numo::Int] returns the result indices.
   @see #max_index
   @see #max
@@ -4459,9 +4484,9 @@ static void iter_robject_argmax_arg32_nan(na_loop_t* const lp) {
 static VALUE robject_argmax(int argc, VALUE* argv, VALUE self) {
   narray_t* na;
   VALUE reduce;
-  ndfunc_arg_in_t ain[2] = {{Qnil, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{0, 0, 0}};
-  ndfunc_t ndf = {0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { Qnil, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { 0, 0, 0 } };
+  ndfunc_t ndf = { 0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 2, 1, ain, aout };
 
   GetNArray(self, na);
   if (na->ndim == 0) {
@@ -4551,7 +4576,8 @@ static void iter_robject_argmin_arg32_nan(na_loop_t* const lp) {
   Index of the minimum value.
   @overload argmin(axis:nil, nan:false)
   @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **indices along the axis**.
+  @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **indices
+  along the axis**.
   @return [Integer,Numo::Int] returns the result indices.
   @see #min_index
   @see #min
@@ -4569,9 +4595,9 @@ static void iter_robject_argmin_arg32_nan(na_loop_t* const lp) {
 static VALUE robject_argmin(int argc, VALUE* argv, VALUE self) {
   narray_t* na;
   VALUE reduce;
-  ndfunc_arg_in_t ain[2] = {{Qnil, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{0, 0, 0}};
-  ndfunc_t ndf = {0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { Qnil, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { 0, 0, 0 } };
+  ndfunc_t ndf = { 0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 2, 1, ain, aout };
 
   GetNArray(self, na);
   if (na->ndim == 0) {
@@ -4627,14 +4653,17 @@ static void iter_robject_minmax_nan(na_loop_t* const lp) {
   @overload minmax(axis:nil, keepdims:false, nan:false)
   @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
   @param [Numeric,Array,Range] axis  Finds min-max along the axis.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+  as dimensions with size one.
   @return [Numo::RObject,Numo::RObject] min and max of self.
 */
 static VALUE robject_minmax(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_t ndf = {iter_robject_minmax, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 2, 2, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_t ndf = {
+    iter_robject_minmax, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 2, 2, ain, aout
+  };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_minmax_nan);
 
@@ -4693,13 +4722,13 @@ static void iter_robject_s_maximum_nan(na_loop_t* const lp) {
 static VALUE robject_s_maximum(int argc, VALUE* argv, VALUE mod) {
   VALUE a1 = Qnil;
   VALUE a2 = Qnil;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_s_maximum, STRIDE_LOOP_NIP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_s_maximum, STRIDE_LOOP_NIP, 2, 1, ain, aout };
 
   VALUE kw_hash = Qnil;
-  ID kw_table[1] = {id_nan};
-  VALUE opts[1] = {Qundef};
+  ID kw_table[1] = { id_nan };
+  VALUE opts[1] = { Qundef };
 
   rb_scan_args(argc, argv, "20:", &a1, &a2, &kw_hash);
   rb_get_kwargs(kw_hash, kw_table, 0, 1, opts);
@@ -4762,13 +4791,13 @@ static void iter_robject_s_minimum_nan(na_loop_t* const lp) {
 static VALUE robject_s_minimum(int argc, VALUE* argv, VALUE mod) {
   VALUE a1 = Qnil;
   VALUE a2 = Qnil;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_s_minimum, STRIDE_LOOP_NIP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_s_minimum, STRIDE_LOOP_NIP, 2, 1, ain, aout };
 
   VALUE kw_hash = Qnil;
-  ID kw_table[1] = {id_nan};
-  VALUE opts[1] = {Qundef};
+  ID kw_table[1] = { id_nan };
+  VALUE opts[1] = { Qundef };
 
   rb_scan_args(argc, argv, "20:", &a1, &a2, &kw_hash);
   rb_get_kwargs(kw_hash, kw_table, 0, 1, opts);
@@ -4825,9 +4854,11 @@ static void iter_robject_cumsum_nan(na_loop_t* const lp) {
 */
 static VALUE robject_cumsum(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_cumsum, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = {
+    iter_robject_cumsum, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout
+  };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_cumsum_nan);
 
@@ -4880,9 +4911,11 @@ static void iter_robject_cumprod_nan(na_loop_t* const lp) {
 */
 static VALUE robject_cumprod(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_cumprod, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = {
+    iter_robject_cumprod, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout
+  };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_cumprod_nan);
 
@@ -4962,9 +4995,9 @@ static void iter_robject_mulsum_nan(na_loop_t* const lp) {
 static VALUE robject_mulsum_self(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
   VALUE naryv[2];
-  ndfunc_arg_in_t ain[4] = {{cT, 0}, {cT, 0}, {sym_reduce, 0}, {sym_init, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_mulsum, STRIDE_LOOP_NIP, 4, 1, ain, aout};
+  ndfunc_arg_in_t ain[4] = { { cT, 0 }, { cT, 0 }, { sym_reduce, 0 }, { sym_init, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_mulsum, STRIDE_LOOP_NIP, 4, 1, ain, aout };
 
   if (argc < 1) {
     rb_raise(rb_eArgError, "wrong number of arguments (%d for >=1)", argc);
@@ -4986,7 +5019,8 @@ static VALUE robject_mulsum_self(int argc, VALUE* argv, VALUE self) {
   @overload mulsum(other, axis:nil, keepdims:false, nan:false)
   @param [Numo::NArray,Numeric] other
   @param [Numeric,Array,Range] axis  Performs mulsum along the axis.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+  as dimensions with size one.
   @param [TrueClass] nan (keyword) If true, apply NaN-aware algorithm (avoid NaN if exists).
   @return [Numo::NArray] mulsum of self and other.
 */
@@ -5062,8 +5096,8 @@ static void iter_robject_seq(na_loop_t* const lp) {
 static VALUE robject_seq(int argc, VALUE* args, VALUE self) {
   seq_opt_t* g;
   VALUE vbeg = Qnil, vstep = Qnil;
-  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
-  ndfunc_t ndf = {iter_robject_seq, FULL_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
+  ndfunc_t ndf = { iter_robject_seq, FULL_LOOP, 1, 0, ain, 0 };
 
   g = ALLOCA_N(seq_opt_t, 1);
   g->beg = m_zero;
@@ -5145,8 +5179,8 @@ static void iter_robject_logseq(na_loop_t* const lp) {
 static VALUE robject_logseq(int argc, VALUE* args, VALUE self) {
   logseq_opt_t* g;
   VALUE vbeg, vstep, vbase;
-  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
-  ndfunc_t ndf = {iter_robject_logseq, FULL_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
+  ndfunc_t ndf = { iter_robject_logseq, FULL_LOOP, 1, 0, ain, 0 };
 
   g = ALLOCA_N(logseq_opt_t, 1);
   rb_scan_args(argc, args, "21", &vbeg, &vstep, &vbase);
@@ -5200,8 +5234,8 @@ static void iter_robject_eye(na_loop_t* const lp) {
   @return [Numo::RObject] eye of self.
 */
 static VALUE robject_eye(int argc, VALUE* argv, VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 2}};
-  ndfunc_t ndf = {iter_robject_eye, NO_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 2 } };
+  ndfunc_t ndf = { iter_robject_eye, NO_LOOP, 1, 0, ain, 0 };
   ssize_t kofs;
   dtype data;
   char* g;
@@ -5231,17 +5265,21 @@ static VALUE robject_eye(int argc, VALUE* argv, VALUE self) {
   // Diagonal offset from the main diagonal.
   if (kofs >= 0) {
     if ((size_t)(kofs) >= na->shape[nd - 1]) {
-      rb_raise(rb_eArgError,
-               "invalid diagonal offset(%" SZF "d) for "
-               "last dimension size(%" SZF "d)",
-               kofs, na->shape[nd - 1]);
+      rb_raise(
+        rb_eArgError,
+        "invalid diagonal offset(%" SZF "d) for "
+        "last dimension size(%" SZF "d)",
+        kofs, na->shape[nd - 1]
+      );
     }
   } else {
     if ((size_t)(-kofs) >= na->shape[nd - 2]) {
-      rb_raise(rb_eArgError,
-               "invalid diagonal offset(%" SZF "d) for "
-               "last-1 dimension size(%" SZF "d)",
-               kofs, na->shape[nd - 2]);
+      rb_raise(
+        rb_eArgError,
+        "invalid diagonal offset(%" SZF "d) for "
+        "last-1 dimension size(%" SZF "d)",
+        kofs, na->shape[nd - 2]
+      );
     }
   }
 
@@ -5291,7 +5329,8 @@ static void iter_robject_rand(na_loop_t* const lp) {
   Generate uniformly distributed random numbers on self narray.
   @overload rand([[low],high])
   @param [Numeric] low  lower inclusive boundary of random numbers. (default=0)
-  @param [Numeric] high  upper exclusive boundary of random numbers. (default=1 or 1+1i for complex types)
+  @param [Numeric] high  upper exclusive boundary of random numbers. (default=1 or 1+1i for
+  complex types)
   @return [Numo::RObject] self.
   @example
     Numo::DFloat.new(6).rand
@@ -5310,8 +5349,8 @@ static VALUE robject_rand(int argc, VALUE* args, VALUE self) {
   rand_opt_t g;
   VALUE v1 = Qnil, v2 = Qnil;
   dtype high;
-  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
-  ndfunc_t ndf = {iter_robject_rand, FULL_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
+  ndfunc_t ndf = { iter_robject_rand, FULL_LOOP, 1, 0, ain, 0 };
 
   rb_scan_args(argc, args, "02", &v1, &v2);
   if (v2 == Qnil) {
@@ -5361,8 +5400,8 @@ static VALUE robject_poly(VALUE self, VALUE args) {
   int argc, i;
   VALUE* argv;
   volatile VALUE v, a;
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_robject_poly, NO_LOOP, 0, 1, 0, aout};
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_robject_poly, NO_LOOP, 0, 1, 0, aout };
 
   argc = (int)RARRAY_LEN(args);
   ndf.nin = argc + 1;

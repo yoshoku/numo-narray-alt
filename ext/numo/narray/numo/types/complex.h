@@ -23,7 +23,9 @@ static inline dtype c_set_imag(dtype x, rtype i) {
 
 static inline VALUE COMP2NUM(dtype x) {
   VALUE v;
-  v = rb_funcall(rb_intern("Kernel"), rb_intern("Complex"), 2, rb_float_new(REAL(x)), rb_float_new(IMAG(x)));
+  v = rb_funcall(
+    rb_intern("Kernel"), rb_intern("Complex"), 2, rb_float_new(REAL(x)), rb_float_new(IMAG(x))
+  );
   return v;
 }
 
@@ -39,8 +41,10 @@ static inline dtype NUM2COMP(VALUE v) {
 #define c_ne(x, y) (REAL(x) != REAL(y) || IMAG(x) != IMAG(y))
 #define c_isnan(x) (isnan(REAL(x)) || isnan(IMAG(x)))
 #define c_isinf(x) (isinf(REAL(x)) || isinf(IMAG(x)))
-#define c_isposinf(x) ((isinf(REAL(x)) && signbit(REAL(x)) == 0) || (isinf(IMAG(x)) && signbit(IMAG(x)) == 0))
-#define c_isneginf(x) ((isinf(REAL(x)) && signbit(REAL(x))) || (isinf(IMAG(x)) && signbit(IMAG(x))))
+#define c_isposinf(x) \
+  ((isinf(REAL(x)) && signbit(REAL(x)) == 0) || (isinf(IMAG(x)) && signbit(IMAG(x)) == 0))
+#define c_isneginf(x) \
+  ((isinf(REAL(x)) && signbit(REAL(x))) || (isinf(IMAG(x)) && signbit(IMAG(x))))
 #define c_isfinite(x) (isfinite(REAL(x)) && isfinite(IMAG(x)))
 
 static inline dtype c_zero(void) {

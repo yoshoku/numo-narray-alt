@@ -71,7 +71,10 @@ static void na_index_set_step(na_index_arg_t* q, int i, size_t n, size_t beg, ss
 }
 
 static void na_index_set_scalar(na_index_arg_t* q, int i, ssize_t size, ssize_t x) {
-  if (x < -size || x >= size) rb_raise(rb_eRangeError, "array index (%" SZF "d) is out of array size (%" SZF "d)", x, size);
+  if (x < -size || x >= size)
+    rb_raise(
+      rb_eRangeError, "array index (%" SZF "d) is out of array size (%" SZF "d)", x, size
+    );
   if (x < 0) x += size;
   q->n = 1;
   q->beg = x;
@@ -172,7 +175,8 @@ static void na_parse_narray_index(VALUE a, int orig_dim, ssize_t size, na_index_
   q->orig_dim = orig_dim;
 }
 
-static void na_parse_range(VALUE range, ssize_t step, int orig_dim, ssize_t size, na_index_arg_t* q) {
+static void
+na_parse_range(VALUE range, ssize_t step, int orig_dim, ssize_t size, na_index_arg_t* q) {
   int n;
   ssize_t beg, end, beg_orig, end_orig;
   const char *dot = "..", *edot = "...";
@@ -192,7 +196,9 @@ static void na_parse_range(VALUE range, ssize_t step, int orig_dim, ssize_t size
       dot = edot;
     }
     if (beg < 0 || beg >= size) {
-      rb_raise(rb_eRangeError, "%" SZF "d%s is out of range for size=%" SZF "d", beg_orig, dot, size);
+      rb_raise(
+        rb_eRangeError, "%" SZF "d%s is out of range for size=%" SZF "d", beg_orig, dot, size
+      );
     }
   } else {
     end = end_orig = NUM2SSIZET(x.end);
@@ -204,7 +210,10 @@ static void na_parse_range(VALUE range, ssize_t step, int orig_dim, ssize_t size
       dot = edot;
     }
     if (beg < 0 || beg >= size || end < 0 || end >= size) {
-      rb_raise(rb_eRangeError, "%" SZF "d%s%" SZF "d is out of range for size=%" SZF "d", beg_orig, dot, end_orig, size);
+      rb_raise(
+        rb_eRangeError, "%" SZF "d%s%" SZF "d is out of range for size=%" SZF "d", beg_orig,
+        dot, end_orig, size
+      );
     }
   }
 #else
@@ -224,7 +233,10 @@ static void na_parse_range(VALUE range, ssize_t step, int orig_dim, ssize_t size
     dot = edot;
   }
   if (beg < 0 || beg >= size || end < 0 || end >= size) {
-    rb_raise(rb_eRangeError, "%" SZF "d%s%" SZF "d is out of range for size=%" SZF "d", beg_orig, dot, end_orig, size);
+    rb_raise(
+      rb_eRangeError, "%" SZF "d%s%" SZF "d is out of range for size=%" SZF "d", beg_orig, dot,
+      end_orig, size
+    );
   }
 #endif
   n = (int)((end - beg) / step + 1);
@@ -342,7 +354,8 @@ static void na_index_parse_each(volatile VALUE a, ssize_t size, int i, na_index_
   }
 }
 
-static void na_at_parse_each(volatile VALUE a, ssize_t size, int i, VALUE* idx, ssize_t stride) {
+static void
+na_at_parse_each(volatile VALUE a, ssize_t size, int i, VALUE* idx, ssize_t stride) {
   na_index_arg_t q;
   size_t n, k;
   ssize_t* index;
@@ -480,8 +493,10 @@ static void na_get_strides_nadata(const narray_data_t* na, ssize_t* strides, ssi
   }
 }
 
-static void na_index_aref_nadata(narray_data_t* na1, narray_view_t* na2, na_index_arg_t* q, ssize_t elmsz, int ndim,
-                                 int keep_dim) {
+static void na_index_aref_nadata(
+  narray_data_t* na1, narray_view_t* na2, na_index_arg_t* q, ssize_t elmsz, int ndim,
+  int keep_dim
+) {
   int i, j;
   ssize_t size, k, total = 1;
   ssize_t stride1;
@@ -530,8 +545,10 @@ static void na_index_aref_nadata(narray_data_t* na1, narray_view_t* na2, na_inde
   na2->base.size = total;
 }
 
-static void na_index_aref_naview(narray_view_t* na1, narray_view_t* na2, na_index_arg_t* q, ssize_t elmsz, int ndim,
-                                 int keep_dim) {
+static void na_index_aref_naview(
+  narray_view_t* na1, narray_view_t* na2, na_index_arg_t* q, ssize_t elmsz, int ndim,
+  int keep_dim
+) {
   int i, j;
   ssize_t total = 1;
 
@@ -778,10 +795,12 @@ static int check_index_count(int argc, int na_ndim, int count_new, int count_res
   case 0:
     if (argc == 1 && count_new == 0) return 1;
     if (argc == result_nd) return result_nd;
-    rb_raise(rb_eIndexError,
-             "# of index(=%i) should be "
-             "equal to ndim(=%i) or 1",
-             argc, na_ndim);
+    rb_raise(
+      rb_eIndexError,
+      "# of index(=%i) should be "
+      "equal to ndim(=%i) or 1",
+      argc, na_ndim
+    );
     break;
   case 1:
     if (argc - 1 <= result_nd) return result_nd;
@@ -793,7 +812,9 @@ static int check_index_count(int argc, int na_ndim, int count_new, int count_res
   return -1;
 }
 
-int na_get_result_dimension(VALUE self, int argc, VALUE* argv, ssize_t stride, size_t* pos_idx) {
+int na_get_result_dimension(
+  VALUE self, int argc, VALUE* argv, ssize_t stride, size_t* pos_idx
+) {
   int i, j;
   int count_new = 0;
   int count_rest = 0;
@@ -889,10 +910,12 @@ int na_get_result_dimension(VALUE self, int argc, VALUE* argv, ssize_t stride, s
       return 0;
     }
   }
-  rb_raise(rb_eIndexError,
-           "# of index(=%i) should be "
-           "equal to ndim(=%i) or 1",
-           argc, na->ndim);
+  rb_raise(
+    rb_eIndexError,
+    "# of index(=%i) should be "
+    "equal to ndim(=%i) or 1",
+    argc, na->ndim
+  );
   return -1;
 }
 
@@ -935,11 +958,12 @@ static VALUE na_slice(int argc, VALUE* argv, VALUE self) {
 
 /*
   Multi-dimensional element reference.
-  Returns an element at `dim0`, `dim1`, ... are Numeric indices for each dimension, or returns a NArray View as a sliced array
-  if `dim0`, `dim1`, ... includes other than Numeric index, e.g., Range or Array or true.
+  Returns an element at `dim0`, `dim1`, ... are Numeric indices for each dimension, or returns a
+  NArray View as a sliced array if `dim0`, `dim1`, ... includes other than Numeric index, e.g.,
+  Range or Array or true.
   @overload [](dim0,...,dimL)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol] dim0,...,dimL  multi-dimensional
-  indices.
+  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+  dim0,...,dimL  multi-dimensional indices.
   @return [Numeric,Numo::NArray] an element or NArray view.
   @see #[]=
   @see #at
@@ -979,8 +1003,8 @@ static VALUE na_slice(int argc, VALUE* argv, VALUE self) {
   Replace element(s) at `dim0`, `dim1`, ... .
   Broadcasting mechanism is applied.
   @overload []=(dim0,...,dimL,val)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol] dim0,...,dimL  multi-dimensional
-  indices.
+  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+  dim0,...,dimL  multi-dimensional indices.
   @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
   @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
   @see #[]

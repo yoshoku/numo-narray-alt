@@ -167,7 +167,10 @@ static VALUE nst_field_view(VALUE self, VALUE idx) {
   def = nst_definition(self, idx);
   if (!RTEST(def)) {
     idx = rb_funcall(idx, rb_intern("to_s"), 0);
-    rb_raise(rb_eTypeError, "Invalid field: '%s' for struct %s", StringValuePtr(idx), rb_class2name(rb_obj_class(self)));
+    rb_raise(
+      rb_eTypeError, "Invalid field: '%s' for struct %s", StringValuePtr(idx),
+      rb_class2name(rb_obj_class(self))
+    );
   }
   type = RARRAY_AREF(def, 1);
   ofs = RARRAY_AREF(def, 2);
@@ -343,7 +346,9 @@ static VALUE nstruct_add_type(VALUE type, int argc, VALUE* argv, VALUE nst) {
 
   size = rb_funcall(type, rb_intern("byte_size"), 0);
   rb_iv_set(nst, "__offset__", rb_funcall(ofs, '+', 1, size));
-  rb_ary_push(rb_iv_get(nst, "__members__"), rb_ary_new3(4, name, type, ofs, size)); // <- field definition
+  rb_ary_push(
+    rb_iv_get(nst, "__members__"), rb_ary_new3(4, name, type, ofs, size)
+  ); // <- field definition
   return Qnil;
 }
 
@@ -420,9 +425,9 @@ static VALUE nst_create_member_views(VALUE self) {
 
 static VALUE nary_struct_to_a(VALUE self) {
   volatile VALUE opt;
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {sym_loop_opt}, {sym_option}};
-  ndfunc_arg_out_t aout[1] = {{rb_cArray, 0}}; // dummy?
-  ndfunc_t ndf = {iter_nstruct_to_a, NO_LOOP, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
+  ndfunc_arg_out_t aout[1] = { { rb_cArray, 0 } }; // dummy?
+  ndfunc_t ndf = { iter_nstruct_to_a, NO_LOOP, 3, 1, ain, aout };
 
   opt = nst_create_member_views(self);
   return na_ndloop_cast_narray_to_rarray(&ndf, self, opt);
@@ -580,8 +585,8 @@ static VALUE nary_struct_cast_array(VALUE klass, VALUE rary) {
   narray_t* na;
   // na_compose_t *nc;
   VALUE opt;
-  ndfunc_arg_in_t ain[3] = {{OVERWRITE, 0}, {rb_cArray, 0}, {sym_option}};
-  ndfunc_t ndf = {iter_nstruct_from_a, NO_LOOP, 3, 0, ain, 0};
+  ndfunc_arg_in_t ain[3] = { { OVERWRITE, 0 }, { rb_cArray, 0 }, { sym_option } };
+  ndfunc_t ndf = { iter_nstruct_from_a, NO_LOOP, 3, 0, ain, 0 };
 
   // vnc = na_ary_composition_for_struct(klass, rary);
   // Data_Get_Struct(vnc, na_compose_t, nc);
@@ -651,8 +656,8 @@ static void iter_struct_store_struct(na_loop_t* const lp) {
 }
 
 static VALUE nary_struct_store_struct(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_struct_store_struct, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_struct_store_struct, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -677,8 +682,10 @@ static VALUE nary_struct_store(VALUE self, VALUE obj) {
     nary_struct_store_struct(self, obj);
     return self;
   }
-  rb_raise(nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)),
-           rb_class2name(rb_obj_class(self)));
+  rb_raise(
+    nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)),
+    rb_class2name(rb_obj_class(self))
+  );
   return self;
 }
 
@@ -754,7 +761,8 @@ NST_TYPEDEF(dcomplex, numo_cDComplex)
 NST_TYPEDEF(sfloat, numo_cSFloat)
 NST_TYPEDEF(scomplex, numo_cSComplex)
 
-#define rb_define_singleton_alias(klass, name1, name2) rb_define_alias(rb_singleton_class(klass), name1, name2)
+#define rb_define_singleton_alias(klass, name1, name2) \
+  rb_define_alias(rb_singleton_class(klass), name1, name2)
 
 void Init_nary_struct(void) {
   cT = rb_define_class_under(mNumo, "Struct", numo_cNArray);

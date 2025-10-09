@@ -157,10 +157,19 @@ static void print_ndloop(na_md_loop_t* lp) {
     printf("  user.args[%d].iter = 0x%" SZF "x\n", j, (size_t)lp->user.args[j].iter);
     if (lp->user.args[j].iter) {
       for (i = 0; i < lp->user.ndim; i++) {
-        printf(" &user.args[%d].iter[%d] = 0x%" SZF "x\n", j, i, (size_t)&lp->user.args[j].iter[i]);
-        printf("  user.args[%d].iter[%d].pos = %" SZF "u\n", j, i, lp->user.args[j].iter[i].pos);
-        printf("  user.args[%d].iter[%d].step = %" SZF "d\n", j, i, lp->user.args[j].iter[i].step);
-        printf("  user.args[%d].iter[%d].idx = 0x%" SZF "x\n", j, i, (size_t)lp->user.args[j].iter[i].idx);
+        printf(
+          " &user.args[%d].iter[%d] = 0x%" SZF "x\n", j, i, (size_t)&lp->user.args[j].iter[i]
+        );
+        printf(
+          "  user.args[%d].iter[%d].pos = %" SZF "u\n", j, i, lp->user.args[j].iter[i].pos
+        );
+        printf(
+          "  user.args[%d].iter[%d].step = %" SZF "d\n", j, i, lp->user.args[j].iter[i].step
+        );
+        printf(
+          "  user.args[%d].iter[%d].idx = 0x%" SZF "x\n", j, i,
+          (size_t)lp->user.args[j].iter[i].idx
+        );
       }
     }
     //
@@ -177,10 +186,18 @@ static void print_ndloop(na_md_loop_t* lp) {
       printf("  xargs[%d].bufcp->ndim = %d\n", j, lp->xargs[j].bufcp->ndim);
       printf("  xargs[%d].bufcp->elmsz = %" SZF "d\n", j, lp->xargs[j].bufcp->elmsz);
       printf("  xargs[%d].bufcp->n = 0x%" SZF "x\n", j, (size_t)lp->xargs[j].bufcp->n);
-      printf("  xargs[%d].bufcp->src_ptr = 0x%" SZF "x\n", j, (size_t)lp->xargs[j].bufcp->src_ptr);
-      printf("  xargs[%d].bufcp->buf_ptr = 0x%" SZF "x\n", j, (size_t)lp->xargs[j].bufcp->buf_ptr);
-      printf("  xargs[%d].bufcp->src_iter = 0x%" SZF "x\n", j, (size_t)lp->xargs[j].bufcp->src_iter);
-      printf("  xargs[%d].bufcp->buf_iter = 0x%" SZF "x\n", j, (size_t)lp->xargs[j].bufcp->buf_iter);
+      printf(
+        "  xargs[%d].bufcp->src_ptr = 0x%" SZF "x\n", j, (size_t)lp->xargs[j].bufcp->src_ptr
+      );
+      printf(
+        "  xargs[%d].bufcp->buf_ptr = 0x%" SZF "x\n", j, (size_t)lp->xargs[j].bufcp->buf_ptr
+      );
+      printf(
+        "  xargs[%d].bufcp->src_iter = 0x%" SZF "x\n", j, (size_t)lp->xargs[j].bufcp->src_iter
+      );
+      printf(
+        "  xargs[%d].bufcp->buf_iter = 0x%" SZF "x\n", j, (size_t)lp->xargs[j].bufcp->buf_iter
+      );
     }
   }
   printf("}\n");
@@ -295,8 +312,10 @@ static void ndloop_find_max_dimension(na_md_loop_t* lp, ndfunc_t* nf, VALUE args
     loop_nd
 */
 
-static void ndloop_alloc(na_md_loop_t* lp, ndfunc_t* nf, VALUE args, void* opt_ptr, unsigned int copy_flag,
-                         void (*loop_func)(ndfunc_t*, na_md_loop_t*)) {
+static void ndloop_alloc(
+  na_md_loop_t* lp, ndfunc_t* nf, VALUE args, void* opt_ptr, unsigned int copy_flag,
+  void (*loop_func)(ndfunc_t*, na_md_loop_t*)
+) {
   int i, j;
   int narg;
   int max_nd;
@@ -455,7 +474,10 @@ static void ndloop_check_shape(na_md_loop_t* lp, int nf_dim, narray_t* na) {
         lp->n[i] = n;
       } else if (lp->n[i] != n) {
         // inconsistent array shape
-        rb_raise(nary_eShapeError, "shape1[%d](=%" SZF "u) != shape2[%d](=%" SZF "u)", i, lp->n[i], k, n);
+        rb_raise(
+          nary_eShapeError, "shape1[%d](=%" SZF "u) != shape2[%d](=%" SZF "u)", i, lp->n[i], k,
+          n
+        );
       }
     }
   }
@@ -559,10 +581,12 @@ static void ndloop_init_args(ndfunc_t* nf, na_md_loop_t* lp, VALUE args) {
       GetNArray(v, na);
       nf_dim = nf->ain[j].dim;
       if (nf_dim > na->ndim) {
-        rb_raise(nary_eDimensionError,
-                 "requires >= %d-dimensioal array "
-                 "while %d-dimensional array is given",
-                 nf_dim, na->ndim);
+        rb_raise(
+          nary_eDimensionError,
+          "requires >= %d-dimensioal array "
+          "while %d-dimensional array is given",
+          nf_dim, na->ndim
+        );
       }
       ndloop_check_shape(lp, nf_dim, na);
       dim_beg = lp->ndim + nf->ain[j].dim - na->ndim;
@@ -621,7 +645,9 @@ static int ndloop_check_inplace(VALUE type, int na_ndim, size_t* na_shape, VALUE
   return 1;
 }
 
-static VALUE ndloop_find_inplace(ndfunc_t* nf, na_md_loop_t* lp, VALUE type, int na_ndim, size_t* na_shape, VALUE args) {
+static VALUE ndloop_find_inplace(
+  ndfunc_t* nf, na_md_loop_t* lp, VALUE type, int na_ndim, size_t* na_shape, VALUE args
+) {
   int j;
   VALUE v;
 
@@ -670,7 +696,8 @@ static VALUE ndloop_get_arg_type(ndfunc_t* nf, VALUE args, VALUE t) {
   return t;
 }
 
-static VALUE ndloop_set_output_narray(ndfunc_t* nf, na_md_loop_t* lp, int k, VALUE type, VALUE args) {
+static VALUE
+ndloop_set_output_narray(ndfunc_t* nf, na_md_loop_t* lp, int k, VALUE type, VALUE args) {
   int i, j;
   int na_ndim;
   int lp_dim;
@@ -1460,8 +1487,8 @@ na_ndloop_inspect(VALUE nary, na_text_func_t func, VALUE opt) {
   volatile VALUE args;
   na_md_loop_t lp;
   VALUE buf;
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {sym_loop_opt}, {sym_option}};
-  ndfunc_t nf = {(na_iter_func_t)func, NO_LOOP, 3, 0, ain, 0};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
+  ndfunc_t nf = { (na_iter_func_t)func, NO_LOOP, 3, 0, ain, 0 };
   // nf = ndfunc_alloc(NULL, NO_LOOP, 1, 0, Qnil);
 
   buf = na_info_str(nary);
@@ -1501,10 +1528,12 @@ static void loop_store_subnarray(ndfunc_t* nf, na_md_loop_t* lp, int i0, size_t*
   }
   GetNArray(a, na);
   if (na->ndim != nd - i0 + 1) {
-    rb_raise(nary_eShapeError,
-             "mismatched dimension of sub-narray: "
-             "nd_src=%d, nd_dst=%d",
-             na->ndim, nd - i0 + 1);
+    rb_raise(
+      nary_eShapeError,
+      "mismatched dimension of sub-narray: "
+      "nd_src=%d, nd_dst=%d",
+      na->ndim, nd - i0 + 1
+    );
   }
   dim_map = ALLOCA_N(int, na->ndim);
   for (i = 0; i < na->ndim; i++) {

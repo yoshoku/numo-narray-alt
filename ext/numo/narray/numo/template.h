@@ -100,27 +100,29 @@
     val = (((BIT_DIGIT*)(adr))[dig] >> bit) & 1u; \
   }
 
-#define STORE_BIT(adr, pos, val)                                                                      \
-  {                                                                                                   \
-    size_t dig = (pos) / NB;                                                                          \
-    int bit = (pos) % NB;                                                                             \
-    ((BIT_DIGIT*)(adr))[dig] = (((BIT_DIGIT*)(adr))[dig] & ~(1u << (bit))) | (((val) & 1u) << (bit)); \
+#define STORE_BIT(adr, pos, val)                                             \
+  {                                                                          \
+    size_t dig = (pos) / NB;                                                 \
+    int bit = (pos) % NB;                                                    \
+    ((BIT_DIGIT*)(adr))[dig] =                                               \
+      (((BIT_DIGIT*)(adr))[dig] & ~(1u << (bit))) | (((val) & 1u) << (bit)); \
   }
 
-#define STORE_BIT_STEP(adr, pos, step, idx, val)                                                      \
-  {                                                                                                   \
-    size_t dig;                                                                                       \
-    int bit;                                                                                          \
-    if (idx) {                                                                                        \
-      dig = ((pos) + *(idx)) / NB;                                                                    \
-      bit = ((pos) + *(idx)) % NB;                                                                    \
-      idx++;                                                                                          \
-    } else {                                                                                          \
-      dig = (pos) / NB;                                                                               \
-      bit = (pos) % NB;                                                                               \
-      pos += step;                                                                                    \
-    }                                                                                                 \
-    ((BIT_DIGIT*)(adr))[dig] = (((BIT_DIGIT*)(adr))[dig] & ~(1u << (bit))) | (((val) & 1u) << (bit)); \
+#define STORE_BIT_STEP(adr, pos, step, idx, val)                             \
+  {                                                                          \
+    size_t dig;                                                              \
+    int bit;                                                                 \
+    if (idx) {                                                               \
+      dig = ((pos) + *(idx)) / NB;                                           \
+      bit = ((pos) + *(idx)) % NB;                                           \
+      idx++;                                                                 \
+    } else {                                                                 \
+      dig = (pos) / NB;                                                      \
+      bit = (pos) % NB;                                                      \
+      pos += step;                                                           \
+    }                                                                        \
+    ((BIT_DIGIT*)(adr))[dig] =                                               \
+      (((BIT_DIGIT*)(adr))[dig] & ~(1u << (bit))) | (((val) & 1u) << (bit)); \
   }
 
 static inline int is_aligned(const void* ptr, const size_t alignment) {
@@ -131,8 +133,9 @@ static inline int is_aligned_step(const ssize_t step, const size_t alignment) {
   return ((step) & ((alignment)-1)) == 0;
 }
 
-static inline int get_count_of_elements_not_aligned_to_simd_size(const void* ptr, const size_t alignment,
-                                                                 const size_t element_size) {
+static inline int get_count_of_elements_not_aligned_to_simd_size(
+  const void* ptr, const size_t alignment, const size_t element_size
+) {
   size_t cnt = (size_t)(ptr) & ((alignment)-1);
   return (int)(cnt == 0 ? 0 : (alignment - cnt) / element_size);
 }
@@ -141,7 +144,8 @@ static inline int is_same_aligned2(const void* ptr1, const void* ptr2, const siz
   return ((size_t)(ptr1) & ((alignment)-1)) == ((size_t)(ptr2) & ((alignment)-1));
 }
 
-static inline int is_same_aligned3(const void* ptr1, const void* ptr2, const void* ptr3, const size_t alignment) {
+static inline int
+is_same_aligned3(const void* ptr1, const void* ptr2, const void* ptr3, const size_t alignment) {
   return (((size_t)(ptr1) & ((alignment)-1)) == ((size_t)(ptr2) & ((alignment)-1))) &&
          (((size_t)(ptr1) & ((alignment)-1)) == ((size_t)(ptr3) & ((alignment)-1)));
 }

@@ -237,8 +237,8 @@ static void iter_dfloat_store_bit(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_store_bit(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dfloat_store_bit, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dfloat_store_bit, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -286,8 +286,8 @@ static void iter_dfloat_store_dfloat(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_store_dfloat(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dfloat_store_dfloat, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dfloat_store_dfloat, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -335,8 +335,8 @@ static void iter_dfloat_store_sfloat(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_store_sfloat(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dfloat_store_sfloat, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dfloat_store_sfloat, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -384,8 +384,8 @@ static void iter_dfloat_store_int64(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_store_int64(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dfloat_store_int64, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dfloat_store_int64, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -433,8 +433,8 @@ static void iter_dfloat_store_int32(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_store_int32(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dfloat_store_int32, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dfloat_store_int32, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -482,8 +482,8 @@ static void iter_dfloat_store_int16(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_store_int16(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dfloat_store_int16, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dfloat_store_int16, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -531,8 +531,8 @@ static void iter_dfloat_store_int8(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_store_int8(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dfloat_store_int8, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dfloat_store_int8, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -580,8 +580,8 @@ static void iter_dfloat_store_uint64(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_store_uint64(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dfloat_store_uint64, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dfloat_store_uint64, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -629,8 +629,8 @@ static void iter_dfloat_store_uint32(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_store_uint32(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dfloat_store_uint32, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dfloat_store_uint32, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -678,8 +678,8 @@ static void iter_dfloat_store_uint16(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_store_uint16(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dfloat_store_uint16, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dfloat_store_uint16, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -727,8 +727,8 @@ static void iter_dfloat_store_uint8(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_store_uint8(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dfloat_store_uint8, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dfloat_store_uint8, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -776,8 +776,8 @@ static void iter_dfloat_store_robject(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_store_robject(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dfloat_store_robject, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dfloat_store_robject, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -885,8 +885,8 @@ loop_end:
 }
 
 static VALUE dfloat_store_array(VALUE self, VALUE rary) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {rb_cArray, 0}};
-  ndfunc_t ndf = {iter_dfloat_store_array, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { rb_cArray, 0 } };
+  ndfunc_t ndf = { iter_dfloat_store_array, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop_store_rarray(&ndf, self, rary);
   return self;
@@ -981,8 +981,10 @@ static VALUE dfloat_store(VALUE self, VALUE obj) {
     }
   }
 
-  rb_raise(nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)),
-           rb_class2name(rb_obj_class(self)));
+  rb_raise(
+    nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)),
+    rb_class2name(rb_obj_class(self))
+  );
 
   return self;
 }
@@ -1076,7 +1078,10 @@ static dtype dfloat_extract_data(VALUE obj) {
       return dfloat_extract_data(r);
     }
 
-    rb_raise(nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)), rb_class2name(cT));
+    rb_raise(
+      nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)),
+      rb_class2name(cT)
+    );
   }
   if (TYPE(obj) == T_ARRAY) {
     if (RARRAY_LEN(obj) != 1) {
@@ -1145,8 +1150,8 @@ static VALUE dfloat_s_cast(VALUE type, VALUE obj) {
 /*
   Multi-dimensional element reference.
   @overload [](dim0,...,dimL)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol] dim0,...,dimL  multi-dimensional
-  indices.
+  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+  dim0,...,dimL  multi-dimensional indices.
   @return [Numeric,Numo::DFloat] an element or NArray view.
   @see Numo::NArray#[]
   @see #[]=
@@ -1168,8 +1173,8 @@ static VALUE dfloat_aref(int argc, VALUE* argv, VALUE self) {
 /*
   Multi-dimensional element assignment.
   @overload []=(dim0,...,dimL,val)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol] dim0,...,dimL  multi-dimensional
-  indices.
+  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+  dim0,...,dimL  multi-dimensional indices.
   @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
   @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
   @see Numo::NArray#[]=
@@ -1240,9 +1245,9 @@ static void iter_dfloat_to_a(na_loop_t* const lp) {
   @return [Array]
 */
 static VALUE dfloat_to_a(VALUE self) {
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {sym_loop_opt}, {sym_option}};
-  ndfunc_arg_out_t aout[1] = {{rb_cArray, 0}}; // dummy?
-  ndfunc_t ndf = {iter_dfloat_to_a, FULL_LOOP_NIP, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
+  ndfunc_arg_out_t aout[1] = { { rb_cArray, 0 } }; // dummy?
+  ndfunc_t ndf = { iter_dfloat_to_a, FULL_LOOP_NIP, 3, 1, ain, aout };
   return na_ndloop_cast_narray_to_rarray(&ndf, self, Qnil);
 }
 
@@ -1274,8 +1279,8 @@ static void iter_dfloat_fill(na_loop_t* const lp) {
   @return [Numo::DFloat] self.
 */
 static VALUE dfloat_fill(VALUE self, VALUE val) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {sym_option}};
-  ndfunc_t ndf = {iter_dfloat_fill, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { sym_option } };
+  ndfunc_t ndf = { iter_dfloat_fill, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, val);
   return self;
@@ -1330,9 +1335,9 @@ static void iter_dfloat_format(na_loop_t* const lp) {
 static VALUE dfloat_format(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
 
-  ndfunc_arg_in_t ain[2] = {{Qnil, 0}, {sym_option}};
-  ndfunc_arg_out_t aout[1] = {{numo_cRObject, 0}};
-  ndfunc_t ndf = {iter_dfloat_format, FULL_LOOP_NIP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { Qnil, 0 }, { sym_option } };
+  ndfunc_arg_out_t aout[1] = { { numo_cRObject, 0 } };
+  ndfunc_t ndf = { iter_dfloat_format, FULL_LOOP_NIP, 2, 1, ain, aout };
 
   rb_scan_args(argc, argv, "01", &fmt);
   return na_ndloop(&ndf, 2, self, fmt);
@@ -1376,9 +1381,9 @@ static void iter_dfloat_format_to_a(na_loop_t* const lp) {
 */
 static VALUE dfloat_format_to_a(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {sym_loop_opt}, {sym_option}};
-  ndfunc_arg_out_t aout[1] = {{rb_cArray, 0}}; // dummy?
-  ndfunc_t ndf = {iter_dfloat_format_to_a, FULL_LOOP_NIP, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
+  ndfunc_arg_out_t aout[1] = { { rb_cArray, 0 } }; // dummy?
+  ndfunc_t ndf = { iter_dfloat_format_to_a, FULL_LOOP_NIP, 3, 1, ain, aout };
 
   rb_scan_args(argc, argv, "01", &fmt);
   return na_ndloop_cast_narray_to_rarray(&ndf, self, fmt);
@@ -1432,8 +1437,8 @@ static void iter_dfloat_each(na_loop_t* const lp) {
   @see #map
 */
 static VALUE dfloat_each(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
-  ndfunc_t ndf = {iter_dfloat_each, FULL_LOOP_NIP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dfloat_each, FULL_LOOP_NIP, 1, 0, ain, 0 };
 
   na_ndloop(&ndf, 1, self);
   return self;
@@ -1507,9 +1512,9 @@ static void iter_dfloat_map(na_loop_t* const lp) {
   @return [Numo::DFloat] map of self.
 */
 static VALUE dfloat_map(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_map, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_map, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -1571,8 +1576,8 @@ static void iter_dfloat_each_with_index(na_loop_t* const lp) {
   @see #map_with_index
 */
 static VALUE dfloat_each_with_index(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
-  ndfunc_t ndf = {iter_dfloat_each_with_index, FULL_LOOP_NIP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dfloat_each_with_index, FULL_LOOP_NIP, 1, 0, ain, 0 };
 
   na_ndloop_with_index(&ndf, 1, self);
   return self;
@@ -1662,9 +1667,9 @@ static void iter_dfloat_map_with_index(na_loop_t* const lp) {
   @see #each_with_index
 */
 static VALUE dfloat_map_with_index(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_map_with_index, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_map_with_index, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop_with_index(&ndf, 1, self);
 }
@@ -1716,9 +1721,9 @@ static void iter_dfloat_abs(na_loop_t* const lp) {
   @return [Numo::DFloat] abs of self.
 */
 static VALUE dfloat_abs(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
-  ndfunc_t ndf = {iter_dfloat_abs, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_abs, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -1748,14 +1753,20 @@ static void iter_dfloat_add(na_loop_t* const lp) {
   INIT_PTR(lp, 2, p3, s3);
 
   //
-  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) &&
+      is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
 #ifdef __SSE2__
       // Check number of elements. & Check same alignment.
-      if ((n >= num_pack) && is_same_aligned3(&((dtype*)p1)[i], &((dtype*)p2)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
+      if ((n >= num_pack) &&
+          is_same_aligned3(
+            &((dtype*)p1)[i], &((dtype*)p2)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE
+          )) {
         // Calculate up to the position just before the start of SIMD computation.
-        cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+        cnt = get_count_of_elements_not_aligned_to_simd_size(
+          &((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype)
+        );
 #endif
         if (p1 == p3) { // inplace case
 #ifdef __SSE2__
@@ -1816,7 +1827,8 @@ static void iter_dfloat_add(na_loop_t* const lp) {
       return;
     }
 
-    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) &&
+        is_aligned_step(s3, sizeof(dtype))) {
       //
 
       if (s2 == 0) { // Broadcasting from scalar value.
@@ -1827,9 +1839,12 @@ static void iter_dfloat_add(na_loop_t* const lp) {
           b = _mm_load1_pd(&((dtype*)p2)[0]);
 
           // Check number of elements. & Check same alignment.
-          if ((n >= num_pack) && is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
+          if ((n >= num_pack) &&
+              is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
             // Calculate up to the position just before the start of SIMD computation.
-            cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+            cnt = get_count_of_elements_not_aligned_to_simd_size(
+              &((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype)
+            );
 #endif
             if (p1 == p3) { // inplace case
 #ifdef __SSE2__
@@ -1924,9 +1939,9 @@ static void iter_dfloat_add(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE dfloat_add_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_add, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_add, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -1975,14 +1990,20 @@ static void iter_dfloat_sub(na_loop_t* const lp) {
   INIT_PTR(lp, 2, p3, s3);
 
   //
-  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) &&
+      is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
 #ifdef __SSE2__
       // Check number of elements. & Check same alignment.
-      if ((n >= num_pack) && is_same_aligned3(&((dtype*)p1)[i], &((dtype*)p2)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
+      if ((n >= num_pack) &&
+          is_same_aligned3(
+            &((dtype*)p1)[i], &((dtype*)p2)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE
+          )) {
         // Calculate up to the position just before the start of SIMD computation.
-        cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+        cnt = get_count_of_elements_not_aligned_to_simd_size(
+          &((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype)
+        );
 #endif
         if (p1 == p3) { // inplace case
 #ifdef __SSE2__
@@ -2044,7 +2065,8 @@ static void iter_dfloat_sub(na_loop_t* const lp) {
       return;
     }
 
-    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) &&
+        is_aligned_step(s3, sizeof(dtype))) {
       //
 
       if (s2 == 0) { // Broadcasting from scalar value.
@@ -2055,9 +2077,12 @@ static void iter_dfloat_sub(na_loop_t* const lp) {
           b = _mm_load1_pd(&((dtype*)p2)[0]);
 
           // Check number of elements. & Check same alignment.
-          if ((n >= num_pack) && is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
+          if ((n >= num_pack) &&
+              is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
             // Calculate up to the position just before the start of SIMD computation.
-            cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+            cnt = get_count_of_elements_not_aligned_to_simd_size(
+              &((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype)
+            );
 #endif
             if (p1 == p3) { // inplace case
 #ifdef __SSE2__
@@ -2153,9 +2178,9 @@ static void iter_dfloat_sub(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE dfloat_sub_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_sub, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_sub, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2204,14 +2229,20 @@ static void iter_dfloat_mul(na_loop_t* const lp) {
   INIT_PTR(lp, 2, p3, s3);
 
   //
-  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) &&
+      is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
 #ifdef __SSE2__
       // Check number of elements. & Check same alignment.
-      if ((n >= num_pack) && is_same_aligned3(&((dtype*)p1)[i], &((dtype*)p2)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
+      if ((n >= num_pack) &&
+          is_same_aligned3(
+            &((dtype*)p1)[i], &((dtype*)p2)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE
+          )) {
         // Calculate up to the position just before the start of SIMD computation.
-        cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+        cnt = get_count_of_elements_not_aligned_to_simd_size(
+          &((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype)
+        );
 #endif
         if (p1 == p3) { // inplace case
 #ifdef __SSE2__
@@ -2273,7 +2304,8 @@ static void iter_dfloat_mul(na_loop_t* const lp) {
       return;
     }
 
-    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) &&
+        is_aligned_step(s3, sizeof(dtype))) {
       //
 
       if (s2 == 0) { // Broadcasting from scalar value.
@@ -2284,9 +2316,12 @@ static void iter_dfloat_mul(na_loop_t* const lp) {
           b = _mm_load1_pd(&((dtype*)p2)[0]);
 
           // Check number of elements. & Check same alignment.
-          if ((n >= num_pack) && is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
+          if ((n >= num_pack) &&
+              is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
             // Calculate up to the position just before the start of SIMD computation.
-            cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+            cnt = get_count_of_elements_not_aligned_to_simd_size(
+              &((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype)
+            );
 #endif
             if (p1 == p3) { // inplace case
 #ifdef __SSE2__
@@ -2382,9 +2417,9 @@ static void iter_dfloat_mul(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE dfloat_mul_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_mul, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_mul, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2433,14 +2468,20 @@ static void iter_dfloat_div(na_loop_t* const lp) {
   INIT_PTR(lp, 2, p3, s3);
 
   //
-  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) &&
+      is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
 #ifdef __SSE2__
       // Check number of elements. & Check same alignment.
-      if ((n >= num_pack) && is_same_aligned3(&((dtype*)p1)[i], &((dtype*)p2)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
+      if ((n >= num_pack) &&
+          is_same_aligned3(
+            &((dtype*)p1)[i], &((dtype*)p2)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE
+          )) {
         // Calculate up to the position just before the start of SIMD computation.
-        cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+        cnt = get_count_of_elements_not_aligned_to_simd_size(
+          &((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype)
+        );
 #endif
         if (p1 == p3) { // inplace case
 #ifdef __SSE2__
@@ -2500,7 +2541,8 @@ static void iter_dfloat_div(na_loop_t* const lp) {
       return;
     }
 
-    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) &&
+        is_aligned_step(s3, sizeof(dtype))) {
       //
 
       if (s2 == 0) { // Broadcasting from scalar value.
@@ -2511,9 +2553,12 @@ static void iter_dfloat_div(na_loop_t* const lp) {
           b = _mm_load1_pd(&((dtype*)p2)[0]);
 
           // Check number of elements. & Check same alignment.
-          if ((n >= num_pack) && is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
+          if ((n >= num_pack) &&
+              is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
             // Calculate up to the position just before the start of SIMD computation.
-            cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+            cnt = get_count_of_elements_not_aligned_to_simd_size(
+              &((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype)
+            );
 #endif
             if (p1 == p3) { // inplace case
 #ifdef __SSE2__
@@ -2611,9 +2656,9 @@ static void iter_dfloat_div(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE dfloat_div_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_div, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_div, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2652,7 +2697,8 @@ static void iter_dfloat_mod(na_loop_t* const lp) {
   INIT_PTR(lp, 2, p3, s3);
 
   //
-  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) &&
+      is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
       if (p1 == p3) { // inplace case
@@ -2669,7 +2715,8 @@ static void iter_dfloat_mod(na_loop_t* const lp) {
       return;
     }
 
-    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) &&
+        is_aligned_step(s3, sizeof(dtype))) {
       //
 
       if (s2 == 0) { // Broadcasting from scalar value.
@@ -2727,9 +2774,9 @@ static void iter_dfloat_mod(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE dfloat_mod_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_mod, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_mod, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2773,9 +2820,9 @@ static void iter_dfloat_divmod(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_divmod_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_divmod, STRIDE_LOOP, 2, 2, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_divmod, STRIDE_LOOP, 2, 2, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2834,11 +2881,11 @@ static void iter_dfloat_pow_int32(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_pow_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_in_t ain_i[2] = {{cT, 0}, {numo_cInt32, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_pow, STRIDE_LOOP, 2, 1, ain, aout};
-  ndfunc_t ndf_i = {iter_dfloat_pow_int32, STRIDE_LOOP, 2, 1, ain_i, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_in_t ain_i[2] = { { cT, 0 }, { numo_cInt32, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_pow, STRIDE_LOOP, 2, 1, ain, aout };
+  ndfunc_t ndf_i = { iter_dfloat_pow_int32, STRIDE_LOOP, 2, 1, ain_i, aout };
 
   // fixme : use na.integer?
   if (FIXNUM_P(other) || rb_obj_is_kind_of(other, numo_cInt32)) {
@@ -2934,9 +2981,9 @@ static void iter_dfloat_minus(na_loop_t* const lp) {
   @return [Numo::DFloat] minus of self.
 */
 static VALUE dfloat_minus(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_minus, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_minus, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3009,9 +3056,9 @@ static void iter_dfloat_reciprocal(na_loop_t* const lp) {
   @return [Numo::DFloat] reciprocal of self.
 */
 static VALUE dfloat_reciprocal(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_reciprocal, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_reciprocal, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3084,9 +3131,9 @@ static void iter_dfloat_sign(na_loop_t* const lp) {
   @return [Numo::DFloat] sign of self.
 */
 static VALUE dfloat_sign(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_sign, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_sign, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3159,9 +3206,9 @@ static void iter_dfloat_square(na_loop_t* const lp) {
   @return [Numo::DFloat] square of self.
 */
 static VALUE dfloat_square(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_square, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_square, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3188,9 +3235,9 @@ static void iter_dfloat_eq(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_eq_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dfloat_eq, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dfloat_eq, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3235,9 +3282,9 @@ static void iter_dfloat_ne(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_ne_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dfloat_ne, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dfloat_ne, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3282,9 +3329,9 @@ static void iter_dfloat_nearly_eq(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_nearly_eq_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dfloat_nearly_eq, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dfloat_nearly_eq, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3375,9 +3422,9 @@ static void iter_dfloat_floor(na_loop_t* const lp) {
   @return [Numo::DFloat] floor of self.
 */
 static VALUE dfloat_floor(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_floor, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_floor, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3450,9 +3497,9 @@ static void iter_dfloat_round(na_loop_t* const lp) {
   @return [Numo::DFloat] round of self.
 */
 static VALUE dfloat_round(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_round, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_round, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3525,9 +3572,9 @@ static void iter_dfloat_ceil(na_loop_t* const lp) {
   @return [Numo::DFloat] ceil of self.
 */
 static VALUE dfloat_ceil(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_ceil, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_ceil, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3600,9 +3647,9 @@ static void iter_dfloat_trunc(na_loop_t* const lp) {
   @return [Numo::DFloat] trunc of self.
 */
 static VALUE dfloat_trunc(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_trunc, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_trunc, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3675,9 +3722,9 @@ static void iter_dfloat_rint(na_loop_t* const lp) {
   @return [Numo::DFloat] rint of self.
 */
 static VALUE dfloat_rint(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_rint, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_rint, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3697,7 +3744,8 @@ static void iter_dfloat_copysign(na_loop_t* const lp) {
   INIT_PTR(lp, 2, p3, s3);
 
   //
-  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) &&
+      is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
       if (p1 == p3) { // inplace case
@@ -3714,7 +3762,8 @@ static void iter_dfloat_copysign(na_loop_t* const lp) {
       return;
     }
 
-    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) &&
+        is_aligned_step(s3, sizeof(dtype))) {
       //
 
       if (s2 == 0) { // Broadcasting from scalar value.
@@ -3772,9 +3821,9 @@ static void iter_dfloat_copysign(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE dfloat_copysign_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_copysign, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_copysign, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3833,9 +3882,9 @@ static void iter_dfloat_signbit(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of signbit.
 */
 static VALUE dfloat_signbit(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dfloat_signbit, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dfloat_signbit, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3863,9 +3912,9 @@ static void iter_dfloat_modf(na_loop_t* const lp) {
   @return [Numo::DFloat] modf of self.
 */
 static VALUE dfloat_modf(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_modf, STRIDE_LOOP, 1, 2, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_modf, STRIDE_LOOP, 1, 2, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3892,9 +3941,9 @@ static void iter_dfloat_gt(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_gt_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dfloat_gt, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dfloat_gt, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3939,9 +3988,9 @@ static void iter_dfloat_ge(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_ge_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dfloat_ge, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dfloat_ge, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3986,9 +4035,9 @@ static void iter_dfloat_lt(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_lt_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dfloat_lt, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dfloat_lt, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -4033,9 +4082,9 @@ static void iter_dfloat_le(na_loop_t* const lp) {
 }
 
 static VALUE dfloat_le_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dfloat_le, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dfloat_le, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -4154,11 +4203,11 @@ static void iter_dfloat_clip_max(na_loop_t* const lp) {
       # [3, 4, 2, 3, 4, 5, 6, 7, 8, 8]
 */
 static VALUE dfloat_clip(VALUE self, VALUE min, VALUE max) {
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf_min = {iter_dfloat_clip_min, STRIDE_LOOP, 2, 1, ain, aout};
-  ndfunc_t ndf_max = {iter_dfloat_clip_max, STRIDE_LOOP, 2, 1, ain, aout};
-  ndfunc_t ndf_both = {iter_dfloat_clip, STRIDE_LOOP, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf_min = { iter_dfloat_clip_min, STRIDE_LOOP, 2, 1, ain, aout };
+  ndfunc_t ndf_max = { iter_dfloat_clip_max, STRIDE_LOOP, 2, 1, ain, aout };
+  ndfunc_t ndf_both = { iter_dfloat_clip, STRIDE_LOOP, 3, 1, ain, aout };
 
   if (RTEST(min)) {
     if (RTEST(max)) {
@@ -4210,9 +4259,9 @@ static void iter_dfloat_isnan(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of isnan.
 */
 static VALUE dfloat_isnan(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dfloat_isnan, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dfloat_isnan, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -4252,9 +4301,9 @@ static void iter_dfloat_isinf(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of isinf.
 */
 static VALUE dfloat_isinf(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dfloat_isinf, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dfloat_isinf, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -4294,9 +4343,9 @@ static void iter_dfloat_isposinf(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of isposinf.
 */
 static VALUE dfloat_isposinf(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dfloat_isposinf, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dfloat_isposinf, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -4336,9 +4385,9 @@ static void iter_dfloat_isneginf(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of isneginf.
 */
 static VALUE dfloat_isneginf(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dfloat_isneginf, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dfloat_isneginf, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -4378,9 +4427,9 @@ static void iter_dfloat_isfinite(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of isfinite.
 */
 static VALUE dfloat_isfinite(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dfloat_isfinite, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dfloat_isfinite, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -4411,16 +4460,18 @@ static void iter_dfloat_sum_nan(na_loop_t* const lp) {
 /*
   sum of self.
   @overload sum(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs sum along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DFloat] returns result of sum.
 */
 static VALUE dfloat_sum(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_sum, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_sum, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_sum_nan);
 
@@ -4455,16 +4506,18 @@ static void iter_dfloat_prod_nan(na_loop_t* const lp) {
 /*
   prod of self.
   @overload prod(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs prod along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DFloat] returns result of prod.
 */
 static VALUE dfloat_prod(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_prod, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_prod, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_prod_nan);
 
@@ -4499,16 +4552,18 @@ static void iter_dfloat_kahan_sum_nan(na_loop_t* const lp) {
 /*
   kahan_sum of self.
   @overload kahan_sum(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs kahan_sum along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DFloat] returns result of kahan_sum.
 */
 static VALUE dfloat_kahan_sum(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_kahan_sum, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_kahan_sum, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_kahan_sum_nan);
 
@@ -4543,16 +4598,18 @@ static void iter_dfloat_mean_nan(na_loop_t* const lp) {
 /*
   mean of self.
   @overload mean(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs mean along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DFloat] returns result of mean.
 */
 static VALUE dfloat_mean(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_mean, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_mean, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_mean_nan);
 
@@ -4587,16 +4644,18 @@ static void iter_dfloat_stddev_nan(na_loop_t* const lp) {
 /*
   stddev of self.
   @overload stddev(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs stddev along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DFloat] returns result of stddev.
 */
 static VALUE dfloat_stddev(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
-  ndfunc_t ndf = {iter_dfloat_stddev, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_stddev, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_stddev_nan);
 
@@ -4631,16 +4690,18 @@ static void iter_dfloat_var_nan(na_loop_t* const lp) {
 /*
   var of self.
   @overload var(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs var along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DFloat] returns result of var.
 */
 static VALUE dfloat_var(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
-  ndfunc_t ndf = {iter_dfloat_var, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_var, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_var_nan);
 
@@ -4675,16 +4736,18 @@ static void iter_dfloat_rms_nan(na_loop_t* const lp) {
 /*
   rms of self.
   @overload rms(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs rms along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DFloat] returns result of rms.
 */
 static VALUE dfloat_rms(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
-  ndfunc_t ndf = {iter_dfloat_rms, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_rms, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_rms_nan);
 
@@ -4719,16 +4782,18 @@ static void iter_dfloat_min_nan(na_loop_t* const lp) {
 /*
   min of self.
   @overload min(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs min along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DFloat] returns result of min.
 */
 static VALUE dfloat_min(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_min, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_min, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_min_nan);
 
@@ -4763,16 +4828,18 @@ static void iter_dfloat_max_nan(na_loop_t* const lp) {
 /*
   max of self.
   @overload max(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs max along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DFloat] returns result of max.
 */
 static VALUE dfloat_max(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_max, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_max, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_max_nan);
 
@@ -4807,16 +4874,18 @@ static void iter_dfloat_ptp_nan(na_loop_t* const lp) {
 /*
   ptp of self.
   @overload ptp(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs ptp along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DFloat] returns result of ptp.
 */
 static VALUE dfloat_ptp(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_ptp, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_ptp, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_ptp_nan);
 
@@ -4897,7 +4966,8 @@ static void iter_dfloat_max_index_index32_nan(na_loop_t* const lp) {
   Index of the maximum value.
   @overload max_index(axis:nil, nan:false)
   @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **flat 1-d indices**.
+  @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **flat 1-d
+  indices**.
   @return [Integer,Numo::Int] returns result indices.
   @see #argmax
   @see #max
@@ -4915,9 +4985,9 @@ static void iter_dfloat_max_index_index32_nan(na_loop_t* const lp) {
 static VALUE dfloat_max_index(int argc, VALUE* argv, VALUE self) {
   narray_t* na;
   VALUE idx, reduce;
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {Qnil, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{0, 0, 0}};
-  ndfunc_t ndf = {0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { Qnil, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { 0, 0, 0 } };
+  ndfunc_t ndf = { 0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 3, 1, ain, aout };
 
   GetNArray(self, na);
   if (na->ndim == 0) {
@@ -5014,7 +5084,8 @@ static void iter_dfloat_min_index_index32_nan(na_loop_t* const lp) {
   Index of the minimum value.
   @overload min_index(axis:nil, nan:false)
   @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **flat 1-d indices**.
+  @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **flat 1-d
+  indices**.
   @return [Integer,Numo::Int] returns result indices.
   @see #argmin
   @see #min
@@ -5032,9 +5103,9 @@ static void iter_dfloat_min_index_index32_nan(na_loop_t* const lp) {
 static VALUE dfloat_min_index(int argc, VALUE* argv, VALUE self) {
   narray_t* na;
   VALUE idx, reduce;
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {Qnil, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{0, 0, 0}};
-  ndfunc_t ndf = {0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { Qnil, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { 0, 0, 0 } };
+  ndfunc_t ndf = { 0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 3, 1, ain, aout };
 
   GetNArray(self, na);
   if (na->ndim == 0) {
@@ -5127,7 +5198,8 @@ static void iter_dfloat_argmax_arg32_nan(na_loop_t* const lp) {
   Index of the maximum value.
   @overload argmax(axis:nil, nan:false)
   @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **indices along the axis**.
+  @param [Numeric,Array,Range] axis  Finds maximum values along the axis and returns **indices
+  along the axis**.
   @return [Integer,Numo::Int] returns the result indices.
   @see #max_index
   @see #max
@@ -5145,9 +5217,9 @@ static void iter_dfloat_argmax_arg32_nan(na_loop_t* const lp) {
 static VALUE dfloat_argmax(int argc, VALUE* argv, VALUE self) {
   narray_t* na;
   VALUE reduce;
-  ndfunc_arg_in_t ain[2] = {{Qnil, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{0, 0, 0}};
-  ndfunc_t ndf = {0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { Qnil, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { 0, 0, 0 } };
+  ndfunc_t ndf = { 0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 2, 1, ain, aout };
 
   GetNArray(self, na);
   if (na->ndim == 0) {
@@ -5237,7 +5309,8 @@ static void iter_dfloat_argmin_arg32_nan(na_loop_t* const lp) {
   Index of the minimum value.
   @overload argmin(axis:nil, nan:false)
   @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN posision if exist).
-  @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **indices along the axis**.
+  @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **indices
+  along the axis**.
   @return [Integer,Numo::Int] returns the result indices.
   @see #min_index
   @see #min
@@ -5255,9 +5328,9 @@ static void iter_dfloat_argmin_arg32_nan(na_loop_t* const lp) {
 static VALUE dfloat_argmin(int argc, VALUE* argv, VALUE self) {
   narray_t* na;
   VALUE reduce;
-  ndfunc_arg_in_t ain[2] = {{Qnil, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{0, 0, 0}};
-  ndfunc_t ndf = {0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { Qnil, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { 0, 0, 0 } };
+  ndfunc_t ndf = { 0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 2, 1, ain, aout };
 
   GetNArray(self, na);
   if (na->ndim == 0) {
@@ -5313,14 +5386,17 @@ static void iter_dfloat_minmax_nan(na_loop_t* const lp) {
   @overload minmax(axis:nil, keepdims:false, nan:false)
   @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
   @param [Numeric,Array,Range] axis  Finds min-max along the axis.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+  as dimensions with size one.
   @return [Numo::DFloat,Numo::DFloat] min and max of self.
 */
 static VALUE dfloat_minmax(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_minmax, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 2, 2, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_t ndf = {
+    iter_dfloat_minmax, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 2, 2, ain, aout
+  };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_minmax_nan);
 
@@ -5379,13 +5455,13 @@ static void iter_dfloat_s_maximum_nan(na_loop_t* const lp) {
 static VALUE dfloat_s_maximum(int argc, VALUE* argv, VALUE mod) {
   VALUE a1 = Qnil;
   VALUE a2 = Qnil;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_s_maximum, STRIDE_LOOP_NIP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_s_maximum, STRIDE_LOOP_NIP, 2, 1, ain, aout };
 
   VALUE kw_hash = Qnil;
-  ID kw_table[1] = {id_nan};
-  VALUE opts[1] = {Qundef};
+  ID kw_table[1] = { id_nan };
+  VALUE opts[1] = { Qundef };
 
   rb_scan_args(argc, argv, "20:", &a1, &a2, &kw_hash);
   rb_get_kwargs(kw_hash, kw_table, 0, 1, opts);
@@ -5448,13 +5524,13 @@ static void iter_dfloat_s_minimum_nan(na_loop_t* const lp) {
 static VALUE dfloat_s_minimum(int argc, VALUE* argv, VALUE mod) {
   VALUE a1 = Qnil;
   VALUE a2 = Qnil;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_s_minimum, STRIDE_LOOP_NIP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_s_minimum, STRIDE_LOOP_NIP, 2, 1, ain, aout };
 
   VALUE kw_hash = Qnil;
-  ID kw_table[1] = {id_nan};
-  VALUE opts[1] = {Qundef};
+  ID kw_table[1] = { id_nan };
+  VALUE opts[1] = { Qundef };
 
   rb_scan_args(argc, argv, "20:", &a1, &a2, &kw_hash);
   rb_get_kwargs(kw_hash, kw_table, 0, 1, opts);
@@ -5511,9 +5587,11 @@ static void iter_dfloat_cumsum_nan(na_loop_t* const lp) {
 */
 static VALUE dfloat_cumsum(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_cumsum, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = {
+    iter_dfloat_cumsum, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout
+  };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_cumsum_nan);
 
@@ -5566,9 +5644,11 @@ static void iter_dfloat_cumprod_nan(na_loop_t* const lp) {
 */
 static VALUE dfloat_cumprod(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_cumprod, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = {
+    iter_dfloat_cumprod, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout
+  };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_cumprod_nan);
 
@@ -5648,9 +5728,9 @@ static void iter_dfloat_mulsum_nan(na_loop_t* const lp) {
 static VALUE dfloat_mulsum_self(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
   VALUE naryv[2];
-  ndfunc_arg_in_t ain[4] = {{cT, 0}, {cT, 0}, {sym_reduce, 0}, {sym_init, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_mulsum, STRIDE_LOOP_NIP, 4, 1, ain, aout};
+  ndfunc_arg_in_t ain[4] = { { cT, 0 }, { cT, 0 }, { sym_reduce, 0 }, { sym_init, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_mulsum, STRIDE_LOOP_NIP, 4, 1, ain, aout };
 
   if (argc < 1) {
     rb_raise(rb_eArgError, "wrong number of arguments (%d for >=1)", argc);
@@ -5672,7 +5752,8 @@ static VALUE dfloat_mulsum_self(int argc, VALUE* argv, VALUE self) {
   @overload mulsum(other, axis:nil, keepdims:false, nan:false)
   @param [Numo::NArray,Numeric] other
   @param [Numeric,Array,Range] axis  Performs mulsum along the axis.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+  as dimensions with size one.
   @param [TrueClass] nan (keyword) If true, apply NaN-aware algorithm (avoid NaN if exists).
   @return [Numo::NArray] mulsum of self and other.
 */
@@ -5758,8 +5839,8 @@ static void iter_dfloat_seq(na_loop_t* const lp) {
 static VALUE dfloat_seq(int argc, VALUE* args, VALUE self) {
   seq_opt_t* g;
   VALUE vbeg = Qnil, vstep = Qnil;
-  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
-  ndfunc_t ndf = {iter_dfloat_seq, FULL_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
+  ndfunc_t ndf = { iter_dfloat_seq, FULL_LOOP, 1, 0, ain, 0 };
 
   g = ALLOCA_N(seq_opt_t, 1);
   g->beg = m_zero;
@@ -5841,8 +5922,8 @@ static void iter_dfloat_logseq(na_loop_t* const lp) {
 static VALUE dfloat_logseq(int argc, VALUE* args, VALUE self) {
   logseq_opt_t* g;
   VALUE vbeg, vstep, vbase;
-  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
-  ndfunc_t ndf = {iter_dfloat_logseq, FULL_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
+  ndfunc_t ndf = { iter_dfloat_logseq, FULL_LOOP, 1, 0, ain, 0 };
 
   g = ALLOCA_N(logseq_opt_t, 1);
   rb_scan_args(argc, args, "21", &vbeg, &vstep, &vbase);
@@ -5896,8 +5977,8 @@ static void iter_dfloat_eye(na_loop_t* const lp) {
   @return [Numo::DFloat] eye of self.
 */
 static VALUE dfloat_eye(int argc, VALUE* argv, VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 2}};
-  ndfunc_t ndf = {iter_dfloat_eye, NO_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 2 } };
+  ndfunc_t ndf = { iter_dfloat_eye, NO_LOOP, 1, 0, ain, 0 };
   ssize_t kofs;
   dtype data;
   char* g;
@@ -5927,17 +6008,21 @@ static VALUE dfloat_eye(int argc, VALUE* argv, VALUE self) {
   // Diagonal offset from the main diagonal.
   if (kofs >= 0) {
     if ((size_t)(kofs) >= na->shape[nd - 1]) {
-      rb_raise(rb_eArgError,
-               "invalid diagonal offset(%" SZF "d) for "
-               "last dimension size(%" SZF "d)",
-               kofs, na->shape[nd - 1]);
+      rb_raise(
+        rb_eArgError,
+        "invalid diagonal offset(%" SZF "d) for "
+        "last dimension size(%" SZF "d)",
+        kofs, na->shape[nd - 1]
+      );
     }
   } else {
     if ((size_t)(-kofs) >= na->shape[nd - 2]) {
-      rb_raise(rb_eArgError,
-               "invalid diagonal offset(%" SZF "d) for "
-               "last-1 dimension size(%" SZF "d)",
-               kofs, na->shape[nd - 2]);
+      rb_raise(
+        rb_eArgError,
+        "invalid diagonal offset(%" SZF "d) for "
+        "last-1 dimension size(%" SZF "d)",
+        kofs, na->shape[nd - 2]
+      );
     }
   }
 
@@ -5987,7 +6072,8 @@ static void iter_dfloat_rand(na_loop_t* const lp) {
   Generate uniformly distributed random numbers on self narray.
   @overload rand([[low],high])
   @param [Numeric] low  lower inclusive boundary of random numbers. (default=0)
-  @param [Numeric] high  upper exclusive boundary of random numbers. (default=1 or 1+1i for complex types)
+  @param [Numeric] high  upper exclusive boundary of random numbers. (default=1 or 1+1i for
+  complex types)
   @return [Numo::DFloat] self.
   @example
     Numo::DFloat.new(6).rand
@@ -6006,8 +6092,8 @@ static VALUE dfloat_rand(int argc, VALUE* args, VALUE self) {
   rand_opt_t g;
   VALUE v1 = Qnil, v2 = Qnil;
   dtype high;
-  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
-  ndfunc_t ndf = {iter_dfloat_rand, FULL_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
+  ndfunc_t ndf = { iter_dfloat_rand, FULL_LOOP, 1, 0, ain, 0 };
 
   rb_scan_args(argc, args, "02", &v1, &v2);
   if (v2 == Qnil) {
@@ -6115,8 +6201,8 @@ static VALUE dfloat_rand_norm(int argc, VALUE* args, VALUE self) {
   int n;
   randn_opt_t g;
   VALUE v1 = Qnil, v2 = Qnil;
-  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
-  ndfunc_t ndf = {iter_dfloat_rand_norm, FULL_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
+  ndfunc_t ndf = { iter_dfloat_rand_norm, FULL_LOOP, 1, 0, ain, 0 };
 
   n = rb_scan_args(argc, args, "02", &v1, &v2);
   if (n == 0) {
@@ -6160,8 +6246,8 @@ static VALUE dfloat_poly(VALUE self, VALUE args) {
   int argc, i;
   VALUE* argv;
   volatile VALUE v, a;
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_poly, NO_LOOP, 0, 1, 0, aout};
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_poly, NO_LOOP, 0, 1, 0, aout };
 
   argc = (int)RARRAY_LEN(args);
   ndf.nin = argc + 1;
@@ -6254,10 +6340,15 @@ static VALUE dfloat_poly(VALUE self, VALUE args) {
   } while (0)
 
 #ifdef HAVE_STDINT_H
-#define SWAPINIT(a, es) swaptype = (uintptr_t)a % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
+#define SWAPINIT(a, es)                                             \
+  swaptype = (uintptr_t)a % sizeof(long) || (es) % sizeof(long) ? 2 \
+             : (es) == sizeof(long)                             ? 0 \
+                                                                : 1;
 #else
-#define SWAPINIT(a, es) \
-  swaptype = ((char*)(a) - (char*)0) % sizeof(long) || (es) % sizeof(long) ? 2 : (es) == sizeof(long) ? 0 : 1;
+#define SWAPINIT(a, es)                                                        \
+  swaptype = ((char*)(a) - (char*)0) % sizeof(long) || (es) % sizeof(long) ? 2 \
+             : (es) == sizeof(long)                                        ? 0 \
+                                                                           : 1;
 #endif
 
 static inline void swapfunc(char* a, char* b, size_t n, int swaptype) {
@@ -6278,8 +6369,9 @@ static inline void swapfunc(char* a, char* b, size_t n, int swaptype) {
 #define vecswap(a, b, n) \
   if ((n) > 0) swapfunc((a), (b), (size_t)(n), swaptype)
 
-#define med3(a, b, c, _cmp) \
-  (cmpgt(b, a) ? (cmpgt(c, b) ? b : (cmpgt(c, a) ? c : a)) : (cmpgt(b, c) ? b : (cmpgt(c, a) ? a : c)))
+#define med3(a, b, c, _cmp)                                \
+  (cmpgt(b, a) ? (cmpgt(c, b) ? b : (cmpgt(c, a) ? c : a)) \
+               : (cmpgt(b, c) ? b : (cmpgt(c, a) ? a : c)))
 #endif
 
 #undef qsort_dtype
@@ -6519,8 +6611,8 @@ static void iter_dfloat_sort_prnan(na_loop_t* const lp) {
 */
 static VALUE dfloat_sort(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {sym_reduce, 0}};
-  ndfunc_t ndf = {0, NDF_HAS_LOOP | NDF_FLAT_REDUCE, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { sym_reduce, 0 } };
+  ndfunc_t ndf = { 0, NDF_HAS_LOOP | NDF_FLAT_REDUCE, 2, 0, ain, 0 };
 
   if (!TEST_INPLACE(self)) {
     self = na_copy(self);
@@ -6625,7 +6717,8 @@ loop:
     pm = med3(pl, pm, pn, cmp);
   }
   swap(a, pm);
-  for (pa = pb = (char*)a + es, pc = pd = (char*)a + (n - 1) * es; pb <= pc; pb += es, pc -= es) {
+  for (pa = pb = (char*)a + es, pc = pd = (char*)a + (n - 1) * es; pb <= pc;
+       pb += es, pc -= es) {
     while (pb <= pc && (r = cmp(pb, a)) <= 0) {
       if (r == 0) {
         swap(pa, pb);
@@ -6750,7 +6843,8 @@ loop:
     pm = med3(pl, pm, pn, cmp);
   }
   swap(a, pm);
-  for (pa = pb = (char*)a + es, pc = pd = (char*)a + (n - 1) * es; pb <= pc; pb += es, pc -= es) {
+  for (pa = pb = (char*)a + es, pc = pd = (char*)a + (n - 1) * es; pb <= pc;
+       pb += es, pc -= es) {
     while (pb <= pc && (r = cmp(pb, a)) <= 0) {
       if (r == 0) {
         swap(pa, pb);
@@ -6945,9 +7039,9 @@ static VALUE dfloat_sort_index(int argc, VALUE* argv, VALUE self) {
   narray_t* na;
   VALUE idx, tmp, reduce, res;
   char* buf;
-  ndfunc_arg_in_t ain[3] = {{cT, 0}, {0, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{0, 0, 0}};
-  ndfunc_t ndf = {0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_CUM, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { cT, 0 }, { 0, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { 0, 0, 0 } };
+  ndfunc_t ndf = { 0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_CUM, 3, 1, ain, aout };
 
   GetNArray(self, na);
   if (na->ndim == 0) {
@@ -7030,15 +7124,16 @@ static void iter_dfloat_median_prnan(na_loop_t* const lp) {
   @overload median(axis:nil, keepdims:false, nan:false)
   @param [TrueClass] nan (keyword) If true, propagete NaN. If false, ignore NaN.
   @param [Numeric,Array,Range] axis  Finds median along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DFloat] returns median of self.
 */
 
 static VALUE dfloat_median(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{INT2FIX(0), 0}};
-  ndfunc_t ndf = {0, NDF_HAS_LOOP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { INT2FIX(0), 0 } };
+  ndfunc_t ndf = { 0, NDF_HAS_LOOP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   self = na_copy(self); // as temporary buffer
 
@@ -7103,9 +7198,12 @@ static void iter_dfloat_math_s_sqrt(na_loop_t* const lp) {
 #ifdef __SSE2__
           //
           // Check number of elements. & Check same alignment.
-          if ((n >= num_pack) && is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p2)[i], SIMD_ALIGNMENT_SIZE)) {
+          if ((n >= num_pack) &&
+              is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p2)[i], SIMD_ALIGNMENT_SIZE)) {
             // Calculate up to the position just before the start of SIMD computation.
-            cnt = get_count_of_elements_not_aligned_to_simd_size(&((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype));
+            cnt = get_count_of_elements_not_aligned_to_simd_size(
+              &((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype)
+            );
 #endif
 #ifdef __SSE2__
             for (i = 0; i < cnt; i++) {
@@ -7174,9 +7272,9 @@ static void iter_dfloat_math_s_sqrt(na_loop_t* const lp) {
   @return [Numo::DFloat] result of sqrt(x).
 */
 static VALUE dfloat_math_s_sqrt(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_sqrt, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_sqrt, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -7252,9 +7350,9 @@ static void iter_dfloat_math_s_cbrt(na_loop_t* const lp) {
   @return [Numo::DFloat] result of cbrt(x).
 */
 static VALUE dfloat_math_s_cbrt(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_cbrt, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_cbrt, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -7330,9 +7428,9 @@ static void iter_dfloat_math_s_log(na_loop_t* const lp) {
   @return [Numo::DFloat] result of log(x).
 */
 static VALUE dfloat_math_s_log(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_log, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_log, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -7408,9 +7506,9 @@ static void iter_dfloat_math_s_log2(na_loop_t* const lp) {
   @return [Numo::DFloat] result of log2(x).
 */
 static VALUE dfloat_math_s_log2(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_log2, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_log2, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -7486,9 +7584,9 @@ static void iter_dfloat_math_s_log10(na_loop_t* const lp) {
   @return [Numo::DFloat] result of log10(x).
 */
 static VALUE dfloat_math_s_log10(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_log10, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_log10, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -7564,9 +7662,9 @@ static void iter_dfloat_math_s_exp(na_loop_t* const lp) {
   @return [Numo::DFloat] result of exp(x).
 */
 static VALUE dfloat_math_s_exp(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_exp, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_exp, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -7642,9 +7740,9 @@ static void iter_dfloat_math_s_exp2(na_loop_t* const lp) {
   @return [Numo::DFloat] result of exp2(x).
 */
 static VALUE dfloat_math_s_exp2(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_exp2, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_exp2, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -7720,9 +7818,9 @@ static void iter_dfloat_math_s_exp10(na_loop_t* const lp) {
   @return [Numo::DFloat] result of exp10(x).
 */
 static VALUE dfloat_math_s_exp10(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_exp10, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_exp10, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -7798,9 +7896,9 @@ static void iter_dfloat_math_s_sin(na_loop_t* const lp) {
   @return [Numo::DFloat] result of sin(x).
 */
 static VALUE dfloat_math_s_sin(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_sin, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_sin, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -7876,9 +7974,9 @@ static void iter_dfloat_math_s_cos(na_loop_t* const lp) {
   @return [Numo::DFloat] result of cos(x).
 */
 static VALUE dfloat_math_s_cos(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_cos, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_cos, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -7954,9 +8052,9 @@ static void iter_dfloat_math_s_tan(na_loop_t* const lp) {
   @return [Numo::DFloat] result of tan(x).
 */
 static VALUE dfloat_math_s_tan(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_tan, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_tan, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -8032,9 +8130,9 @@ static void iter_dfloat_math_s_asin(na_loop_t* const lp) {
   @return [Numo::DFloat] result of asin(x).
 */
 static VALUE dfloat_math_s_asin(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_asin, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_asin, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -8110,9 +8208,9 @@ static void iter_dfloat_math_s_acos(na_loop_t* const lp) {
   @return [Numo::DFloat] result of acos(x).
 */
 static VALUE dfloat_math_s_acos(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_acos, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_acos, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -8188,9 +8286,9 @@ static void iter_dfloat_math_s_atan(na_loop_t* const lp) {
   @return [Numo::DFloat] result of atan(x).
 */
 static VALUE dfloat_math_s_atan(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_atan, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_atan, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -8266,9 +8364,9 @@ static void iter_dfloat_math_s_sinh(na_loop_t* const lp) {
   @return [Numo::DFloat] result of sinh(x).
 */
 static VALUE dfloat_math_s_sinh(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_sinh, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_sinh, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -8344,9 +8442,9 @@ static void iter_dfloat_math_s_cosh(na_loop_t* const lp) {
   @return [Numo::DFloat] result of cosh(x).
 */
 static VALUE dfloat_math_s_cosh(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_cosh, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_cosh, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -8422,9 +8520,9 @@ static void iter_dfloat_math_s_tanh(na_loop_t* const lp) {
   @return [Numo::DFloat] result of tanh(x).
 */
 static VALUE dfloat_math_s_tanh(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_tanh, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_tanh, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -8500,9 +8598,9 @@ static void iter_dfloat_math_s_asinh(na_loop_t* const lp) {
   @return [Numo::DFloat] result of asinh(x).
 */
 static VALUE dfloat_math_s_asinh(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_asinh, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_asinh, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -8578,9 +8676,9 @@ static void iter_dfloat_math_s_acosh(na_loop_t* const lp) {
   @return [Numo::DFloat] result of acosh(x).
 */
 static VALUE dfloat_math_s_acosh(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_acosh, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_acosh, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -8656,9 +8754,9 @@ static void iter_dfloat_math_s_atanh(na_loop_t* const lp) {
   @return [Numo::DFloat] result of atanh(x).
 */
 static VALUE dfloat_math_s_atanh(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_atanh, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_atanh, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -8734,9 +8832,9 @@ static void iter_dfloat_math_s_sinc(na_loop_t* const lp) {
   @return [Numo::DFloat] result of sinc(x).
 */
 static VALUE dfloat_math_s_sinc(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_sinc, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_sinc, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -8766,9 +8864,9 @@ static void iter_dfloat_math_s_atan2(na_loop_t* const lp) {
   @return [Numo::DFloat] atan2(a1,a2).
 */
 static VALUE dfloat_math_s_atan2(VALUE mod, VALUE a1, VALUE a2) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_atan2, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_atan2, STRIDE_LOOP, 2, 1, ain, aout };
   return na_ndloop(&ndf, 2, a1, a2);
 }
 
@@ -8797,9 +8895,9 @@ static void iter_dfloat_math_s_hypot(na_loop_t* const lp) {
   @return [Numo::DFloat] hypot(a1,a2).
 */
 static VALUE dfloat_math_s_hypot(VALUE mod, VALUE a1, VALUE a2) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_hypot, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_hypot, STRIDE_LOOP, 2, 1, ain, aout };
   return na_ndloop(&ndf, 2, a1, a2);
 }
 
@@ -8874,9 +8972,9 @@ static void iter_dfloat_math_s_erf(na_loop_t* const lp) {
   @return [Numo::DFloat] result of erf(x).
 */
 static VALUE dfloat_math_s_erf(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_erf, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_erf, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -8952,9 +9050,9 @@ static void iter_dfloat_math_s_erfc(na_loop_t* const lp) {
   @return [Numo::DFloat] result of erfc(x).
 */
 static VALUE dfloat_math_s_erfc(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_erfc, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_erfc, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -9030,9 +9128,9 @@ static void iter_dfloat_math_s_log1p(na_loop_t* const lp) {
   @return [Numo::DFloat] result of log1p(x).
 */
 static VALUE dfloat_math_s_log1p(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_log1p, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_log1p, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -9108,9 +9206,9 @@ static void iter_dfloat_math_s_expm1(na_loop_t* const lp) {
   @return [Numo::DFloat] result of expm1(x).
 */
 static VALUE dfloat_math_s_expm1(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_expm1, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_expm1, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -9140,9 +9238,9 @@ static void iter_dfloat_math_s_ldexp(na_loop_t* const lp) {
   @return [Numo::DFloat] ldexp(a1,a2).
 */
 static VALUE dfloat_math_s_ldexp(VALUE mod, VALUE a1, VALUE a2) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_ldexp, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_ldexp, STRIDE_LOOP, 2, 1, ain, aout };
   return na_ndloop(&ndf, 2, a1, a2);
 }
 
@@ -9174,9 +9272,9 @@ static void iter_dfloat_math_s_frexp(na_loop_t* const lp) {
 
 */
 static VALUE dfloat_math_s_frexp(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[2] = {{cT, 0}, {numo_cInt32, 0}};
-  ndfunc_t ndf = {iter_dfloat_math_s_frexp, STRIDE_LOOP, 1, 2, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[2] = { { cT, 0 }, { numo_cInt32, 0 } };
+  ndfunc_t ndf = { iter_dfloat_math_s_frexp, STRIDE_LOOP, 1, 2, ain, aout };
   return na_ndloop(&ndf, 1, a1);
 }
 

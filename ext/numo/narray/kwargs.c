@@ -69,7 +69,7 @@ static int separate_symbol(st_data_t key, st_data_t value, st_data_t arg) {
 
 VALUE
 rb_extract_keywords(VALUE* orighash) {
-  VALUE parthash[2] = {0, 0};
+  VALUE parthash[2] = { 0, 0 };
   VALUE hash = *orighash;
 
   if (RHASH_EMPTY_P(hash)) {
@@ -84,15 +84,17 @@ rb_extract_keywords(VALUE* orighash) {
   return parthash[0];
 }
 
-int rb_get_kwargs(VALUE keyword_hash, const ID* table, int required, int optional, VALUE* values) {
+int rb_get_kwargs(
+  VALUE keyword_hash, const ID* table, int required, int optional, VALUE* values
+) {
   int i = 0, j;
   int rest = 0;
   VALUE missing = Qnil;
   st_data_t key;
 
-#define extract_kwarg(keyword, val) \
-  (key = (st_data_t)(keyword),      \
-   values ? st_delete(rb_hash_tbl_raw(keyword_hash), &key, (val)) : st_lookup(rb_hash_tbl_raw(keyword_hash), key, (val)))
+#define extract_kwarg(keyword, val)                                                           \
+  (key = (st_data_t)(keyword), values ? st_delete(rb_hash_tbl_raw(keyword_hash), &key, (val)) \
+                                      : st_lookup(rb_hash_tbl_raw(keyword_hash), key, (val)))
 
   if (NIL_P(keyword_hash)) keyword_hash = 0;
 

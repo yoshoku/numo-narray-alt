@@ -233,8 +233,8 @@ static void iter_dcomplex_store_bit(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_store_bit(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_store_bit, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_store_bit, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -282,8 +282,8 @@ static void iter_dcomplex_store_dcomplex(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_store_dcomplex(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_store_dcomplex, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_store_dcomplex, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -331,8 +331,8 @@ static void iter_dcomplex_store_scomplex(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_store_scomplex(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_store_scomplex, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_store_scomplex, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -380,8 +380,8 @@ static void iter_dcomplex_store_dfloat(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_store_dfloat(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_store_dfloat, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_store_dfloat, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -429,8 +429,8 @@ static void iter_dcomplex_store_sfloat(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_store_sfloat(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_store_sfloat, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_store_sfloat, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -478,8 +478,8 @@ static void iter_dcomplex_store_int64(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_store_int64(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_store_int64, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_store_int64, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -527,8 +527,8 @@ static void iter_dcomplex_store_int32(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_store_int32(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_store_int32, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_store_int32, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -576,8 +576,8 @@ static void iter_dcomplex_store_int16(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_store_int16(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_store_int16, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_store_int16, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -625,8 +625,8 @@ static void iter_dcomplex_store_int8(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_store_int8(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_store_int8, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_store_int8, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -674,8 +674,8 @@ static void iter_dcomplex_store_uint64(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_store_uint64(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_store_uint64, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_store_uint64, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -723,8 +723,8 @@ static void iter_dcomplex_store_uint32(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_store_uint32(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_store_uint32, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_store_uint32, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -772,8 +772,8 @@ static void iter_dcomplex_store_uint16(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_store_uint16(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_store_uint16, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_store_uint16, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -821,8 +821,8 @@ static void iter_dcomplex_store_uint8(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_store_uint8(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_store_uint8, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_store_uint8, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -870,8 +870,8 @@ static void iter_dcomplex_store_robject(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_store_robject(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_store_robject, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_store_robject, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -979,8 +979,8 @@ loop_end:
 }
 
 static VALUE dcomplex_store_array(VALUE self, VALUE rary) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {rb_cArray, 0}};
-  ndfunc_t ndf = {iter_dcomplex_store_array, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { rb_cArray, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_store_array, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop_store_rarray(&ndf, self, rary);
   return self;
@@ -1085,8 +1085,10 @@ static VALUE dcomplex_store(VALUE self, VALUE obj) {
     }
   }
 
-  rb_raise(nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)),
-           rb_class2name(rb_obj_class(self)));
+  rb_raise(
+    nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)),
+    rb_class2name(rb_obj_class(self))
+  );
 
   return self;
 }
@@ -1196,7 +1198,10 @@ static dtype dcomplex_extract_data(VALUE obj) {
       return dcomplex_extract_data(r);
     }
 
-    rb_raise(nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)), rb_class2name(cT));
+    rb_raise(
+      nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)),
+      rb_class2name(cT)
+    );
   }
   if (TYPE(obj) == T_ARRAY) {
     if (RARRAY_LEN(obj) != 1) {
@@ -1265,8 +1270,8 @@ static VALUE dcomplex_s_cast(VALUE type, VALUE obj) {
 /*
   Multi-dimensional element reference.
   @overload [](dim0,...,dimL)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol] dim0,...,dimL  multi-dimensional
-  indices.
+  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+  dim0,...,dimL  multi-dimensional indices.
   @return [Numeric,Numo::DComplex] an element or NArray view.
   @see Numo::NArray#[]
   @see #[]=
@@ -1288,8 +1293,8 @@ static VALUE dcomplex_aref(int argc, VALUE* argv, VALUE self) {
 /*
   Multi-dimensional element assignment.
   @overload []=(dim0,...,dimL,val)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol] dim0,...,dimL  multi-dimensional
-  indices.
+  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+  dim0,...,dimL  multi-dimensional indices.
   @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
   @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
   @see Numo::NArray#[]=
@@ -1360,9 +1365,9 @@ static void iter_dcomplex_to_a(na_loop_t* const lp) {
   @return [Array]
 */
 static VALUE dcomplex_to_a(VALUE self) {
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {sym_loop_opt}, {sym_option}};
-  ndfunc_arg_out_t aout[1] = {{rb_cArray, 0}}; // dummy?
-  ndfunc_t ndf = {iter_dcomplex_to_a, FULL_LOOP_NIP, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
+  ndfunc_arg_out_t aout[1] = { { rb_cArray, 0 } }; // dummy?
+  ndfunc_t ndf = { iter_dcomplex_to_a, FULL_LOOP_NIP, 3, 1, ain, aout };
   return na_ndloop_cast_narray_to_rarray(&ndf, self, Qnil);
 }
 
@@ -1394,8 +1399,8 @@ static void iter_dcomplex_fill(na_loop_t* const lp) {
   @return [Numo::DComplex] self.
 */
 static VALUE dcomplex_fill(VALUE self, VALUE val) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {sym_option}};
-  ndfunc_t ndf = {iter_dcomplex_fill, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { sym_option } };
+  ndfunc_t ndf = { iter_dcomplex_fill, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, val);
   return self;
@@ -1450,9 +1455,9 @@ static void iter_dcomplex_format(na_loop_t* const lp) {
 static VALUE dcomplex_format(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
 
-  ndfunc_arg_in_t ain[2] = {{Qnil, 0}, {sym_option}};
-  ndfunc_arg_out_t aout[1] = {{numo_cRObject, 0}};
-  ndfunc_t ndf = {iter_dcomplex_format, FULL_LOOP_NIP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { Qnil, 0 }, { sym_option } };
+  ndfunc_arg_out_t aout[1] = { { numo_cRObject, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_format, FULL_LOOP_NIP, 2, 1, ain, aout };
 
   rb_scan_args(argc, argv, "01", &fmt);
   return na_ndloop(&ndf, 2, self, fmt);
@@ -1496,9 +1501,9 @@ static void iter_dcomplex_format_to_a(na_loop_t* const lp) {
 */
 static VALUE dcomplex_format_to_a(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {sym_loop_opt}, {sym_option}};
-  ndfunc_arg_out_t aout[1] = {{rb_cArray, 0}}; // dummy?
-  ndfunc_t ndf = {iter_dcomplex_format_to_a, FULL_LOOP_NIP, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
+  ndfunc_arg_out_t aout[1] = { { rb_cArray, 0 } }; // dummy?
+  ndfunc_t ndf = { iter_dcomplex_format_to_a, FULL_LOOP_NIP, 3, 1, ain, aout };
 
   rb_scan_args(argc, argv, "01", &fmt);
   return na_ndloop_cast_narray_to_rarray(&ndf, self, fmt);
@@ -1552,8 +1557,8 @@ static void iter_dcomplex_each(na_loop_t* const lp) {
   @see #map
 */
 static VALUE dcomplex_each(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_each, FULL_LOOP_NIP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_each, FULL_LOOP_NIP, 1, 0, ain, 0 };
 
   na_ndloop(&ndf, 1, self);
   return self;
@@ -1627,9 +1632,9 @@ static void iter_dcomplex_map(na_loop_t* const lp) {
   @return [Numo::DComplex] map of self.
 */
 static VALUE dcomplex_map(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_map, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_map, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -1691,8 +1696,8 @@ static void iter_dcomplex_each_with_index(na_loop_t* const lp) {
   @see #map_with_index
 */
 static VALUE dcomplex_each_with_index(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
-  ndfunc_t ndf = {iter_dcomplex_each_with_index, FULL_LOOP_NIP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_each_with_index, FULL_LOOP_NIP, 1, 0, ain, 0 };
 
   na_ndloop_with_index(&ndf, 1, self);
   return self;
@@ -1782,9 +1787,9 @@ static void iter_dcomplex_map_with_index(na_loop_t* const lp) {
   @see #each_with_index
 */
 static VALUE dcomplex_map_with_index(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_map_with_index, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_map_with_index, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop_with_index(&ndf, 1, self);
 }
@@ -1836,9 +1841,9 @@ static void iter_dcomplex_abs(na_loop_t* const lp) {
   @return [Numo::DFloat] abs of self.
 */
 static VALUE dcomplex_abs(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_abs, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_abs, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -1858,7 +1863,8 @@ static void iter_dcomplex_add(na_loop_t* const lp) {
   INIT_PTR(lp, 2, p3, s3);
 
   //
-  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) &&
+      is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
       if (p1 == p3) { // inplace case
@@ -1875,7 +1881,8 @@ static void iter_dcomplex_add(na_loop_t* const lp) {
       return;
     }
 
-    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) &&
+        is_aligned_step(s3, sizeof(dtype))) {
       //
 
       if (s2 == 0) { // Broadcasting from scalar value.
@@ -1933,9 +1940,9 @@ static void iter_dcomplex_add(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE dcomplex_add_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_add, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_add, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -1974,7 +1981,8 @@ static void iter_dcomplex_sub(na_loop_t* const lp) {
   INIT_PTR(lp, 2, p3, s3);
 
   //
-  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) &&
+      is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
       if (p1 == p3) { // inplace case
@@ -1991,7 +1999,8 @@ static void iter_dcomplex_sub(na_loop_t* const lp) {
       return;
     }
 
-    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) &&
+        is_aligned_step(s3, sizeof(dtype))) {
       //
 
       if (s2 == 0) { // Broadcasting from scalar value.
@@ -2049,9 +2058,9 @@ static void iter_dcomplex_sub(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE dcomplex_sub_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_sub, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_sub, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2090,7 +2099,8 @@ static void iter_dcomplex_mul(na_loop_t* const lp) {
   INIT_PTR(lp, 2, p3, s3);
 
   //
-  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) &&
+      is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
       if (p1 == p3) { // inplace case
@@ -2107,7 +2117,8 @@ static void iter_dcomplex_mul(na_loop_t* const lp) {
       return;
     }
 
-    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) &&
+        is_aligned_step(s3, sizeof(dtype))) {
       //
 
       if (s2 == 0) { // Broadcasting from scalar value.
@@ -2165,9 +2176,9 @@ static void iter_dcomplex_mul(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE dcomplex_mul_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_mul, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_mul, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2206,7 +2217,8 @@ static void iter_dcomplex_div(na_loop_t* const lp) {
   INIT_PTR(lp, 2, p3, s3);
 
   //
-  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) &&
+      is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
       if (p1 == p3) { // inplace case
@@ -2223,7 +2235,8 @@ static void iter_dcomplex_div(na_loop_t* const lp) {
       return;
     }
 
-    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) &&
+        is_aligned_step(s3, sizeof(dtype))) {
       //
 
       if (s2 == 0) { // Broadcasting from scalar value.
@@ -2281,9 +2294,9 @@ static void iter_dcomplex_div(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE dcomplex_div_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_div, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_div, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2343,11 +2356,11 @@ static void iter_dcomplex_pow_int32(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_pow_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_in_t ain_i[2] = {{cT, 0}, {numo_cInt32, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_pow, STRIDE_LOOP, 2, 1, ain, aout};
-  ndfunc_t ndf_i = {iter_dcomplex_pow_int32, STRIDE_LOOP, 2, 1, ain_i, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_in_t ain_i[2] = { { cT, 0 }, { numo_cInt32, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_pow, STRIDE_LOOP, 2, 1, ain, aout };
+  ndfunc_t ndf_i = { iter_dcomplex_pow_int32, STRIDE_LOOP, 2, 1, ain_i, aout };
 
   // fixme : use na.integer?
   if (FIXNUM_P(other) || rb_obj_is_kind_of(other, numo_cInt32)) {
@@ -2443,9 +2456,9 @@ static void iter_dcomplex_minus(na_loop_t* const lp) {
   @return [Numo::DComplex] minus of self.
 */
 static VALUE dcomplex_minus(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_minus, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_minus, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -2518,9 +2531,9 @@ static void iter_dcomplex_reciprocal(na_loop_t* const lp) {
   @return [Numo::DComplex] reciprocal of self.
 */
 static VALUE dcomplex_reciprocal(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_reciprocal, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_reciprocal, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -2593,9 +2606,9 @@ static void iter_dcomplex_sign(na_loop_t* const lp) {
   @return [Numo::DComplex] sign of self.
 */
 static VALUE dcomplex_sign(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_sign, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_sign, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -2668,9 +2681,9 @@ static void iter_dcomplex_square(na_loop_t* const lp) {
   @return [Numo::DComplex] square of self.
 */
 static VALUE dcomplex_square(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_square, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_square, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -2743,9 +2756,9 @@ static void iter_dcomplex_conj(na_loop_t* const lp) {
   @return [Numo::DComplex] conj of self.
 */
 static VALUE dcomplex_conj(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_conj, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_conj, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -2818,9 +2831,9 @@ static void iter_dcomplex_im(na_loop_t* const lp) {
   @return [Numo::DComplex] im of self.
 */
 static VALUE dcomplex_im(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_im, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_im, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -2872,9 +2885,9 @@ static void iter_dcomplex_real(na_loop_t* const lp) {
   @return [Numo::DFloat] real of self.
 */
 static VALUE dcomplex_real(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_real, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_real, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -2926,9 +2939,9 @@ static void iter_dcomplex_imag(na_loop_t* const lp) {
   @return [Numo::DFloat] imag of self.
 */
 static VALUE dcomplex_imag(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_imag, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_imag, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -2980,9 +2993,9 @@ static void iter_dcomplex_arg(na_loop_t* const lp) {
   @return [Numo::DFloat] arg of self.
 */
 static VALUE dcomplex_arg(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_arg, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_arg, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3033,8 +3046,8 @@ static void iter_dcomplex_set_imag(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_set_imag(VALUE self, VALUE a1) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {cRT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_set_imag, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { cRT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_set_imag, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, a1);
   return a1;
@@ -3086,8 +3099,8 @@ static void iter_dcomplex_set_real(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_set_real(VALUE self, VALUE a1) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {cRT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_set_real, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { cRT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_set_real, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, a1);
   return a1;
@@ -3115,9 +3128,9 @@ static void iter_dcomplex_eq(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_eq_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dcomplex_eq, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_eq, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3162,9 +3175,9 @@ static void iter_dcomplex_ne(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_ne_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dcomplex_ne, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_ne, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3209,9 +3222,9 @@ static void iter_dcomplex_nearly_eq(na_loop_t* const lp) {
 }
 
 static VALUE dcomplex_nearly_eq_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dcomplex_nearly_eq, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_nearly_eq, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3302,9 +3315,9 @@ static void iter_dcomplex_floor(na_loop_t* const lp) {
   @return [Numo::DComplex] floor of self.
 */
 static VALUE dcomplex_floor(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_floor, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_floor, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3377,9 +3390,9 @@ static void iter_dcomplex_round(na_loop_t* const lp) {
   @return [Numo::DComplex] round of self.
 */
 static VALUE dcomplex_round(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_round, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_round, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3452,9 +3465,9 @@ static void iter_dcomplex_ceil(na_loop_t* const lp) {
   @return [Numo::DComplex] ceil of self.
 */
 static VALUE dcomplex_ceil(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_ceil, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_ceil, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3527,9 +3540,9 @@ static void iter_dcomplex_trunc(na_loop_t* const lp) {
   @return [Numo::DComplex] trunc of self.
 */
 static VALUE dcomplex_trunc(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_trunc, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_trunc, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3602,9 +3615,9 @@ static void iter_dcomplex_rint(na_loop_t* const lp) {
   @return [Numo::DComplex] rint of self.
 */
 static VALUE dcomplex_rint(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_rint, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_rint, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3624,7 +3637,8 @@ static void iter_dcomplex_copysign(na_loop_t* const lp) {
   INIT_PTR(lp, 2, p3, s3);
 
   //
-  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) && is_aligned(p3, sizeof(dtype))) {
+  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) &&
+      is_aligned(p3, sizeof(dtype))) {
 
     if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
       if (p1 == p3) { // inplace case
@@ -3641,7 +3655,8 @@ static void iter_dcomplex_copysign(na_loop_t* const lp) {
       return;
     }
 
-    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) && is_aligned_step(s3, sizeof(dtype))) {
+    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) &&
+        is_aligned_step(s3, sizeof(dtype))) {
       //
 
       if (s2 == 0) { // Broadcasting from scalar value.
@@ -3699,9 +3714,9 @@ static void iter_dcomplex_copysign(na_loop_t* const lp) {
 #undef check_intdivzero
 
 static VALUE dcomplex_copysign_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_copysign, STRIDE_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_copysign, STRIDE_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -3760,9 +3775,9 @@ static void iter_dcomplex_isnan(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of isnan.
 */
 static VALUE dcomplex_isnan(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dcomplex_isnan, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_isnan, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3802,9 +3817,9 @@ static void iter_dcomplex_isinf(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of isinf.
 */
 static VALUE dcomplex_isinf(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dcomplex_isinf, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_isinf, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3844,9 +3859,9 @@ static void iter_dcomplex_isposinf(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of isposinf.
 */
 static VALUE dcomplex_isposinf(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dcomplex_isposinf, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_isposinf, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3886,9 +3901,9 @@ static void iter_dcomplex_isneginf(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of isneginf.
 */
 static VALUE dcomplex_isneginf(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dcomplex_isneginf, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_isneginf, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3928,9 +3943,9 @@ static void iter_dcomplex_isfinite(na_loop_t* const lp) {
   @return [Numo::Bit] Condition of isfinite.
 */
 static VALUE dcomplex_isfinite(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_dcomplex_isfinite, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_isfinite, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -3961,16 +3976,18 @@ static void iter_dcomplex_sum_nan(na_loop_t* const lp) {
 /*
   sum of self.
   @overload sum(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs sum along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DComplex] returns result of sum.
 */
 static VALUE dcomplex_sum(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_sum, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_sum, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_sum_nan);
 
@@ -4005,16 +4022,18 @@ static void iter_dcomplex_prod_nan(na_loop_t* const lp) {
 /*
   prod of self.
   @overload prod(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs prod along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DComplex] returns result of prod.
 */
 static VALUE dcomplex_prod(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_prod, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_prod, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_prod_nan);
 
@@ -4049,16 +4068,20 @@ static void iter_dcomplex_kahan_sum_nan(na_loop_t* const lp) {
 /*
   kahan_sum of self.
   @overload kahan_sum(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs kahan_sum along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DComplex] returns result of kahan_sum.
 */
 static VALUE dcomplex_kahan_sum(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_kahan_sum, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = {
+    iter_dcomplex_kahan_sum, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout
+  };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_kahan_sum_nan);
 
@@ -4093,16 +4116,18 @@ static void iter_dcomplex_mean_nan(na_loop_t* const lp) {
 /*
   mean of self.
   @overload mean(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs mean along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DComplex] returns result of mean.
 */
 static VALUE dcomplex_mean(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_mean, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_mean, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_mean_nan);
 
@@ -4137,16 +4162,18 @@ static void iter_dcomplex_stddev_nan(na_loop_t* const lp) {
 /*
   stddev of self.
   @overload stddev(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs stddev along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DComplex] returns result of stddev.
 */
 static VALUE dcomplex_stddev(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_stddev, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_stddev, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_stddev_nan);
 
@@ -4181,16 +4208,18 @@ static void iter_dcomplex_var_nan(na_loop_t* const lp) {
 /*
   var of self.
   @overload var(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs var along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DComplex] returns result of var.
 */
 static VALUE dcomplex_var(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_var, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_var, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_var_nan);
 
@@ -4225,16 +4254,18 @@ static void iter_dcomplex_rms_nan(na_loop_t* const lp) {
 /*
   rms of self.
   @overload rms(axis:nil, keepdims:false, nan:false)
-  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+  @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
+  return NaN for min/max etc).
   @param [Numeric,Array,Range] axis  Performs rms along the axis.
-  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+  dimensions with size one.
   @return [Numo::DComplex] returns result of rms.
 */
 static VALUE dcomplex_rms(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cRT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_rms, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_rms, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_rms_nan);
 
@@ -4289,9 +4320,11 @@ static void iter_dcomplex_cumsum_nan(na_loop_t* const lp) {
 */
 static VALUE dcomplex_cumsum(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_cumsum, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = {
+    iter_dcomplex_cumsum, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout
+  };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_cumsum_nan);
 
@@ -4344,9 +4377,11 @@ static void iter_dcomplex_cumprod_nan(na_loop_t* const lp) {
 */
 static VALUE dcomplex_cumprod(int argc, VALUE* argv, VALUE self) {
   VALUE reduce;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {sym_reduce, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_cumprod, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = {
+    iter_dcomplex_cumprod, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout
+  };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_cumprod_nan);
 
@@ -4426,9 +4461,9 @@ static void iter_dcomplex_mulsum_nan(na_loop_t* const lp) {
 static VALUE dcomplex_mulsum_self(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
   VALUE naryv[2];
-  ndfunc_arg_in_t ain[4] = {{cT, 0}, {cT, 0}, {sym_reduce, 0}, {sym_init, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_mulsum, STRIDE_LOOP_NIP, 4, 1, ain, aout};
+  ndfunc_arg_in_t ain[4] = { { cT, 0 }, { cT, 0 }, { sym_reduce, 0 }, { sym_init, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_mulsum, STRIDE_LOOP_NIP, 4, 1, ain, aout };
 
   if (argc < 1) {
     rb_raise(rb_eArgError, "wrong number of arguments (%d for >=1)", argc);
@@ -4450,7 +4485,8 @@ static VALUE dcomplex_mulsum_self(int argc, VALUE* argv, VALUE self) {
   @overload mulsum(other, axis:nil, keepdims:false, nan:false)
   @param [Numo::NArray,Numeric] other
   @param [Numeric,Array,Range] axis  Performs mulsum along the axis.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+  as dimensions with size one.
   @param [TrueClass] nan (keyword) If true, apply NaN-aware algorithm (avoid NaN if exists).
   @return [Numo::NArray] mulsum of self and other.
 */
@@ -4536,8 +4572,8 @@ static void iter_dcomplex_seq(na_loop_t* const lp) {
 static VALUE dcomplex_seq(int argc, VALUE* args, VALUE self) {
   seq_opt_t* g;
   VALUE vbeg = Qnil, vstep = Qnil;
-  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
-  ndfunc_t ndf = {iter_dcomplex_seq, FULL_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_seq, FULL_LOOP, 1, 0, ain, 0 };
 
   g = ALLOCA_N(seq_opt_t, 1);
   g->beg = m_zero;
@@ -4619,8 +4655,8 @@ static void iter_dcomplex_logseq(na_loop_t* const lp) {
 static VALUE dcomplex_logseq(int argc, VALUE* args, VALUE self) {
   logseq_opt_t* g;
   VALUE vbeg, vstep, vbase;
-  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
-  ndfunc_t ndf = {iter_dcomplex_logseq, FULL_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_logseq, FULL_LOOP, 1, 0, ain, 0 };
 
   g = ALLOCA_N(logseq_opt_t, 1);
   rb_scan_args(argc, args, "21", &vbeg, &vstep, &vbase);
@@ -4674,8 +4710,8 @@ static void iter_dcomplex_eye(na_loop_t* const lp) {
   @return [Numo::DComplex] eye of self.
 */
 static VALUE dcomplex_eye(int argc, VALUE* argv, VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 2}};
-  ndfunc_t ndf = {iter_dcomplex_eye, NO_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 2 } };
+  ndfunc_t ndf = { iter_dcomplex_eye, NO_LOOP, 1, 0, ain, 0 };
   ssize_t kofs;
   dtype data;
   char* g;
@@ -4705,17 +4741,21 @@ static VALUE dcomplex_eye(int argc, VALUE* argv, VALUE self) {
   // Diagonal offset from the main diagonal.
   if (kofs >= 0) {
     if ((size_t)(kofs) >= na->shape[nd - 1]) {
-      rb_raise(rb_eArgError,
-               "invalid diagonal offset(%" SZF "d) for "
-               "last dimension size(%" SZF "d)",
-               kofs, na->shape[nd - 1]);
+      rb_raise(
+        rb_eArgError,
+        "invalid diagonal offset(%" SZF "d) for "
+        "last dimension size(%" SZF "d)",
+        kofs, na->shape[nd - 1]
+      );
     }
   } else {
     if ((size_t)(-kofs) >= na->shape[nd - 2]) {
-      rb_raise(rb_eArgError,
-               "invalid diagonal offset(%" SZF "d) for "
-               "last-1 dimension size(%" SZF "d)",
-               kofs, na->shape[nd - 2]);
+      rb_raise(
+        rb_eArgError,
+        "invalid diagonal offset(%" SZF "d) for "
+        "last-1 dimension size(%" SZF "d)",
+        kofs, na->shape[nd - 2]
+      );
     }
   }
 
@@ -4765,7 +4805,8 @@ static void iter_dcomplex_rand(na_loop_t* const lp) {
   Generate uniformly distributed random numbers on self narray.
   @overload rand([[low],high])
   @param [Numeric] low  lower inclusive boundary of random numbers. (default=0)
-  @param [Numeric] high  upper exclusive boundary of random numbers. (default=1 or 1+1i for complex types)
+  @param [Numeric] high  upper exclusive boundary of random numbers. (default=1 or 1+1i for
+  complex types)
   @return [Numo::DComplex] self.
   @example
     Numo::DFloat.new(6).rand
@@ -4784,8 +4825,8 @@ static VALUE dcomplex_rand(int argc, VALUE* args, VALUE self) {
   rand_opt_t g;
   VALUE v1 = Qnil, v2 = Qnil;
   dtype high;
-  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
-  ndfunc_t ndf = {iter_dcomplex_rand, FULL_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_rand, FULL_LOOP, 1, 0, ain, 0 };
 
   rb_scan_args(argc, args, "02", &v1, &v2);
   if (v2 == Qnil) {
@@ -4883,8 +4924,8 @@ static VALUE dcomplex_rand_norm(int argc, VALUE* args, VALUE self) {
   int n;
   randn_opt_t g;
   VALUE v1 = Qnil, v2 = Qnil;
-  ndfunc_arg_in_t ain[1] = {{OVERWRITE, 0}};
-  ndfunc_t ndf = {iter_dcomplex_rand_norm, FULL_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_rand_norm, FULL_LOOP, 1, 0, ain, 0 };
 
   n = rb_scan_args(argc, args, "02", &v1, &v2);
   if (n == 0) {
@@ -4928,8 +4969,8 @@ static VALUE dcomplex_poly(VALUE self, VALUE args) {
   int argc, i;
   VALUE* argv;
   volatile VALUE v, a;
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_poly, NO_LOOP, 0, 1, 0, aout};
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_poly, NO_LOOP, 0, 1, 0, aout };
 
   argc = (int)RARRAY_LEN(args);
   ndf.nin = argc + 1;
@@ -5024,9 +5065,9 @@ static void iter_dcomplex_math_s_sqrt(na_loop_t* const lp) {
   @return [Numo::DComplex] result of sqrt(x).
 */
 static VALUE dcomplex_math_s_sqrt(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_sqrt, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_sqrt, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -5102,9 +5143,9 @@ static void iter_dcomplex_math_s_cbrt(na_loop_t* const lp) {
   @return [Numo::DComplex] result of cbrt(x).
 */
 static VALUE dcomplex_math_s_cbrt(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_cbrt, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_cbrt, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -5180,9 +5221,9 @@ static void iter_dcomplex_math_s_log(na_loop_t* const lp) {
   @return [Numo::DComplex] result of log(x).
 */
 static VALUE dcomplex_math_s_log(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_log, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_log, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -5258,9 +5299,9 @@ static void iter_dcomplex_math_s_log2(na_loop_t* const lp) {
   @return [Numo::DComplex] result of log2(x).
 */
 static VALUE dcomplex_math_s_log2(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_log2, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_log2, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -5336,9 +5377,9 @@ static void iter_dcomplex_math_s_log10(na_loop_t* const lp) {
   @return [Numo::DComplex] result of log10(x).
 */
 static VALUE dcomplex_math_s_log10(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_log10, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_log10, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -5414,9 +5455,9 @@ static void iter_dcomplex_math_s_exp(na_loop_t* const lp) {
   @return [Numo::DComplex] result of exp(x).
 */
 static VALUE dcomplex_math_s_exp(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_exp, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_exp, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -5492,9 +5533,9 @@ static void iter_dcomplex_math_s_exp2(na_loop_t* const lp) {
   @return [Numo::DComplex] result of exp2(x).
 */
 static VALUE dcomplex_math_s_exp2(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_exp2, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_exp2, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -5570,9 +5611,9 @@ static void iter_dcomplex_math_s_exp10(na_loop_t* const lp) {
   @return [Numo::DComplex] result of exp10(x).
 */
 static VALUE dcomplex_math_s_exp10(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_exp10, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_exp10, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -5648,9 +5689,9 @@ static void iter_dcomplex_math_s_sin(na_loop_t* const lp) {
   @return [Numo::DComplex] result of sin(x).
 */
 static VALUE dcomplex_math_s_sin(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_sin, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_sin, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -5726,9 +5767,9 @@ static void iter_dcomplex_math_s_cos(na_loop_t* const lp) {
   @return [Numo::DComplex] result of cos(x).
 */
 static VALUE dcomplex_math_s_cos(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_cos, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_cos, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -5804,9 +5845,9 @@ static void iter_dcomplex_math_s_tan(na_loop_t* const lp) {
   @return [Numo::DComplex] result of tan(x).
 */
 static VALUE dcomplex_math_s_tan(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_tan, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_tan, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -5882,9 +5923,9 @@ static void iter_dcomplex_math_s_asin(na_loop_t* const lp) {
   @return [Numo::DComplex] result of asin(x).
 */
 static VALUE dcomplex_math_s_asin(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_asin, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_asin, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -5960,9 +6001,9 @@ static void iter_dcomplex_math_s_acos(na_loop_t* const lp) {
   @return [Numo::DComplex] result of acos(x).
 */
 static VALUE dcomplex_math_s_acos(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_acos, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_acos, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -6038,9 +6079,9 @@ static void iter_dcomplex_math_s_atan(na_loop_t* const lp) {
   @return [Numo::DComplex] result of atan(x).
 */
 static VALUE dcomplex_math_s_atan(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_atan, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_atan, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -6116,9 +6157,9 @@ static void iter_dcomplex_math_s_sinh(na_loop_t* const lp) {
   @return [Numo::DComplex] result of sinh(x).
 */
 static VALUE dcomplex_math_s_sinh(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_sinh, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_sinh, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -6194,9 +6235,9 @@ static void iter_dcomplex_math_s_cosh(na_loop_t* const lp) {
   @return [Numo::DComplex] result of cosh(x).
 */
 static VALUE dcomplex_math_s_cosh(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_cosh, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_cosh, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -6272,9 +6313,9 @@ static void iter_dcomplex_math_s_tanh(na_loop_t* const lp) {
   @return [Numo::DComplex] result of tanh(x).
 */
 static VALUE dcomplex_math_s_tanh(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_tanh, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_tanh, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -6350,9 +6391,9 @@ static void iter_dcomplex_math_s_asinh(na_loop_t* const lp) {
   @return [Numo::DComplex] result of asinh(x).
 */
 static VALUE dcomplex_math_s_asinh(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_asinh, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_asinh, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -6428,9 +6469,9 @@ static void iter_dcomplex_math_s_acosh(na_loop_t* const lp) {
   @return [Numo::DComplex] result of acosh(x).
 */
 static VALUE dcomplex_math_s_acosh(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_acosh, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_acosh, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -6506,9 +6547,9 @@ static void iter_dcomplex_math_s_atanh(na_loop_t* const lp) {
   @return [Numo::DComplex] result of atanh(x).
 */
 static VALUE dcomplex_math_s_atanh(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_atanh, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_atanh, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }
@@ -6584,9 +6625,9 @@ static void iter_dcomplex_math_s_sinc(na_loop_t* const lp) {
   @return [Numo::DComplex] result of sinc(x).
 */
 static VALUE dcomplex_math_s_sinc(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_dcomplex_math_s_sinc, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_dcomplex_math_s_sinc, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, a1);
 }

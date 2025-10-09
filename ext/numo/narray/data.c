@@ -64,9 +64,9 @@ static void iter_copy_bytes(na_loop_t* const lp) {
 VALUE
 na_copy(VALUE self) {
   VALUE v;
-  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
-  ndfunc_arg_out_t aout[1] = {{INT2FIX(0), 0}};
-  ndfunc_t ndf = {iter_copy_bytes, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
+  ndfunc_arg_out_t aout[1] = { { INT2FIX(0), 0 } };
+  ndfunc_t ndf = { iter_copy_bytes, FULL_LOOP, 1, 1, ain, aout };
 
   v = na_ndloop(&ndf, 1, self);
   return v;
@@ -101,9 +101,9 @@ static void iter_swap_byte(na_loop_t* const lp) {
 
 static VALUE nary_swap_byte(VALUE self) {
   VALUE v;
-  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
-  ndfunc_arg_out_t aout[1] = {{INT2FIX(0), 0}};
-  ndfunc_t ndf = {iter_swap_byte, FULL_LOOP | NDF_ACCEPT_BYTESWAP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
+  ndfunc_arg_out_t aout[1] = { { INT2FIX(0), 0 } };
+  ndfunc_t ndf = { iter_swap_byte, FULL_LOOP | NDF_ACCEPT_BYTESWAP, 1, 1, ain, aout };
 
   v = na_ndloop(&ndf, 1, self);
   if (self != v) {
@@ -656,19 +656,23 @@ static VALUE na_diagonal(int argc, VALUE* argv, VALUE self) {
     k0 = 0;
     k1 = kofs;
     if (k1 >= na->shape[ax[1]]) {
-      rb_raise(rb_eArgError,
-               "invalid diagonal offset(%" SZF "d) for "
-               "last dimension size(%" SZF "d)",
-               kofs, na->shape[ax[1]]);
+      rb_raise(
+        rb_eArgError,
+        "invalid diagonal offset(%" SZF "d) for "
+        "last dimension size(%" SZF "d)",
+        kofs, na->shape[ax[1]]
+      );
     }
   } else {
     k0 = -kofs;
     k1 = 0;
     if (k0 >= na->shape[ax[0]]) {
-      rb_raise(rb_eArgError,
-               "invalid diagonal offset(=%" SZF "d) for "
-               "last-1 dimension size(%" SZF "d)",
-               kofs, na->shape[ax[0]]);
+      rb_raise(
+        rb_eArgError,
+        "invalid diagonal offset(=%" SZF "d) for "
+        "last-1 dimension size(%" SZF "d)",
+        kofs, na->shape[ax[0]]
+      );
     }
   }
 

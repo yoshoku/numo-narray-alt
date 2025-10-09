@@ -859,7 +859,8 @@ void na_copy_flags(VALUE src, VALUE dst) {
   na2->flag[0] = na1->flag[0];
   // na2->flag[1] = NA_FL1_INIT;
 
-  RBASIC(dst)->flags |= (RBASIC(src)->flags) & (FL_USER1 | FL_USER2 | FL_USER3 | FL_USER4 | FL_USER5 | FL_USER6 | FL_USER7);
+  RBASIC(dst)->flags |= (RBASIC(src)->flags) & (FL_USER1 | FL_USER2 | FL_USER3 | FL_USER4 |
+                                                FL_USER5 | FL_USER6 | FL_USER7);
 }
 
 // fix name, ex, allow_stride_for_flatten_view
@@ -1425,10 +1426,12 @@ static VALUE nary_marshal_load(VALUE self, VALUE a) {
     rb_raise(rb_eArgError, "marshal array size should be 4");
   }
   if (RARRAY_AREF(a, 0) != INT2FIX(1)) {
-    rb_raise(rb_eArgError,
-             "NArray marshal version %d is not supported "
-             "(only version 1)",
-             NUM2INT(RARRAY_AREF(a, 0)));
+    rb_raise(
+      rb_eArgError,
+      "NArray marshal version %d is not supported "
+      "(only version 1)",
+      NUM2INT(RARRAY_AREF(a, 0))
+    );
   }
   na_initialize(self, RARRAY_AREF(a, 1));
   NA_FL0_SET(self, FIX2INT(RARRAY_AREF(a, 2)));
@@ -1611,12 +1614,14 @@ nary_reduce_options(VALUE axes, VALUE* opts, int naryc, VALUE* naryv, ndfunc_t* 
 }
 
 VALUE
-nary_reduce_dimension(int argc, VALUE* argv, int naryc, VALUE* naryv, ndfunc_t* ndf, na_iter_func_t iter_nan) {
+nary_reduce_dimension(
+  int argc, VALUE* argv, int naryc, VALUE* naryv, ndfunc_t* ndf, na_iter_func_t iter_nan
+) {
   long narg;
   VALUE axes;
   VALUE kw_hash = Qnil;
-  ID kw_table[3] = {id_axis, id_keepdims, id_nan};
-  VALUE opts[3] = {Qundef, Qundef, Qundef};
+  ID kw_table[3] = { id_axis, id_keepdims, id_nan };
+  VALUE opts[3] = { Qundef, Qundef, Qundef };
 
   narg = rb_scan_args(argc, argv, "*:", &axes, &kw_hash);
   rb_get_kwargs(kw_hash, kw_table, 0, 3, opts);

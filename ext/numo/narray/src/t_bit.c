@@ -255,8 +255,8 @@ static void iter_bit_store_bit(na_loop_t* const lp) {
 }
 
 static VALUE bit_store_bit(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_bit_store_bit, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_bit_store_bit, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -311,8 +311,8 @@ static void iter_bit_store_dfloat(na_loop_t* const lp) {
 }
 
 static VALUE bit_store_dfloat(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_bit_store_dfloat, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_bit_store_dfloat, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -367,8 +367,8 @@ static void iter_bit_store_sfloat(na_loop_t* const lp) {
 }
 
 static VALUE bit_store_sfloat(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_bit_store_sfloat, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_bit_store_sfloat, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -423,8 +423,8 @@ static void iter_bit_store_int64(na_loop_t* const lp) {
 }
 
 static VALUE bit_store_int64(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_bit_store_int64, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_bit_store_int64, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -479,8 +479,8 @@ static void iter_bit_store_int32(na_loop_t* const lp) {
 }
 
 static VALUE bit_store_int32(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_bit_store_int32, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_bit_store_int32, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -535,8 +535,8 @@ static void iter_bit_store_int16(na_loop_t* const lp) {
 }
 
 static VALUE bit_store_int16(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_bit_store_int16, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_bit_store_int16, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -591,8 +591,8 @@ static void iter_bit_store_int8(na_loop_t* const lp) {
 }
 
 static VALUE bit_store_int8(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_bit_store_int8, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_bit_store_int8, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -647,8 +647,8 @@ static void iter_bit_store_uint64(na_loop_t* const lp) {
 }
 
 static VALUE bit_store_uint64(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_bit_store_uint64, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_bit_store_uint64, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -703,8 +703,8 @@ static void iter_bit_store_uint32(na_loop_t* const lp) {
 }
 
 static VALUE bit_store_uint32(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_bit_store_uint32, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_bit_store_uint32, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -759,8 +759,8 @@ static void iter_bit_store_uint16(na_loop_t* const lp) {
 }
 
 static VALUE bit_store_uint16(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_bit_store_uint16, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_bit_store_uint16, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -815,8 +815,8 @@ static void iter_bit_store_uint8(na_loop_t* const lp) {
 }
 
 static VALUE bit_store_uint8(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_bit_store_uint8, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_bit_store_uint8, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -871,8 +871,8 @@ static void iter_bit_store_robject(na_loop_t* const lp) {
 }
 
 static VALUE bit_store_robject(VALUE self, VALUE obj) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_bit_store_robject, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_bit_store_robject, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, obj);
   return self;
@@ -990,8 +990,8 @@ loop_end:
 }
 
 static VALUE bit_store_array(VALUE self, VALUE rary) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {rb_cArray, 0}};
-  ndfunc_t ndf = {iter_bit_store_array, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { rb_cArray, 0 } };
+  ndfunc_t ndf = { iter_bit_store_array, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop_store_rarray(&ndf, self, rary);
   return self;
@@ -1086,8 +1086,10 @@ static VALUE bit_store(VALUE self, VALUE obj) {
     }
   }
 
-  rb_raise(nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)),
-           rb_class2name(rb_obj_class(self)));
+  rb_raise(
+    nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)),
+    rb_class2name(rb_obj_class(self))
+  );
 
   return self;
 }
@@ -1181,7 +1183,10 @@ static dtype bit_extract_data(VALUE obj) {
       return bit_extract_data(r);
     }
 
-    rb_raise(nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)), rb_class2name(cT));
+    rb_raise(
+      nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)),
+      rb_class2name(cT)
+    );
   }
   if (TYPE(obj) == T_ARRAY) {
     if (RARRAY_LEN(obj) != 1) {
@@ -1250,8 +1255,8 @@ static VALUE bit_s_cast(VALUE type, VALUE obj) {
 /*
   Multi-dimensional element reference.
   @overload [](dim0,...,dimL)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol] dim0,...,dimL  multi-dimensional
-  indices.
+  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+  dim0,...,dimL  multi-dimensional indices.
   @return [Numeric,Numo::Bit] an element or NArray view.
   @see Numo::NArray#[]
   @see #[]=
@@ -1297,8 +1302,8 @@ static VALUE bit_aref(int argc, VALUE* argv, VALUE self) {
 /*
   Multi-dimensional element assignment.
   @overload []=(dim0,...,dimL,val)
-  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol] dim0,...,dimL  multi-dimensional
-  indices.
+  @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+  dim0,...,dimL  multi-dimensional indices.
   @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
   @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
   @see Numo::NArray#[]=
@@ -1389,9 +1394,9 @@ static void iter_bit_to_a(na_loop_t* const lp) {
   @return [Array]
 */
 static VALUE bit_to_a(VALUE self) {
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {sym_loop_opt}, {sym_option}};
-  ndfunc_arg_out_t aout[1] = {{rb_cArray, 0}}; // dummy?
-  ndfunc_t ndf = {iter_bit_to_a, FULL_LOOP_NIP, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
+  ndfunc_arg_out_t aout[1] = { { rb_cArray, 0 } }; // dummy?
+  ndfunc_t ndf = { iter_bit_to_a, FULL_LOOP_NIP, 3, 1, ain, aout };
   return na_ndloop_cast_narray_to_rarray(&ndf, self, Qnil);
 }
 
@@ -1451,8 +1456,8 @@ static void iter_bit_fill(na_loop_t* const lp) {
   @return [Numo::Bit] self.
 */
 static VALUE bit_fill(VALUE self, VALUE val) {
-  ndfunc_arg_in_t ain[2] = {{OVERWRITE, 0}, {sym_option}};
-  ndfunc_t ndf = {iter_bit_fill, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { sym_option } };
+  ndfunc_t ndf = { iter_bit_fill, FULL_LOOP, 2, 0, ain, 0 };
 
   na_ndloop(&ndf, 2, self, val);
   return self;
@@ -1508,9 +1513,9 @@ static void iter_bit_format(na_loop_t* const lp) {
 static VALUE bit_format(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
 
-  ndfunc_arg_in_t ain[2] = {{Qnil, 0}, {sym_option}};
-  ndfunc_arg_out_t aout[1] = {{numo_cRObject, 0}};
-  ndfunc_t ndf = {iter_bit_format, FULL_LOOP_NIP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { Qnil, 0 }, { sym_option } };
+  ndfunc_arg_out_t aout[1] = { { numo_cRObject, 0 } };
+  ndfunc_t ndf = { iter_bit_format, FULL_LOOP_NIP, 2, 1, ain, aout };
 
   rb_scan_args(argc, argv, "01", &fmt);
   return na_ndloop(&ndf, 2, self, fmt);
@@ -1555,9 +1560,9 @@ static void iter_bit_format_to_a(na_loop_t* const lp) {
 */
 static VALUE bit_format_to_a(int argc, VALUE* argv, VALUE self) {
   VALUE fmt = Qnil;
-  ndfunc_arg_in_t ain[3] = {{Qnil, 0}, {sym_loop_opt}, {sym_option}};
-  ndfunc_arg_out_t aout[1] = {{rb_cArray, 0}}; // dummy?
-  ndfunc_t ndf = {iter_bit_format_to_a, FULL_LOOP_NIP, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
+  ndfunc_arg_out_t aout[1] = { { rb_cArray, 0 } }; // dummy?
+  ndfunc_t ndf = { iter_bit_format_to_a, FULL_LOOP_NIP, 3, 1, ain, aout };
 
   rb_scan_args(argc, argv, "01", &fmt);
   return na_ndloop_cast_narray_to_rarray(&ndf, self, fmt);
@@ -1614,8 +1619,8 @@ static void iter_bit_each(na_loop_t* const lp) {
   @yield [x]  x is element of NArray.
 */
 static VALUE bit_each(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
-  ndfunc_t ndf = {iter_bit_each, FULL_LOOP_NIP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
+  ndfunc_t ndf = { iter_bit_each, FULL_LOOP_NIP, 1, 0, ain, 0 };
 
   na_ndloop(&ndf, 1, self);
   return self;
@@ -1676,8 +1681,8 @@ static void iter_bit_each_with_index(na_loop_t* const lp) {
   @yield [x,i,j,...]  x is an element, i,j,... are multidimensional indices.
 */
 static VALUE bit_each_with_index(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{Qnil, 0}};
-  ndfunc_t ndf = {iter_bit_each_with_index, FULL_LOOP_NIP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
+  ndfunc_t ndf = { iter_bit_each_with_index, FULL_LOOP_NIP, 1, 0, ain, 0 };
 
   na_ndloop_with_index(&ndf, 1, self);
   return self;
@@ -1770,9 +1775,9 @@ static void iter_bit_copy(na_loop_t* const lp) {
   @return [Numo::Bit] copy of self.
 */
 static VALUE bit_copy(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_bit_copy, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_bit_copy, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -1864,9 +1869,9 @@ static void iter_bit_not(na_loop_t* const lp) {
   @return [Numo::Bit] not of self.
 */
 static VALUE bit_not(VALUE self) {
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_bit_not, FULL_LOOP, 1, 1, ain, aout};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_bit_not, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
 }
@@ -1993,9 +1998,9 @@ static void iter_bit_and(na_loop_t* const lp) {
   @return [Numo::NArray] and of self and other.
 */
 static VALUE bit_and(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_bit_and, FULL_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_bit_and, FULL_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2122,9 +2127,9 @@ static void iter_bit_or(na_loop_t* const lp) {
   @return [Numo::NArray] or of self and other.
 */
 static VALUE bit_or(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_bit_or, FULL_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_bit_or, FULL_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2251,9 +2256,9 @@ static void iter_bit_xor(na_loop_t* const lp) {
   @return [Numo::NArray] xor of self and other.
 */
 static VALUE bit_xor(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_bit_xor, FULL_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_bit_xor, FULL_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2380,9 +2385,9 @@ static void iter_bit_eq(na_loop_t* const lp) {
   @return [Numo::NArray] eq of self and other.
 */
 static VALUE bit_eq(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {cT, 0}};
-  ndfunc_arg_out_t aout[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_bit_eq, FULL_LOOP, 2, 1, ain, aout};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
+  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_bit_eq, FULL_LOOP, 2, 1, ain, aout };
 
   return na_ndloop(&ndf, 2, self, other);
 }
@@ -2455,15 +2460,16 @@ static void iter_bit_count_true(na_loop_t* const lp) {
   If argument is supplied, return Int-array counted along the axes.
   @overload count_true(axis:nil, keepdims:false)
   @param [Integer,Array,Range] axis (keyword) axes to be counted.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+  as dimensions with size one.
   @return [Numo::Int64]
 */
 static VALUE bit_count_true(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
   narray_t* na;
-  ndfunc_arg_in_t ain[3] = {{cT, 0}, {sym_reduce, 0}, {sym_init, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cInt64, 0}};
-  ndfunc_t ndf = {iter_bit_count_true, FULL_LOOP_NIP, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { cT, 0 }, { sym_reduce, 0 }, { sym_init, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cInt64, 0 } };
+  ndfunc_t ndf = { iter_bit_count_true, FULL_LOOP_NIP, 3, 1, ain, aout };
 
   GetNArray(self, na);
   if (NA_SIZE(na) == 0) {
@@ -2542,15 +2548,16 @@ static void iter_bit_count_false(na_loop_t* const lp) {
   If argument is supplied, return Int-array counted along the axes.
   @overload count_false(axis:nil, keepdims:false)
   @param [Integer,Array,Range] axis (keyword) axes to be counted.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+  as dimensions with size one.
   @return [Numo::Int64]
 */
 static VALUE bit_count_false(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
   narray_t* na;
-  ndfunc_arg_in_t ain[3] = {{cT, 0}, {sym_reduce, 0}, {sym_init, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cInt64, 0}};
-  ndfunc_t ndf = {iter_bit_count_false, FULL_LOOP_NIP, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { cT, 0 }, { sym_reduce, 0 }, { sym_init, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cInt64, 0 } };
+  ndfunc_t ndf = { iter_bit_count_false, FULL_LOOP_NIP, 3, 1, ain, aout };
 
   GetNArray(self, na);
   if (NA_SIZE(na) == 0) {
@@ -2656,15 +2663,16 @@ static void iter_bit_all_p(na_loop_t* const lp) {
   If argument is supplied, return Bit-array reduced along the axes.
   @overload all?(axis:nil, keepdims:false)
   @param [Integer,Array,Range] axis (keyword) axes to be reduced.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+  as dimensions with size one.
   @return [Numo::Bit] .
 */
 static VALUE bit_all_p(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
   narray_t* na;
-  ndfunc_arg_in_t ain[3] = {{cT, 0}, {sym_reduce, 0}, {sym_init, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_bit_all_p, FULL_LOOP_NIP, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { cT, 0 }, { sym_reduce, 0 }, { sym_init, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_bit_all_p, FULL_LOOP_NIP, 3, 1, ain, aout };
 
   GetNArray(self, na);
   if (NA_SIZE(na) == 0) {
@@ -2783,15 +2791,16 @@ static void iter_bit_any_p(na_loop_t* const lp) {
   If argument is supplied, return Bit-array reduced along the axes.
   @overload any?(axis:nil, keepdims:false)
   @param [Integer,Array,Range] axis (keyword) axes to be reduced.
-  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array as dimensions with size one.
+  @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
+  as dimensions with size one.
   @return [Numo::Bit] .
 */
 static VALUE bit_any_p(int argc, VALUE* argv, VALUE self) {
   VALUE v, reduce;
   narray_t* na;
-  ndfunc_arg_in_t ain[3] = {{cT, 0}, {sym_reduce, 0}, {sym_init, 0}};
-  ndfunc_arg_out_t aout[1] = {{numo_cBit, 0}};
-  ndfunc_t ndf = {iter_bit_any_p, FULL_LOOP_NIP, 3, 1, ain, aout};
+  ndfunc_arg_in_t ain[3] = { { cT, 0 }, { sym_reduce, 0 }, { sym_init, 0 } };
+  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
+  ndfunc_t ndf = { iter_bit_any_p, FULL_LOOP_NIP, 3, 1, ain, aout };
 
   GetNArray(self, na);
   if (NA_SIZE(na) == 0) {
@@ -2889,8 +2898,8 @@ static VALUE bit_where(VALUE self) {
   size_t size, n_1;
   where_opt_t* g;
 
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_bit_where, FULL_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_bit_where, FULL_LOOP, 1, 0, ain, 0 };
 
   size = RNARRAY_SIZE(self);
   n_1 = NUM2SIZET(bit_count_true(0, NULL, self));
@@ -2973,8 +2982,8 @@ static VALUE bit_where2(VALUE self) {
   size_t size, n_1, n_0;
   where_opt_t* g;
 
-  ndfunc_arg_in_t ain[1] = {{cT, 0}};
-  ndfunc_t ndf = {iter_bit_where2, FULL_LOOP, 1, 0, ain, 0};
+  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
+  ndfunc_t ndf = { iter_bit_where2, FULL_LOOP, 1, 0, ain, 0 };
 
   size = RNARRAY_SIZE(self);
   n_1 = NUM2SIZET(bit_count_true(0, NULL, self));
@@ -3092,8 +3101,8 @@ static VALUE bit_mask(VALUE mask, VALUE val) {
   stridx_t stridx0;
   size_t n_1;
   where_opt_t g;
-  ndfunc_arg_in_t ain[2] = {{cT, 0}, {Qnil, 0}};
-  ndfunc_t ndf = {iter_bit_mask, FULL_LOOP, 2, 0, ain, 0};
+  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { Qnil, 0 } };
+  ndfunc_t ndf = { iter_bit_mask, FULL_LOOP, 2, 0, ain, 0 };
 
   // cast val to NArray
   if (!rb_obj_is_kind_of(val, numo_cNArray)) {

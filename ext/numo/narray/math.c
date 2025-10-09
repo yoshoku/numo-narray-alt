@@ -40,8 +40,10 @@ static VALUE nary_math_cast2(VALUE type1, VALUE type2) {
   if (RTEST(rb_class_inherited_p(type2, cNArray))) {
     return nary_type_s_upcast(type2, type1);
   }
-  if (RTEST(rb_class_inherited_p(type1, rb_cNumeric)) && RTEST(rb_class_inherited_p(type2, rb_cNumeric))) {
-    if (RTEST(rb_class_inherited_p(type1, rb_cComplex)) || RTEST(rb_class_inherited_p(type2, rb_cComplex))) {
+  if (RTEST(rb_class_inherited_p(type1, rb_cNumeric)) &&
+      RTEST(rb_class_inherited_p(type2, rb_cNumeric))) {
+    if (RTEST(rb_class_inherited_p(type1, rb_cComplex)) ||
+        RTEST(rb_class_inherited_p(type2, rb_cComplex))) {
       return rb_cComplex;
     }
     return rb_cFloat;

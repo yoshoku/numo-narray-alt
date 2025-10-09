@@ -22,7 +22,17 @@ typedef struct {
 } na_mdai_t;
 
 // Order of Ruby object.
-enum { NA_NONE, NA_BIT, NA_INT32, NA_INT64, NA_RATIONAL, NA_DFLOAT, NA_DCOMPLEX, NA_ROBJ, NA_NTYPES };
+enum {
+  NA_NONE,
+  NA_BIT,
+  NA_INT32,
+  NA_INT64,
+  NA_RATIONAL,
+  NA_DFLOAT,
+  NA_DCOMPLEX,
+  NA_ROBJ,
+  NA_NTYPES
+};
 
 static ID id_begin;
 static ID id_end;
@@ -51,7 +61,8 @@ static VALUE na_object_type(int type, VALUE v) {
     return type;
   case T_BIGNUM:
     if (type < NA_INT64) {
-      if (RTEST(rb_funcall(v, id_le, 1, int32_max)) && RTEST(rb_funcall(v, id_ge, 1, int32_min))) {
+      if (RTEST(rb_funcall(v, id_le, 1, int32_max)) &&
+          RTEST(rb_funcall(v, id_ge, 1, int32_min))) {
         if (type < NA_INT32) return NA_INT32;
       } else {
         return NA_INT64;
@@ -160,7 +171,8 @@ static int na_mdai_investigate(na_mdai_t* mdai, int ndim) {
     if (TYPE(v) == T_ARRAY) {
       /* check recursive array */
       for (j = 0; j < ndim; j++) {
-        if (mdai->item[j].val == v) rb_raise(rb_eStandardError, "cannot convert from a recursive Array to NArray");
+        if (mdai->item[j].val == v)
+          rb_raise(rb_eStandardError, "cannot convert from a recursive Array to NArray");
       }
       if (ndim >= mdai->capa) {
         na_mdai_realloc(mdai, 4);
@@ -294,15 +306,16 @@ static size_t na_mdai_memsize(const void* ptr) {
   return sizeof(na_mdai_t) + mdai->capa * sizeof(na_mdai_item_t);
 }
 
-static const rb_data_type_t mdai_data_type = {"Numo::NArray/mdai",
-                                              {
-                                                NULL,
-                                                na_mdai_free,
-                                                na_mdai_memsize,
-                                              },
-                                              0,
-                                              0,
-                                              RUBY_TYPED_FREE_IMMEDIATELY | RUBY_TYPED_WB_PROTECTED};
+static const rb_data_type_t mdai_data_type = { "Numo::NArray/mdai",
+                                               {
+                                                 NULL,
+                                                 na_mdai_free,
+                                                 na_mdai_memsize,
+                                               },
+                                               0,
+                                               0,
+                                               RUBY_TYPED_FREE_IMMEDIATELY |
+                                                 RUBY_TYPED_WB_PROTECTED };
 
 static void na_composition3_ary(VALUE ary, VALUE* ptype, VALUE* pshape, VALUE* pnary) {
   VALUE vmdai;

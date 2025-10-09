@@ -72,7 +72,9 @@ void na_release_lock(VALUE); // currently do nothing
 
 // used in reduce methods
 #define na_reduce_dimension nary_reduce_dimension
-VALUE nary_reduce_dimension(int argc, VALUE* argv, int naryc, VALUE* naryv, ndfunc_t* ndf, na_iter_func_t nan_iter);
+VALUE nary_reduce_dimension(
+  int argc, VALUE* argv, int naryc, VALUE* naryv, ndfunc_t* ndf, na_iter_func_t nan_iter
+);
 
 #define na_reduce_options nary_reduce_options
 VALUE nary_reduce_options(VALUE axes, VALUE* opts, int naryc, VALUE* naryv, ndfunc_t* ndf);
@@ -95,13 +97,17 @@ VALUE nary_info_str(VALUE);
 #define na_test_reduce nary_test_reduce
 bool nary_test_reduce(VALUE reduce, int dim);
 
-void nary_step_array_index(VALUE self, size_t ary_size, size_t* plen, ssize_t* pbeg, ssize_t* pstep);
+void nary_step_array_index(
+  VALUE self, size_t ary_size, size_t* plen, ssize_t* pbeg, ssize_t* pstep
+);
 void nary_step_sequence(VALUE self, size_t* plen, double* pbeg, double* pstep);
 void na_parse_enumerator_step(VALUE enum_obj, VALUE* pstep);
 
 // used in aref, aset
 #define na_get_result_dimension nary_get_result_dimension
-int nary_get_result_dimension(VALUE self, int argc, VALUE* argv, ssize_t stride, size_t* pos_idx);
+int nary_get_result_dimension(
+  VALUE self, int argc, VALUE* argv, ssize_t stride, size_t* pos_idx
+);
 #define na_aref_main nary_aref_main
 VALUE nary_aref_main(int nidx, VALUE* idx, VALUE self, int keep_dim, int nd);
 
