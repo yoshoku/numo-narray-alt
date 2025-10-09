@@ -28,3 +28,4 @@ lib/numo/numo/extconf.h
 TAGS
 t.rb
 node_modules/
+doc/
