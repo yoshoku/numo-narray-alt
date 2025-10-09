@@ -4862,7 +4862,7 @@ static void iter_uint16_seq(na_loop_t* const lp) {
     # => Numo::DComplex#shape=[6]
     # [1+0i, 0.8+0.2i, 0.6+0.4i, 0.4+0.6i, 0.2+0.8i, 0+1i]
 */
-static VALUE uint16_seq(int argc, VALUE* args, VALUE self) {
+static VALUE uint16_seq(int argc, VALUE* argv, VALUE self) {
   seq_opt_t* g;
   VALUE vbeg = Qnil, vstep = Qnil;
   ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
@@ -4872,7 +4872,7 @@ static VALUE uint16_seq(int argc, VALUE* args, VALUE self) {
   g->beg = m_zero;
   g->step = m_one;
   g->count = 0;
-  rb_scan_args(argc, args, "02", &vbeg, &vstep);
+  rb_scan_args(argc, argv, "02", &vbeg, &vstep);
   if (vbeg != Qnil) {
     g->beg = NUM2DBL(vbeg);
   }
@@ -5069,14 +5069,14 @@ static void iter_uint16_rand(na_loop_t* const lp) {
     # => Numo::Int32#shape=[6]
     # [4, 3, 3, 2, 4, 2]
 */
-static VALUE uint16_rand(int argc, VALUE* args, VALUE self) {
+static VALUE uint16_rand(int argc, VALUE* argv, VALUE self) {
   rand_opt_t g;
   VALUE v1 = Qnil, v2 = Qnil;
   dtype high;
   ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
   ndfunc_t ndf = { iter_uint16_rand, FULL_LOOP, 1, 0, ain, 0 };
 
-  rb_scan_args(argc, args, "11", &v1, &v2);
+  rb_scan_args(argc, argv, "11", &v1, &v2);
   if (v2 == Qnil) {
     g.low = m_zero;
     g.max = high = m_num_to_data(v1);

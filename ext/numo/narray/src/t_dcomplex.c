@@ -4569,7 +4569,7 @@ static void iter_dcomplex_seq(na_loop_t* const lp) {
     # => Numo::DComplex#shape=[6]
     # [1+0i, 0.8+0.2i, 0.6+0.4i, 0.4+0.6i, 0.2+0.8i, 0+1i]
 */
-static VALUE dcomplex_seq(int argc, VALUE* args, VALUE self) {
+static VALUE dcomplex_seq(int argc, VALUE* argv, VALUE self) {
   seq_opt_t* g;
   VALUE vbeg = Qnil, vstep = Qnil;
   ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
@@ -4579,7 +4579,7 @@ static VALUE dcomplex_seq(int argc, VALUE* args, VALUE self) {
   g->beg = m_zero;
   g->step = m_one;
   g->count = 0;
-  rb_scan_args(argc, args, "02", &vbeg, &vstep);
+  rb_scan_args(argc, argv, "02", &vbeg, &vstep);
   if (vbeg != Qnil) {
     g->beg = m_num_to_data(vbeg);
   }
@@ -4652,14 +4652,14 @@ static void iter_dcomplex_logseq(na_loop_t* const lp) {
     # => Numo::DComplex#shape=[5]
     # [1+7.26156e-310i, 0.5+0.866025i, -0.5+0.866025i, -1+1.22465e-16i, ...]
 */
-static VALUE dcomplex_logseq(int argc, VALUE* args, VALUE self) {
+static VALUE dcomplex_logseq(int argc, VALUE* argv, VALUE self) {
   logseq_opt_t* g;
   VALUE vbeg, vstep, vbase;
   ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
   ndfunc_t ndf = { iter_dcomplex_logseq, FULL_LOOP, 1, 0, ain, 0 };
 
   g = ALLOCA_N(logseq_opt_t, 1);
-  rb_scan_args(argc, args, "21", &vbeg, &vstep, &vbase);
+  rb_scan_args(argc, argv, "21", &vbeg, &vstep, &vbase);
   g->beg = m_num_to_data(vbeg);
   g->step = m_num_to_data(vstep);
   if (vbase == Qnil) {
@@ -4821,14 +4821,14 @@ static void iter_dcomplex_rand(na_loop_t* const lp) {
     # => Numo::Int32#shape=[6]
     # [4, 3, 3, 2, 4, 2]
 */
-static VALUE dcomplex_rand(int argc, VALUE* args, VALUE self) {
+static VALUE dcomplex_rand(int argc, VALUE* argv, VALUE self) {
   rand_opt_t g;
   VALUE v1 = Qnil, v2 = Qnil;
   dtype high;
   ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
   ndfunc_t ndf = { iter_dcomplex_rand, FULL_LOOP, 1, 0, ain, 0 };
 
-  rb_scan_args(argc, args, "02", &v1, &v2);
+  rb_scan_args(argc, argv, "02", &v1, &v2);
   if (v2 == Qnil) {
     g.low = m_zero;
     if (v1 == Qnil) {
@@ -4920,14 +4920,14 @@ static void iter_dcomplex_rand_norm(na_loop_t* const lp) {
     #  [4.26477+3.99655i, 4.90052+5.00763i, 4.46607+2.3444i],
     #  [4.5528+7.11003i, 5.62117+6.69094i, 5.05443+5.35133i]]
 */
-static VALUE dcomplex_rand_norm(int argc, VALUE* args, VALUE self) {
+static VALUE dcomplex_rand_norm(int argc, VALUE* argv, VALUE self) {
   int n;
   randn_opt_t g;
   VALUE v1 = Qnil, v2 = Qnil;
   ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
   ndfunc_t ndf = { iter_dcomplex_rand_norm, FULL_LOOP, 1, 0, ain, 0 };
 
-  n = rb_scan_args(argc, args, "02", &v1, &v2);
+  n = rb_scan_args(argc, argv, "02", &v1, &v2);
   if (n == 0) {
     g.mu = m_zero;
   } else {
