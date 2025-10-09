@@ -357,7 +357,6 @@ static void na_check_reshape(int argc, VALUE* argv, VALUE self, size_t* shape) {
   @overload  reshape!(size0,size1,...)
     @param sizeN [Integer] new shape
     @return [Numo::NArray] return self.
-  @example
 */
 static VALUE na_reshape_bang(int argc, VALUE* argv, VALUE self) {
   size_t* shape;
@@ -402,7 +401,6 @@ static VALUE na_reshape_bang(int argc, VALUE* argv, VALUE self) {
   @overload  reshape(size0,size1,...)
     @param sizeN [Integer] new shape
     @return [Numo::NArray] return self.
-  @example
 */
 static VALUE na_reshape(int argc, VALUE* argv, VALUE self) {
   size_t* shape;
