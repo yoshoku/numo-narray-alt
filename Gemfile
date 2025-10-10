@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in narray-devel.gemspec
 gemspec
 
+gem 'irb', '~> 1.15'
 gem 'minitest', '~> 5.25'
 gem 'rake', '~> 13.3'
 gem 'rake-compiler', '~> 1.3'
