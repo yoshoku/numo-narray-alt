@@ -1,27 +1,14 @@
 /*
-  t_mean.c
+  mean.h
   Numo::NArray Alternative
 
   created on: 2025-10-08
   Copyright (C) 2025 Atsushi Tatsuma
 */
-#include <ruby.h>
+#ifndef NUMO_NARRAY_MH_MEAN_H
+#define NUMO_NARRAY_MH_MEAN_H 1
 
-#include "numo/narray.h"
-#include "numo/template.h"
-
-// Type aliases for shorter notation following the codebase naming convention.
-typedef BIT_DIGIT bit;
-typedef int8_t int8;
-typedef int16_t int16;
-typedef int32_t int32;
-typedef int64_t int64;
-typedef u_int8_t uint8;
-typedef u_int16_t uint16;
-typedef u_int32_t uint32;
-typedef u_int64_t uint64;
-
-#define DEF_INT_MEAN_FUNC(tDType, tRtDType, tNAryClass, tRtNAryClass)                         \
+#define DEF_NARRAY_MEAN_METHOD_FUNC(tDType, tRtDType, tNAryClass, tRtNAryClass)               \
   static void iter_##tDType##_mean(na_loop_t* const lp) {                                     \
     size_t n;                                                                                 \
     char* p1;                                                                                 \
@@ -33,14 +20,15 @@ typedef u_int64_t uint64;
     p2 = NDL_PTR(lp, 1);                                                                      \
                                                                                               \
     size_t count = 0;                                                                         \
-    tRtDType sum = 0;                                                                         \
+    tRtDType sum = m_zero;                                                                    \
     for (size_t i = n; i--;) {                                                                \
-      sum += (tRtDType)(*(tDType*)p1);                                                        \
+      const tRtDType x = (tRtDType)(*(tDType*)p1);                                            \
       p1 += s1;                                                                               \
+      sum = m_add(sum, x);                                                                    \
       count++;                                                                                \
     }                                                                                         \
                                                                                               \
-    *(tRtDType*)p2 = sum / (tRtDType)count;                                                   \
+    *(tRtDType*)p2 = m_div(sum, (tRtDType)m_from_real(count));                                \
   }                                                                                           \
                                                                                               \
   static void iter_##tDType##_mean_nan(na_loop_t* const lp) {                                 \
@@ -54,18 +42,17 @@ typedef u_int64_t uint64;
     p2 = NDL_PTR(lp, 1);                                                                      \
                                                                                               \
     size_t count = 0;                                                                         \
-    tRtDType tmp = 0;                                                                         \
-    tRtDType sum = 0;                                                                         \
+    tRtDType sum = m_zero;                                                                    \
     for (size_t i = n; i--;) {                                                                \
-      tmp = (tRtDType)(*(tDType*)p1);                                                         \
+      const tRtDType tmp = (tRtDType)(*(tDType*)p1);                                          \
       p1 += s1;                                                                               \
       if (tmp == tmp) {                                                                       \
-        sum += tmp;                                                                           \
+        sum = m_add(sum, tmp);                                                                \
         count++;                                                                              \
       }                                                                                       \
     }                                                                                         \
                                                                                               \
-    *(tRtDType*)p2 = sum / (tRtDType)count;                                                   \
+    *(tRtDType*)p2 = m_div(sum, (tRtDType)m_from_real(count));                                \
   }                                                                                           \
                                                                                               \
   static VALUE tDType##_mean(int argc, VALUE* argv, VALUE self) {                             \
@@ -80,26 +67,4 @@ typedef u_int64_t uint64;
     return rb_funcall(v, rb_intern("extract"), 0);                                            \
   }
 
-DEF_INT_MEAN_FUNC(bit, double, numo_cBit, numo_cDFloat)
-DEF_INT_MEAN_FUNC(int8, double, numo_cInt8, numo_cDFloat)
-DEF_INT_MEAN_FUNC(int16, double, numo_cInt16, numo_cDFloat)
-DEF_INT_MEAN_FUNC(int32, double, numo_cInt32, numo_cDFloat)
-DEF_INT_MEAN_FUNC(int64, double, numo_cInt64, numo_cDFloat)
-DEF_INT_MEAN_FUNC(uint8, double, numo_cUInt8, numo_cDFloat)
-DEF_INT_MEAN_FUNC(uint16, double, numo_cUInt16, numo_cDFloat)
-DEF_INT_MEAN_FUNC(uint32, double, numo_cUInt32, numo_cDFloat)
-DEF_INT_MEAN_FUNC(uint64, double, numo_cUInt64, numo_cDFloat)
-
-#undef DEF_INT_MEAN_FUNC
-
-void Init_nary_mean(void) {
-  rb_define_method(numo_cBit, "mean", bit_mean, -1);
-  rb_define_method(numo_cInt8, "mean", int8_mean, -1);
-  rb_define_method(numo_cInt16, "mean", int16_mean, -1);
-  rb_define_method(numo_cInt32, "mean", int32_mean, -1);
-  rb_define_method(numo_cInt64, "mean", int64_mean, -1);
-  rb_define_method(numo_cUInt8, "mean", uint8_mean, -1);
-  rb_define_method(numo_cUInt16, "mean", uint16_mean, -1);
-  rb_define_method(numo_cUInt32, "mean", uint32_mean, -1);
-  rb_define_method(numo_cUInt64, "mean", uint64_mean, -1);
-}
+#endif // NUMO_NARRAY_MH_MEAN_H

@@ -40,6 +40,12 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/mean.h"
+
+typedef int16_t int16; // Type aliases for shorter notation
+                       // following the codebase naming convention.
+DEF_NARRAY_MEAN_METHOD_FUNC(int16, double, numo_cInt16, numo_cDFloat)
+
 /*
   class definition: Numo::Int16
 */
@@ -5797,4 +5803,15 @@ void Init_numo_int16(void) {
   rb_define_method(cT, "sort_index", int16_sort_index, -1);
   rb_define_method(cT, "median", int16_median, -1);
   rb_define_singleton_method(cT, "[]", int16_s_cast, -2);
+  /**
+   * mean of self.
+   * @overload mean(axis: nil, keepdims: false, nan: false)
+   *   @param axis [Numeric, Array, Range] Performs mean along the axis.
+   *   @param keepdims [Boolean] If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @param nan [Boolean] If true, apply NaN-aware algorithm
+   *     (avoid NaN for sum/mean etc, or return NaN for min/max etc).
+   *   @return [Numo::DFloat]
+   */
+  rb_define_method(cT, "mean", int16_mean, -1);
 }

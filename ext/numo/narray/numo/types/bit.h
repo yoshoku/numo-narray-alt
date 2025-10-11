@@ -19,6 +19,9 @@ typedef BIT_DIGIT rtype;
 #define m_data_to_num(x) INT2FIX(x)
 #define m_sprintf(s, x) sprintf(s, "%1d", (int)(x))
 
+#define m_add(x, y) ((x) + (y))
+#define m_div(x, y) ((x) / (y))
+
 #define m_copy(x) (x)
 #define m_not(x) (~(x))
 #define m_and(x, y) ((x) & (y))
