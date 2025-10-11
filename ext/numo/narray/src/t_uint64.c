@@ -40,6 +40,12 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "src/mh/mean.h"
+
+typedef u_int64_t uint64; // Type aliases for shorter notation
+                          // following the codebase naming convention.
+DEF_NARRAY_MEAN_METHOD_FUNC(uint64, double, numo_cUInt64, numo_cDFloat)
+
 /*
   class definition: Numo::UInt64
 */
@@ -5795,4 +5801,15 @@ void Init_numo_uint64(void) {
   rb_define_method(cT, "sort_index", uint64_sort_index, -1);
   rb_define_method(cT, "median", uint64_median, -1);
   rb_define_singleton_method(cT, "[]", uint64_s_cast, -2);
+  /**
+   * mean of self.
+   * @overload mean(axis: nil, keepdims: false, nan: false)
+   *   @param axis [Numeric, Array, Range] Performs mean along the axis.
+   *   @param keepdims [Boolean] If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @param nan [Boolean] If true, apply NaN-aware algorithm
+   *     (avoid NaN for sum/mean etc, or return NaN for min/max etc).
+   *   @return [Numo::DFloat]
+   */
+  rb_define_method(cT, "mean", uint64_mean, -1);
 }

@@ -77,8 +77,6 @@ void Init_nary_math();
 void Init_nary_rand();
 void Init_nary_array();
 void Init_nary_struct();
-// define mean method for integer array
-void Init_nary_mean();
 
 const rb_data_type_t na_data_type = {
   "Numo::NArray",
@@ -1973,8 +1971,6 @@ void Init_narray(void) {
 
   Init_numo_bit();
   Init_numo_robject();
-
-  Init_nary_mean();
 
   Init_nary_math();
 

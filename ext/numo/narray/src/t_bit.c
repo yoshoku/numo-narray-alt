@@ -31,6 +31,12 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "src/mh/mean.h"
+
+typedef BIT_DIGIT bit; // Type aliases for shorter notation
+                       // following the codebase naming convention.
+DEF_NARRAY_MEAN_METHOD_FUNC(bit, double, numo_cBit, numo_cDFloat);
+
 /*
   class definition: Numo::Bit
 */
@@ -3242,4 +3248,15 @@ void Init_numo_bit(void) {
   rb_define_method(cT, "where2", bit_where2, 0);
   rb_define_method(cT, "mask", bit_mask, 1);
   rb_define_singleton_method(cT, "[]", bit_s_cast, -2);
+  /**
+   * mean of self.
+   * @overload mean(axis: nil, keepdims: false, nan: false)
+   *   @param axis [Numeric, Array, Range] Performs mean along the axis.
+   *   @param keepdims [Boolean] If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @param nan [Boolean] If true, apply NaN-aware algorithm
+   *     (avoid NaN for sum/mean etc, or return NaN for min/max etc).
+   *   @return [Numo::DFloat]
+   */
+  rb_define_method(cT, "mean", bit_mean, -1);
 }
