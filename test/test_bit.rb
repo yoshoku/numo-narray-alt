@@ -118,4 +118,11 @@ class NArrayBitTest < NArrayTestBase
       m
     )
   end
+
+  def test_mean
+    m = Numo::Bit[[0, 1, 0, 1], [1, 0, 0, 1]]
+    assert_in_delta(0.5, m.mean)
+    assert_equal(Numo::DFloat[0.5, 0.5, 0, 1], m.mean(axis: 0))
+    assert_equal(Numo::DFloat[0.5, 0.5], m.mean(axis: 1))
+  end
 end
