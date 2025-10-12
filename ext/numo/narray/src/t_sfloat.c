@@ -39,6 +39,12 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "src/mh/mean.h"
+
+typedef float sfloat; // Type aliases for shorter notation
+                      // following the codebase naming convention.
+DEF_NARRAY_MEAN_METHOD_FUNC(sfloat, float, numo_cSFloat, numo_cSFloat)
+
 /*
   class definition: Numo::SFloat
 */
@@ -4522,52 +4528,6 @@ static VALUE sfloat_prod(int argc, VALUE* argv, VALUE self) {
   ndfunc_t ndf = { iter_sfloat_prod, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_sfloat_prod_nan);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-
-  return sfloat_extract(v);
-}
-
-static void iter_sfloat_mean(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_mean(n, p1, s1);
-}
-static void iter_sfloat_mean_nan(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_mean_nan(n, p1, s1);
-}
-
-/*
-  mean of self.
-  @overload mean(axis:nil, keepdims:false, nan:false)
-    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-    return NaN for min/max etc).
-    @param [Numeric,Array,Range] axis  Performs mean along the axis.
-    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-    dimensions with size one.
-    @return [Numo::SFloat] returns result of mean.
-*/
-static VALUE sfloat_mean(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_sfloat_mean, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_sfloat_mean_nan);
 
   v = na_ndloop(&ndf, 2, self, reduce);
 
@@ -9364,6 +9324,16 @@ void Init_numo_sfloat(void) {
   rb_define_method(cT, "isfinite", sfloat_isfinite, 0);
   rb_define_method(cT, "sum", sfloat_sum, -1);
   rb_define_method(cT, "prod", sfloat_prod, -1);
+  /**
+   * mean of self.
+   * @overload mean(axis: nil, keepdims: false, nan: false)
+   *   @param axis [Numeric, Array, Range] Performs mean along the axis.
+   *   @param keepdims [Boolean] If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @param nan [Boolean] If true, apply NaN-aware algorithm
+   *     (avoid NaN for sum/mean etc, or return NaN for min/max etc).
+   *   @return [Numo::SFloat]
+   */
   rb_define_method(cT, "mean", sfloat_mean, -1);
   rb_define_method(cT, "stddev", sfloat_stddev, -1);
   rb_define_method(cT, "var", sfloat_var, -1);

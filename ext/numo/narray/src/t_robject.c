@@ -57,6 +57,12 @@ static ID id_truncate;
 VALUE cT;
 extern VALUE cRT;
 
+#include "src/mh/mean.h"
+
+typedef VALUE robject; // Type aliases for shorter notation
+                       // following the codebase naming convention.
+DEF_NARRAY_MEAN_METHOD_FUNC(robject, VALUE, numo_cRObject, numo_cRObject)
+
 /*
   class definition: Numo::RObject
 */
@@ -3835,52 +3841,6 @@ static VALUE robject_prod(int argc, VALUE* argv, VALUE self) {
   return robject_extract(v);
 }
 
-static void iter_robject_mean(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_mean(n, p1, s1);
-}
-static void iter_robject_mean_nan(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_mean_nan(n, p1, s1);
-}
-
-/*
-  mean of self.
-  @overload mean(axis:nil, keepdims:false, nan:false)
-    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-    return NaN for min/max etc).
-    @param [Numeric,Array,Range] axis  Performs mean along the axis.
-    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-    dimensions with size one.
-    @return [Numo::RObject] returns result of mean.
-*/
-static VALUE robject_mean(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_robject_mean, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_mean_nan);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-
-  return robject_extract(v);
-}
-
 static void iter_robject_stddev(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -5567,6 +5527,16 @@ void Init_numo_robject(void) {
   rb_define_method(cT, "isfinite", robject_isfinite, 0);
   rb_define_method(cT, "sum", robject_sum, -1);
   rb_define_method(cT, "prod", robject_prod, -1);
+  /**
+   * mean of self.
+   * @overload mean(axis:nil, keepdims:false, nan:false)
+   *   @param [Numeric,Array,Range] axis  Performs mean along the axis.
+   *   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @param [TrueClass] nan  If true, apply NaN-aware algorithm
+   *     (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+   *   @return [Numo::RObject] returns result of mean.
+   */
   rb_define_method(cT, "mean", robject_mean, -1);
   rb_define_method(cT, "stddev", robject_stddev, -1);
   rb_define_method(cT, "var", robject_var, -1);

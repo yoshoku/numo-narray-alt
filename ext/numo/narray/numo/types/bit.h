@@ -21,6 +21,7 @@ typedef BIT_DIGIT rtype;
 
 #define m_add(x, y) ((x) + (y))
 #define m_div(x, y) ((x) / (y))
+#define m_div_r(x, y) m_div(x, (double)(y))
 
 #define m_copy(x) (x)
 #define m_not(x) (~(x))
@@ -30,6 +31,8 @@ typedef BIT_DIGIT rtype;
 #define m_eq(x, y) (~((x) ^ (y)))
 #define m_count_true(x) ((x) != 0)
 #define m_count_false(x) ((x) == 0)
+
+#define not_nan(x) ((x) == (x))
 
 static inline BIT_DIGIT m_num_to_data(VALUE num) {
   if (RTEST(num)) {

@@ -16,6 +16,7 @@
 #define m_sub(x, y) rb_funcall(x, '-', 1, y)
 #define m_mul(x, y) rb_funcall(x, '*', 1, y)
 #define m_div(x, y) rb_funcall(x, '/', 1, y)
+#define m_div_r(x, y) m_div(x, m_from_real(y))
 #define m_mod(x, y) rb_funcall(x, '%', 1, y)
 #define m_divmod(x, y, a, b)            \
   {                                     \

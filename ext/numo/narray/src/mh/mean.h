@@ -28,7 +28,7 @@
       count++;                                                                                \
     }                                                                                         \
                                                                                               \
-    *(tRtDType*)p2 = m_div(sum, (tRtDType)m_from_real(count));                                \
+    *(tRtDType*)p2 = m_div_r(sum, count);                                                     \
   }                                                                                           \
                                                                                               \
   static void iter_##tDType##_mean_nan(na_loop_t* const lp) {                                 \
@@ -46,13 +46,13 @@
     for (size_t i = n; i--;) {                                                                \
       const tRtDType tmp = (tRtDType)(*(tDType*)p1);                                          \
       p1 += s1;                                                                               \
-      if (tmp == tmp) {                                                                       \
+      if (not_nan(tmp)) {                                                                     \
         sum = m_add(sum, tmp);                                                                \
         count++;                                                                              \
       }                                                                                       \
     }                                                                                         \
                                                                                               \
-    *(tRtDType*)p2 = m_div(sum, (tRtDType)m_from_real(count));                                \
+    *(tRtDType*)p2 = m_div_r(sum, count);                                                     \
   }                                                                                           \
                                                                                               \
   static VALUE tDType##_mean(int argc, VALUE* argv, VALUE self) {                             \

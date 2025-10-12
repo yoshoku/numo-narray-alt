@@ -27,6 +27,7 @@ extern double pow(double, double);
 #define m_sub(x, y) ((x) - (y))
 #define m_mul(x, y) ((x) * (y))
 #define m_div(x, y) ((x) / (y))
+#define m_div_r(x, y) m_div(x, m_from_real(y))
 #define m_div_check(x, y) ((y) == 0)
 #define m_mod(x, y) fmod(x, y)
 #define m_divmod(x, y, a, b) \

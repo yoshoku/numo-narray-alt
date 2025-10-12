@@ -16,6 +16,7 @@
 #define m_sub(x, y) ((x) - (y))
 #define m_mul(x, y) ((x) * (y))
 #define m_div(x, y) ((x) / (y))
+#define m_div_r(x, y) m_div(x, m_from_real(y))
 #define m_mod(x, y) ((x) % (y))
 #define m_divmod(x, y, a, b) \
   {                          \
@@ -44,6 +45,7 @@
 #define m_right_shift(x, y) ((x) >> (y))
 
 #define m_isnan(x) 0
+#define not_nan(x) (!m_isnan(x))
 
 #define m_mulsum(x, y, z) \
   { z += x * y; }
