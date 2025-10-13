@@ -36,6 +36,9 @@ static ID id_to_a;
 
 #include <numo/types/dfloat.h>
 
+/*
+  class definition: Numo::DFloat
+*/
 VALUE cT;
 extern VALUE cRT;
 
@@ -44,12 +47,6 @@ extern VALUE cRT;
 typedef double dfloat; // Type aliases for shorter notation
                        // following the codebase naming convention.
 DEF_NARRAY_MEAN_METHOD_FUNC(dfloat, double, numo_cDFloat, numo_cDFloat)
-
-/*
-  class definition: Numo::DFloat
-*/
-
-VALUE cT;
 
 static VALUE dfloat_store(VALUE, VALUE);
 

@@ -54,6 +54,9 @@ static ID id_truncate;
 
 #include <numo/types/robject.h>
 
+/*
+  class definition: Numo::RObject
+*/
 VALUE cT;
 extern VALUE cRT;
 
@@ -62,12 +65,6 @@ extern VALUE cRT;
 typedef VALUE robject; // Type aliases for shorter notation
                        // following the codebase naming convention.
 DEF_NARRAY_MEAN_METHOD_FUNC(robject, VALUE, numo_cRObject, numo_cRObject)
-
-/*
-  class definition: Numo::RObject
-*/
-
-VALUE cT;
 
 static VALUE robject_store(VALUE, VALUE);
 

@@ -37,6 +37,9 @@ static ID id_to_a;
 
 #include <numo/types/uint8.h>
 
+/*
+  class definition: Numo::UInt8
+*/
 VALUE cT;
 extern VALUE cRT;
 
@@ -45,12 +48,6 @@ extern VALUE cRT;
 typedef u_int8_t uint8; // Type aliases for shorter notation
                         // following the codebase naming convention.
 DEF_NARRAY_MEAN_METHOD_FUNC(uint8, double, numo_cUInt8, numo_cDFloat)
-
-/*
-  class definition: Numo::UInt8
-*/
-
-VALUE cT;
 
 static VALUE uint8_store(VALUE, VALUE);
 

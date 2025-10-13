@@ -28,14 +28,11 @@ static ID id_to_a;
 
 #include <numo/types/bit.h>
 
-VALUE cT;
-extern VALUE cRT;
-
 /*
   class definition: Numo::Bit
 */
-
 VALUE cT;
+extern VALUE cRT;
 
 static VALUE bit_store(VALUE, VALUE);
 

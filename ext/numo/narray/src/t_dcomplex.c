@@ -32,18 +32,15 @@ static ID id_to_a;
 
 #include <numo/types/dcomplex.h>
 
+/*
+  class definition: Numo::DComplex
+*/
 VALUE cT;
 extern VALUE cRT;
 
 #include "src/mh/mean.h"
 
 DEF_NARRAY_MEAN_METHOD_FUNC(dcomplex, dcomplex, numo_cDComplex, numo_cDComplex)
-
-/*
-  class definition: Numo::DComplex
-*/
-
-VALUE cT;
 
 static VALUE dcomplex_store(VALUE, VALUE);
 

@@ -37,6 +37,9 @@ static ID id_to_a;
 
 #include <numo/types/uint64.h>
 
+/*
+  class definition: Numo::UInt64
+*/
 VALUE cT;
 extern VALUE cRT;
 
@@ -45,12 +48,6 @@ extern VALUE cRT;
 typedef u_int64_t uint64; // Type aliases for shorter notation
                           // following the codebase naming convention.
 DEF_NARRAY_MEAN_METHOD_FUNC(uint64, double, numo_cUInt64, numo_cDFloat)
-
-/*
-  class definition: Numo::UInt64
-*/
-
-VALUE cT;
 
 static VALUE uint64_store(VALUE, VALUE);
 

@@ -37,6 +37,9 @@ static ID id_to_a;
 
 #include <numo/types/int32.h>
 
+/*
+  class definition: Numo::Int32
+*/
 VALUE cT;
 extern VALUE cRT;
 
@@ -45,12 +48,6 @@ extern VALUE cRT;
 typedef int32_t int32; // Type aliases for shorter notation
                        // following the codebase naming convention.
 DEF_NARRAY_MEAN_METHOD_FUNC(int32, double, numo_cInt32, numo_cDFloat)
-
-/*
-  class definition: Numo::Int32
-*/
-
-VALUE cT;
 
 static VALUE int32_store(VALUE, VALUE);
 
