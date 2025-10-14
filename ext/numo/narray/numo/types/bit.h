@@ -39,3 +39,25 @@ static inline BIT_DIGIT m_num_to_data(VALUE num) {
   }
   return 0;
 }
+
+static inline double f_mean(size_t n, BIT_DIGIT* p, size_t pos, ssize_t stride, size_t* idx) {
+  size_t count = 0;
+  double sum = 0.0;
+  BIT_DIGIT x;
+  if (idx) {
+    for (size_t i = n; i--;) {
+      LOAD_BIT(p, pos + *idx, x);
+      idx++;
+      sum += (double)x;
+      count++;
+    }
+  } else {
+    for (size_t i = n; i--;) {
+      LOAD_BIT(p, pos, x);
+      pos += stride;
+      sum += (double)x;
+      count++;
+    }
+  }
+  return sum / (double)count;
+}
