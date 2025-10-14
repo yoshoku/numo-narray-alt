@@ -3187,49 +3187,11 @@ static void iter_bit_mean(na_loop_t* const lp) {
   *(double*)p2 = sum / (double)count;
 }
 
-static void iter_bit_mean_nan(na_loop_t* const lp) {
-  size_t n;
-  BIT_DIGIT* a1;
-  size_t p1;
-  ssize_t s1;
-  size_t* idx1;
-  BIT_DIGIT x;
-  char* p2;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR_BIT_IDX(lp, 0, a1, p1, s1, idx1);
-  p2 = NDL_PTR(lp, 1);
-
-  size_t count = 0;
-  double sum = 0.0;
-  if (idx1) {
-    for (size_t i = n; i--;) {
-      LOAD_BIT(a1, p1 + *idx1, x);
-      idx1++;
-      if (not_nan(x)) {
-        sum += (double)x;
-        count++;
-      }
-    }
-  } else {
-    for (size_t i = n; i--;) {
-      LOAD_BIT(a1, p1, x);
-      p1 += s1;
-      if (not_nan(x)) {
-        sum += (double)x;
-        count++;
-      }
-    }
-  }
-
-  *(double*)p2 = sum / (double)count;
-}
-
 static VALUE bit_mean(int argc, VALUE* argv, VALUE self) {
   ndfunc_arg_in_t ain[2] = { { numo_cBit, 0 }, { sym_reduce, 0 } };
   ndfunc_arg_out_t aout[1] = { { numo_cDFloat, 0 } };
   ndfunc_t ndf = { iter_bit_mean, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-  VALUE reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_bit_mean_nan);
+  VALUE reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
   VALUE v = na_ndloop(&ndf, 2, self, reduce);
 
   return rb_funcall(v, rb_intern("extract"), 0);

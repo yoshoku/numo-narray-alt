@@ -31,9 +31,6 @@ typedef BIT_DIGIT rtype;
 #define m_count_true(x) ((x) != 0)
 #define m_count_false(x) ((x) == 0)
 
-#define m_isnan(x) 0
-#define not_nan(x) (!m_isnan(x))
-
 static inline BIT_DIGIT m_num_to_data(VALUE num) {
   if (RTEST(num)) {
     if (!RTEST(rb_equal(num, INT2FIX(0)))) {
