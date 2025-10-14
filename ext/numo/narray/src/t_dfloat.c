@@ -46,7 +46,7 @@ extern VALUE cRT;
 
 typedef double dfloat; // Type aliases for shorter notation
                        // following the codebase naming convention.
-DEF_NARRAY_MEAN_METHOD_FUNC(dfloat, double, numo_cDFloat, numo_cDFloat)
+DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dfloat, double, numo_cDFloat, numo_cDFloat)
 
 static VALUE dfloat_store(VALUE, VALUE);
 

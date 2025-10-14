@@ -47,7 +47,7 @@ extern VALUE cRT;
 
 typedef int8_t int8; // Type aliases for shorter notation
                      // following the codebase naming convention.
-DEF_NARRAY_MEAN_METHOD_FUNC(int8, double, numo_cInt8, numo_cDFloat)
+DEF_NARRAY_INT_MEAN_METHOD_FUNC(int8, numo_cInt8)
 
 static VALUE int8_store(VALUE, VALUE);
 

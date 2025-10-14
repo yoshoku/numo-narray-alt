@@ -47,7 +47,7 @@ extern VALUE cRT;
 
 typedef u_int64_t uint64; // Type aliases for shorter notation
                           // following the codebase naming convention.
-DEF_NARRAY_MEAN_METHOD_FUNC(uint64, double, numo_cUInt64, numo_cDFloat)
+DEF_NARRAY_INT_MEAN_METHOD_FUNC(uint64, numo_cUInt64)
 
 static VALUE uint64_store(VALUE, VALUE);
 

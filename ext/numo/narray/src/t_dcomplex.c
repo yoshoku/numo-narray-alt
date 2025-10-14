@@ -40,7 +40,7 @@ extern VALUE cRT;
 
 #include "src/mh/mean.h"
 
-DEF_NARRAY_MEAN_METHOD_FUNC(dcomplex, dcomplex, numo_cDComplex, numo_cDComplex)
+DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dcomplex, dcomplex, numo_cDComplex, numo_cDComplex)
 
 static VALUE dcomplex_store(VALUE, VALUE);
 

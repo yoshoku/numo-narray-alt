@@ -47,7 +47,7 @@ extern VALUE cRT;
 
 typedef int32_t int32; // Type aliases for shorter notation
                        // following the codebase naming convention.
-DEF_NARRAY_MEAN_METHOD_FUNC(int32, double, numo_cInt32, numo_cDFloat)
+DEF_NARRAY_INT_MEAN_METHOD_FUNC(int32, numo_cInt32)
 
 static VALUE int32_store(VALUE, VALUE);
 

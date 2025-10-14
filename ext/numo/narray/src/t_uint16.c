@@ -47,7 +47,7 @@ extern VALUE cRT;
 
 typedef u_int16_t uint16; // Type aliases for shorter notation
                           // following the codebase naming convention.
-DEF_NARRAY_MEAN_METHOD_FUNC(uint16, double, numo_cUInt16, numo_cDFloat)
+DEF_NARRAY_INT_MEAN_METHOD_FUNC(uint16, numo_cUInt16)
 
 static VALUE uint16_store(VALUE, VALUE);
 
