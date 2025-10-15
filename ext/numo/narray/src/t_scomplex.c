@@ -6398,10 +6398,11 @@ void Init_numo_scomplex(void) {
   id_real = rb_intern("real");
   id_to_a = rb_intern("to_a");
 
-  /*
-    Document-class: Numo::SComplex
-
-  */
+  /**
+   * Document-class: Numo::SComplex
+   *
+   * Single precision floating point (32bit) complex number N-dimensional array class.
+   */
   cT = rb_define_class_under(mNumo, "SComplex", cNArray);
 
   // alias of SComplex

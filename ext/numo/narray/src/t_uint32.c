@@ -5673,10 +5673,11 @@ void Init_numo_uint32(void) {
   id_ne = rb_intern("ne");
   id_to_a = rb_intern("to_a");
 
-  /*
-    Document-class: Numo::UInt32
-
-  */
+  /**
+   * Document-class: Numo::UInt32
+   *
+   * 32-bit unsinged integer N-dimensional array class.
+   */
   cT = rb_define_class_under(mNumo, "UInt32", cNArray);
 
   hCast = rb_hash_new();

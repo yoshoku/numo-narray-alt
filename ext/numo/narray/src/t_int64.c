@@ -5679,10 +5679,11 @@ void Init_numo_int64(void) {
   id_ne = rb_intern("ne");
   id_to_a = rb_intern("to_a");
 
-  /*
-    Document-class: Numo::Int64
-
-  */
+  /**
+   * Document-class: Numo::Int64
+   *
+   * 64-bit signed integer N-dimensional array class.
+   */
   cT = rb_define_class_under(mNumo, "Int64", cNArray);
 
   hCast = rb_hash_new();

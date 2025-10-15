@@ -28,9 +28,6 @@ static ID id_to_a;
 
 #include <numo/types/bit.h>
 
-/*
-  class definition: Numo::Bit
-*/
 VALUE cT;
 extern VALUE cRT;
 
@@ -3175,10 +3172,11 @@ void Init_numo_bit(void) {
   id_ne = rb_intern("ne");
   id_to_a = rb_intern("to_a");
 
-  /*
-    Document-class: Numo::Bit
-
-  */
+  /**
+   * Document-class: Numo::Bit
+   *
+   * Binary digit (bit) N-dimensional array class.
+   */
   cT = rb_define_class_under(mNumo, "Bit", cNArray);
 
   hCast = rb_hash_new();

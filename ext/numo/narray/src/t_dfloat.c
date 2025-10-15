@@ -9118,10 +9118,11 @@ void Init_numo_dfloat(void) {
   id_nearly_eq = rb_intern("nearly_eq");
   id_to_a = rb_intern("to_a");
 
-  /*
-    Document-class: Numo::DFloat
-
-  */
+  /**
+   * Document-class: Numo::DFloat
+   *
+   * Double precision floating point number (64-bit float) N-dimensional array class.
+   */
   cT = rb_define_class_under(mNumo, "DFloat", cNArray);
 
   // alias of DFloat

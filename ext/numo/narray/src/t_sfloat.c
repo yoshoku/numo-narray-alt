@@ -9074,10 +9074,11 @@ void Init_numo_sfloat(void) {
   id_nearly_eq = rb_intern("nearly_eq");
   id_to_a = rb_intern("to_a");
 
-  /*
-    Document-class: Numo::SFloat
-
-  */
+  /**
+   * Document-class: Numo::SFloat
+   *
+   * Single precision floating point number (32-bit float) N-dimensional array class.
+   */
   cT = rb_define_class_under(mNumo, "SFloat", cNArray);
 
   // alias of SFloat

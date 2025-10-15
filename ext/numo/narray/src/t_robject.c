@@ -5282,10 +5282,11 @@ void Init_numo_robject(void) {
   id_to_a = rb_intern("to_a");
   id_truncate = rb_intern("truncate");
 
-  /*
-    Document-class: Numo::RObject
-
-  */
+  /**
+   * Document-class: Numo::RObject
+   *
+   * Ruby object N-dimensional array class.
+   */
   cT = rb_define_class_under(mNumo, "RObject", cNArray);
 
   hCast = rb_hash_new();

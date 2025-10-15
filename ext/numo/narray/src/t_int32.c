@@ -5677,10 +5677,11 @@ void Init_numo_int32(void) {
   id_ne = rb_intern("ne");
   id_to_a = rb_intern("to_a");
 
-  /*
-    Document-class: Numo::Int32
-
-  */
+  /**
+   * Document-class: Numo::Int32
+   *
+   * 32-bit signed integer N-dimensional array.
+   */
   cT = rb_define_class_under(mNumo, "Int32", cNArray);
 
   hCast = rb_hash_new();

@@ -5673,10 +5673,11 @@ void Init_numo_uint16(void) {
   id_ne = rb_intern("ne");
   id_to_a = rb_intern("to_a");
 
-  /*
-    Document-class: Numo::UInt16
-
-  */
+  /**
+   * Document-class: Numo::UInt16
+   *
+   * 16-bit unsigned integer N-dimensional array class.
+   */
   cT = rb_define_class_under(mNumo, "UInt16", cNArray);
 
   hCast = rb_hash_new();

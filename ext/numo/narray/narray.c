@@ -1831,14 +1831,14 @@ void Init_narray(void) {
    */
   mNumo = rb_define_module("Numo");
 
-  /*
-    Document-class: Numo::NArray
-
-    Numo::NArray is the abstract super class for
-    Numerical N-dimensional Array in the Ruby/Numo module.
-    Use Typed Subclasses of NArray (Numo::DFloat, Int32, etc)
-    to create data array instances.
-  */
+  /**
+   * Document-class: Numo::NArray
+   *
+   * Numo::NArray is the abstract super class for
+   * Numerical N-dimensional Array in the Ruby/Numo module.
+   * Use Typed Subclasses of NArray (Numo::DFloat, Int32, etc)
+   * to create data array instances.
+   */
   cNArray = rb_define_class_under(mNumo, "NArray", rb_cObject);
 
 #ifndef HAVE_RB_CCOMPLEX
@@ -1851,10 +1851,35 @@ void Init_narray(void) {
 
   rb_define_const(cNArray, "VERSION", rb_str_new2(NARRAY_VERSION));
 
+  /**
+   * Document-class: Numo::NArray::CastError
+   *
+   * Exception raised when type casting is not possible.
+   */
   nary_eCastError = rb_define_class_under(cNArray, "CastError", rb_eStandardError);
+  /**
+   * Document-class: Numo::NArray::ShapeError
+   *
+   * Exception raised when shape is invalid.
+   */
   nary_eShapeError = rb_define_class_under(cNArray, "ShapeError", rb_eStandardError);
+  /**
+   * Document-class: Numo::NArray::OperationError
+   *
+   * Exception raised when operation is not appropriate.
+   */
   nary_eOperationError = rb_define_class_under(cNArray, "OperationError", rb_eStandardError);
+  /**
+   * Document-class: Numo::NArray::DimensionError
+   *
+   * Exception raised when dimension is invalid.
+   */
   nary_eDimensionError = rb_define_class_under(cNArray, "DimensionError", rb_eStandardError);
+  /**
+   * Document-class: Numo::NArray::ValueError
+   *
+   * Exception raised when occurred value error.
+   */
   nary_eValueError = rb_define_class_under(cNArray, "ValueError", rb_eStandardError);
 
   rb_define_singleton_method(cNArray, "debug=", na_debug_set, 1);

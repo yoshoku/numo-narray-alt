@@ -5251,10 +5251,11 @@ void Init_numo_uint8(void) {
   id_ne = rb_intern("ne");
   id_to_a = rb_intern("to_a");
 
-  /*
-    Document-class: Numo::UInt8
-
-  */
+  /**
+   * Document-class: Numo::UInt8
+   *
+   * 8-bit unsigned integer N-dimensional array class.
+   */
   cT = rb_define_class_under(mNumo, "UInt8", cNArray);
 
   hCast = rb_hash_new();

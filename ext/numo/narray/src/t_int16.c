@@ -5677,10 +5677,11 @@ void Init_numo_int16(void) {
   id_ne = rb_intern("ne");
   id_to_a = rb_intern("to_a");
 
-  /*
-    Document-class: Numo::Int16
-
-  */
+  /**
+   * Document-class: Numo::Int16
+   *
+   * 16-bit signed integer N-dimensional array class.
+   */
   cT = rb_define_class_under(mNumo, "Int16", cNArray);
 
   hCast = rb_hash_new();

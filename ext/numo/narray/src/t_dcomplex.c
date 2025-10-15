@@ -6467,10 +6467,11 @@ void Init_numo_dcomplex(void) {
   id_real = rb_intern("real");
   id_to_a = rb_intern("to_a");
 
-  /*
-    Document-class: Numo::DComplex
-
-  */
+  /**
+   * Document-class: Numo::DComplex
+   *
+   * Double precision floating point complex number N-dimensional array class.
+   */
   cT = rb_define_class_under(mNumo, "DComplex", cNArray);
 
   // alias of DComplex

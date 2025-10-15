@@ -5253,10 +5253,11 @@ void Init_numo_int8(void) {
   id_ne = rb_intern("ne");
   id_to_a = rb_intern("to_a");
 
-  /*
-    Document-class: Numo::Int8
-
-  */
+  /**
+   * Document-class: Numo::Int8
+   *
+   * 8-bit signed integer N-dimensional array class.
+   */
   cT = rb_define_class_under(mNumo, "Int8", cNArray);
 
   hCast = rb_hash_new();
