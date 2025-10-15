@@ -76,10 +76,10 @@ static inline dtype c_from_dcomplex(dcomplex x) {
 #define m_ceil(x) c_new(ceil(REAL(x)), ceil(IMAG(x)))
 #define m_trunc(x) c_new(trunc(REAL(x)), trunc(IMAG(x)))
 #define m_rint(x) c_new(rint(REAL(x)), rint(IMAG(x)))
-#define m_sign(x)                                                                      \
-  c_new(                                                                               \
-    ((REAL(x) == 0) ? 0.0 : ((REAL(x) > 0) ? 1.0 : ((REAL(x) < 0) ? -1.0 : REAL(x)))), \
-    ((IMAG(x) == 0) ? 0.0 : ((IMAG(x) > 0) ? 1.0 : ((IMAG(x) < 0) ? -1.0 : IMAG(x))))  \
+#define m_sign(x)                                                                              \
+  c_new(                                                                                       \
+    ((REAL(x) == 0) ? 0.0 : ((REAL(x) > 0) ? 1.0 : ((REAL(x) < 0) ? -1.0 : REAL(x)))),         \
+    ((IMAG(x) == 0) ? 0.0 : ((IMAG(x) > 0) ? 1.0 : ((IMAG(x) < 0) ? -1.0 : IMAG(x))))          \
   )
 #define m_copysign(x, y) c_new(copysign(REAL(x), REAL(y)), copysign(IMAG(x), IMAG(y)))
 
@@ -127,35 +127,35 @@ static inline dtype c_from_dcomplex(dcomplex x) {
 
 #define not_nan(x) (REAL(x) == REAL(x) && IMAG(x) == IMAG(x))
 
-#define m_mulsum(x, y, z) \
+#define m_mulsum(x, y, z)                                                                      \
   { z = m_add(m_mul(x, y), z); }
-#define m_mulsum_nan(x, y, z)       \
-  {                                 \
-    if (not_nan(x) && not_nan(y)) { \
-      z = m_add(m_mul(x, y), z);    \
-    }                               \
+#define m_mulsum_nan(x, y, z)                                                                  \
+  {                                                                                            \
+    if (not_nan(x) && not_nan(y)) {                                                            \
+      z = m_add(m_mul(x, y), z);                                                               \
+    }                                                                                          \
   }
 
-#define m_cumsum(x, y) \
+#define m_cumsum(x, y)                                                                         \
   { (x) = m_add(x, y); }
-#define m_cumsum_nan(x, y)   \
-  {                          \
-    if (!not_nan(x)) {       \
-      (x) = (y);             \
-    } else if (not_nan(y)) { \
-      (x) = m_add(x, y);     \
-    }                        \
+#define m_cumsum_nan(x, y)                                                                     \
+  {                                                                                            \
+    if (!not_nan(x)) {                                                                         \
+      (x) = (y);                                                                               \
+    } else if (not_nan(y)) {                                                                   \
+      (x) = m_add(x, y);                                                                       \
+    }                                                                                          \
   }
 
-#define m_cumprod(x, y) \
+#define m_cumprod(x, y)                                                                        \
   { (x) = m_mul(x, y); }
-#define m_cumprod_nan(x, y)  \
-  {                          \
-    if (!not_nan(x)) {       \
-      (x) = (y);             \
-    } else if (not_nan(y)) { \
-      (x) = m_mul(x, y);     \
-    }                        \
+#define m_cumprod_nan(x, y)                                                                    \
+  {                                                                                            \
+    if (!not_nan(x)) {                                                                         \
+      (x) = (y);                                                                               \
+    } else if (not_nan(y)) {                                                                   \
+      (x) = m_mul(x, y);                                                                       \
+    }                                                                                          \
   }
 
 static inline dtype f_sum(size_t n, char* p, ssize_t stride) {

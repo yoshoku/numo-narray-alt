@@ -742,10 +742,10 @@ static VALUE nst_s_add_type(int argc, VALUE* argv, VALUE mod) {
   return Qnil;
 }
 
-#define NST_TYPEDEF(tpname, tpclass)                              \
-  static VALUE nst_s_##tpname(int argc, VALUE* argv, VALUE mod) { \
-    nstruct_add_type(tpclass, argc, argv, mod);                   \
-    return Qnil;                                                  \
+#define NST_TYPEDEF(tpname, tpclass)                                                           \
+  static VALUE nst_s_##tpname(int argc, VALUE* argv, VALUE mod) {                              \
+    nstruct_add_type(tpclass, argc, argv, mod);                                                \
+    return Qnil;                                                                               \
   }
 
 NST_TYPEDEF(int8, numo_cInt8)
@@ -761,7 +761,7 @@ NST_TYPEDEF(dcomplex, numo_cDComplex)
 NST_TYPEDEF(sfloat, numo_cSFloat)
 NST_TYPEDEF(scomplex, numo_cSComplex)
 
-#define rb_define_singleton_alias(klass, name1, name2) \
+#define rb_define_singleton_alias(klass, name1, name2)                                         \
   rb_define_alias(rb_singleton_class(klass), name1, name2)
 
 void Init_nary_struct(void) {

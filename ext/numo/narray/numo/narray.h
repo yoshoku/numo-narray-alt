@@ -343,31 +343,31 @@ static inline narray_t* _na_get_narray_t(VALUE obj, unsigned char na_type) {
 #define NA_FL0_TEST(x, f) (NA_FLAG0(x) & (f))
 #define NA_FL1_TEST(x, f) (NA_FLAG1(x) & (f))
 
-#define NA_FL0_SET(x, f) \
-  do {                   \
-    NA_FLAG0(x) |= (f);  \
+#define NA_FL0_SET(x, f)                                                                       \
+  do {                                                                                         \
+    NA_FLAG0(x) |= (f);                                                                        \
   } while (0)
-#define NA_FL1_SET(x, f) \
-  do {                   \
-    NA_FLAG1(x) |= (f);  \
-  } while (0)
-
-#define NA_FL0_UNSET(x, f) \
-  do {                     \
-    NA_FLAG0(x) &= ~(f);   \
-  } while (0)
-#define NA_FL1_UNSET(x, f) \
-  do {                     \
-    NA_FLAG1(x) &= ~(f);   \
+#define NA_FL1_SET(x, f)                                                                       \
+  do {                                                                                         \
+    NA_FLAG1(x) |= (f);                                                                        \
   } while (0)
 
-#define NA_FL0_REVERSE(x, f) \
-  do {                       \
-    NA_FLAG0(x) ^= (f);      \
+#define NA_FL0_UNSET(x, f)                                                                     \
+  do {                                                                                         \
+    NA_FLAG0(x) &= ~(f);                                                                       \
   } while (0)
-#define NA_FL1_REVERSE(x, f) \
-  do {                       \
-    NA_FLAG1(x) ^= (f);      \
+#define NA_FL1_UNSET(x, f)                                                                     \
+  do {                                                                                         \
+    NA_FLAG1(x) &= ~(f);                                                                       \
+  } while (0)
+
+#define NA_FL0_REVERSE(x, f)                                                                   \
+  do {                                                                                         \
+    NA_FLAG0(x) ^= (f);                                                                        \
+  } while (0)
+#define NA_FL1_REVERSE(x, f)                                                                   \
+  do {                                                                                         \
+    NA_FLAG1(x) ^= (f);                                                                        \
   } while (0)
 
 /* FLAGS

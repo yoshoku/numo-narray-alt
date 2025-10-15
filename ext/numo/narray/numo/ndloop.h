@@ -56,7 +56,7 @@ typedef struct NA_LOOP {
 #define OVERWRITE Qtrue // used for CASTABLE(t)
 
 #define NDF_TEST(nf, fl) ((nf)->flag & (fl))
-#define NDF_SET(nf, fl) \
+#define NDF_SET(nf, fl)                                                                        \
   { (nf)->flag |= (fl); }
 
 #define NDF_ARG_READ_ONLY 1

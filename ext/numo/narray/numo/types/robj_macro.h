@@ -18,11 +18,11 @@
 #define m_div(x, y) rb_funcall(x, '/', 1, y)
 #define m_div_r(x, y) m_div(x, m_from_real(y))
 #define m_mod(x, y) rb_funcall(x, '%', 1, y)
-#define m_divmod(x, y, a, b)            \
-  {                                     \
-    x = rb_funcall(x, id_divmod, 1, y); \
-    a = RARRAY_PTR(x)[0];               \
-    b = RARRAY_PTR(x)[0];               \
+#define m_divmod(x, y, a, b)                                                                   \
+  {                                                                                            \
+    x = rb_funcall(x, id_divmod, 1, y);                                                        \
+    a = RARRAY_PTR(x)[0];                                                                      \
+    b = RARRAY_PTR(x)[0];                                                                      \
   }
 #define m_pow(x, y) rb_funcall(x, id_pow, 1, y)
 #define m_pow_int(x, y) rb_funcall(x, id_pow, 1, y)
@@ -53,17 +53,17 @@
 #define m_right_shift(x, y) rb_funcall(x, id_right_shift, 1, y)
 
 #define m_isnan(x) ((rb_respond_to(x, id_nan_p)) ? RTEST(rb_funcall(x, id_nan_p, 0)) : 0)
-#define m_isinf(x) \
+#define m_isinf(x)                                                                             \
   ((rb_respond_to(x, id_infinite_p)) ? RTEST(rb_funcall(x, id_infinite_p, 0)) : 0)
-#define m_isposinf(x)                                                       \
-  ((rb_respond_to(x, id_infinite_p))                                        \
-     ? ((RTEST(rb_funcall(x, id_infinite_p, 0))) ? m_gt(x, INT2FIX(0)) : 0) \
+#define m_isposinf(x)                                                                          \
+  ((rb_respond_to(x, id_infinite_p))                                                           \
+     ? ((RTEST(rb_funcall(x, id_infinite_p, 0))) ? m_gt(x, INT2FIX(0)) : 0)                    \
      : 0)
-#define m_isneginf(x)                                                       \
-  ((rb_respond_to(x, id_infinite_p))                                        \
-     ? ((RTEST(rb_funcall(x, id_infinite_p, 0))) ? m_lt(x, INT2FIX(0)) : 0) \
+#define m_isneginf(x)                                                                          \
+  ((rb_respond_to(x, id_infinite_p))                                                           \
+     ? ((RTEST(rb_funcall(x, id_infinite_p, 0))) ? m_lt(x, INT2FIX(0)) : 0)                    \
      : 0)
-#define m_isfinite(x) \
+#define m_isfinite(x)                                                                          \
   ((rb_respond_to(x, id_finite_p)) ? RTEST(rb_funcall(x, id_finite_p, 0)) : 0)
 
 #define m_mulsum_init INT2FIX(0)
@@ -75,7 +75,7 @@ static inline int robj_sprintf(char* s, VALUE x) {
   return sprintf(s, "%s", StringValuePtr(v));
 }
 
-#define m_sqrt(x) \
+#define m_sqrt(x)                                                                              \
   rb_funcall(rb_const_get(rb_mKernel, rb_intern("Math")), rb_intern("sqrt"), 1, x);
 
 static inline dtype f_seq(dtype x, dtype y, size_t c) {

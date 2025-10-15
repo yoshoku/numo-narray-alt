@@ -1849,7 +1849,7 @@ static VALUE dcomplex_abs(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#define check_intdivzero(y) \
+#define check_intdivzero(y)                                                                    \
   {}
 
 static void iter_dcomplex_add(na_loop_t* const lp) {
@@ -1967,7 +1967,7 @@ static VALUE dcomplex_add(VALUE self, VALUE other) {
   }
 }
 
-#define check_intdivzero(y) \
+#define check_intdivzero(y)                                                                    \
   {}
 
 static void iter_dcomplex_sub(na_loop_t* const lp) {
@@ -2085,7 +2085,7 @@ static VALUE dcomplex_sub(VALUE self, VALUE other) {
   }
 }
 
-#define check_intdivzero(y) \
+#define check_intdivzero(y)                                                                    \
   {}
 
 static void iter_dcomplex_mul(na_loop_t* const lp) {
@@ -2203,7 +2203,7 @@ static VALUE dcomplex_mul(VALUE self, VALUE other) {
   }
 }
 
-#define check_intdivzero(y) \
+#define check_intdivzero(y)                                                                    \
   {}
 
 static void iter_dcomplex_div(na_loop_t* const lp) {
@@ -3623,7 +3623,7 @@ static VALUE dcomplex_rint(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#define check_intdivzero(y) \
+#define check_intdivzero(y)                                                                    \
   {}
 
 static void iter_dcomplex_copysign(na_loop_t* const lp) {

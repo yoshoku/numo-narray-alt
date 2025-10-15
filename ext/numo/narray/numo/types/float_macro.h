@@ -30,10 +30,10 @@ extern double pow(double, double);
 #define m_div_r(x, y) m_div(x, m_from_real(y))
 #define m_div_check(x, y) ((y) == 0)
 #define m_mod(x, y) fmod(x, y)
-#define m_divmod(x, y, a, b) \
-  {                          \
-    a = (x) / (y);           \
-    b = m_mod(x, y);         \
+#define m_divmod(x, y, a, b)                                                                   \
+  {                                                                                            \
+    a = (x) / (y);                                                                             \
+    b = m_mod(x, y);                                                                           \
   }
 #define m_pow(x, y) pow(x, y)
 #define m_pow_int(x, y) pow_int(x, y)
@@ -50,11 +50,11 @@ extern double pow(double, double);
 #define m_sign(x) (((x) == 0) ? 0.0 : (((x) > 0) ? 1.0 : (((x) < 0) ? -1.0 : (x))))
 #define m_copysign(x, y) copysign(x, y)
 #define m_signbit(x) signbit(x)
-#define m_modf(x, y, z) \
-  {                     \
-    double d;           \
-    y = modf(x, &d);    \
-    z = d;              \
+#define m_modf(x, y, z)                                                                        \
+  {                                                                                            \
+    double d;                                                                                  \
+    y = modf(x, &d);                                                                           \
+    z = d;                                                                                     \
   }
 
 #define m_eq(x, y) ((x) == (y))
@@ -74,20 +74,20 @@ extern double pow(double, double);
 
 #define m_sprintf(s, x) sprintf(s, "%g", x)
 
-#define cmp_prnan(a, b) \
+#define cmp_prnan(a, b)                                                                        \
   ((qsort_cast(a) == qsort_cast(b)) ? 0 : (qsort_cast(a) > qsort_cast(b)) ? 1 : -1)
 
-#define cmp_ignan(a, b)                                                 \
-  (m_isnan(qsort_cast(a))                                               \
-     ? (m_isnan(qsort_cast(b)) ? 0 : 1)                                 \
-     : (m_isnan(qsort_cast(b)) ? -1                                     \
-                               : ((qsort_cast(a) == qsort_cast(b))  ? 0 \
-                                  : (qsort_cast(a) > qsort_cast(b)) ? 1 \
+#define cmp_ignan(a, b)                                                                        \
+  (m_isnan(qsort_cast(a))                                                                      \
+     ? (m_isnan(qsort_cast(b)) ? 0 : 1)                                                        \
+     : (m_isnan(qsort_cast(b)) ? -1                                                            \
+                               : ((qsort_cast(a) == qsort_cast(b))  ? 0                        \
+                                  : (qsort_cast(a) > qsort_cast(b)) ? 1                        \
                                                                     : -1)))
 
 #define cmpgt_prnan(a, b) (qsort_cast(a) > qsort_cast(b))
 
-#define cmpgt_ignan(a, b) \
+#define cmpgt_ignan(a, b)                                                                      \
   ((m_isnan(qsort_cast(a)) && !m_isnan(qsort_cast(b))) || (qsort_cast(a) > qsort_cast(b)))
 
 #define m_sqrt(x) sqrt(x)

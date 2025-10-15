@@ -14,44 +14,44 @@ static ID id_swap_byte;
 
 // ---------------------------------------------------------------------
 
-#define LOOP_UNARY_PTR(lp, proc)            \
-  {                                         \
-    size_t i;                               \
-    ssize_t s1, s2;                         \
-    char *p1, *p2;                          \
-    size_t *idx1, *idx2;                    \
-    INIT_COUNTER(lp, i);                    \
-    INIT_PTR_IDX(lp, 0, p1, s1, idx1);      \
-    INIT_PTR_IDX(lp, 1, p2, s2, idx2);      \
-    if (idx1) {                             \
-      if (idx2) {                           \
-        for (; i--;) {                      \
-          proc((p1 + *idx1), (p2 + *idx2)); \
-          idx1++;                           \
-          idx2++;                           \
-        }                                   \
-      } else {                              \
-        for (; i--;) {                      \
-          proc((p1 + *idx1), p2);           \
-          idx1++;                           \
-          p2 += s2;                         \
-        }                                   \
-      }                                     \
-    } else {                                \
-      if (idx2) {                           \
-        for (; i--;) {                      \
-          proc(p1, (p1 + *idx2));           \
-          p1 += s1;                         \
-          idx2++;                           \
-        }                                   \
-      } else {                              \
-        for (; i--;) {                      \
-          proc(p1, p2);                     \
-          p1 += s1;                         \
-          p2 += s2;                         \
-        }                                   \
-      }                                     \
-    }                                       \
+#define LOOP_UNARY_PTR(lp, proc)                                                               \
+  {                                                                                            \
+    size_t i;                                                                                  \
+    ssize_t s1, s2;                                                                            \
+    char *p1, *p2;                                                                             \
+    size_t *idx1, *idx2;                                                                       \
+    INIT_COUNTER(lp, i);                                                                       \
+    INIT_PTR_IDX(lp, 0, p1, s1, idx1);                                                         \
+    INIT_PTR_IDX(lp, 1, p2, s2, idx2);                                                         \
+    if (idx1) {                                                                                \
+      if (idx2) {                                                                              \
+        for (; i--;) {                                                                         \
+          proc((p1 + *idx1), (p2 + *idx2));                                                    \
+          idx1++;                                                                              \
+          idx2++;                                                                              \
+        }                                                                                      \
+      } else {                                                                                 \
+        for (; i--;) {                                                                         \
+          proc((p1 + *idx1), p2);                                                              \
+          idx1++;                                                                              \
+          p2 += s2;                                                                            \
+        }                                                                                      \
+      }                                                                                        \
+    } else {                                                                                   \
+      if (idx2) {                                                                              \
+        for (; i--;) {                                                                         \
+          proc(p1, (p1 + *idx2));                                                              \
+          p1 += s1;                                                                            \
+          idx2++;                                                                              \
+        }                                                                                      \
+      } else {                                                                                 \
+        for (; i--;) {                                                                         \
+          proc(p1, p2);                                                                        \
+          p1 += s1;                                                                            \
+          p2 += s2;                                                                            \
+        }                                                                                      \
+      }                                                                                        \
+    }                                                                                          \
   }
 
 #define m_memcpy(src, dst) memcpy(dst, src, e)
@@ -79,14 +79,14 @@ na_store(VALUE self, VALUE src) {
 
 // ---------------------------------------------------------------------
 
-#define m_swap_byte(q1, q2)   \
-  {                           \
-    size_t j;                 \
-    memcpy(b1, q1, e);        \
-    for (j = 0; j < e; j++) { \
-      b2[e - 1 - j] = b1[j];  \
-    }                         \
-    memcpy(q2, b2, e);        \
+#define m_swap_byte(q1, q2)                                                                    \
+  {                                                                                            \
+    size_t j;                                                                                  \
+    memcpy(b1, q1, e);                                                                         \
+    for (j = 0; j < e; j++) {                                                                  \
+      b2[e - 1 - j] = b1[j];                                                                   \
+    }                                                                                          \
+    memcpy(q2, b2, e);                                                                         \
   }
 
 static void iter_swap_byte(na_loop_t* const lp) {
@@ -231,11 +231,11 @@ static VALUE na_transpose_map(VALUE self, int* map) {
   return view;
 }
 
-#define SWAP(a, b, tmp) \
-  {                     \
-    tmp = a;            \
-    a = b;              \
-    b = tmp;            \
+#define SWAP(a, b, tmp)                                                                        \
+  {                                                                                            \
+    tmp = a;                                                                                   \
+    a = b;                                                                                     \
+    b = tmp;                                                                                   \
   }
 
 static VALUE na_transpose(int argc, VALUE* argv, VALUE self) {
@@ -779,11 +779,11 @@ static VALUE na_diagonal(int argc, VALUE* argv, VALUE self) {
 #ifdef SWAP
 #undef SWAP
 #endif
-#define SWAP(a, b, t) \
-  {                   \
-    t = a;            \
-    a = b;            \
-    b = t;            \
+#define SWAP(a, b, t)                                                                          \
+  {                                                                                            \
+    t = a;                                                                                     \
+    a = b;                                                                                     \
+    b = t;                                                                                     \
   }
 
 static VALUE
