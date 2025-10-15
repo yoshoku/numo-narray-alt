@@ -90,3 +90,25 @@ static inline double f_var(size_t n, BIT_DIGIT* p, size_t pos, ssize_t stride, s
 static inline double f_stddev(size_t n, BIT_DIGIT* p, size_t pos, ssize_t stride, size_t* idx) {
   return sqrt(f_var(n, p, pos, stride, idx));
 }
+
+static inline double f_rms(size_t n, BIT_DIGIT* p, size_t pos, ssize_t stride, size_t* idx) {
+  size_t count = 0;
+  double sum = 0.0;
+  BIT_DIGIT x;
+  if (idx) {
+    for (size_t i = n; i--;) {
+      LOAD_BIT(p, pos + *idx, x);
+      idx++;
+      sum += (double)(x * x);
+      count++;
+    }
+  } else {
+    for (size_t i = n; i--;) {
+      LOAD_BIT(p, pos, x);
+      pos += stride;
+      sum += (double)(x * x);
+      count++;
+    }
+  }
+  return sqrt(sum / (double)count);
+}

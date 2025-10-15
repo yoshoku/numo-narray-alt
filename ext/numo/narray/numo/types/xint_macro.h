@@ -195,3 +195,15 @@ static inline double f_var(size_t n, char* p, ssize_t stride) {
 static inline double f_stddev(size_t n, char* p, ssize_t stride) {
   return sqrt(f_var(n, p, stride));
 }
+
+static inline double f_rms(size_t n, char* p, ssize_t stride) {
+  size_t count = 0;
+  double sum = 0.0;
+  for (size_t i = n; i--;) {
+    const double x = (double)(*(dtype*)p);
+    p += stride;
+    sum = m_add(sum, m_square(x));
+    count++;
+  }
+  return sqrt(sum / (double)count);
+}

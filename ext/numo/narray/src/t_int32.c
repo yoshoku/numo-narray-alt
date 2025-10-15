@@ -46,12 +46,14 @@ extern VALUE cRT;
 #include "mh/mean.h"
 #include "mh/var.h"
 #include "mh/stddev.h"
+#include "mh/rms.h"
 
 typedef int32_t int32; // Type aliases for shorter notation
                        // following the codebase naming convention.
 DEF_NARRAY_INT_MEAN_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_INT_VAR_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_INT_STDDEV_METHOD_FUNC(int32, numo_cInt32)
+DEF_NARRAY_INT_RMS_METHOD_FUNC(int32, numo_cInt32)
 
 static VALUE int32_store(VALUE, VALUE);
 
@@ -5837,4 +5839,15 @@ void Init_numo_int32(void) {
    *   @return [Numo::DFloat] returns result of stddev.
    */
   rb_define_method(cT, "stddev", int32_stddev, -1);
+  /**
+   * rms of self.
+   * @overload rms(axis: nil, keepdims: false, nan: false)
+   *   @param axis [Numeric, Array, Range] Performs rms along the axis.
+   *   @param keepdims [Boolean] If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @param nan [Boolean] If true, apply NaN-aware algorithm
+   *     (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+   *   @return [Numo::DFloat] returns result of rms.
+   */
+  rb_define_method(cT, "rms", int32_rms, -1);
 }
