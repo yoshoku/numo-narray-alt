@@ -45,12 +45,14 @@ extern VALUE cRT;
 #include "mh/mean.h"
 #include "mh/var.h"
 #include "mh/stddev.h"
+#include "mh/rms.h"
 
 typedef float sfloat; // Type aliases for shorter notation
                       // following the codebase naming convention.
 DEF_NARRAY_FLT_MEAN_METHOD_FUNC(sfloat, float, numo_cSFloat, numo_cSFloat)
 DEF_NARRAY_FLT_VAR_METHOD_FUNC(sfloat, float, numo_cSFloat, numo_cSFloat)
 DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(sfloat, float, numo_cSFloat, numo_cSFloat)
+DEF_NARRAY_FLT_RMS_METHOD_FUNC(sfloat, float, numo_cSFloat, numo_cSFloat)
 
 static VALUE sfloat_store(VALUE, VALUE);
 
@@ -4533,52 +4535,6 @@ static VALUE sfloat_prod(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return sfloat_extract(v);
-}
-
-static void iter_sfloat_rms(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(rtype*)p2 = f_rms(n, p1, s1);
-}
-static void iter_sfloat_rms_nan(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(rtype*)p2 = f_rms_nan(n, p1, s1);
-}
-
-/*
-  rms of self.
-  @overload rms(axis:nil, keepdims:false, nan:false)
-    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-    return NaN for min/max etc).
-    @param [Numeric,Array,Range] axis  Performs rms along the axis.
-    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-    dimensions with size one.
-    @return [Numo::SFloat] returns result of rms.
-*/
-static VALUE sfloat_rms(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
-  ndfunc_t ndf = { iter_sfloat_rms, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_sfloat_rms_nan);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-
-  return rb_funcall(v, rb_intern("extract"), 0);
 }
 
 static void iter_sfloat_min(na_loop_t* const lp) {
@@ -9266,6 +9222,16 @@ void Init_numo_sfloat(void) {
    *   @return [Numo::SFloat] returns result of stddev.
    */
   rb_define_method(cT, "stddev", sfloat_stddev, -1);
+  /**
+   * rms of self.
+   * @overload rms(axis: nil, keepdims: false, nan: false)
+   *   @param axis [Numeric, Array, Range] Performs rms along the axis.
+   *   @param keepdims [Boolean] If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @param nan [Boolean] If true, apply NaN-aware algorithm
+   *     (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+   *   @return [Numo::SFloat] returns result of rms.
+   */
   rb_define_method(cT, "rms", sfloat_rms, -1);
   rb_define_method(cT, "min", sfloat_min, -1);
   rb_define_method(cT, "max", sfloat_max, -1);
