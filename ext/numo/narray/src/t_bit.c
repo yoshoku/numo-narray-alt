@@ -3208,11 +3208,8 @@ void Init_numo_bit(void) {
   rb_hash_aset(hCast, numo_cUInt8, numo_cUInt8);
   rb_obj_freeze(hCast);
 
-  /**/
   rb_define_const(cT, "ELEMENT_BIT_SIZE", INT2FIX(1));
-  /**/
   rb_define_const(cT, "ELEMENT_BYTE_SIZE", rb_float_new(1.0 / 8));
-  /**/
   rb_define_const(cT, "CONTIGUOUS_STRIDE", INT2FIX(1));
   rb_define_alloc_func(cT, bit_s_alloc_func);
   rb_define_method(cT, "allocate", bit_allocate, 0);

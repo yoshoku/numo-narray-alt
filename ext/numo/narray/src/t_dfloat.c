@@ -9158,17 +9158,11 @@ void Init_numo_dfloat(void) {
   rb_hash_aset(hCast, numo_cUInt8, numo_cDFloat);
   rb_obj_freeze(hCast);
 
-  /**/
   rb_define_const(cT, "ELEMENT_BIT_SIZE", INT2FIX(sizeof(dtype) * 8));
-  /**/
   rb_define_const(cT, "ELEMENT_BYTE_SIZE", INT2FIX(sizeof(dtype)));
-  /**/
   rb_define_const(cT, "CONTIGUOUS_STRIDE", INT2FIX(sizeof(dtype)));
-  /**/
   rb_define_const(cT, "EPSILON", M_EPSILON);
-  /**/
   rb_define_const(cT, "MAX", M_MAX);
-  /**/
   rb_define_const(cT, "MIN", M_MIN);
   rb_define_alloc_func(cT, dfloat_s_alloc_func);
   rb_define_method(cT, "allocate", dfloat_allocate, 0);
