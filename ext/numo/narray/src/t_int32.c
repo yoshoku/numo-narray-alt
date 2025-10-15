@@ -43,11 +43,13 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
-#include "src/mh/mean.h"
+#include "mh/mean.h"
+#include "mh/var.h"
 
 typedef int32_t int32; // Type aliases for shorter notation
                        // following the codebase naming convention.
 DEF_NARRAY_INT_MEAN_METHOD_FUNC(int32, numo_cInt32)
+DEF_NARRAY_INT_VAR_METHOD_FUNC(int32, numo_cInt32)
 
 static VALUE int32_store(VALUE, VALUE);
 
@@ -5811,4 +5813,15 @@ void Init_numo_int32(void) {
    *   @return [Numo::DFloat]
    */
   rb_define_method(cT, "mean", int32_mean, -1);
+  /**
+   * var of self.
+   * @overload var(axis: nil, keepdims: false, nan: false)
+   *   @param axis [Numeric, Array, Range] Performs var along the axis.
+   *   @param keepdims [Boolean] If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @param nan [Boolean] If true, apply NaN-aware algorithm
+   *     (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+   *   @return [Numo::DFloat] returns result of var.
+   */
+  rb_define_method(cT, "var", int32_var, -1);
 }

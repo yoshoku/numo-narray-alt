@@ -177,3 +177,17 @@ static inline double f_mean(size_t n, char* p, ssize_t stride) {
   }
   return sum / (double)count;
 }
+
+static inline double f_var(size_t n, char* p, ssize_t stride) {
+  size_t count = 0;
+  double sum = 0.0;
+  const double mean = f_mean(n, p, stride);
+  for (size_t i = n; i--;) {
+    const double x = (double)(*(dtype*)p);
+    const double d = m_sub(x, mean);
+    p += stride;
+    sum = m_add(sum, m_square(d));
+    count++;
+  }
+  return sum / (double)(count - 1);
+}

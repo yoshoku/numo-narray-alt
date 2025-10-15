@@ -61,3 +61,28 @@ static inline double f_mean(size_t n, BIT_DIGIT* p, size_t pos, ssize_t stride, 
   }
   return sum / (double)count;
 }
+
+static inline double f_var(size_t n, BIT_DIGIT* p, size_t pos, ssize_t stride, size_t* idx) {
+  size_t count = 0;
+  double sum = 0.0;
+  BIT_DIGIT x;
+  const double mean = f_mean(n, p, pos, stride, idx);
+  if (idx) {
+    for (size_t i = n; i--;) {
+      LOAD_BIT(p, pos + *idx, x);
+      const double d = (double)x - mean;
+      idx++;
+      sum += d * d;
+      count++;
+    }
+  } else {
+    for (size_t i = n; i--;) {
+      LOAD_BIT(p, pos, x);
+      const double d = (double)x - mean;
+      pos += stride;
+      sum += d * d;
+      count++;
+    }
+  }
+  return sum / (double)(count - 1);
+}

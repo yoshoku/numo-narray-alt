@@ -34,9 +34,11 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
-#include "src/mh/mean.h"
+#include "mh/mean.h"
+#include "mh/var.h"
 
 DEF_NARRAY_BIT_MEAN_METHOD_FUNC()
+DEF_NARRAY_BIT_VAR_METHOD_FUNC()
 
 static VALUE bit_store(VALUE, VALUE);
 
@@ -3254,4 +3256,15 @@ void Init_numo_bit(void) {
    *   @return [Numo::DFloat]
    */
   rb_define_method(cT, "mean", bit_mean, -1);
+  /**
+   * var of self.
+   * @overload var(axis: nil, keepdims: false, nan: false)
+   *   @param axis [Numeric, Array, Range] Performs var along the axis.
+   *   @param keepdims [Boolean] If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @param nan [Boolean] If true, apply NaN-aware algorithm
+   *     (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+   *   @return [Numo::DFloat] returns result of var.
+   */
+  rb_define_method(cT, "var", bit_var, -1);
 }
