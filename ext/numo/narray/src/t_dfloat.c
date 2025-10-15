@@ -42,11 +42,13 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
-#include "src/mh/mean.h"
+#include "mh/mean.h"
+#include "mh/var.h"
 
 typedef double dfloat; // Type aliases for shorter notation
                        // following the codebase naming convention.
 DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dfloat, double, numo_cDFloat, numo_cDFloat)
+DEF_NARRAY_FLT_VAR_METHOD_FUNC(dfloat, double, numo_cDFloat, numo_cDFloat)
 
 static VALUE dfloat_store(VALUE, VALUE);
 
@@ -4615,52 +4617,6 @@ static VALUE dfloat_stddev(int argc, VALUE* argv, VALUE self) {
   ndfunc_t ndf = { iter_dfloat_stddev, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_stddev_nan);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-
-  return rb_funcall(v, rb_intern("extract"), 0);
-}
-
-static void iter_dfloat_var(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(rtype*)p2 = f_var(n, p1, s1);
-}
-static void iter_dfloat_var_nan(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(rtype*)p2 = f_var_nan(n, p1, s1);
-}
-
-/*
-  var of self.
-  @overload var(axis:nil, keepdims:false, nan:false)
-    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-    return NaN for min/max etc).
-    @param [Numeric,Array,Range] axis  Performs var along the axis.
-    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-    dimensions with size one.
-    @return [Numo::DFloat] returns result of var.
-*/
-static VALUE dfloat_var(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
-  ndfunc_t ndf = { iter_dfloat_var, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_var_nan);
 
   v = na_ndloop(&ndf, 2, self, reduce);
 
@@ -9378,6 +9334,16 @@ void Init_numo_dfloat(void) {
    */
   rb_define_method(cT, "mean", dfloat_mean, -1);
   rb_define_method(cT, "stddev", dfloat_stddev, -1);
+  /**
+   * var of self.
+   * @overload var(axis: nil, keepdims: false, nan: false)
+   *   @param axis [Numeric,Array,Range] Performs var along the axis.
+   *   @param keepdims [TrueClass] If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @param nan [TrueClass] If true, apply NaN-aware algorithm
+   *     (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+   *   @return [Numo::DFloat] returns result of var.
+   */
   rb_define_method(cT, "var", dfloat_var, -1);
   rb_define_method(cT, "rms", dfloat_rms, -1);
   rb_define_method(cT, "min", dfloat_min, -1);
