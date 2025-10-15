@@ -137,4 +137,23 @@ class NArrayBitTest < NArrayTestBase
     assert_in_delta(0.3333333, m_var[0])
     assert_in_delta(0.3333333, m_var[1])
   end
+
+  def test_stddev
+    m = Numo::Bit[[0, 1, 0, 1], [1, 0, 0, 1]]
+    assert_in_delta(0.5345225, m.stddev)
+    m_stddev = m.stddev(axis: 0)
+    assert_kind_of(Numo::DFloat, m_stddev)
+    assert_equal(1, m_stddev.ndim)
+    assert_equal(4, m_stddev.shape[0])
+    assert_in_delta(0.7071068, m_stddev[0])
+    assert_in_delta(0.7071068, m_stddev[1])
+    assert_in_delta(0, m_stddev[2])
+    assert_in_delta(0, m_stddev[3])
+    m_stddev = m.stddev(axis: 1)
+    assert_kind_of(Numo::DFloat, m_stddev)
+    assert_equal(1, m_stddev.ndim)
+    assert_equal(2, m_stddev.shape[0])
+    assert_in_delta(0.5773503, m_stddev[0])
+    assert_in_delta(0.5773503, m_stddev[1])
+  end
 end

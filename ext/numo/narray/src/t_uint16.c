@@ -45,11 +45,13 @@ extern VALUE cRT;
 
 #include "mh/mean.h"
 #include "mh/var.h"
+#include "mh/stddev.h"
 
 typedef u_int16_t uint16; // Type aliases for shorter notation
                           // following the codebase naming convention.
 DEF_NARRAY_INT_MEAN_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_INT_VAR_METHOD_FUNC(uint16, numo_cUInt16)
+DEF_NARRAY_INT_STDDEV_METHOD_FUNC(uint16, numo_cUInt16)
 
 static VALUE uint16_store(VALUE, VALUE);
 
@@ -5806,7 +5808,7 @@ void Init_numo_uint16(void) {
    *     dimensions with size one.
    *   @param nan [Boolean] If true, apply NaN-aware algorithm
    *     (avoid NaN for sum/mean etc, or return NaN for min/max etc).
-   *   @return [Numo::DFloat]
+   *   @return [Numo::DFloat] returns result of mean.
    */
   rb_define_method(cT, "mean", uint16_mean, -1);
   /**
@@ -5820,4 +5822,15 @@ void Init_numo_uint16(void) {
    *   @return [Numo::DFloat] returns result of var.
    */
   rb_define_method(cT, "var", uint16_var, -1);
+  /**
+   * stddev of self.
+   * @overload stddev(axis: nil, keepdims: false, nan: false)
+   *   @param axis [Numeric, Array, Range] Performs stddev along the axis.
+   *   @param keepdims [Boolean] If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @param nan [Boolean] If true, apply NaN-aware algorithm
+   *     (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+   *   @return [Numo::DFloat] returns result of stddev.
+   */
+  rb_define_method(cT, "stddev", uint16_stddev, -1);
 }

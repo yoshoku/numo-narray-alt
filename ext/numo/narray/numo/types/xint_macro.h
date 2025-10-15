@@ -191,3 +191,7 @@ static inline double f_var(size_t n, char* p, ssize_t stride) {
   }
   return sum / (double)(count - 1);
 }
+
+static inline double f_stddev(size_t n, char* p, ssize_t stride) {
+  return sqrt(f_var(n, p, stride));
+}

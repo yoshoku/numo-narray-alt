@@ -121,10 +121,8 @@ class NArrayTest < NArrayTestBase
         assert_equal(29, a.sum)
         assert_in_delta(4.833333, a.mean, 1e-6)
         assert_in_delta(13.766666, a.var, 1e-5)
-        if FLOAT_TYPES.include?(dtype)
-          assert_in_delta(3.710345, a.stddev, 1e-6)
-          assert_in_delta(5.901977, a.rms, 1e-6)
-        end
+        assert_in_delta(3.710345, a.stddev, 1e-6)
+        assert_in_delta(5.901977, a.rms, 1e-6) if FLOAT_TYPES.include?(dtype)
         assert_equal(dtype[12, 12, 12, 12, 12, 12], a.dup.fill(12))
         assert_equal(dtype[2, 3, 4, 6, 8, 12], a + 1)
         assert_equal(dtype[0, 1, 2, 4, 6, 10], a - 1)

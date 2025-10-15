@@ -86,3 +86,7 @@ static inline double f_var(size_t n, BIT_DIGIT* p, size_t pos, ssize_t stride, s
   }
   return sum / (double)(count - 1);
 }
+
+static inline double f_stddev(size_t n, BIT_DIGIT* p, size_t pos, ssize_t stride, size_t* idx) {
+  return sqrt(f_var(n, p, pos, stride, idx));
+}
