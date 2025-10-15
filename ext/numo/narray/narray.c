@@ -1824,6 +1824,11 @@ void Init_narray(void) {
   rb_ext_ractor_safe(true);
 #endif
 
+  /**
+   * Document-module: Numo
+   *
+   * Ruby/Numo (NUmerical MOdules)
+   */
   mNumo = rb_define_module("Numo");
 
   /*

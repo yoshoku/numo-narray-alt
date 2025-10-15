@@ -6925,10 +6925,6 @@ static VALUE sfloat_median(int argc, VALUE* argv, VALUE self) {
   return sfloat_extract(v);
 }
 
-/*
-  module definition: Numo::SFloat::NMath
-*/
-
 VALUE mTM;
 
 static void iter_sfloat_math_s_sqrt(na_loop_t* const lp) {
@@ -9254,11 +9250,11 @@ void Init_numo_sfloat(void) {
   rb_define_method(cT, "median", sfloat_median, -1);
   rb_define_singleton_method(cT, "[]", sfloat_s_cast, -2);
 
-  /*
-    Document-module: Numo::SFloat::NMath
-
-  */
-
+  /**
+   * Document-module: Numo::SFloat::Math
+   *
+   * This module contains mathematical functions for Numo::SFloat.
+   */
   mTM = rb_define_module_under(cT, "Math");
 
   rb_define_module_function(mTM, "sqrt", sfloat_math_s_sqrt, 1);

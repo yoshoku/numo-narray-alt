@@ -4742,10 +4742,6 @@ static VALUE scomplex_poly(VALUE self, VALUE args) {
   return scomplex_extract(v);
 }
 
-/*
-  module definition: Numo::SComplex::NMath
-*/
-
 VALUE mTM;
 
 static void iter_scomplex_math_s_sqrt(na_loop_t* const lp) {
@@ -6558,11 +6554,11 @@ void Init_numo_scomplex(void) {
   rb_define_method(cT, "poly", scomplex_poly, -2);
   rb_define_singleton_method(cT, "[]", scomplex_s_cast, -2);
 
-  /*
-    Document-module: Numo::SComplex::NMath
-
-  */
-
+  /**
+   * Document-module: Numo::SComplex::Math
+   *
+   * This module contains mathematical functions for Numo::SComplex.
+   */
   mTM = rb_define_module_under(cT, "Math");
 
   rb_define_module_function(mTM, "sqrt", scomplex_math_s_sqrt, 1);

@@ -101,6 +101,11 @@ static VALUE nary_math_method_missing(int argc, VALUE* argv, VALUE mod) {
 void Init_nary_math(void) {
   VALUE hCast;
 
+  /**
+   * Document-module: Numo::NMath
+   *
+   * This module provides mathematical functions for NArray.
+   */
   numo_mNMath = rb_define_module_under(mNumo, "NMath");
   rb_define_singleton_method(numo_mNMath, "method_missing", nary_math_method_missing, -1);
 
