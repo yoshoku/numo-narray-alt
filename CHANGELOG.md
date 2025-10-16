@@ -1,3 +1,9 @@
+## [[0.9.6](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.5...v0.9.6)] - 2025-10-16
+
+- add `var`, `stddev`, and `rms` methods to integer-typed narrays.
+- refactor `mean` method's native extension code to improve yard documentation comment parsing.
+- update API documentation: improve documentation coverage to 96.09% (1135/1186 methods documented).
+
 ## [[0.9.5](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.4...v0.9.5)] - 2025-10-09
 
 - implement `cov` method: [8fb42d9](https://github.com/yoshoku/numo-narray-alt/commit/8fb42d967fd6280059cf4093a9abbd9d989bb904)
