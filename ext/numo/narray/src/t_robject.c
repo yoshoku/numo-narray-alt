@@ -5280,6 +5280,7 @@ void Init_numo_robject(void) {
   cT = rb_define_class_under(mNumo, "RObject", cNArray);
 
   hCast = rb_hash_new();
+  /* Upcasting rules of RObject. */
   rb_define_const(cT, "UPCAST", hCast);
   rb_hash_aset(hCast, rb_cArray, cT);
 
@@ -5305,8 +5306,11 @@ void Init_numo_robject(void) {
   rb_hash_aset(hCast, numo_cUInt8, numo_cRObject);
   rb_obj_freeze(hCast);
 
+  /* Element size of RObject in bits. */
   rb_define_const(cT, "ELEMENT_BIT_SIZE", INT2FIX(sizeof(dtype) * 8));
+  /* Element size of RObject in bytes. */
   rb_define_const(cT, "ELEMENT_BYTE_SIZE", INT2FIX(sizeof(dtype)));
+  /* Stride size of contiguous RObject array. */
   rb_define_const(cT, "CONTIGUOUS_STRIDE", INT2FIX(sizeof(dtype)));
   rb_undef_method(rb_singleton_class(cT), "from_binary");
   rb_undef_method(cT, "to_binary");

@@ -5669,6 +5669,7 @@ void Init_numo_int32(void) {
   cT = rb_define_class_under(mNumo, "Int32", cNArray);
 
   hCast = rb_hash_new();
+  /* Upcasting rules of Int32. */
   rb_define_const(cT, "UPCAST", hCast);
   rb_hash_aset(hCast, rb_cArray, cT);
 
@@ -5695,10 +5696,15 @@ void Init_numo_int32(void) {
   rb_hash_aset(hCast, numo_cUInt8, cT);
   rb_obj_freeze(hCast);
 
+  /* Element size of Int32 in bits. */
   rb_define_const(cT, "ELEMENT_BIT_SIZE", INT2FIX(sizeof(dtype) * 8));
+  /* Element size of Int32 in bytes. */
   rb_define_const(cT, "ELEMENT_BYTE_SIZE", INT2FIX(sizeof(dtype)));
+  /* Stride size of contiguous Int32 array. */
   rb_define_const(cT, "CONTIGUOUS_STRIDE", INT2FIX(sizeof(dtype)));
+  /* The largest representable value of Int32. */
   rb_define_const(cT, "MAX", M_MAX);
+  /* The smallest representable value of Int32. */
   rb_define_const(cT, "MIN", M_MIN);
   rb_define_alloc_func(cT, int32_s_alloc_func);
   rb_define_method(cT, "allocate", int32_allocate, 0);

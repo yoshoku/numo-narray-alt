@@ -110,7 +110,6 @@ void Init_nary_math(void) {
   rb_define_singleton_method(numo_mNMath, "method_missing", nary_math_method_missing, -1);
 
   hCast = rb_hash_new();
-  rb_define_const(numo_mNMath, "DISPATCH", hCast);
   rb_hash_aset(hCast, numo_cInt64, numo_mDFloatMath);
   rb_hash_aset(hCast, numo_cInt32, numo_mDFloatMath);
   rb_hash_aset(hCast, numo_cInt16, numo_mDFloatMath);
@@ -132,6 +131,8 @@ void Init_nary_math(void) {
 #endif
   rb_hash_aset(hCast, rb_cFloat, rb_mMath);
   rb_hash_aset(hCast, rb_cComplex, numo_mDComplexMath);
+  /* Dispatch table representing the corresponding Math module. */
+  rb_define_const(numo_mNMath, "DISPATCH", hCast);
 
   id_send = rb_intern("send");
   id_UPCAST = rb_intern("UPCAST");

@@ -1849,6 +1849,7 @@ void Init_narray(void) {
   rb_cArithSeq = rb_path2class("Enumerator::ArithmeticSequence");
 #endif
 
+  /* The version of Numo::NArray Alternative. */
   rb_define_const(cNArray, "VERSION", rb_str_new2(NARRAY_VERSION));
 
   /**

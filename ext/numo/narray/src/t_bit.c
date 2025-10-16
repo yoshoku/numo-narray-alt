@@ -3180,6 +3180,7 @@ void Init_numo_bit(void) {
   cT = rb_define_class_under(mNumo, "Bit", cNArray);
 
   hCast = rb_hash_new();
+  /* Upcasting rules of Bit. */
   rb_define_const(cT, "UPCAST", hCast);
   rb_hash_aset(hCast, rb_cArray, cT);
 
@@ -3206,8 +3207,11 @@ void Init_numo_bit(void) {
   rb_hash_aset(hCast, numo_cUInt8, numo_cUInt8);
   rb_obj_freeze(hCast);
 
+  /* Element size of Bit in bits. */
   rb_define_const(cT, "ELEMENT_BIT_SIZE", INT2FIX(1));
+  /* Element size of Bit in bytes. */
   rb_define_const(cT, "ELEMENT_BYTE_SIZE", rb_float_new(1.0 / 8));
+  /* Stride size of contiguous Bit array. */
   rb_define_const(cT, "CONTIGUOUS_STRIDE", INT2FIX(1));
   rb_define_alloc_func(cT, bit_s_alloc_func);
   rb_define_method(cT, "allocate", bit_allocate, 0);

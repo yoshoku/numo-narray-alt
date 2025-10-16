@@ -6478,6 +6478,7 @@ void Init_numo_dcomplex(void) {
   rb_define_const(mNumo, "Complex64", numo_cDComplex);
 
   hCast = rb_hash_new();
+  /* Upcasting rules of DComplex. */
   rb_define_const(cT, "UPCAST", hCast);
   rb_hash_aset(hCast, rb_cArray, cT);
 
@@ -6504,11 +6505,17 @@ void Init_numo_dcomplex(void) {
   rb_hash_aset(hCast, numo_cUInt8, numo_cDComplex);
   rb_obj_freeze(hCast);
 
+  /* Element size of DComplex in bits. */
   rb_define_const(cT, "ELEMENT_BIT_SIZE", INT2FIX(sizeof(dtype) * 8));
+  /* Element size of DComplex in bytes. */
   rb_define_const(cT, "ELEMENT_BYTE_SIZE", INT2FIX(sizeof(dtype)));
+  /* Stride size of contiguous DComplex array. */
   rb_define_const(cT, "CONTIGUOUS_STRIDE", INT2FIX(sizeof(dtype)));
+  /* Machine epsilon of DComplex. */
   rb_define_const(cT, "EPSILON", M_EPSILON);
+  /* The largest representable value of DComplex. */
   rb_define_const(cT, "MAX", M_MAX);
+  /* The smallest representable value of DComplex. */
   rb_define_const(cT, "MIN", M_MIN);
   rb_define_alloc_func(cT, dcomplex_s_alloc_func);
   rb_define_method(cT, "allocate", dcomplex_allocate, 0);

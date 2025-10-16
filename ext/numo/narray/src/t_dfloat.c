@@ -8307,6 +8307,7 @@ void Init_numo_dfloat(void) {
   rb_define_const(mNumo, "Float64", numo_cDFloat);
 
   hCast = rb_hash_new();
+  /* Upcasting rules of DFloat. */
   rb_define_const(cT, "UPCAST", hCast);
   rb_hash_aset(hCast, rb_cArray, cT);
 
@@ -8333,11 +8334,17 @@ void Init_numo_dfloat(void) {
   rb_hash_aset(hCast, numo_cUInt8, numo_cDFloat);
   rb_obj_freeze(hCast);
 
+  /* Element size of DFloat in bits. */
   rb_define_const(cT, "ELEMENT_BIT_SIZE", INT2FIX(sizeof(dtype) * 8));
+  /* Element size of DFloat in bytes. */
   rb_define_const(cT, "ELEMENT_BYTE_SIZE", INT2FIX(sizeof(dtype)));
+  /* Stride size of contiguous DFloat array. */
   rb_define_const(cT, "CONTIGUOUS_STRIDE", INT2FIX(sizeof(dtype)));
+  /* Machine epsilon of DFloat. */
   rb_define_const(cT, "EPSILON", M_EPSILON);
+  /* The largest representable value of DFloat. */
   rb_define_const(cT, "MAX", M_MAX);
+  /* The smallest representable value of DFloat. */
   rb_define_const(cT, "MIN", M_MIN);
   rb_define_alloc_func(cT, dfloat_s_alloc_func);
   rb_define_method(cT, "allocate", dfloat_allocate, 0);
