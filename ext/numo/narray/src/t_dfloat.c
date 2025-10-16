@@ -8357,13 +8357,20 @@ void Init_numo_dfloat(void) {
   rb_define_method(cT, "store", dfloat_store, 1);
   /**
    * Cast object to Numo::DFloat.
-   * @overload [](elements)
    * @overload cast(array)
    *   @param [Numeric,Array] elements
    *   @param [Array] array
    *   @return [Numo::DFloat]
    */
   rb_define_singleton_method(cT, "cast", dfloat_s_cast, 1);
+  /**
+   * Cast object to Numo::DFloat.
+   * @overload [](elements)
+   *   @param [Numeric,Array] elements
+   *   @param [Array] array
+   *   @return [Numo::DFloat]
+   */
+  rb_define_singleton_method(cT, "[]", dfloat_s_cast, -2);
   /**
    * Multi-dimensional element reference.
    * @overload [](dim0,...,dimL)
@@ -9102,7 +9109,6 @@ void Init_numo_dfloat(void) {
    * @return [Numo::DFloat] returns median of self.
    */
   rb_define_method(cT, "median", dfloat_median, -1);
-  rb_define_singleton_method(cT, "[]", dfloat_s_cast, -2);
 
   /**
    * Document-module: Numo::DFloat::Math
