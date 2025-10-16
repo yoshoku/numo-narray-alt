@@ -35,6 +35,13 @@ static VALUE nary_s_srand(int argc, VALUE* argv, VALUE obj) {
 }
 
 void Init_nary_rand(void) {
+  /**
+   * Sets the seed for random number generator.
+   * @overload Numo::NArray.srand(seed)
+   *   @param seed [Integer] if seed is not given, a seed is generated from current time,
+   *     process id, and a sequence number.
+   *   @return [nil]
+   */
   rb_define_singleton_method(cNArray, "srand", nary_s_srand, -1);
   init_gen_rand(0);
 }

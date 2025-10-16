@@ -114,6 +114,7 @@ module Numo
       end
     end
 
+    # Convert the argument to an narray.
     def self.asarray(a)
       case a
       when NArray
@@ -710,6 +711,12 @@ module Numo
       end
     end
 
+    # Split an array into multiple sub-arrays vertically
+    def vsplit(indices_or_sections)
+      split(indices_or_sections, axis: 0)
+    end
+
+    # Split an array into multiple sub-arrays horizontally
     # @example
     #   x = Numo::DFloat.new(4,4).seq
     #   # => Numo::DFloat#shape=[4,4]
@@ -742,15 +749,11 @@ module Numo
     #   #  [11],
     #   #  [15]],
     #   #  Numo::DFloat(view)#shape=[4,0][]]
-
-    def vsplit(indices_or_sections)
-      split(indices_or_sections, axis: 0)
-    end
-
     def hsplit(indices_or_sections)
       split(indices_or_sections, axis: 1)
     end
 
+    # Split an array into multiple sub-arrays along the depth
     def dsplit(indices_or_sections)
       split(indices_or_sections, axis: 2)
     end

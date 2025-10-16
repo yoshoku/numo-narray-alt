@@ -557,7 +557,31 @@ na_ary_composition_for_struct(VALUE nstruct, VALUE ary)
 */
 
 void Init_nary_array(void) {
+  /**
+   * return shape of NArray which would be created from given Array.
+   * @overload array_shape(ary)
+   *   @param [Array] ary
+   *   @return [Array] shape
+   * @example
+   *   Numo::NArray.array_shape([[1, 2, 3],[4, 5, 6]])
+   *   # => [2,3]
+   *   Numo::NArray.array_shape(Numo::DFloat[[1, 2, 3], [4, 5, 6]])
+   *   # => []
+   */
   rb_define_singleton_method(cNArray, "array_shape", na_s_array_shape, 1);
+  /**
+   * return type of NArray which would be created from given Array.
+   * @overload array_type(ary)
+   *   @param [Array] ary
+   *   @return [Class] NArray class
+   * @example
+   *  Numo::NArray.array_type([1, 2, 3])
+   *  # => Numo::Int32
+   *  Numo::NArray.array_type([0, 1, 2i])
+   *  # => Numo::DComplex
+   *  Numo::NArray.array_type(Numo::DFloat[1, 2, 3])
+   *  # => Numo::DFloat
+   */
   rb_define_singleton_method(cNArray, "array_type", na_s_array_type, 1);
   rb_define_singleton_method(cNArray, "new_like", na_s_new_like, 1);
 
