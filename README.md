@@ -40,6 +40,19 @@ Numo::DFloat#shape=[2,2]
 irb(main):004>
 ```
 
+## Related Projects
+
+Numo::NArray Alternative is used in the following projects:
+
+- [numo-linalg-alt](https://github.com/yoshoku/numo-linalg-alt): Linear algebra library with BLAS/LAPACK.
+- [numo-optimize](https://github.com/yoshoku/numo-optimize): Optimization library for minimizing objective functions.
+- [numo-random](https://github.com/yoshoku/numo-random): Random number generation library with several distributions.
+- [numo-pocketfft](https://github.com/yoshoku/numo-pocketfft): Fourier transform library with pocketfft.
+- [numo-libsvm](https://github.com/yoshoku/numo-libsvm): LIBSVM bindings library for numo-narray-alt.
+- [numo-liblinear](https://github.com/yoshoku/numo-liblinear): LIBLINEAR bindings library for numo-narray-alt.
+- [numo-linalg-randsvd](https://github.com/yoshoku/numo-linalg-randsvd): Randomized SVD library for numo-linalg-alt.
+- [rumale](https://github.com/yoshoku/rumale): Machine learning library.
+
 ## Development
 
 preparation:
