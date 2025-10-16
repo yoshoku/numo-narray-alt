@@ -3916,14 +3916,6 @@ static VALUE uint8_minmax(int argc, VALUE* argv, VALUE self) {
   return na_ndloop(&ndf, 2, self, reduce);
 }
 
-/*
-  Element-wise maximum of two arrays.
-
-  @overload maximum(a1, a2)
-    @param [Numo::NArray,Numeric] a1,a2  The arrays holding the elements to be compared.
-    @return [Numo::UInt8]
-*/
-
 static void iter_uint8_s_maximum(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2, *p3;
@@ -3955,14 +3947,6 @@ static VALUE uint8_s_maximum(int argc, VALUE* argv, VALUE mod) {
 
   return na_ndloop(&ndf, 2, a1, a2);
 }
-
-/*
-  Element-wise minimum of two arrays.
-
-  @overload minimum(a1, a2)
-    @param [Numo::NArray,Numeric] a1,a2  The arrays holding the elements to be compared.
-    @return [Numo::UInt8]
-*/
 
 static void iter_uint8_s_minimum(na_loop_t* const lp) {
   size_t i, n;
@@ -5359,7 +5343,19 @@ void Init_numo_uint8(void) {
   rb_define_method(cT, "argmax", uint8_argmax, -1);
   rb_define_method(cT, "argmin", uint8_argmin, -1);
   rb_define_method(cT, "minmax", uint8_minmax, -1);
+  /**
+   * Element-wise maximum of two arrays.
+   * @overload maximum(a1, a2)
+   *   @param [Numo::NArray,Numeric] a1,a2  The arrays holding the elements to be compared.
+   *   @return [Numo::UInt8]
+   */
   rb_define_module_function(cT, "maximum", uint8_s_maximum, -1);
+  /**
+   * Element-wise minimum of two arrays.
+   * @overload minimum(a1, a2)
+   *   @param [Numo::NArray,Numeric] a1,a2  The arrays holding the elements to be compared.
+   *   @return [Numo::UInt8]
+   */
   rb_define_module_function(cT, "minimum", uint8_s_minimum, -1);
   rb_define_method(cT, "bincount", uint8_bincount, -1);
   rb_define_method(cT, "cumsum", uint8_cumsum, -1);

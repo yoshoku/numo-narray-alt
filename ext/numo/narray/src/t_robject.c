@@ -4495,16 +4495,6 @@ static VALUE robject_minmax(int argc, VALUE* argv, VALUE self) {
   return na_ndloop(&ndf, 2, self, reduce);
 }
 
-/*
-  Element-wise maximum of two arrays.
-
-  @overload maximum(a1, a2, nan:false)
-    @param [Numo::NArray,Numeric] a1  The array to be compared.
-    @param [Numo::NArray,Numeric] a2  The array to be compared.
-    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
-    @return [Numo::RObject]
-*/
-
 static void iter_robject_s_maximum(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2, *p3;
@@ -5442,7 +5432,23 @@ void Init_numo_robject(void) {
   rb_define_method(cT, "argmax", robject_argmax, -1);
   rb_define_method(cT, "argmin", robject_argmin, -1);
   rb_define_method(cT, "minmax", robject_minmax, -1);
+  /**
+   * Element-wise maximum of two arrays.
+   * @overload maximum(a1, a2, nan:false)
+   *   @param [Numo::NArray,Numeric] a1  The array to be compared.
+   *   @param [Numo::NArray,Numeric] a2  The array to be compared.
+   *   @param [Boolean] nan  If true, apply NaN-aware algorithm (return NaN if exist).
+   *   @return [Numo::RObject]
+   */
   rb_define_module_function(cT, "maximum", robject_s_maximum, -1);
+  /**
+   * Element-wise minimum of two arrays.
+   * @overload minimum(a1, a2, nan:false)
+   *   @param [Numo::NArray,Numeric] a1  The array to be compared.
+   *   @param [Numo::NArray,Numeric] a2  The array to be compared.
+   *   @param [Boolean] nan  If true, apply NaN-aware algorithm (return NaN if exist).
+   *   @return [Numo::RObject]
+   */
   rb_define_module_function(cT, "minimum", robject_s_minimum, -1);
   rb_define_method(cT, "cumsum", robject_cumsum, -1);
   rb_define_method(cT, "cumprod", robject_cumprod, -1);

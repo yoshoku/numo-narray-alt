@@ -4338,14 +4338,6 @@ static VALUE int64_minmax(int argc, VALUE* argv, VALUE self) {
   return na_ndloop(&ndf, 2, self, reduce);
 }
 
-/*
-  Element-wise maximum of two arrays.
-
-  @overload maximum(a1, a2)
-    @param [Numo::NArray,Numeric] a1,a2  The arrays holding the elements to be compared.
-    @return [Numo::Int64]
-*/
-
 static void iter_int64_s_maximum(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2, *p3;
@@ -4377,14 +4369,6 @@ static VALUE int64_s_maximum(int argc, VALUE* argv, VALUE mod) {
 
   return na_ndloop(&ndf, 2, a1, a2);
 }
-
-/*
-  Element-wise minimum of two arrays.
-
-  @overload minimum(a1, a2)
-    @param [Numo::NArray,Numeric] a1,a2  The arrays holding the elements to be compared.
-    @return [Numo::Int64]
-*/
 
 static void iter_int64_s_minimum(na_loop_t* const lp) {
   size_t i, n;
@@ -5787,7 +5771,19 @@ void Init_numo_int64(void) {
   rb_define_method(cT, "argmax", int64_argmax, -1);
   rb_define_method(cT, "argmin", int64_argmin, -1);
   rb_define_method(cT, "minmax", int64_minmax, -1);
+  /**
+   * Element-wise maximum of two arrays.
+   * @overload maximum(a1, a2)
+   *   @param [Numo::NArray,Numeric] a1,a2  The arrays holding the elements to be compared.
+   *   @return [Numo::Int64]
+   */
   rb_define_module_function(cT, "maximum", int64_s_maximum, -1);
+  /**
+   * Element-wise minimum of two arrays.
+   * @overload minimum(a1, a2)
+   *   @param [Numo::NArray,Numeric] a1,a2  The arrays holding the elements to be compared.
+   *   @return [Numo::Int64]
+   */
   rb_define_module_function(cT, "minimum", int64_s_minimum, -1);
   rb_define_method(cT, "bincount", int64_bincount, -1);
   rb_define_method(cT, "cumsum", int64_cumsum, -1);
