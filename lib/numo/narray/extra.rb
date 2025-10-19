@@ -1045,6 +1045,86 @@ module Numo
       a
     end
 
+    # Returns an index array of sort result.
+    #
+    # @example
+    #   require 'numo/narray'
+    #
+    #   a = Numo::DFloat[[0.1, 0.7],
+    #                    [0.4, 0.2],
+    #                    [0.2, 0.5]]
+    #   pp a.argsort
+    #   # =>
+    #   # Numo::Int32#shape=[3,2]
+    #   # [[0, 1],
+    #   #  [1, 0],
+    #   #  [0, 1]]
+    #   pp a.argsort(axis: 0)
+    #   # =>
+    #   # Numo::Int32#shape=[3,2]
+    #   # [[0, 1],
+    #   #  [2, 2],
+    #   #  [1, 0]]
+    #   pp a.argsort(axis: 1)
+    #   # =>
+    #   # Numo::Int32#shape=[3,2]
+    #   # [[0, 1],
+    #   #  [1, 0],
+    #   #  [0, 1]]
+    #   pp a.argsort(axis: nil)
+    #   # =>
+    #   # Numo::Int32#shape=[6]
+    #   # [0, 3, 4, 2, 5, 1]
+    #
+    # @overload argsort(axis: -1)
+    #   @param axis [Integer, nil] Axis along which to sort. Default is -1 (the last axis).
+    #     If `nil` is given, the array is flattened before sorting.
+    #   @return [Numo::Int32] An array of indices that would sort the array.
+    def argsort(axis_ = 'none', axis: -1)
+      raise NotImplementedError, "argsort is not implemented for #{self.class}" unless respond_to?(:sort_index)
+
+      axis = axis_ unless axis_ == 'none'
+
+      return flatten.sort_index if axis.nil?
+
+      ndim = self.ndim
+      axis = ndim + axis if axis.negative?
+      raise Numo::NArray::DimensionError, 'dimension is out of range' if axis.negative? || axis >= ndim
+
+      case ndim
+      when 1
+        sort_index
+      when 2
+        case axis
+        when 0
+          indices = transpose.sort_index(1)
+          indices.transpose - indices.min(1)
+        when 1
+          indices = sort_index(1)
+          indices - indices.min(1).expand_dims(1)
+        end
+      else
+        other_dim = Array.new(ndim) { |i| i } - [axis]
+        # other_axis_shape = self.shape - [self.shape[axis]]
+
+        id_dim = other_dim.map do |d|
+          Array.new(shape[d]) { |i| i }
+        end
+        slicer = Array.new(ndim)
+        res = Numo::Int32.zeros(*shape)
+        id_dim.inject(:product).each do |indices|
+          indices = indices.flatten
+          slicer[axis] = true
+          other_dim.each_with_index do |d, i|
+            slicer[d] = indices[i]
+          end
+          sorted_indices = self[*slicer].sort_index
+          res[*slicer] = sorted_indices - sorted_indices.min
+        end
+        res
+      end
+    end
+
     # Return the sum along diagonals of the array.
     #
     # If 2-D array, computes the summation along its diagonal with the

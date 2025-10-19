@@ -462,6 +462,81 @@ class NArrayExtraTest < NArrayTestBase
     end
   end
 
+  def test_argsort # rubocop:disable  Metrics/AbcSize, Metrics/MethodLength, Minitest/MultipleAssertions
+    types = [Numo::SFloat, Numo::DFloat, Numo::Int64, Numo::Int32, Numo::Int16, Numo::Int8,
+             Numo::UInt64, Numo::UInt32, Numo::UInt16, Numo::UInt8]
+    types.each do |dtype|
+      a = dtype.new(24).seq.reshape(2, 3, 4)
+      s = a.argsort
+      s0 = a.argsort(axis: 0)
+      s1 = a.argsort(axis: 1)
+      s2 = a.argsort(axis: 2)
+      sn = a.argsort(axis: nil)
+
+      assert_kind_of(Numo::Int32, s)
+      assert_kind_of(Numo::Int32, s0)
+      assert_kind_of(Numo::Int32, s1)
+      assert_kind_of(Numo::Int32, s2)
+      assert_kind_of(Numo::Int32, sn)
+      assert_equal(3, s.ndim)
+      assert_equal(3, s0.ndim)
+      assert_equal(3, s1.ndim)
+      assert_equal(3, s2.ndim)
+      assert_equal([2, 3, 4], s.shape)
+      assert_equal([2, 3, 4], s0.shape)
+      assert_equal([2, 3, 4], s1.shape)
+      assert_equal([2, 3, 4], s2.shape)
+      assert_equal(Numo::Int32[[[0, 1, 2, 3], [0, 1, 2, 3], [0, 1, 2, 3]],
+                               [[0, 1, 2, 3], [0, 1, 2, 3], [0, 1, 2, 3]]], s)
+      assert_equal(Numo::Int32[[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
+                               [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]], s0)
+      assert_equal(Numo::Int32[[[0, 0, 0, 0], [1, 1, 1, 1], [2, 2, 2, 2]],
+                               [[0, 0, 0, 0], [1, 1, 1, 1], [2, 2, 2, 2]]], s1)
+      assert_equal(Numo::Int32[[[0, 1, 2, 3], [0, 1, 2, 3], [0, 1, 2, 3]],
+                               [[0, 1, 2, 3], [0, 1, 2, 3], [0, 1, 2, 3]]], s2)
+      assert_equal(Numo::Int32.new(24).seq, sn)
+    end
+
+    types = [Numo::SFloat, Numo::DFloat]
+    types.each do |dtype|
+      a = dtype.new(5).rand - 0.5
+      s = a.argsort
+
+      assert_kind_of(Numo::Int32, s)
+      assert_equal(1, s.ndim)
+      assert_equal([5], s.shape)
+      assert_equal(a.sort_index, s)
+
+      shapes = [[3, 2], [2, 3], [3, 3]]
+      shapes.each do |shape|
+        a = dtype.new(*shape).rand - 0.5
+        s0 = a.argsort(0)
+        s1 = a.argsort(1)
+        sn = a.argsort(nil)
+
+        ex0 = Numo::Int32.cast(Array.new(shape[1]) { |j| a[true, j].sort_index }).transpose.dup
+        ex1 = Numo::Int32.cast(Array.new(shape[0]) { |i| a[i, true].sort_index })
+        exn = a.flatten.sort_index
+
+        assert_kind_of(Numo::Int32, s0)
+        assert_kind_of(Numo::Int32, s1)
+        assert_kind_of(Numo::Int32, sn)
+        assert_equal(2, s0.ndim)
+        assert_equal(2, s1.ndim)
+        assert_equal(1, sn.ndim)
+        assert_equal(shape, s0.shape)
+        assert_equal(shape, s1.shape)
+        assert_equal([shape.reduce(:*)], sn.shape)
+        assert_equal(ex0, s0)
+        assert_equal(ex1, s1)
+        assert_equal(exn, sn)
+        assert_equal(ex0, a.argsort(-2))
+        assert_equal(ex1, a.argsort(-1))
+        assert_equal(ex1, a.argsort)
+      end
+    end
+  end
+
   def test_trace
     TYPES.each do |dtype|
       a = dtype.new(3, 3).seq + 1
