@@ -1105,13 +1105,13 @@ module Numo
       else
         res = Numo::Int32.zeros(*shape)
         slicer = Array.new(ndim)
+        slicer[axis] = true
         other_axes = Array.new(ndim) { |i| i } - [axis]
         axis_ids = other_axes.map do |d|
           Array.new(shape[d]) { |i| i }
         end
         axis_ids.inject(:product).each do |indices|
           indices = indices.flatten
-          slicer[axis] = true
           other_axes.each_with_index do |d, i|
             slicer[d] = indices[i]
           end
