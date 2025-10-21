@@ -8,6 +8,10 @@
 #include <assert.h>
 #include <ruby.h>
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 #include "SFMT.h"
 #include "numo/narray.h"
 #include "numo/template.h"
@@ -4995,22 +4999,34 @@ static void iter_dfloat_mulsum(na_loop_t* const lp) {
     dtype z;
     // Reduce loop
     GET_DATA(p3, dtype, z);
+    #ifdef _OPENMP
+    #pragma omp parallel for
+    #endif
     for (i = 0; i < n; i++) {
       dtype x, y;
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      GET_DATA_STRIDE(p2, s2, dtype, y);
+      // GET_DATA_STRIDE(p1, s1, dtype, x);
+      // GET_DATA_STRIDE(p2, s2, dtype, y);
+      GET_DATA((dtype*)p1 + i * s1, dtype, x);
+      GET_DATA((dtype*)p2 + i * s2, dtype, y);
       m_mulsum(x, y, z);
     }
     SET_DATA(p3, dtype, z);
     return;
   } else {
+    #ifdef _OPENMP
+    #pragma omp parallel for
+    #endif
     for (i = 0; i < n; i++) {
       dtype x, y, z;
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      GET_DATA_STRIDE(p2, s2, dtype, y);
-      GET_DATA(p3, dtype, z);
+      // GET_DATA_STRIDE(p1, s1, dtype, x);
+      // GET_DATA_STRIDE(p2, s2, dtype, y);
+      // GET_DATA(p3, dtype, z);
+      GET_DATA((dtype*)p1 + i * s1, dtype, x);
+      GET_DATA((dtype*)p2 + i * s2, dtype, y);
+      GET_DATA((dtype*)p3 + i * s3, dtype, z);
       m_mulsum(x, y, z);
-      SET_DATA_STRIDE(p3, s3, dtype, z);
+      // SET_DATA_STRIDE(p3, s3, dtype, z);
+      SET_DATA((dtype*)p3 + i * s3, dtype, z);
     }
   }
 }

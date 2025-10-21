@@ -77,6 +77,11 @@ have_func('RTYPEDDATA_GET_DATA')
 
 have_var('rb_cComplex')
 
+if have_library('gomp')
+  $CFLAGS << ' -fopenmp'
+end
+
+
 $objs = srcs.collect { |i| "#{i}.o" }
 
 create_header d('numo/extconf.h')
