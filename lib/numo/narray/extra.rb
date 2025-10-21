@@ -1087,7 +1087,6 @@ module Numo
 
       return flatten.sort_index if axis.nil?
 
-      ndim = self.ndim
       axis = ndim + axis if axis.negative?
       raise Numo::NArray::DimensionError, 'dimension is out of range' if axis.negative? || axis >= ndim
 
@@ -1104,18 +1103,16 @@ module Numo
           indices - indices.min(1).expand_dims(1)
         end
       else
-        other_dim = Array.new(ndim) { |i| i } - [axis]
-        # other_axis_shape = self.shape - [self.shape[axis]]
-
-        id_dim = other_dim.map do |d|
+        res = Numo::Int32.zeros(*shape)
+        slicer = Array.new(ndim)
+        other_axes = Array.new(ndim) { |i| i } - [axis]
+        axis_ids = other_axes.map do |d|
           Array.new(shape[d]) { |i| i }
         end
-        slicer = Array.new(ndim)
-        res = Numo::Int32.zeros(*shape)
-        id_dim.inject(:product).each do |indices|
+        axis_ids.inject(:product).each do |indices|
           indices = indices.flatten
           slicer[axis] = true
-          other_dim.each_with_index do |d, i|
+          other_axes.each_with_index do |d, i|
             slicer[d] = indices[i]
           end
           sorted_indices = self[*slicer].sort_index
