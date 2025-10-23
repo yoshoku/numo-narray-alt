@@ -77,6 +77,13 @@ $ bundle exec rubocop
 $ clang-format --dry-run --Werror --style=file ext/**/*.h ext/**/*.c
 ```
 
+This project follows [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+Please run `npm install` to set up husky and commitlint for commit message validation:
+
+```shell
+$ npm install
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/yoshoku/numo-narray-alt.
