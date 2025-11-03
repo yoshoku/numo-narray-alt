@@ -1,3 +1,7 @@
+## [[0.9.7](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.6...v0.9.7)] - 2025-11-03
+
+- add `argsort` method.
+
 ## [[0.9.6](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.5...v0.9.6)] - 2025-10-16
 
 - add `var`, `stddev`, and `rms` methods to integer-typed narrays.
