@@ -1,10 +1,3 @@
-/*
-  hypot.h
-  Numo::NArray Alternative
-
-  created_on: 2025-11-04
-  Copyright (C) 2025 Atsushi Tatsuma
-*/
 #ifndef NUMO_NARRAY_MH_HYPOT_H
 #define NUMO_NARRAY_MH_HYPOT_H 1
 

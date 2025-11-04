@@ -1,10 +1,3 @@
-/*
-  mean.h
-  Numo::NArray Alternative
-
-  created on: 2025-10-08
-  Copyright (C) 2025 Atsushi Tatsuma
-*/
 #ifndef NUMO_NARRAY_MH_MEAN_H
 #define NUMO_NARRAY_MH_MEAN_H 1
 

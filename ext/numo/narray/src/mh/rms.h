@@ -1,10 +1,3 @@
-/*
-  rms.h
-  Numo::NArray Alternative
-
-  created on: 2025-10-15
-  Copyright (C) 2025 Atsushi Tatsuma
-*/
 #ifndef NUMO_NARRAY_MH_RMS_H
 #define NUMO_NARRAY_MH_RMS_H 1
 
