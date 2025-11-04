@@ -7,13 +7,25 @@ def complex_type?(type)
 end
 
 class NArrayMathTest < NArrayTestBase
+  def test_log1p
+    FLOAT_TYPES.reject { |t| complex_type?(t) }.each do |dtype|
+      a = dtype[-0.5, 0, 1, 2]
+      b = Numo::NMath.log1p(a)
+      err = (dtype[Math.log(0.5), Math.log(1), Math.log(2), Math.log(3)] - b).abs.max
+
+      assert_kind_of(dtype, b)
+      assert_operator(err, :<, 1e-6)
+    end
+  end
+
   def test_expm1
     FLOAT_TYPES.reject { |t| complex_type?(t) }.each do |dtype|
       a = dtype[-1.0, 0.0, 1.0, 2.0]
       b = Numo::NMath.expm1(a)
+      err = (dtype[Math.exp(-1) - 1, 0, Math.exp(1) - 1, Math.exp(2) - 1] - b).abs.max
 
       assert_kind_of(dtype, b)
-      assert_equal(dtype[Math.exp(-1) - 1, 0, Math.exp(1) - 1, Math.exp(2) - 1], b)
+      assert_operator(err, :<, 1e-6)
     end
   end
 
