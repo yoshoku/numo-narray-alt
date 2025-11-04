@@ -10,7 +10,37 @@ def zsin(z)
   (Math.sin(z.real) * Math.cosh(z.imag)) + (1i * Math.cos(z.real) * Math.sinh(z.imag))
 end
 
+def zlog(z)
+  Math.log(z.abs) + (1i * Math.atan2(z.imag, z.real))
+end
+
+def zatanh(z)
+  0.5 * zlog((1 + z) / (1 - z))
+end
+
 class NArrayMathTest < NArrayTestBase
+  def test_atanh
+    FLOAT_TYPES.each do |dtype|
+      a = if complex_type?(dtype)
+            dtype[-0.2 + 0.1i, -0.1 + 0.2i, 0, 0.1 - 0.2i, 0.2 - 0.1i]
+          else
+            dtype[-0.2, -0.1, 0, 0.1, 0.2]
+          end
+      b = Numo::NMath.atanh(a)
+      expected = if complex_type?(dtype)
+                   dtype[zatanh(-0.2 + 0.1i), zatanh(-0.1 + 0.2i), 0,
+                         zatanh(0.1 - 0.2i), zatanh(0.2 - 0.1i)]
+                 else
+                   dtype[Math.atanh(-0.2), Math.atanh(-0.1), 0,
+                         Math.atanh(0.1), Math.atanh(0.2)]
+                 end
+      err = (expected - b).abs.max
+
+      assert_kind_of(dtype, b)
+      assert_operator(err, :<, 1e-6)
+    end
+  end
+
   def test_sinc
     FLOAT_TYPES.each do |dtype|
       a = if complex_type?(dtype)
