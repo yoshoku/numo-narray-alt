@@ -46,6 +46,7 @@ extern VALUE cRT;
 #include "mh/var.h"
 #include "mh/stddev.h"
 #include "mh/rms.h"
+#include "mh/frexp.h"
 
 typedef float sfloat; // Type aliases for shorter notation
                       // following the codebase naming convention.
@@ -53,6 +54,7 @@ DEF_NARRAY_FLT_MEAN_METHOD_FUNC(sfloat, float, numo_cSFloat, numo_cSFloat)
 DEF_NARRAY_FLT_VAR_METHOD_FUNC(sfloat, float, numo_cSFloat, numo_cSFloat)
 DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(sfloat, float, numo_cSFloat, numo_cSFloat)
 DEF_NARRAY_FLT_RMS_METHOD_FUNC(sfloat, float, numo_cSFloat, numo_cSFloat)
+DEF_NARRAY_FLT_FREXP_METHOD_FUNC(sfloat, numo_cSFloat)
 
 static VALUE sfloat_store(VALUE, VALUE);
 
@@ -8215,31 +8217,6 @@ static VALUE sfloat_math_s_ldexp(VALUE mod, VALUE a1, VALUE a2) {
   ndfunc_arg_out_t aout[1] = { { cT, 0 } };
   ndfunc_t ndf = { iter_sfloat_math_s_ldexp, STRIDE_LOOP, 2, 1, ain, aout };
   return na_ndloop(&ndf, 2, a1, a2);
-}
-
-static void iter_sfloat_math_s_frexp(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-  dtype x;
-  int y;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    x = m_frexp(x, &y);
-    SET_DATA_STRIDE(p2, s2, dtype, x);
-    SET_DATA_STRIDE(p3, s3, int32_t, y);
-  }
-}
-
-static VALUE sfloat_math_s_frexp(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[2] = { { cT, 0 }, { numo_cInt32, 0 } };
-  ndfunc_t ndf = { iter_sfloat_math_s_frexp, STRIDE_LOOP, 1, 2, ain, aout };
-  return na_ndloop(&ndf, 1, a1);
 }
 
 void Init_numo_sfloat(void) {
