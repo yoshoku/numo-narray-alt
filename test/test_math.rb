@@ -6,7 +6,33 @@ def complex_type?(type)
   [Numo::DComplex, Numo::SComplex].include?(type)
 end
 
+def zsin(z)
+  (Math.sin(z.real) * Math.cosh(z.imag)) + (1i * Math.cos(z.real) * Math.sinh(z.imag))
+end
+
 class NArrayMathTest < NArrayTestBase
+  def test_sinc
+    FLOAT_TYPES.each do |dtype|
+      a = if complex_type?(dtype)
+            dtype[-2 + 1i, -1 + 2i, 0, 1 - 2i, 2 - 1i]
+          else
+            dtype[-2, -1, 0, 1, 2]
+          end
+      b = Numo::NMath.sinc(a)
+      expected = if complex_type?(dtype)
+                   dtype[zsin(-2 + 1i) / (-2 + 1i), zsin(-1 + 2i) / (-1 + 2i),
+                         1, zsin(1 - 2i) / (1 - 2i), zsin(2 - 1i) / (2 - 1i)]
+                 else
+                   dtype[Math.sin(-2) / -2, Math.sin(-1) / -1,
+                         1, Math.sin(1) / 1, Math.sin(2) / 2]
+                 end
+      err = (expected - b).abs.max
+
+      assert_kind_of(dtype, b)
+      assert_operator(err, :<, 1e-6)
+    end
+  end
+
   def test_atan2
     FLOAT_TYPES.reject { |t| complex_type?(t) }.each do |dtype|
       a = dtype[0, 1, 0, -1]

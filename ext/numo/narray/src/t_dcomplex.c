@@ -42,11 +42,13 @@ extern VALUE cRT;
 #include "mh/var.h"
 #include "mh/stddev.h"
 #include "mh/rms.h"
+#include "mh/sinc.h"
 
 DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dcomplex, dcomplex, numo_cDComplex, numo_cDComplex)
 DEF_NARRAY_FLT_VAR_METHOD_FUNC(dcomplex, double, numo_cDComplex, numo_cDFloat)
 DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(dcomplex, double, numo_cDComplex, numo_cDFloat)
 DEF_NARRAY_FLT_RMS_METHOD_FUNC(dcomplex, double, numo_cDComplex, numo_cDFloat)
+DEF_NARRAY_FLT_SINC_METHOD_FUNC(dcomplex, numo_cDComplex)
 
 static VALUE dcomplex_store(VALUE, VALUE);
 
@@ -6373,84 +6375,6 @@ static VALUE dcomplex_math_s_atanh(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-static void iter_dcomplex_math_s_sinc(na_loop_t* const lp) {
-  size_t i = 0, n;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t *idx1, *idx2;
-  dtype x;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-
-  if (idx1) {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_sinc(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_sinc(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-    }
-  } else {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_sinc(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      //
-      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
-        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
-          //
-          for (; i < n; i++) {
-            ((dtype*)p2)[i] = m_sinc(((dtype*)p1)[i]);
-          }
-          //
-          return;
-        }
-        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
-          //
-          for (i = 0; i < n; i++) {
-            *(dtype*)p2 = m_sinc(*(dtype*)p1);
-            p1 += s1;
-            p2 += s2;
-          }
-          return;
-          //
-        }
-      }
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_sinc(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-      //
-    }
-  }
-}
-
-/*
-  Calculate sinc(x).
-  @overload sinc(x)
-    @param [Numo::NArray,Numeric] x  input value
-    @return [Numo::DComplex] result of sinc(x).
-*/
-static VALUE dcomplex_math_s_sinc(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_dcomplex_math_s_sinc, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, a1);
-}
-
 void Init_numo_dcomplex(void) {
   VALUE hCast, mNumo;
 
@@ -6659,6 +6583,12 @@ void Init_numo_dcomplex(void) {
   rb_define_module_function(mTM, "asinh", dcomplex_math_s_asinh, 1);
   rb_define_module_function(mTM, "acosh", dcomplex_math_s_acosh, 1);
   rb_define_module_function(mTM, "atanh", dcomplex_math_s_atanh, 1);
+  /**
+   * Calculate sinc(x).
+   * @overload sinc(x)
+   *   @param [Numo::NArray,Numeric] x  input value
+   *   @return [Numo::DComplex] result of sinc(x).
+   */
   rb_define_module_function(mTM, "sinc", dcomplex_math_s_sinc, 1);
 
   //  how to do this?
