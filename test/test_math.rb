@@ -7,6 +7,17 @@ def complex_type?(type)
 end
 
 class NArrayMathTest < NArrayTestBase
+  def test_erf
+    FLOAT_TYPES.reject { |t| complex_type?(t) }.each do |dtype|
+      a = dtype[-2, -1, 0, 1, 2]
+      b = Numo::NMath.erf(a)
+      err = (dtype[Math.erf(-2), Math.erf(-1), 0, Math.erf(1), Math.erf(2)] - b).abs.max
+
+      assert_kind_of(dtype, b)
+      assert_operator(err, :<, 1e-6)
+    end
+  end
+
   def test_erfc
     FLOAT_TYPES.reject { |t| complex_type?(t) }.each do |dtype|
       a = dtype[-2, -1, 0, 1, 2]
