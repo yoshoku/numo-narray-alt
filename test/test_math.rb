@@ -7,6 +7,17 @@ def complex_type?(type)
 end
 
 class NArrayMathTest < NArrayTestBase
+  def test_hypot
+    FLOAT_TYPES.reject { |t| complex_type?(t) }.each do |dtype|
+      a = dtype[3, 5, 8]
+      b = dtype[4, 12, 15]
+      c = Numo::NMath.hypot(a, b)
+
+      assert_kind_of(dtype, c)
+      assert_equal(dtype[5, 13, 17], c)
+    end
+  end
+
   def test_erf
     FLOAT_TYPES.reject { |t| complex_type?(t) }.each do |dtype|
       a = dtype[-2, -1, 0, 1, 2]

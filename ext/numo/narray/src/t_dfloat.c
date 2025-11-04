@@ -46,6 +46,7 @@ extern VALUE cRT;
 #include "mh/var.h"
 #include "mh/stddev.h"
 #include "mh/rms.h"
+#include "mh/hypot.h"
 #include "mh/erf.h"
 #include "mh/erfc.h"
 #include "mh/log1p.h"
@@ -59,6 +60,7 @@ DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dfloat, double, numo_cDFloat, numo_cDFloat)
 DEF_NARRAY_FLT_VAR_METHOD_FUNC(dfloat, double, numo_cDFloat, numo_cDFloat)
 DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(dfloat, double, numo_cDFloat, numo_cDFloat)
 DEF_NARRAY_FLT_RMS_METHOD_FUNC(dfloat, double, numo_cDFloat, numo_cDFloat)
+DEF_NARRAY_FLT_HYPOT_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_ERF_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_ERFC_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_LOG1P_METHOD_FUNC(dfloat, numo_cDFloat)
@@ -7924,30 +7926,6 @@ static VALUE dfloat_math_s_atan2(VALUE mod, VALUE a1, VALUE a2) {
   ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
   ndfunc_arg_out_t aout[1] = { { cT, 0 } };
   ndfunc_t ndf = { iter_dfloat_math_s_atan2, STRIDE_LOOP, 2, 1, ain, aout };
-  return na_ndloop(&ndf, 2, a1, a2);
-}
-
-static void iter_dfloat_math_s_hypot(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-  dtype x, y;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    x = m_hypot(x, y);
-    SET_DATA_STRIDE(p3, s3, dtype, x);
-  }
-}
-
-static VALUE dfloat_math_s_hypot(VALUE mod, VALUE a1, VALUE a2) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_dfloat_math_s_hypot, STRIDE_LOOP, 2, 1, ain, aout };
   return na_ndloop(&ndf, 2, a1, a2);
 }
 
