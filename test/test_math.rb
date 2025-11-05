@@ -69,6 +69,26 @@ def zatanh(z)
 end
 
 class NArrayMathTest < NArrayTestBase
+  def test_cos
+    FLOAT_TYPES.each do |dtype|
+      a = if complex_type?(dtype)
+            dtype[-2 + 1i, -1 + 2i, 0, 1 - 2i, 2 - 1i]
+          else
+            dtype[-2, -1, 0, 1, 2]
+          end
+      b = Numo::NMath.cos(a)
+      expected = if complex_type?(dtype)
+                   dtype[zcos(-2 + 1i), zcos(-1 + 2i), 1, zcos(1 - 2i), zcos(2 - 1i)]
+                 else
+                   dtype[Math.cos(-2), Math.cos(-1), 1, Math.cos(1), Math.cos(2)]
+                 end
+      err = (expected - b).abs.max
+
+      assert_kind_of(dtype, b)
+      assert_operator(err, :<, 1e-6)
+    end
+  end
+
   def test_tan
     FLOAT_TYPES.each do |dtype|
       a = if complex_type?(dtype)
