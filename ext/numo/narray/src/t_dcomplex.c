@@ -42,6 +42,7 @@ extern VALUE cRT;
 #include "mh/var.h"
 #include "mh/stddev.h"
 #include "mh/rms.h"
+#include "mh/log10.h"
 #include "mh/exp.h"
 #include "mh/exp2.h"
 #include "mh/exp10.h"
@@ -63,6 +64,7 @@ DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dcomplex, dcomplex, numo_cDComplex, numo_cDCompl
 DEF_NARRAY_FLT_VAR_METHOD_FUNC(dcomplex, double, numo_cDComplex, numo_cDFloat)
 DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(dcomplex, double, numo_cDComplex, numo_cDFloat)
 DEF_NARRAY_FLT_RMS_METHOD_FUNC(dcomplex, double, numo_cDComplex, numo_cDFloat)
+DEF_NARRAY_FLT_LOG10_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_EXP_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_EXP2_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_EXP10_METHOD_FUNC(dcomplex, numo_cDComplex)
@@ -5157,84 +5159,6 @@ static VALUE dcomplex_math_s_log2(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-static void iter_dcomplex_math_s_log10(na_loop_t* const lp) {
-  size_t i = 0, n;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t *idx1, *idx2;
-  dtype x;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-
-  if (idx1) {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_log10(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_log10(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-    }
-  } else {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_log10(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      //
-      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
-        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
-          //
-          for (; i < n; i++) {
-            ((dtype*)p2)[i] = m_log10(((dtype*)p1)[i]);
-          }
-          //
-          return;
-        }
-        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
-          //
-          for (i = 0; i < n; i++) {
-            *(dtype*)p2 = m_log10(*(dtype*)p1);
-            p1 += s1;
-            p2 += s2;
-          }
-          return;
-          //
-        }
-      }
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_log10(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-      //
-    }
-  }
-}
-
-/*
-  Calculate log10(x).
-  @overload log10(x)
-    @param [Numo::NArray,Numeric] x  input value
-    @return [Numo::DComplex] result of log10(x).
-*/
-static VALUE dcomplex_math_s_log10(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_dcomplex_math_s_log10, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, a1);
-}
-
 void Init_numo_dcomplex(void) {
   VALUE hCast, mNumo;
 
@@ -5427,6 +5351,12 @@ void Init_numo_dcomplex(void) {
   rb_define_module_function(mTM, "cbrt", dcomplex_math_s_cbrt, 1);
   rb_define_module_function(mTM, "log", dcomplex_math_s_log, 1);
   rb_define_module_function(mTM, "log2", dcomplex_math_s_log2, 1);
+  /**
+   * Calculate log10(x).
+   * @overload log10(x)
+   *   @param [Numo::NArray,Numeric] x  input value
+   *   @return [Numo::DComplex] result of log10(x).
+   */
   rb_define_module_function(mTM, "log10", dcomplex_math_s_log10, 1);
   /**
    * Calculate exp(x).
