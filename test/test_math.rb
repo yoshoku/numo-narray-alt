@@ -14,11 +14,41 @@ def zlog(z)
   Math.log(z.abs) + (1i * Math.atan2(z.imag, z.real))
 end
 
+def zsqrt(z)
+  r = Math.sqrt(z.abs)
+  theta = Math.atan2(z.imag, z.real) / 2
+  r * (Math.cos(theta) + (1i * Math.sin(theta)))
+end
+
+def zacosh(z)
+  zlog(z + zsqrt((z * z) - 1))
+end
+
 def zatanh(z)
   0.5 * zlog((1 + z) / (1 - z))
 end
 
 class NArrayMathTest < NArrayTestBase
+  def test_acosh
+    FLOAT_TYPES.each do |dtype|
+      a = if complex_type?(dtype)
+            dtype[1 + 2i, 3 + 4i, 2 - 1i, 4 - 3i]
+          else
+            dtype[1, 2, 3, 4]
+          end
+      b = Numo::NMath.acosh(a)
+      expected = if complex_type?(dtype)
+                   dtype[zacosh(1 + 2i), zacosh(3 + 4i), zacosh(2 - 1i), zacosh(4 - 3i)]
+                 else
+                   dtype[Math.acosh(1), Math.acosh(2), Math.acosh(3), Math.acosh(4)]
+                 end
+      err = (expected - b).abs.max
+
+      assert_kind_of(dtype, b)
+      assert_operator(err, :<, 1e-6)
+    end
+  end
+
   def test_atanh
     FLOAT_TYPES.each do |dtype|
       a = if complex_type?(dtype)
