@@ -47,6 +47,26 @@ def zatanh(z)
 end
 
 class NArrayMathTest < NArrayTestBase
+  def test_sinh
+    FLOAT_TYPES.each do |dtype|
+      a = if complex_type?(dtype)
+            dtype[-2 + 1i, -1 + 2i, 0, 1 - 2i, 2 - 1i]
+          else
+            dtype[-2, -1, 0, 1, 2]
+          end
+      b = Numo::NMath.sinh(a)
+      expected = if complex_type?(dtype)
+                   dtype[zsinh(-2 + 1i), zsinh(-1 + 2i), 0, zsinh(1 - 2i), zsinh(2 - 1i)]
+                 else
+                   dtype[Math.sinh(-2), Math.sinh(-1), 0, Math.sinh(1), Math.sinh(2)]
+                 end
+      err = (expected - b).abs.max
+
+      assert_kind_of(dtype, b)
+      assert_operator(err, :<, 1e-6)
+    end
+  end
+
   def test_cosh
     FLOAT_TYPES.each do |dtype|
       a = if complex_type?(dtype)
