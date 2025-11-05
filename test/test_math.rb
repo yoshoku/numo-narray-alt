@@ -3,6 +3,46 @@
 require_relative 'test_helper'
 
 class NArrayMathTest < NArrayTestBase
+  def test_log2
+    FLOAT_TYPES.each do |dtype|
+      a = if complex_type?(dtype)
+            dtype[-2 + 1i, -1 + 2i, 1 - 2i, 2 - 1i]
+          else
+            dtype[1, 0.5, 2, 4]
+          end
+      b = Numo::NMath.log2(a)
+      expected = if complex_type?(dtype)
+                   dtype[zlog2(-2 + 1i), zlog2(-1 + 2i), zlog2(1 - 2i), zlog2(2 - 1i)]
+                 else
+                   dtype[0, -1, 1, 2]
+                 end
+      err = (expected - b).abs.max
+
+      assert_kind_of(dtype, b)
+      assert_operator(err, :<, 1e-6)
+    end
+  end
+
+  def test_log10
+    FLOAT_TYPES.each do |dtype|
+      a = if complex_type?(dtype)
+            dtype[-2 + 1i, -1 + 2i, 1 - 2i, 2 - 1i]
+          else
+            dtype[1, 0.1, 5, 10, 100]
+          end
+      b = Numo::NMath.log10(a)
+      expected = if complex_type?(dtype)
+                   dtype[zlog10(-2 + 1i), zlog10(-1 + 2i), zlog10(1 - 2i), zlog10(2 - 1i)]
+                 else
+                   dtype[0, -1, Math.log10(5), 1, 2]
+                 end
+      err = (expected - b).abs.max
+
+      assert_kind_of(dtype, b)
+      assert_operator(err, :<, 1e-6)
+    end
+  end
+
   def test_exp
     FLOAT_TYPES.each do |dtype|
       a = if complex_type?(dtype)
@@ -431,6 +471,14 @@ class NArrayMathTest < NArrayTestBase
     r = Math.sqrt(z.abs)
     theta = Math.atan2(z.imag, z.real) / 2
     r * (Math.cos(theta) + (1i * Math.sin(theta)))
+  end
+
+  def zlog2(z)
+    zlog(z) / zlog(2 + 0i)
+  end
+
+  def zlog10(z)
+    zlog(z) / zlog(10 + 0i)
   end
 
   def zexp(z)
