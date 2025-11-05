@@ -20,6 +20,10 @@ def zsqrt(z)
   r * (Math.cos(theta) + (1i * Math.sin(theta)))
 end
 
+def zasinh(z)
+  zlog(z + zsqrt((z * z) + 1))
+end
+
 def zacosh(z)
   zlog(z + zsqrt((z * z) - 1))
 end
@@ -29,6 +33,26 @@ def zatanh(z)
 end
 
 class NArrayMathTest < NArrayTestBase
+  def test_asinh
+    FLOAT_TYPES.each do |dtype|
+      a = if complex_type?(dtype)
+            dtype[-2 + 1i, -1 + 2i, 0, 1 - 2i, 2 - 1i]
+          else
+            dtype[-2, -1, 0, 1, 2]
+          end
+      b = Numo::NMath.asinh(a)
+      expected = if complex_type?(dtype)
+                   dtype[zasinh(-2 + 1i), zasinh(-1 + 2i), 0, zasinh(1 - 2i), zasinh(2 - 1i)]
+                 else
+                   dtype[Math.asinh(-2), Math.asinh(-1), 0, Math.asinh(1), Math.asinh(2)]
+                 end
+      err = (expected - b).abs.max
+
+      assert_kind_of(dtype, b)
+      assert_operator(err, :<, 1e-6)
+    end
+  end
+
   def test_acosh
     FLOAT_TYPES.each do |dtype|
       a = if complex_type?(dtype)
