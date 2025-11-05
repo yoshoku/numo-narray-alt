@@ -20,6 +20,18 @@ def zsqrt(z)
   r * (Math.cos(theta) + (1i * Math.sin(theta)))
 end
 
+def zasin(z)
+  -1i * zlog((1i * z) + zsqrt(1 - (z * z)))
+end
+
+def zacos(z)
+  -1i * zlog(z + (1i * zsqrt(1 - (z * z))))
+end
+
+def zatan(z)
+  (1i / 2) * zlog((1 - (1i * z)) / (1 + (1i * z)))
+end
+
 def zsinh(z)
   (Math.sinh(z.real) * Math.cos(z.imag)) + (1i * Math.cosh(z.real) * Math.sin(z.imag))
 end
@@ -47,6 +59,26 @@ def zatanh(z)
 end
 
 class NArrayMathTest < NArrayTestBase
+  def test_atan
+    FLOAT_TYPES.each do |dtype|
+      a = if complex_type?(dtype)
+            dtype[-2 + 1i, -1 + 2i, 0, 1 - 2i, 2 - 1i]
+          else
+            dtype[-2, -1, 0, 1, 2]
+          end
+      b = Numo::NMath.atan(a)
+      expected = if complex_type?(dtype)
+                   dtype[zatan(-2 + 1i), zatan(-1 + 2i), 0, zatan(1 - 2i), zatan(2 - 1i)]
+                 else
+                   dtype[Math.atan(-2), Math.atan(-1), 0, Math.atan(1), Math.atan(2)]
+                 end
+      err = (expected - b).abs.max
+
+      assert_kind_of(dtype, b)
+      assert_operator(err, :<, 1e-6)
+    end
+  end
+
   def test_sinh
     FLOAT_TYPES.each do |dtype|
       a = if complex_type?(dtype)
