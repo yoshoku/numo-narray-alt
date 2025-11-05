@@ -2,73 +2,27 @@
 
 require_relative 'test_helper'
 
-def complex_type?(type)
-  [Numo::DComplex, Numo::SComplex].include?(type)
-end
-
-def zlog(z)
-  Math.log(z.abs) + (1i * Math.atan2(z.imag, z.real))
-end
-
-def zsqrt(z)
-  r = Math.sqrt(z.abs)
-  theta = Math.atan2(z.imag, z.real) / 2
-  r * (Math.cos(theta) + (1i * Math.sin(theta)))
-end
-
-def zsin(z)
-  (Math.sin(z.real) * Math.cosh(z.imag)) + (1i * Math.cos(z.real) * Math.sinh(z.imag))
-end
-
-def zcos(z)
-  (Math.cos(z.real) * Math.cosh(z.imag)) - (1i * Math.sin(z.real) * Math.sinh(z.imag))
-end
-
-def ztan(z)
-  sin_z = zsin(z)
-  cos_z = zcos(z)
-  sin_z / cos_z
-end
-
-def zasin(z)
-  -1i * zlog((1i * z) + zsqrt(1 - (z * z)))
-end
-
-def zacos(z)
-  -1i * zlog(z + (1i * zsqrt(1 - (z * z))))
-end
-
-def zatan(z)
-  (1i / 2) * zlog((1 - (1i * z)) / (1 + (1i * z)))
-end
-
-def zsinh(z)
-  (Math.sinh(z.real) * Math.cos(z.imag)) + (1i * Math.cosh(z.real) * Math.sin(z.imag))
-end
-
-def zcosh(z)
-  (Math.cosh(z.real) * Math.cos(z.imag)) + (1i * Math.sinh(z.real) * Math.sin(z.imag))
-end
-
-def ztanh(z)
-  sinh_z = zsinh(z)
-  cosh_z = zcosh(z)
-  sinh_z / cosh_z
-end
-
-def zasinh(z)
-  zlog(z + zsqrt((z * z) + 1))
-end
-
-def zacosh(z)
-  zlog(z + zsqrt((z * z) - 1))
-end
-
-def zatanh(z)
-  0.5 * zlog((1 + z) / (1 - z))
-end
-
 class NArrayMathTest < NArrayTestBase
+  def test_exp10
+    FLOAT_TYPES.each do |dtype|
+      a = if complex_type?(dtype)
+            dtype[-2 + 1i, -1 + 2i, 0, 1 - 2i, 2 - 1i]
+          else
+            dtype[-2, -1, 0, 1, 2]
+          end
+      b = Numo::NMath.exp10(a)
+      expected = if complex_type?(dtype)
+                   dtype[zexp10(-2 + 1i), zexp10(-1 + 2i), 1, zexp10(1 - 2i), zexp10(2 - 1i)]
+                 else
+                   dtype[10**-2, 10**-1, 1, 10**1, 10**2]
+                 end
+      err = (expected - b).abs.max
+
+      assert_kind_of(dtype, b)
+      assert_operator(err, :<, 1e-6)
+    end
+  end
+
   def test_sin
     FLOAT_TYPES.each do |dtype|
       a = if complex_type?(dtype)
@@ -421,5 +375,81 @@ class NArrayMathTest < NArrayTestBase
       assert_equal(dtype[0.0, 0.5, 0.5, 0.75, 0.5, 0.625], mant)
       assert_equal(Numo::Int32[0, 1, 2, 2, 3, 3], expo)
     end
+  end
+
+  private
+
+  def complex_type?(type)
+    [Numo::DComplex, Numo::SComplex].include?(type)
+  end
+
+  def zlog(z)
+    Math.log(z.abs) + (1i * Math.atan2(z.imag, z.real))
+  end
+
+  def zsqrt(z)
+    r = Math.sqrt(z.abs)
+    theta = Math.atan2(z.imag, z.real) / 2
+    r * (Math.cos(theta) + (1i * Math.sin(theta)))
+  end
+
+  def zexp10(z)
+    exp_ln10 = Math.log(10)
+    exp_real = Math.exp(z.real * exp_ln10)
+    real_part = exp_real * Math.cos(z.imag)
+    imag_part = exp_real * Math.sin(z.imag)
+    real_part + (1i * imag_part)
+  end
+
+  def zsin(z)
+    (Math.sin(z.real) * Math.cosh(z.imag)) + (1i * Math.cos(z.real) * Math.sinh(z.imag))
+  end
+
+  def zcos(z)
+    (Math.cos(z.real) * Math.cosh(z.imag)) - (1i * Math.sin(z.real) * Math.sinh(z.imag))
+  end
+
+  def ztan(z)
+    sin_z = zsin(z)
+    cos_z = zcos(z)
+    sin_z / cos_z
+  end
+
+  def zasin(z)
+    -1i * zlog((1i * z) + zsqrt(1 - (z * z)))
+  end
+
+  def zacos(z)
+    -1i * zlog(z + (1i * zsqrt(1 - (z * z))))
+  end
+
+  def zatan(z)
+    (1i / 2) * zlog((1 - (1i * z)) / (1 + (1i * z)))
+  end
+
+  def zsinh(z)
+    (Math.sinh(z.real) * Math.cos(z.imag)) + (1i * Math.cosh(z.real) * Math.sin(z.imag))
+  end
+
+  def zcosh(z)
+    (Math.cosh(z.real) * Math.cos(z.imag)) + (1i * Math.sinh(z.real) * Math.sin(z.imag))
+  end
+
+  def ztanh(z)
+    sinh_z = zsinh(z)
+    cosh_z = zcosh(z)
+    sinh_z / cosh_z
+  end
+
+  def zasinh(z)
+    zlog(z + zsqrt((z * z) + 1))
+  end
+
+  def zacosh(z)
+    zlog(z + zsqrt((z * z) - 1))
+  end
+
+  def zatanh(z)
+    0.5 * zlog((1 + z) / (1 - z))
   end
 end
