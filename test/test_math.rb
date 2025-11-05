@@ -6,10 +6,6 @@ def complex_type?(type)
   [Numo::DComplex, Numo::SComplex].include?(type)
 end
 
-def zsin(z)
-  (Math.sin(z.real) * Math.cosh(z.imag)) + (1i * Math.cos(z.real) * Math.sinh(z.imag))
-end
-
 def zlog(z)
   Math.log(z.abs) + (1i * Math.atan2(z.imag, z.real))
 end
@@ -18,6 +14,20 @@ def zsqrt(z)
   r = Math.sqrt(z.abs)
   theta = Math.atan2(z.imag, z.real) / 2
   r * (Math.cos(theta) + (1i * Math.sin(theta)))
+end
+
+def zsin(z)
+  (Math.sin(z.real) * Math.cosh(z.imag)) + (1i * Math.cos(z.real) * Math.sinh(z.imag))
+end
+
+def zcos(z)
+  (Math.cos(z.real) * Math.cosh(z.imag)) - (1i * Math.sin(z.real) * Math.sinh(z.imag))
+end
+
+def ztan(z)
+  sin_z = zsin(z)
+  cos_z = zcos(z)
+  sin_z / cos_z
 end
 
 def zasin(z)
@@ -59,6 +69,26 @@ def zatanh(z)
 end
 
 class NArrayMathTest < NArrayTestBase
+  def test_tan
+    FLOAT_TYPES.each do |dtype|
+      a = if complex_type?(dtype)
+            dtype[-2 + 1i, -1 + 2i, 0, 1 - 2i, 2 - 1i]
+          else
+            dtype[-2, -1, 0, 1, 2]
+          end
+      b = Numo::NMath.tan(a)
+      expected = if complex_type?(dtype)
+                   dtype[ztan(-2 + 1i), ztan(-1 + 2i), 0, ztan(1 - 2i), ztan(2 - 1i)]
+                 else
+                   dtype[Math.tan(-2), Math.tan(-1), 0, Math.tan(1), Math.tan(2)]
+                 end
+      err = (expected - b).abs.max
+
+      assert_kind_of(dtype, b)
+      assert_operator(err, :<, 1e-6)
+    end
+  end
+
   def test_asin
     FLOAT_TYPES.each do |dtype|
       a = if complex_type?(dtype)
