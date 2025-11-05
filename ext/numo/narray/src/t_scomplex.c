@@ -42,6 +42,7 @@ extern VALUE cRT;
 #include "mh/var.h"
 #include "mh/stddev.h"
 #include "mh/rms.h"
+#include "mh/sin.h"
 #include "mh/cos.h"
 #include "mh/tan.h"
 #include "mh/asin.h"
@@ -59,6 +60,7 @@ DEF_NARRAY_FLT_MEAN_METHOD_FUNC(scomplex, scomplex, numo_cSComplex, numo_cSCompl
 DEF_NARRAY_FLT_VAR_METHOD_FUNC(scomplex, float, numo_cSComplex, numo_cSFloat)
 DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(scomplex, float, numo_cSComplex, numo_cSFloat)
 DEF_NARRAY_FLT_RMS_METHOD_FUNC(scomplex, float, numo_cSComplex, numo_cSFloat)
+DEF_NARRAY_FLT_SIN_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_COS_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_TAN_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_ASIN_METHOD_FUNC(scomplex, numo_cSComplex)
@@ -5392,84 +5394,6 @@ static VALUE scomplex_math_s_exp10(VALUE mod, VALUE a1) {
   return na_ndloop(&ndf, 1, a1);
 }
 
-static void iter_scomplex_math_s_sin(na_loop_t* const lp) {
-  size_t i = 0, n;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t *idx1, *idx2;
-  dtype x;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-
-  if (idx1) {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_sin(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_sin(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-    }
-  } else {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_sin(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      //
-      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
-        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
-          //
-          for (; i < n; i++) {
-            ((dtype*)p2)[i] = m_sin(((dtype*)p1)[i]);
-          }
-          //
-          return;
-        }
-        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
-          //
-          for (i = 0; i < n; i++) {
-            *(dtype*)p2 = m_sin(*(dtype*)p1);
-            p1 += s1;
-            p2 += s2;
-          }
-          return;
-          //
-        }
-      }
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_sin(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-      //
-    }
-  }
-}
-
-/*
-  Calculate sin(x).
-  @overload sin(x)
-    @param [Numo::NArray,Numeric] x  input value
-    @return [Numo::SComplex] result of sin(x).
-*/
-static VALUE scomplex_math_s_sin(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_scomplex_math_s_sin, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, a1);
-}
-
 void Init_numo_scomplex(void) {
   VALUE hCast, mNumo;
 
@@ -5665,6 +5589,12 @@ void Init_numo_scomplex(void) {
   rb_define_module_function(mTM, "exp", scomplex_math_s_exp, 1);
   rb_define_module_function(mTM, "exp2", scomplex_math_s_exp2, 1);
   rb_define_module_function(mTM, "exp10", scomplex_math_s_exp10, 1);
+  /**
+   * Calculate sin(x).
+   * @overload sin(x)
+   *   @param [Numo::NArray,Numeric] x  input value
+   *   @return [Numo::SComplex] result of sin(x).
+   */
   rb_define_module_function(mTM, "sin", scomplex_math_s_sin, 1);
   /**
    * Calculate cos(x).
