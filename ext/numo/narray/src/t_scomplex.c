@@ -42,6 +42,7 @@ extern VALUE cRT;
 #include "mh/var.h"
 #include "mh/stddev.h"
 #include "mh/rms.h"
+#include "mh/sqrt.h"
 #include "mh/cbrt.h"
 #include "mh/log.h"
 #include "mh/log2.h"
@@ -67,6 +68,7 @@ DEF_NARRAY_FLT_MEAN_METHOD_FUNC(scomplex, scomplex, numo_cSComplex, numo_cSCompl
 DEF_NARRAY_FLT_VAR_METHOD_FUNC(scomplex, float, numo_cSComplex, numo_cSFloat)
 DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(scomplex, float, numo_cSComplex, numo_cSFloat)
 DEF_NARRAY_FLT_RMS_METHOD_FUNC(scomplex, float, numo_cSComplex, numo_cSFloat)
+DEF_NARRAY_FLT_SQRT_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_CBRT_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_LOG_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_LOG2_METHOD_FUNC(scomplex, numo_cSComplex)
@@ -4784,84 +4786,6 @@ static VALUE scomplex_poly(VALUE self, VALUE args) {
 
 VALUE mTM;
 
-static void iter_scomplex_math_s_sqrt(na_loop_t* const lp) {
-  size_t i = 0, n;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t *idx1, *idx2;
-  dtype x;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-
-  if (idx1) {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_sqrt(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_sqrt(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-    }
-  } else {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_sqrt(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      //
-      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
-        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
-          //
-          for (; i < n; i++) {
-            ((dtype*)p2)[i] = m_sqrt(((dtype*)p1)[i]);
-          }
-          //
-          return;
-        }
-        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
-          //
-          for (i = 0; i < n; i++) {
-            *(dtype*)p2 = m_sqrt(*(dtype*)p1);
-            p1 += s1;
-            p2 += s2;
-          }
-          return;
-          //
-        }
-      }
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_sqrt(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-      //
-    }
-  }
-}
-
-/*
-  Calculate sqrt(x).
-  @overload sqrt(x)
-    @param [Numo::NArray,Numeric] x  input value
-    @return [Numo::SComplex] result of sqrt(x).
-*/
-static VALUE scomplex_math_s_sqrt(VALUE mod, VALUE a1) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_scomplex_math_s_sqrt, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, a1);
-}
-
 void Init_numo_scomplex(void) {
   VALUE hCast, mNumo;
 
@@ -5048,7 +4972,12 @@ void Init_numo_scomplex(void) {
    * This module contains mathematical functions for Numo::SComplex.
    */
   mTM = rb_define_module_under(cT, "Math");
-
+  /**
+   * Calculate sqrt(x).
+   * @overload sqrt(x)
+   *   @param [Numo::NArray,Numeric] x  input value
+   *   @return [Numo::SComplex] result of sqrt(x).
+   */
   rb_define_module_function(mTM, "sqrt", scomplex_math_s_sqrt, 1);
   /**
    * Calculate cbrt(x).

@@ -3,6 +3,26 @@
 require_relative 'test_helper'
 
 class NArrayMathTest < NArrayTestBase
+  def test_sqrt
+    FLOAT_TYPES.each do |dtype|
+      a = if complex_type?(dtype)
+            dtype[-4 + 1i, -1 + 4i, 1 - 4i, 4 - 1i]
+          else
+            dtype[0, 1, 4, 9, 16]
+          end
+      b = Numo::NMath.sqrt(a)
+      expected = if complex_type?(dtype)
+                   dtype[zsqrt(-4 + 1i), zsqrt(-1 + 4i), zsqrt(1 - 4i), zsqrt(4 - 1i)]
+                 else
+                   dtype[0, 1, 2, 3, 4]
+                 end
+      err = (expected - b).abs.max
+
+      assert_kind_of(dtype, b)
+      assert_operator(err, :<, 1e-6)
+    end
+  end
+
   def test_cbrt
     FLOAT_TYPES.each do |dtype|
       a = if complex_type?(dtype)
