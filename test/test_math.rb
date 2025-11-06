@@ -3,6 +3,26 @@
 require_relative 'test_helper'
 
 class NArrayMathTest < NArrayTestBase
+  def test_cbrt
+    FLOAT_TYPES.each do |dtype|
+      a = if complex_type?(dtype)
+            dtype[-8 + 1i, -1 + 27i, 1 - 8i, 8 - 1i]
+          else
+            dtype[-8, -1, 0, 1, 8]
+          end
+      b = Numo::NMath.cbrt(a)
+      expected = if complex_type?(dtype)
+                   dtype[zcbrt(-8 + 1i), zcbrt(-1 + 27i), zcbrt(1 - 8i), zcbrt(8 - 1i)]
+                 else
+                   dtype[-2, -1, 0, 1, 2]
+                 end
+      err = (expected - b).abs.max
+
+      assert_kind_of(dtype, b)
+      assert_operator(err, :<, 1e-6)
+    end
+  end
+
   def test_log
     FLOAT_TYPES.each do |dtype|
       a = if complex_type?(dtype)
@@ -486,6 +506,12 @@ class NArrayMathTest < NArrayTestBase
   def zsqrt(z)
     r = Math.sqrt(z.abs)
     theta = Math.atan2(z.imag, z.real) / 2
+    r * (Math.cos(theta) + (1i * Math.sin(theta)))
+  end
+
+  def zcbrt(z)
+    r = Math.cbrt(z.abs)
+    theta = Math.atan2(z.imag, z.real) / 3
     r * (Math.cos(theta) + (1i * Math.sin(theta)))
   end
 
