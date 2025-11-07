@@ -1,5 +1,5 @@
-#ifndef NUMO_NARRAY_MH_FREXP_H
-#define NUMO_NARRAY_MH_FREXP_H 1
+#ifndef NUMO_NARRAY_MH_MATH_FREXP_H
+#define NUMO_NARRAY_MH_MATH_FREXP_H 1
 
 #define DEF_NARRAY_FLT_FREXP_METHOD_FUNC(tDType, tNAryType)                                    \
   static void iter_##tDType##_math_s_frexp(na_loop_t* const lp) {                              \
@@ -27,4 +27,4 @@
     return na_ndloop(&ndf, 1, a1);                                                             \
   }
 
-#endif /* NUMO_NARRAY_MH_FREXP_H */
+#endif /* NUMO_NARRAY_MH_MATH_FREXP_H */

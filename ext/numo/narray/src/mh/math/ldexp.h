@@ -1,5 +1,5 @@
-#ifndef NUMO_NARRAY_MH_LDEXP_H
-#define NUMO_NARRAY_MH_LDEXP_H 1
+#ifndef NUMO_NARRAY_MH_MATH_LDEXP_H
+#define NUMO_NARRAY_MH_MATH_LDEXP_H 1
 
 #define DEF_NARRAY_FLT_LDEXP_METHOD_FUNC(tDType, tNAryType)                                    \
   static void iter_##tDType##_math_s_ldexp(na_loop_t* const lp) {                              \
@@ -26,4 +26,4 @@
     return na_ndloop(&ndf, 2, a1, a2);                                                         \
   }
 
-#endif /* NUMO_NARRAY_MH_LDEXP_H */
+#endif /* NUMO_NARRAY_MH_MATH_LDEXP_H */
