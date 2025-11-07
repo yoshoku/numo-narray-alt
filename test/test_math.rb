@@ -3,7 +3,8 @@
 require_relative 'test_helper'
 
 class NArrayMathTest < NArrayTestBase
-  def test_sqrt
+  def test_sqrt # rubocop:disable Minitest/MultipleAssertions
+    # NArray
     FLOAT_TYPES.each do |dtype|
       a = if complex_type?(dtype)
             dtype[-4 + 1i, -1 + 4i, 1 - 4i, 4 - 1i]
@@ -21,9 +22,36 @@ class NArrayMathTest < NArrayTestBase
       assert_kind_of(dtype, b)
       assert_operator(err, :<, 1e-6)
     end
+
+    # Ruby Array
+    a = Numo::NMath.sqrt([4, 9])
+    b = Numo::NMath.sqrt([-2 + 3i, 4 - 5i])
+
+    assert_kind_of(Numo::DFloat, a)
+    assert_in_delta(2.0, a[0])
+    assert_in_delta(3.0, a[1])
+    assert_equal(1, a.ndim)
+    assert_equal(2, a.size)
+    assert_kind_of(Numo::DComplex, b)
+    assert_equal(1, b.ndim)
+    assert_equal(2, b.size)
+
+    # Scalar
+    a = Numo::NMath.sqrt(4)
+    b = Numo::NMath.sqrt(-2 + 3i)
+
+    assert_kind_of(Numo::DFloat, a)
+    assert_in_delta(2, a)
+    assert_equal(0, a.ndim)
+    assert_equal(1, a.size)
+    assert_kind_of(Numo::DComplex, b)
+    assert_operator((b - zsqrt(-2 + 3i)).abs, :<, 1e-8)
+    assert_equal(0, b.ndim)
+    assert_equal(1, b.size)
   end
 
-  def test_cbrt
+  def test_cbrt # rubocop:disable Minitest/MultipleAssertions
+    # NArray
     FLOAT_TYPES.each do |dtype|
       a = if complex_type?(dtype)
             dtype[-8 + 1i, -1 + 27i, 1 - 8i, 8 - 1i]
@@ -41,6 +69,32 @@ class NArrayMathTest < NArrayTestBase
       assert_kind_of(dtype, b)
       assert_operator(err, :<, 1e-6)
     end
+
+    # Ruby Array
+    a = Numo::NMath.cbrt([8, 27])
+    b = Numo::NMath.cbrt([-2 + 3i, 4 - 5i])
+
+    assert_kind_of(Numo::DFloat, a)
+    assert_in_delta(2, a[0])
+    assert_in_delta(3, a[1])
+    assert_equal(1, a.ndim)
+    assert_equal(2, a.size)
+    assert_kind_of(Numo::DComplex, b)
+    assert_equal(1, b.ndim)
+    assert_equal(2, b.size)
+
+    # Scalar
+    a = Numo::NMath.cbrt(8)
+    b = Numo::NMath.cbrt(-2 + 3i)
+
+    assert_kind_of(Numo::DFloat, a)
+    assert_in_delta(2, a)
+    assert_equal(0, a.ndim)
+    assert_equal(1, a.size)
+    assert_kind_of(Numo::DComplex, b)
+    assert_operator((b - zcbrt(-2 + 3i)).abs, :<, 1e-8)
+    assert_equal(0, b.ndim)
+    assert_equal(1, b.size)
   end
 
   def test_log
