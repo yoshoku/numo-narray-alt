@@ -25,7 +25,7 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
       - name: Build and test
-        run: bundle exec rake compile test
+        run: bundle exec rake
 
   build-debug:
     name: Ruby debug
@@ -75,7 +75,7 @@ jobs:
           ruby-version: 3.4
           bundler-cache: true
       - name: Build and test
-        run: bundle exec rake compile test
+        run: bundle exec rake
 
   build-mac:
     runs-on: macos-latest
@@ -88,4 +88,4 @@ jobs:
           ruby-version: 3.4
           bundler-cache: true
       - name: Build and test
-        run: bundle exec rake compile test
+        run: bundle exec rake
