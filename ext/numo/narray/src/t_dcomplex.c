@@ -64,10 +64,10 @@ extern VALUE cRT;
 #include "mh/math/atanh.h"
 #include "mh/math/sinc.h"
 
-DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dcomplex, dcomplex, numo_cDComplex, numo_cDComplex)
-DEF_NARRAY_FLT_VAR_METHOD_FUNC(dcomplex, double, numo_cDComplex, numo_cDFloat)
-DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(dcomplex, double, numo_cDComplex, numo_cDFloat)
-DEF_NARRAY_FLT_RMS_METHOD_FUNC(dcomplex, double, numo_cDComplex, numo_cDFloat)
+DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dcomplex, numo_cDComplex, dcomplex, numo_cDComplex)
+DEF_NARRAY_FLT_VAR_METHOD_FUNC(dcomplex, numo_cDComplex, double, numo_cDFloat)
+DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(dcomplex, numo_cDComplex, double, numo_cDFloat)
+DEF_NARRAY_FLT_RMS_METHOD_FUNC(dcomplex, numo_cDComplex, double, numo_cDFloat)
 DEF_NARRAY_FLT_SQRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_CBRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_LOG_METHOD_FUNC(dcomplex, numo_cDComplex)

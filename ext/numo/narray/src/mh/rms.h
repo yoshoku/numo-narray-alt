@@ -1,7 +1,7 @@
 #ifndef NUMO_NARRAY_MH_RMS_H
 #define NUMO_NARRAY_MH_RMS_H 1
 
-#define DEF_NARRAY_FLT_RMS_METHOD_FUNC(tDType, tRtDType, tNAryClass, tRtNAryClass)             \
+#define DEF_NARRAY_FLT_RMS_METHOD_FUNC(tDType, tNAryClass, tRtDType, tRtNAryClass)             \
   static void iter_##tDType##_rms(na_loop_t* const lp) {                                       \
     size_t n;                                                                                  \
     char* p1;                                                                                  \

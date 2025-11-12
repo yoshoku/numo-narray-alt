@@ -78,10 +78,10 @@ extern VALUE cRT;
 
 typedef float sfloat; // Type aliases for shorter notation
                       // following the codebase naming convention.
-DEF_NARRAY_FLT_MEAN_METHOD_FUNC(sfloat, float, numo_cSFloat, numo_cSFloat)
-DEF_NARRAY_FLT_VAR_METHOD_FUNC(sfloat, float, numo_cSFloat, numo_cSFloat)
-DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(sfloat, float, numo_cSFloat, numo_cSFloat)
-DEF_NARRAY_FLT_RMS_METHOD_FUNC(sfloat, float, numo_cSFloat, numo_cSFloat)
+DEF_NARRAY_FLT_MEAN_METHOD_FUNC(sfloat, numo_cSFloat, float, numo_cSFloat)
+DEF_NARRAY_FLT_VAR_METHOD_FUNC(sfloat, numo_cSFloat, float, numo_cSFloat)
+DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(sfloat, numo_cSFloat, float, numo_cSFloat)
+DEF_NARRAY_FLT_RMS_METHOD_FUNC(sfloat, numo_cSFloat, float, numo_cSFloat)
 #ifdef __SSE2__
 DEF_NARRAY_FLT_SQRT_SSE2_SGL_METHOD_FUNC(sfloat, numo_cSFloat)
 #else

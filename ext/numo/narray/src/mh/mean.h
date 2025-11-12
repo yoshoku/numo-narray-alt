@@ -1,7 +1,7 @@
 #ifndef NUMO_NARRAY_MH_MEAN_H
 #define NUMO_NARRAY_MH_MEAN_H 1
 
-#define DEF_NARRAY_FLT_MEAN_METHOD_FUNC(tDType, tRtDType, tNAryClass, tRtNAryClass)            \
+#define DEF_NARRAY_FLT_MEAN_METHOD_FUNC(tDType, tNAryClass, tRtDType, tRtNAryClass)            \
   static void iter_##tDType##_mean(na_loop_t* const lp) {                                      \
     size_t n;                                                                                  \
     char* p1;                                                                                  \

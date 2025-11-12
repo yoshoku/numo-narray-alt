@@ -78,10 +78,10 @@ extern VALUE cRT;
 
 typedef double dfloat; // Type aliases for shorter notation
                        // following the codebase naming convention.
-DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dfloat, double, numo_cDFloat, numo_cDFloat)
-DEF_NARRAY_FLT_VAR_METHOD_FUNC(dfloat, double, numo_cDFloat, numo_cDFloat)
-DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(dfloat, double, numo_cDFloat, numo_cDFloat)
-DEF_NARRAY_FLT_RMS_METHOD_FUNC(dfloat, double, numo_cDFloat, numo_cDFloat)
+DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dfloat, numo_cDFloat, double, numo_cDFloat)
+DEF_NARRAY_FLT_VAR_METHOD_FUNC(dfloat, numo_cDFloat, double, numo_cDFloat)
+DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(dfloat, numo_cDFloat, double, numo_cDFloat)
+DEF_NARRAY_FLT_RMS_METHOD_FUNC(dfloat, numo_cDFloat, double, numo_cDFloat)
 #ifdef __SSE2__
 DEF_NARRAY_FLT_SQRT_SSE2_DBL_METHOD_FUNC(dfloat, numo_cDFloat)
 #else
