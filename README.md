@@ -5,14 +5,17 @@
 [![BSD 3-Clause License](https://img.shields.io/badge/License-BSD%203--Clause-orange.svg)](https://github.com/yoshoku/numo-narray-alt/blob/main/LICENSE)
 [![Documentation](https://img.shields.io/badge/api-reference-blue.svg)](https://gemdocs.org/gems/numo-narray-alt/)
 
-Numo::NArray Alternative is an experimental project forked from [Numo::NArray](https://github.com/ruby-numo/numo-narray).
-Its goal is to adopt more modern Ruby features and development practices.
-The project owner is also the developer of [Rumale](https://github.com/yoshoku/rumale), a machine learning library,
-and may add new features to this project to support the needs of Rumale.
-In addition, since Rumale depends on Numo::NArray, namespaces, class names, and method names will be kept unchanged
-to allow this library to be used as a drop-in replacement.
+Numo::NArray Alternative (numo-narray-alt) is a project forked from
+[Numo::NArray](https://github.com/ruby-numo/numo-narray).
+The project aims to support the latest Ruby features, release bug fixes as quickly as possible,
+and adopt modern development practices.
+In addition, module names, class names, and method names remain unchanged for compatibility,
+making it a drop-in replacement.
+The project owner is also the developer of [Rumale](https://github.com/yoshoku/rumale),
+a machine learning library, and may add new features to numo-narray-alt to support the needs of Rumale.
 
-The project owner has the utmost respect for Numo::NArray and its creator, Prof. Masahiro Tanaka.
+The project owner has the utmost respect for Numo::NArray and its creator,
+Prof. [Masahiro Tanaka](https://github.com/masa16).
 This project is in no way intended to adversely affect the development of the original Numo::NArray.
 
 ## Installation
@@ -23,7 +26,7 @@ $ gem install numo-narray-alt
 
 ## Usage
 
-The same as Numo::NArray.
+The usage is exactly the same as Numo::NArray.
 
 ```irb
 irb(main):001> require 'numo/narray'
