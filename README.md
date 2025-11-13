@@ -28,7 +28,7 @@ $ gem install numo-narray-alt
 
 The usage is exactly the same as Numo::NArray.
 
-```irb
+```ruby
 irb(main):001> require 'numo/narray'
 => true
 irb(main):002> x = Numo::DFloat[[1, 2, 3], [4, 5, 6]]
