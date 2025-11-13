@@ -43,6 +43,17 @@ Numo::DFloat#shape=[2,2]
 irb(main):004>
 ```
 
+## Documentation
+
+- [API Documentation on Gemdocs](https://gemdocs.org/gems/numo-narray-alt/)
+- [Major Changes Since Fork](https://github.com/yoshoku/numo-narray-alt/wiki/Major-Changes-Since-Fork)
+
+Since it is compatible with Numo::NArray, the following Numo::NArray documentation is also useful.
+
+- [Comparison with Numpy](https://github.com/ruby-numo/numo-narray/wiki/Comparison-with-Numpy)
+- [Numo vs numpy](https://github.com/ruby-numo/numo-narray/wiki/Numo-vs-numpy)
+- [100 narray exercises](https://github.com/ruby-numo/numo-narray/wiki/100-narray-exercises)
+
 ## Related Projects
 
 Numo::NArray Alternative is used in the following projects:
