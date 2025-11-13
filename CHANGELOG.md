@@ -1,3 +1,9 @@
+## [[0.9.8](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.7...v0.9.8)] - 2025-11-13
+
+- fix variable typo in `log2` and `log10` methods for complex array classes (`Numo::SComplex`, `Numo::DComplex`)
+  causing incorrect calculations: [289b747](https://github.com/yoshoku/numo-narray-alt/commit/289b747f16adb9209835172db8024970326ad52c)
+- refactor `Math` module methods for floating-point and complex array classes.
+
 ## [[0.9.7](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.6...v0.9.7)] - 2025-11-03
 
 - add `argsort` method.
