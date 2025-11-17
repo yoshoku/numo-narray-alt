@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "numo/narray.#{RUBY_PLATFORM.include?('darwin') ? 'bundle' : 'so'}"
-require 'numo/narray/extra'
+require_relative "narray.#{RUBY_PLATFORM.include?('darwin') ? 'bundle' : 'so'}"
+require_relative 'narray/extra'
 
 module Numo
   class NArray
