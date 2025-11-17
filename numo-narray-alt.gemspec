@@ -14,7 +14,7 @@ open('ext/numo/narray/numo/narray.h') do |f|
   end
 end
 
-Gem::Specification.new do |spec|
+Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.name          = 'numo-narray-alt'
   spec.version       = NARRAY_VERSION
   spec.authors       = ['yoshoku']
@@ -29,10 +29,20 @@ Gem::Specification.new do |spec|
   spec.metadata['source_code_uri'] = spec.homepage
   spec.metadata['changelog_uri'] = "#{spec.homepage}/blob/main/CHANGELOG.md"
   spec.metadata['documentation_uri'] = "https://gemdocs.org/gems/#{spec.name}/#{spec.version}/"
+  spec.metadata['rubygems_mfa_required'] = 'true'
 
   spec.files         = `git ls-files Gemfile LICENSE README.md Rakefile lib ext numo-narray-alt.gemspec`.split($INPUT_RECORD_SEPARATOR) # rubocop:disable Layout/LineLength
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
   spec.extensions    = ['ext/numo/narray/extconf.rb']
-  spec.metadata['rubygems_mfa_required'] = 'true'
+
+  spec.post_install_message = <<~MESSAGE
+    ===
+    Thank you for installing 'numo-narray-alt'.
+
+    NOTICE: 'numo-narray-alt' is an alternative implementation of 'numo-narray'.
+    Having both gems installed may lead to conflicts and unexpected behavior.
+    If you encounter any issues, please consider uninstalling one of them.
+    ===
+  MESSAGE
 end
