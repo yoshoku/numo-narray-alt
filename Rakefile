@@ -39,6 +39,12 @@ else
 end
 
 require 'rake/extensiontask'
-Rake::ExtensionTask.new('numo/narray')
+
+GEMSPEC = Gem::Specification.load('numo-narray-alt.gemspec')
+
+Rake::ExtensionTask.new('numo/narray', GEMSPEC) do |ext|
+  ext.ext_dir = 'ext/numo/narray'
+  ext.lib_dir = 'lib/numo/narray'
+end
 
 task default: %i[clobber compile test]

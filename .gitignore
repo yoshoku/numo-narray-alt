@@ -24,7 +24,7 @@ mkmf.log
 ext/numo/narray/numo/extconf.h
 ext/numo/narray/Makefile
 ext/numo/narray/depend
-lib/numo/numo/extconf.h
+lib/numo/narray/numo/extconf.h
 TAGS
 t.rb
 node_modules/

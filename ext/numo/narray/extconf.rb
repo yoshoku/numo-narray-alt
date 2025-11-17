@@ -17,8 +17,8 @@ rm_f d('numo/extconf.h')
 $INCFLAGS = "-Itypes #{$INCFLAGS}"
 $VPATH << '$(srcdir)/src'
 
-$INSTALLFILES = Dir.glob(%w[numo/*.h numo/types/*.h]).map { |x| [x, '$(archdir)'] }
-$INSTALLFILES << ['numo/extconf.h', '$(archdir)']
+$INSTALLFILES = Dir.glob(%w[numo/*.h numo/types/*.h]).map { |x| [x, '$(archdir)/../'] }
+$INSTALLFILES << ['numo/extconf.h', '$(archdir)/../']
 if /cygwin|mingw/.match?(RUBY_PLATFORM)
   $DLDFLAGS << ' -Wl,--export-all,--out-implib=libnarray.a'
   $INSTALLFILES << ['./libnarray.a', '$(archdir)']
@@ -81,4 +81,4 @@ $objs = srcs.collect { |i| "#{i}.o" }
 
 create_header d('numo/extconf.h')
 
-create_makefile('numo/narray')
+create_makefile('numo/narray/narray')
