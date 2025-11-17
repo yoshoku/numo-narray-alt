@@ -19,8 +19,12 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.version       = NARRAY_VERSION
   spec.authors       = ['yoshoku']
   spec.email         = ['yoshoku@outlook.com']
-  spec.description   = 'Numo::NArray Alternative is an experimental project forked from Numo::NArray.'
-  spec.summary       = 'Numo::NArray Alternative is an experimental project forked from Numo::NArray.'
+  spec.description   = <<~DESC
+    Numo::NArray Alternative is a project forked from Numo::NArray.
+    The project aims to support the latest Ruby features,
+    release bug fixes as quickly as possible, and adopt modern development practices.
+  DESC
+  spec.summary       = 'Numo::NArray Alternative is a project forked from Numo::NArray.'
   spec.homepage      = 'https://github.com/yoshoku/numo-narray-alt'
   spec.license       = 'BSD-3-Clause'
   spec.required_ruby_version = '>= 2.2'
