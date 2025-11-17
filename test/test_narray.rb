@@ -9,6 +9,11 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_altertive
+    assert(Numo::NArray::ALTERNATIVE)
+    assert_predicate(Numo::NArray, :alternative?)
+  end
+
   def test_empty_narray # rubocop:disable Minitest/MultipleAssertions
     TYPES.each do |dtype|
       a = dtype[]
