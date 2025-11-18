@@ -39,9 +39,11 @@ jobs:
           ruby-version: debug
       - name: Build and Install
         run: |
-          gem build numo-narray-alt.gemspec
-          gem install numo-narray-alt-*.gem
           bundle install
+          bundle exec rake install
+          ls -lah /home/runner/work/numo-narray-alt/numo-narray-alt/lib/numo/
+          ls -lah /home/runner/work/numo-narray-alt/numo-narray-alt/lib/numo/narray/
+          ls -lah /home/runner/work/numo-narray-alt/numo-narray-alt/lib/numo/numo
       - name: Tests
         run: rake test
 
