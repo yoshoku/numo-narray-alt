@@ -1,3 +1,20 @@
+## [[0.9.9](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.8...v0.9.9)] - 2025-11-18
+
+- change installation path for the native extension file: [a826564](https://github.com/yoshoku/numo-narray-alt/commit/a826564c18341bcc6e89ce6a2753b667929fd90e)
+- change to use require_relative: [1f6a4be](https://github.com/yoshoku/numo-narray-alt/commit/1f6a4bed02978921fe4052f5c27bcbf1076358e3)
+- add alt.rb for explicit numo-narray-alt loading: [762048a](https://github.com/yoshoku/numo-narray-alt/commit/762048afcecc6511caef049d3f666c96d610bb9a)
+  ```ruby
+  require 'numo/narray/alt'
+  ```
+- add post_install_message about conflict with numo-narray: [092e8b8](https://github.com/yoshoku/numo-narray-alt/commit/092e8b89cf2b4e9de38598524104df76febb22f1)
+- add constant value and class method to indicate wheter it is numo-narray-alt: [d71f4ff](https://github.com/yoshoku/numo-narray-alt/commit/d71f4ff49820b4ba8d4732f283b842dca9e2016a)
+  ```ruby
+  > Numo::NArray::ALTERNATIVE
+  => true
+  > Numo::NArray.alternative?
+  => true
+  ```
+
 ## [[0.9.8](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.7...v0.9.8)] - 2025-11-13
 
 - fix variable typo in `log2` and `log10` methods for complex array classes (`Numo::SComplex`, `Numo::DComplex`)
