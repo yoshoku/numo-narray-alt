@@ -1,3 +1,10 @@
+## [[0.9.10](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.9...v0.9.10)] - 2025-11-18
+
+- fix to use require for compatibility with distributions installing extensions separately: [b6ceeb6](https://github.com/yoshoku/numo-narray-alt/commit/b6ceeb6ccee122c24cebeb2676d4abd742767fdb)
+  - Fixed a `LoadError` on Rocky Linux where built native extensions are installed under `/usr/local/lib64/gems/`
+    separately from Ruby code under `/usr/local/share/gems/`. Changed to use `require` instead of `require_relative`
+    for loading native extensions to support this directory layout.
+
 ## [[0.9.9](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.8...v0.9.9)] - 2025-11-18
 
 - change installation path for the native extension file: [a826564](https://github.com/yoshoku/numo-narray-alt/commit/a826564c18341bcc6e89ce6a2753b667929fd90e)
