@@ -18,7 +18,7 @@ jobs:
       matrix:
         ruby: ['2.7', '3.2', '3.3', '3.4']
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set up Ruby ${{ matrix.ruby }}
         uses: ruby/setup-ruby@v1
         with:
@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set up Ruby head debug
         uses: ruby/setup-ruby@v1
         with:
@@ -50,7 +50,7 @@ jobs:
     name: Ruby 3.3 (Rocky)
     container: rockylinux/rockylinux:9
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set up Ruby
         run: |
           dnf update -y
@@ -68,7 +68,7 @@ jobs:
     name: Ruby 3.4 (Windows)
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set up Ruby 3.4
         uses: ruby/setup-ruby@v1
         with:
@@ -81,7 +81,7 @@ jobs:
     runs-on: macos-latest
     name: Ruby 3.4 (macOS)
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set up Ruby 3.4
         uses: ruby/setup-ruby@v1
         with:
