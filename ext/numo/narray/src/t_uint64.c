@@ -45,6 +45,7 @@ extern VALUE cRT;
 
 #include "mh/maximum.h"
 #include "mh/minimum.h"
+#include "mh/cumsum.h"
 #include "mh/mean.h"
 #include "mh/var.h"
 #include "mh/stddev.h"
@@ -54,6 +55,7 @@ typedef u_int64_t uint64; // Type aliases for shorter notation
                           // following the codebase naming convention.
 DEF_NARRAY_INT_MAXIMUM_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_INT_MINIMUM_METHOD_FUNC(uint64, numo_cUInt64)
+DEF_NARRAY_INT_CUMSUM_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_INT_MEAN_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_INT_VAR_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_INT_STDDEV_METHOD_FUNC(uint64, numo_cUInt64)
@@ -4571,45 +4573,6 @@ static VALUE uint64_bincount(int argc, VALUE* argv, VALUE self) {
   }
 }
 
-static void iter_uint64_cumsum(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  dtype x, y;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-
-  GET_DATA_STRIDE(p1, s1, dtype, x);
-  SET_DATA_STRIDE(p2, s2, dtype, x);
-  for (i--; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, y);
-    m_cumsum(x, y);
-    SET_DATA_STRIDE(p2, s2, dtype, x);
-  }
-}
-
-/*
-  cumsum of self.
-  @overload cumsum(axis:nil, nan:false)
-    @param [Numeric,Array,Range] axis  Performs cumsum along the axis.
-    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
-    @return [Numo::UInt64] cumsum of self.
-*/
-static VALUE uint64_cumsum(int argc, VALUE* argv, VALUE self) {
-  VALUE reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = {
-    iter_uint64_cumsum, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout
-  };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
-
-  return na_ndloop(&ndf, 2, self, reduce);
-}
-
 static void iter_uint64_cumprod(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -5728,6 +5691,13 @@ void Init_numo_uint64(void) {
    */
   rb_define_module_function(cT, "minimum", uint64_s_minimum, -1);
   rb_define_method(cT, "bincount", uint64_bincount, -1);
+  /**
+   * cumsum of self.
+   * @overload cumsum(axis:nil, nan:false)
+   *   @param [Numeric,Array,Range] axis  Performs cumsum along the axis.
+   *   @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
+   *   @return [Numo::UInt64] cumsum of self.
+   */
   rb_define_method(cT, "cumsum", uint64_cumsum, -1);
   rb_define_method(cT, "cumprod", uint64_cumprod, -1);
   rb_define_method(cT, "mulsum", uint64_mulsum, -1);

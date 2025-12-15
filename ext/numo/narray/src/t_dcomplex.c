@@ -42,6 +42,7 @@ extern VALUE cRT;
 #include "mh/var.h"
 #include "mh/stddev.h"
 #include "mh/rms.h"
+#include "mh/cumsum.h"
 #include "mh/math/sqrt.h"
 #include "mh/math/cbrt.h"
 #include "mh/math/log.h"
@@ -68,6 +69,7 @@ DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dcomplex, numo_cDComplex, dcomplex, numo_cDCompl
 DEF_NARRAY_FLT_VAR_METHOD_FUNC(dcomplex, numo_cDComplex, double, numo_cDFloat)
 DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(dcomplex, numo_cDComplex, double, numo_cDFloat)
 DEF_NARRAY_FLT_RMS_METHOD_FUNC(dcomplex, numo_cDComplex, double, numo_cDFloat)
+DEF_NARRAY_FLT_CUMSUM_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_SQRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_CBRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_LOG_METHOD_FUNC(dcomplex, numo_cDComplex)
@@ -4139,63 +4141,6 @@ static VALUE dcomplex_kahan_sum(int argc, VALUE* argv, VALUE self) {
   return dcomplex_extract(v);
 }
 
-static void iter_dcomplex_cumsum(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  dtype x, y;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-
-  GET_DATA_STRIDE(p1, s1, dtype, x);
-  SET_DATA_STRIDE(p2, s2, dtype, x);
-  for (i--; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, y);
-    m_cumsum(x, y);
-    SET_DATA_STRIDE(p2, s2, dtype, x);
-  }
-}
-static void iter_dcomplex_cumsum_nan(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  dtype x, y;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-
-  GET_DATA_STRIDE(p1, s1, dtype, x);
-  SET_DATA_STRIDE(p2, s2, dtype, x);
-  for (i--; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, y);
-    m_cumsum_nan(x, y);
-    SET_DATA_STRIDE(p2, s2, dtype, x);
-  }
-}
-
-/*
-  cumsum of self.
-  @overload cumsum(axis:nil, nan:false)
-    @param [Numeric,Array,Range] axis  Performs cumsum along the axis.
-    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
-    @return [Numo::DComplex] cumsum of self.
-*/
-static VALUE dcomplex_cumsum(int argc, VALUE* argv, VALUE self) {
-  VALUE reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = {
-    iter_dcomplex_cumsum, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout
-  };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_cumsum_nan);
-
-  return na_ndloop(&ndf, 2, self, reduce);
-}
-
 static void iter_dcomplex_cumprod(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -5024,6 +4969,13 @@ void Init_numo_dcomplex(void) {
    *   @return [Numo::DFloat] returns result of rms.
    */
   rb_define_method(cT, "rms", dcomplex_rms, -1);
+  /**
+   * cumsum of self.
+   * @overload cumsum(axis:nil, nan:false)
+   *   @param [Numeric,Array,Range] axis  Performs cumsum along the axis.
+   *   @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
+   *   @return [Numo::DComplex] cumsum of self.
+   */
   rb_define_method(cT, "cumsum", dcomplex_cumsum, -1);
   rb_define_method(cT, "cumprod", dcomplex_cumprod, -1);
   rb_define_method(cT, "mulsum", dcomplex_mulsum, -1);
