@@ -160,10 +160,10 @@ class NArrayTest < NArrayTestBase
             assert_equal(Numo::Int32[0, 1, 2, 3, 4, 5], a.sort_index)
             assert_equal(4, a.median)
           end
-          assert_equal(Numo::SFloat[11, 10, 9, 7, 7, 11], dtype.maximum(a, 12 - a))
-          assert_equal(Numo::SFloat[1, 2, 3, 5, 5, 1], dtype.minimum(a, 12 - a))
-          assert_equal(Numo::SFloat[5, 5, 5, 5, 7, 11], dtype.maximum(a, 5))
-          assert_equal(Numo::SFloat[1, 2, 3, 5, 5, 5], dtype.minimum(a, 5))
+          assert_equal(dtype[11, 10, 9, 7, 7, 11], dtype.maximum(a, 12 - a))
+          assert_equal(dtype[1, 2, 3, 5, 5, 1], dtype.minimum(a, 12 - a))
+          assert_equal(dtype[5, 5, 5, 5, 7, 11], dtype.maximum(a, 5))
+          assert_equal(dtype[1, 2, 3, 5, 5, 5], dtype.minimum(a, 5))
         end
       end
     end
