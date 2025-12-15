@@ -46,6 +46,7 @@ extern VALUE cRT;
 #include "mh/maximum.h"
 #include "mh/minimum.h"
 #include "mh/cumsum.h"
+#include "mh/cumprod.h"
 #include "mh/mean.h"
 #include "mh/var.h"
 #include "mh/stddev.h"
@@ -56,6 +57,7 @@ typedef u_int32_t uint32; // Type aliases for shorter notation
 DEF_NARRAY_INT_MAXIMUM_METHOD_FUNC(uint32, numo_cUInt32)
 DEF_NARRAY_INT_MINIMUM_METHOD_FUNC(uint32, numo_cUInt32)
 DEF_NARRAY_INT_CUMSUM_METHOD_FUNC(uint32, numo_cUInt32)
+DEF_NARRAY_INT_CUMPROD_METHOD_FUNC(uint32, numo_cUInt32)
 DEF_NARRAY_INT_MEAN_METHOD_FUNC(uint32, numo_cUInt32)
 DEF_NARRAY_INT_VAR_METHOD_FUNC(uint32, numo_cUInt32)
 DEF_NARRAY_INT_STDDEV_METHOD_FUNC(uint32, numo_cUInt32)
@@ -4573,45 +4575,6 @@ static VALUE uint32_bincount(int argc, VALUE* argv, VALUE self) {
   }
 }
 
-static void iter_uint32_cumprod(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  dtype x, y;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-
-  GET_DATA_STRIDE(p1, s1, dtype, x);
-  SET_DATA_STRIDE(p2, s2, dtype, x);
-  for (i--; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, y);
-    m_cumprod(x, y);
-    SET_DATA_STRIDE(p2, s2, dtype, x);
-  }
-}
-
-/*
-  cumprod of self.
-  @overload cumprod(axis:nil, nan:false)
-    @param [Numeric,Array,Range] axis  Performs cumprod along the axis.
-    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
-    @return [Numo::UInt32] cumprod of self.
-*/
-static VALUE uint32_cumprod(int argc, VALUE* argv, VALUE self) {
-  VALUE reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = {
-    iter_uint32_cumprod, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout
-  };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
-
-  return na_ndloop(&ndf, 2, self, reduce);
-}
-
 //
 static void iter_uint32_mulsum(na_loop_t* const lp) {
   size_t i, n;
@@ -5697,6 +5660,13 @@ void Init_numo_uint32(void) {
    *   @return [Numo::UInt32] cumsum of self.
    */
   rb_define_method(cT, "cumsum", uint32_cumsum, -1);
+  /**
+   * cumprod of self.
+   * @overload cumprod(axis:nil, nan:false)
+   *   @param [Numeric,Array,Range] axis  Performs cumprod along the axis.
+   *   @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN if exists).
+   *   @return [Numo::UInt32] cumprod of self.
+   */
   rb_define_method(cT, "cumprod", uint32_cumprod, -1);
   rb_define_method(cT, "mulsum", uint32_mulsum, -1);
   rb_define_method(cT, "seq", uint32_seq, -1);

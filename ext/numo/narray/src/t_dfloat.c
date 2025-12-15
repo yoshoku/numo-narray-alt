@@ -49,6 +49,7 @@ extern VALUE cRT;
 #include "mh/maximum.h"
 #include "mh/minimum.h"
 #include "mh/cumsum.h"
+#include "mh/cumprod.h"
 #include "mh/math/sqrt.h"
 #include "mh/math/cbrt.h"
 #include "mh/math/log.h"
@@ -88,6 +89,7 @@ DEF_NARRAY_FLT_RMS_METHOD_FUNC(dfloat, numo_cDFloat, double, numo_cDFloat)
 DEF_NARRAY_FLT_MAXIMUM_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_MINIMUM_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_CUMSUM_METHOD_FUNC(dfloat, numo_cDFloat)
+DEF_NARRAY_FLT_CUMPROD_METHOD_FUNC(dfloat, numo_cDFloat)
 #ifdef __SSE2__
 DEF_NARRAY_FLT_SQRT_SSE2_DBL_METHOD_FUNC(dfloat, numo_cDFloat)
 #else
@@ -4826,56 +4828,6 @@ static VALUE dfloat_minmax(int argc, VALUE* argv, VALUE self) {
   };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_minmax_nan);
-
-  return na_ndloop(&ndf, 2, self, reduce);
-}
-
-static void iter_dfloat_cumprod(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  dtype x, y;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-
-  GET_DATA_STRIDE(p1, s1, dtype, x);
-  SET_DATA_STRIDE(p2, s2, dtype, x);
-  for (i--; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, y);
-    m_cumprod(x, y);
-    SET_DATA_STRIDE(p2, s2, dtype, x);
-  }
-}
-static void iter_dfloat_cumprod_nan(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  dtype x, y;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-
-  GET_DATA_STRIDE(p1, s1, dtype, x);
-  SET_DATA_STRIDE(p2, s2, dtype, x);
-  for (i--; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, y);
-    m_cumprod_nan(x, y);
-    SET_DATA_STRIDE(p2, s2, dtype, x);
-  }
-}
-
-static VALUE dfloat_cumprod(int argc, VALUE* argv, VALUE self) {
-  VALUE reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = {
-    iter_dfloat_cumprod, STRIDE_LOOP | NDF_FLAT_REDUCE | NDF_CUM, 2, 1, ain, aout
-  };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_cumprod_nan);
 
   return na_ndloop(&ndf, 2, self, reduce);
 }

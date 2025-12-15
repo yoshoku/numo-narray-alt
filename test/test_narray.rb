@@ -165,6 +165,7 @@ class NArrayTest < NArrayTestBase
           assert_equal(dtype[5, 5, 5, 5, 7, 11], dtype.maximum(a, 5))
           assert_equal(dtype[1, 2, 3, 5, 5, 5], dtype.minimum(a, 5))
           assert_equal(dtype[1, 3, 6, 11, 18, 29], a.cumsum)
+          assert_equal(dtype[1, 2, 6, 30], a[0...4].cumprod)
         end
       end
     end
@@ -267,6 +268,9 @@ class NArrayTest < NArrayTestBase
         assert_equal(dtype[[1, 3, 6], [11, 18, 29]], a.cumsum)
         assert_equal(dtype[[1, 2, 3], [6, 9, 14]], a.cumsum(0))
         assert_equal(dtype[[1, 3, 6], [5, 12, 23]], a.cumsum(1))
+        assert_equal(dtype[[1, 2], [10, 70]], a[true, 0...2].cumprod)
+        assert_equal(dtype[[1, 2], [5, 14]], a[true, 0...2].cumprod(0))
+        assert_equal(dtype[[1, 2], [5, 35]], a[true, 0...2].cumprod(1))
 
         assert_predicate(a, :contiguous?)
         assert_predicate(a.reshape(3, 2), :contiguous?)
