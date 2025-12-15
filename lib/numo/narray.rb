@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# On distributions like Rocky Linux, native extensions are installed in a separate
-# directory from Ruby code, so use require to load them.
+# On RHEL-based Linux distributions, native extensions are installed in a separate
+# directory from Ruby scripts, so use require to load them.
 require 'numo/narray/narray'
-
 require_relative 'narray/extra'
 
 module Numo
