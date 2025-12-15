@@ -43,6 +43,7 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/maximum.h"
 #include "mh/minimum.h"
 #include "mh/mean.h"
 #include "mh/var.h"
@@ -51,6 +52,7 @@ extern VALUE cRT;
 
 typedef int8_t int8; // Type aliases for shorter notation
                      // following the codebase naming convention.
+DEF_NARRAY_INT_MAXIMUM_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT_MINIMUM_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT_MEAN_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT_VAR_METHOD_FUNC(int8, numo_cInt8)
@@ -3916,38 +3918,6 @@ static VALUE int8_minmax(int argc, VALUE* argv, VALUE self) {
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
 
   return na_ndloop(&ndf, 2, self, reduce);
-}
-
-static void iter_int8_s_maximum(na_loop_t* const lp) {
-  size_t i, n;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-
-  for (i = 0; i < n; i++) {
-    dtype x, y, z;
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    GET_DATA(p3, dtype, z);
-    z = f_maximum(x, y);
-    SET_DATA_STRIDE(p3, s3, dtype, z);
-  }
-}
-
-static VALUE int8_s_maximum(int argc, VALUE* argv, VALUE mod) {
-  VALUE a1 = Qnil;
-  VALUE a2 = Qnil;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_int8_s_maximum, STRIDE_LOOP_NIP, 2, 1, ain, aout };
-
-  rb_scan_args(argc, argv, "20", &a1, &a2);
-
-  return na_ndloop(&ndf, 2, a1, a2);
 }
 
 // ------- Integer count without weights -------
