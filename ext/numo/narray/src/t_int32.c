@@ -43,6 +43,7 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/sum.h"
 #include "mh/maximum.h"
 #include "mh/minimum.h"
 #include "mh/cumsum.h"
@@ -54,6 +55,7 @@ extern VALUE cRT;
 
 typedef int32_t int32; // Type aliases for shorter notation
                        // following the codebase naming convention.
+DEF_NARRAY_INT_SUM_METHOD_FUNC(int32, numo_cInt32, int64_t, numo_cInt64)
 DEF_NARRAY_INT_MAXIMUM_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_INT_MINIMUM_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_INT_CUMSUM_METHOD_FUNC(int32, numo_cInt32)
@@ -3823,39 +3825,6 @@ static VALUE int32_clip(VALUE self, VALUE min, VALUE max) {
   return Qnil;
 }
 
-static void iter_int32_sum(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(int64_t*)p2 = f_sum(n, p1, s1);
-}
-
-/*
-  sum of self.
-  @overload sum(axis:nil, keepdims:false)
-    @param [Numeric,Array,Range] axis  Performs sum along the axis.
-    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-    dimensions with size one.
-    @return [Numo::Int32] returns result of sum.
-*/
-static VALUE int32_sum(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cInt64, 0 } };
-  ndfunc_t ndf = { iter_int32_sum, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-
-  return rb_funcall(v, rb_intern("extract"), 0);
-}
-
 static void iter_int32_prod(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -5631,6 +5600,14 @@ void Init_numo_int32(void) {
   rb_define_alias(cT, "<", "lt");
   rb_define_alias(cT, "<=", "le");
   rb_define_method(cT, "clip", int32_clip, 2);
+  /**
+   * sum of self.
+   * @overload sum(axis:nil, keepdims:false)
+   *   @param [Numeric,Array,Range] axis  Performs sum along the axis.
+   *   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+   *   dimensions with size one.
+   *   @return [Numo::Int32] returns result of sum.
+   */
   rb_define_method(cT, "sum", int32_sum, -1);
   rb_define_method(cT, "prod", int32_prod, -1);
   rb_define_method(cT, "min", int32_min, -1);

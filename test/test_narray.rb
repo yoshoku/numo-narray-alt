@@ -254,8 +254,25 @@ class NArrayTest < NArrayTestBase
         assert_equal(dtype[[3, 2, 1], [11, 7, 5]], a.reverse(1))
 
         assert_equal(29, a.sum)
-        assert_equal(dtype[6, 9, 14], a.sum(axis: 0))
-        assert_equal(dtype[6, 23], a.sum(axis: 1))
+        a_sum_axis0 = a.sum(axis: 0)
+        a_sum_axis1 = a.sum(axis: 1)
+        if INTEGER_TYPES.include?(dtype)
+          assert_equal(Numo::Int64[6, 9, 14], a_sum_axis0)
+          assert_kind_of(Numo::Int64, a_sum_axis0)
+          assert_equal(Numo::Int64[6, 23], a_sum_axis1)
+          assert_kind_of(Numo::Int64, a_sum_axis1)
+        elsif UNSIGNED_INTEGER_TYPES.include?(dtype)
+          assert_equal(Numo::UInt64[6, 9, 14], a_sum_axis0)
+          assert_kind_of(Numo::UInt64, a_sum_axis0)
+          assert_equal(Numo::UInt64[6, 23], a_sum_axis1)
+          assert_kind_of(Numo::UInt64, a_sum_axis1)
+        else
+          assert_equal(dtype[6, 9, 14], a_sum_axis0)
+          assert_kind_of(dtype, a_sum_axis0)
+          assert_equal(dtype[6, 23], a_sum_axis1)
+          assert_kind_of(dtype, a_sum_axis1)
+        end
+
         assert_in_delta(4.833333, a.mean, 1e-6)
         if FLOAT_TYPES.include?(dtype)
           assert_equal(dtype[3, 4.5, 7], a.mean(0))

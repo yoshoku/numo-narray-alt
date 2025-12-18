@@ -15,16 +15,24 @@ class NArrayTestBase < Minitest::Test
     Numo::DComplex
   ].freeze
 
-  TYPES = [
-    *FLOAT_TYPES,
+  INTEGER_TYPES = [
     Numo::Int64,
     Numo::Int32,
     Numo::Int16,
-    Numo::Int8,
+    Numo::Int8
+  ].freeze
+
+  UNSIGNED_INTEGER_TYPES = [
     Numo::UInt64,
     Numo::UInt32,
     Numo::UInt16,
-    Numo::UInt8,
+    Numo::UInt8
+  ].freeze
+
+  TYPES = [
+    *FLOAT_TYPES,
+    *INTEGER_TYPES,
+    *UNSIGNED_INTEGER_TYPES,
     Numo::RObject
   ].freeze
 end
