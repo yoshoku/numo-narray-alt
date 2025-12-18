@@ -61,6 +61,7 @@ VALUE cT;
 extern VALUE cRT;
 
 #include "mh/sum.h"
+#include "mh/prod.h"
 #include "mh/mean.h"
 #include "mh/var.h"
 #include "mh/stddev.h"
@@ -73,6 +74,7 @@ extern VALUE cRT;
 typedef VALUE robject; // Type aliases for shorter notation
                        // following the codebase naming convention.
 DEF_NARRAY_FLT_SUM_METHOD_FUNC(robject, numo_cRObject)
+DEF_NARRAY_FLT_PROD_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_MEAN_METHOD_FUNC(robject, numo_cRObject, VALUE, numo_cRObject)
 DEF_NARRAY_FLT_VAR_METHOD_FUNC(robject, numo_cRObject, VALUE, numo_cRObject)
 DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(robject, numo_cRObject, VALUE, numo_cRObject)
@@ -3762,52 +3764,6 @@ static VALUE robject_isfinite(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-static void iter_robject_prod(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_prod(n, p1, s1);
-}
-static void iter_robject_prod_nan(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_prod_nan(n, p1, s1);
-}
-
-/*
-  prod of self.
-  @overload prod(axis:nil, keepdims:false, nan:false)
-    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-    return NaN for min/max etc).
-    @param [Numeric,Array,Range] axis  Performs prod along the axis.
-    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-    dimensions with size one.
-    @return [Numo::RObject] returns result of prod.
-*/
-static VALUE robject_prod(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_robject_prod, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_prod_nan);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-
-  return robject_extract(v);
-}
-
 static void iter_robject_min(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -5115,6 +5071,16 @@ void Init_numo_robject(void) {
    *   @return [Numo::RObject] returns result of sum.
    */
   rb_define_method(cT, "sum", robject_sum, -1);
+  /**
+   * prod of self.
+   * @overload prod(axis:nil, keepdims:false, nan:false)
+   *   @param [TrueClass] nan  If true, apply NaN-aware algorithm
+   *     (avoid NaN for sum/mean etc, or, return NaN for min/max etc).
+   *   @param [Numeric,Array,Range] axis  Performs prod along the axis.
+   *   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @return [Numo::RObject] returns result of prod.
+   */
   rb_define_method(cT, "prod", robject_prod, -1);
   /**
    * mean of self.

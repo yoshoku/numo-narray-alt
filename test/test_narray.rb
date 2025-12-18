@@ -273,6 +273,26 @@ class NArrayTest < NArrayTestBase
           assert_kind_of(dtype, a_sum_axis1)
         end
 
+        assert_equal(2310, a.prod)
+        a_prod_axis0 = a.prod(axis: 0)
+        a_prod_axis1 = a.prod(axis: 1)
+        if INTEGER_TYPES.include?(dtype)
+          assert_equal(Numo::Int64[5, 14, 33], a_prod_axis0)
+          assert_kind_of(Numo::Int64, a_prod_axis0)
+          assert_equal(Numo::Int64[6, 385], a_prod_axis1)
+          assert_kind_of(Numo::Int64, a_prod_axis1)
+        elsif UNSIGNED_INTEGER_TYPES.include?(dtype)
+          assert_equal(Numo::UInt64[5, 14, 33], a_prod_axis0)
+          assert_kind_of(Numo::UInt64, a_prod_axis0)
+          assert_equal(Numo::UInt64[6, 385], a_prod_axis1)
+          assert_kind_of(Numo::UInt64, a_prod_axis1)
+        else
+          assert_equal(dtype[5, 14, 33], a_prod_axis0)
+          assert_kind_of(dtype, a_prod_axis0)
+          assert_equal(dtype[6, 385], a_prod_axis1)
+          assert_kind_of(dtype, a_prod_axis1)
+        end
+
         assert_in_delta(4.833333, a.mean, 1e-6)
         if FLOAT_TYPES.include?(dtype)
           assert_equal(dtype[3, 4.5, 7], a.mean(0))

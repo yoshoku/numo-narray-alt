@@ -44,6 +44,7 @@ VALUE cT;
 extern VALUE cRT;
 
 #include "mh/sum.h"
+#include "mh/prod.h"
 #include "mh/maximum.h"
 #include "mh/minimum.h"
 #include "mh/cumsum.h"
@@ -56,6 +57,7 @@ extern VALUE cRT;
 typedef int8_t int8; // Type aliases for shorter notation
                      // following the codebase naming convention.
 DEF_NARRAY_INT_SUM_METHOD_FUNC(int8, numo_cInt8, int64_t, numo_cInt64)
+DEF_NARRAY_INT_PROD_METHOD_FUNC(int8, numo_cInt8, int64_t, numo_cInt64)
 DEF_NARRAY_INT_MAXIMUM_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT_MINIMUM_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT_CUMSUM_METHOD_FUNC(int8, numo_cInt8)
@@ -3403,39 +3405,6 @@ static VALUE int8_clip(VALUE self, VALUE min, VALUE max) {
   return Qnil;
 }
 
-static void iter_int8_prod(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(int64_t*)p2 = f_prod(n, p1, s1);
-}
-
-/*
-  prod of self.
-  @overload prod(axis:nil, keepdims:false)
-    @param [Numeric,Array,Range] axis  Performs prod along the axis.
-    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-    dimensions with size one.
-    @return [Numo::Int8] returns result of prod.
-*/
-static VALUE int8_prod(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cInt64, 0 } };
-  ndfunc_t ndf = { iter_int8_prod, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-
-  return rb_funcall(v, rb_intern("extract"), 0);
-}
-
 static void iter_int8_min(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -5183,10 +5152,18 @@ void Init_numo_int8(void) {
    * @overload sum(axis:nil, keepdims:false)
    *   @param [Numeric,Array,Range] axis  Performs sum along the axis.
    *   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-   *   dimensions with size one.
+   *     dimensions with size one.
    *   @return [Numo::Int8] returns result of sum.
    */
   rb_define_method(cT, "sum", int8_sum, -1);
+  /**
+   * prod of self.
+   * @overload prod(axis:nil, keepdims:false)
+   *   @param [Numeric,Array,Range] axis  Performs prod along the axis.
+   *   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @return [Numo::Int64] returns result of prod.
+   */
   rb_define_method(cT, "prod", int8_prod, -1);
   rb_define_method(cT, "min", int8_min, -1);
   rb_define_method(cT, "max", int8_max, -1);
