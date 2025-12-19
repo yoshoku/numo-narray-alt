@@ -331,6 +331,8 @@ class NArrayTest < NArrayTestBase
           assert_equal(dtype[1, 5], a.min(axis: 1))
           assert_equal(dtype[1, 2, 3], a.min(axis: 0))
           assert_equal(11, a.max)
+          assert_equal(dtype[3, 11], a.max(axis: 1))
+          assert_equal(dtype[5, 7, 11], a.max(axis: 0))
           assert_equal(0, a.min_index)
           assert_equal(dtype[0, 3], a.min_index(axis: 1))
           assert_equal(dtype[0, 1, 2], a.min_index(axis: 0))

@@ -49,6 +49,7 @@ extern VALUE cRT;
 #include "mh/stddev.h"
 #include "mh/rms.h"
 #include "mh/min.h"
+#include "mh/max.h"
 #include "mh/maximum.h"
 #include "mh/minimum.h"
 #include "mh/cumsum.h"
@@ -92,6 +93,7 @@ DEF_NARRAY_FLT_VAR_METHOD_FUNC(dfloat, numo_cDFloat, double, numo_cDFloat)
 DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(dfloat, numo_cDFloat, double, numo_cDFloat)
 DEF_NARRAY_FLT_RMS_METHOD_FUNC(dfloat, numo_cDFloat, double, numo_cDFloat)
 DEF_NARRAY_FLT_MIN_METHOD_FUNC(dfloat, numo_cDFloat)
+DEF_NARRAY_FLT_MAX_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_MAXIMUM_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_MINIMUM_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_CUMSUM_METHOD_FUNC(dfloat, numo_cDFloat)
@@ -4232,42 +4234,6 @@ static VALUE dfloat_kahan_sum(int argc, VALUE* argv, VALUE self) {
   ndfunc_t ndf = { iter_dfloat_kahan_sum, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
 
   reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_kahan_sum_nan);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-
-  return dfloat_extract(v);
-}
-
-static void iter_dfloat_max(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_max(n, p1, s1);
-}
-static void iter_dfloat_max_nan(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_max_nan(n, p1, s1);
-}
-
-static VALUE dfloat_max(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_dfloat_max, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dfloat_max_nan);
 
   v = na_ndloop(&ndf, 2, self, reduce);
 

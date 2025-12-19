@@ -46,6 +46,7 @@ extern VALUE cRT;
 #include "mh/sum.h"
 #include "mh/prod.h"
 #include "mh/min.h"
+#include "mh/max.h"
 #include "mh/maximum.h"
 #include "mh/minimum.h"
 #include "mh/cumsum.h"
@@ -60,6 +61,7 @@ typedef int32_t int32; // Type aliases for shorter notation
 DEF_NARRAY_INT_SUM_METHOD_FUNC(int32, numo_cInt32, int64_t, numo_cInt64)
 DEF_NARRAY_INT_PROD_METHOD_FUNC(int32, numo_cInt32, int64_t, numo_cInt64)
 DEF_NARRAY_INT_MIN_METHOD_FUNC(int32, numo_cInt32)
+DEF_NARRAY_INT_MAX_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_INT_MAXIMUM_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_INT_MINIMUM_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_INT_CUMSUM_METHOD_FUNC(int32, numo_cInt32)
@@ -3829,39 +3831,6 @@ static VALUE int32_clip(VALUE self, VALUE min, VALUE max) {
   return Qnil;
 }
 
-static void iter_int32_max(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_max(n, p1, s1);
-}
-
-/*
-  max of self.
-  @overload max(axis:nil, keepdims:false)
-    @param [Numeric,Array,Range] axis  Performs max along the axis.
-    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-    dimensions with size one.
-    @return [Numo::Int32] returns result of max.
-*/
-static VALUE int32_max(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_int32_max, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-
-  return int32_extract(v);
-}
-
 static void iter_int32_ptp(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -5565,6 +5534,14 @@ void Init_numo_int32(void) {
    *   @return [Numo::Int32] returns result of min.
    */
   rb_define_method(cT, "min", int32_min, -1);
+  /**
+   * max of self.
+   * @overload max(axis:nil, keepdims:false)
+   *   @param [Numeric,Array,Range] axis  Performs max along the axis.
+   *   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @return [Numo::Int32] returns result of max.
+   */
   rb_define_method(cT, "max", int32_max, -1);
   rb_define_method(cT, "ptp", int32_ptp, -1);
   rb_define_method(cT, "max_index", int32_max_index, -1);
