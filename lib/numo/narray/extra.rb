@@ -143,15 +143,26 @@ module Numo
       a = []
       str.split(split3d).each do |block|
         b = []
-        # print "b"; p block
         block.split(split2d).each do |line|
-          # p line
           line.strip!
           next if line.empty?
 
           c = []
           line.split(split1d).each do |item|
-            c << eval(item.strip) unless item.empty? # rubocop:disable Security/Eval
+            next if item.empty?
+
+            el = begin
+              v = Complex(item.strip)
+              if v.imag.zero?
+                reali = v.real.to_i
+                v.real == reali ? reali : v.real
+              else
+                v
+              end
+            rescue ArgumentError
+              eval(item.strip) # rubocop:disable Security/Eval
+            end
+            c << el
           end
           b << c unless c.empty?
         end
