@@ -47,6 +47,7 @@ extern VALUE cRT;
 #include "mh/prod.h"
 #include "mh/min.h"
 #include "mh/max.h"
+#include "mh/ptp.h"
 #include "mh/maximum.h"
 #include "mh/minimum.h"
 #include "mh/cumsum.h"
@@ -62,6 +63,7 @@ DEF_NARRAY_INT_SUM_METHOD_FUNC(int8, numo_cInt8, int64_t, numo_cInt64)
 DEF_NARRAY_INT_PROD_METHOD_FUNC(int8, numo_cInt8, int64_t, numo_cInt64)
 DEF_NARRAY_INT_MAX_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT_MIN_METHOD_FUNC(int8, numo_cInt8)
+DEF_NARRAY_INT_PTP_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT_MAXIMUM_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT_MINIMUM_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT_CUMSUM_METHOD_FUNC(int8, numo_cInt8)
@@ -3409,39 +3411,6 @@ static VALUE int8_clip(VALUE self, VALUE min, VALUE max) {
   return Qnil;
 }
 
-static void iter_int8_ptp(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_ptp(n, p1, s1);
-}
-
-/*
-  ptp of self.
-  @overload ptp(axis:nil, keepdims:false)
-    @param [Numeric,Array,Range] axis  Performs ptp along the axis.
-    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-    dimensions with size one.
-    @return [Numo::Int8] returns result of ptp.
-*/
-static VALUE int8_ptp(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_int8_ptp, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-
-  return int8_extract(v);
-}
-
 #define idx_t int64_t
 static void iter_int8_max_index_index64(na_loop_t* const lp) {
   size_t n, idx;
@@ -5121,6 +5090,14 @@ void Init_numo_int8(void) {
    *   @return [Numo::Int8] returns result of max.
    */
   rb_define_method(cT, "max", int8_max, -1);
+  /**
+   * ptp of self.
+   * @overload ptp(axis:nil, keepdims:false)
+   *   @param [Numeric,Array,Range] axis  Performs ptp along the axis.
+   *   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @return [Numo::Int8] returns result of ptp.
+   */
   rb_define_method(cT, "ptp", int8_ptp, -1);
   rb_define_method(cT, "max_index", int8_max_index, -1);
   rb_define_method(cT, "min_index", int8_min_index, -1);

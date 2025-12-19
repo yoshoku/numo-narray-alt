@@ -47,6 +47,7 @@ extern VALUE cRT;
 #include "mh/prod.h"
 #include "mh/min.h"
 #include "mh/max.h"
+#include "mh/ptp.h"
 #include "mh/maximum.h"
 #include "mh/minimum.h"
 #include "mh/cumsum.h"
@@ -62,6 +63,7 @@ DEF_NARRAY_INT_SUM_METHOD_FUNC(uint16, numo_cUInt16, u_int64_t, numo_cUInt64)
 DEF_NARRAY_INT_PROD_METHOD_FUNC(uint16, numo_cUInt16, u_int64_t, numo_cUInt64)
 DEF_NARRAY_INT_MIN_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_INT_MAX_METHOD_FUNC(uint16, numo_cUInt16)
+DEF_NARRAY_INT_PTP_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_INT_MAXIMUM_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_INT_MINIMUM_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_INT_CUMSUM_METHOD_FUNC(uint16, numo_cUInt16)
@@ -3831,39 +3833,6 @@ static VALUE uint16_clip(VALUE self, VALUE min, VALUE max) {
   return Qnil;
 }
 
-static void iter_uint16_ptp(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_ptp(n, p1, s1);
-}
-
-/*
-  ptp of self.
-  @overload ptp(axis:nil, keepdims:false)
-    @param [Numeric,Array,Range] axis  Performs ptp along the axis.
-    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-    dimensions with size one.
-    @return [Numo::UInt16] returns result of ptp.
-*/
-static VALUE uint16_ptp(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_uint16_ptp, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-
-  return uint16_extract(v);
-}
-
 #define idx_t int64_t
 static void iter_uint16_max_index_index64(na_loop_t* const lp) {
   size_t n, idx;
@@ -5539,6 +5508,14 @@ void Init_numo_uint16(void) {
    *   @return [Numo::UInt16] returns result of max.
    */
   rb_define_method(cT, "max", uint16_max, -1);
+  /**
+   * ptp of self.
+   * @overload ptp(axis:nil, keepdims:false)
+   *   @param [Numeric,Array,Range] axis  Performs ptp along the axis.
+   *   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @return [Numo::UInt16] returns result of ptp.
+   */
   rb_define_method(cT, "ptp", uint16_ptp, -1);
   rb_define_method(cT, "max_index", uint16_max_index, -1);
   rb_define_method(cT, "min_index", uint16_min_index, -1);

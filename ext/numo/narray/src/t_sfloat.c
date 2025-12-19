@@ -50,6 +50,7 @@ extern VALUE cRT;
 #include "mh/rms.h"
 #include "mh/min.h"
 #include "mh/max.h"
+#include "mh/ptp.h"
 #include "mh/maximum.h"
 #include "mh/minimum.h"
 #include "mh/cumsum.h"
@@ -94,6 +95,7 @@ DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(sfloat, numo_cSFloat, float, numo_cSFloat)
 DEF_NARRAY_FLT_RMS_METHOD_FUNC(sfloat, numo_cSFloat, float, numo_cSFloat)
 DEF_NARRAY_FLT_MIN_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_MAX_METHOD_FUNC(sfloat, numo_cSFloat)
+DEF_NARRAY_FLT_PTP_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_MAXIMUM_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_MINIMUM_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_CUMSUM_METHOD_FUNC(sfloat, numo_cSFloat)
@@ -4204,42 +4206,6 @@ static VALUE sfloat_isfinite(VALUE self) {
   ndfunc_t ndf = { iter_sfloat_isfinite, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
-}
-
-static void iter_sfloat_ptp(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_ptp(n, p1, s1);
-}
-static void iter_sfloat_ptp_nan(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_ptp_nan(n, p1, s1);
-}
-
-static VALUE sfloat_ptp(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_sfloat_ptp, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_sfloat_ptp_nan);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-
-  return sfloat_extract(v);
 }
 
 #define idx_t int64_t
