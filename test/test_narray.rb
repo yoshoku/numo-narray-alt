@@ -89,24 +89,23 @@ class NArrayTest < NArrayTestBase
 
         if Enumerator.const_defined?(:ArithmeticSequence)
           assert_equal(dtype[1, 2, 3, 5, 7, 11], a[0.step(-1)])
-          assert_equal(dtype[1, 2, 3, 5, 7],    a[0.step(4)])
-          assert_equal(dtype[2, 3, 5, 7, 11],   a[-5.step(-1)])
-          assert_equal(dtype[1, 3, 7],          a[0.step(-1, 2)])
-          assert_equal(dtype[1, 3, 7],          a[0.step(4, 2)])
-          assert_equal(dtype[2, 5, 11],         a[-5.step(-1, 2)])
+          assert_equal(dtype[1, 2, 3, 5, 7], a[0.step(4)])
+          assert_equal(dtype[2, 3, 5, 7, 11], a[-5.step(-1)])
+          assert_equal(dtype[1, 3, 7], a[0.step(-1, 2)])
+          assert_equal(dtype[1, 3, 7], a[0.step(4, 2)])
+          assert_equal(dtype[2, 5, 11], a[-5.step(-1, 2)])
 
           assert_equal(dtype[1, 2, 3, 5, 7, 11], a[0.step])
           assert_equal(dtype[2, 3, 5, 7, 11], a[-5.step])
-          # rubocop:disable Style/EvalWithLocation
-          assert_equal(dtype[1, 3, 7], eval('a[(0..).step(2)]'))
-          assert_equal(dtype[1, 3, 7], eval('a[(0...).step(2)]'))
-          assert_equal(dtype[2, 5, 11], eval('a[(-5..).step(2)]'))
-          assert_equal(dtype[2, 5, 11], eval('a[(-5...).step(2)]'))
-          assert_equal(dtype[1, 3, 7], eval('a[(0..) % 2]'))
-          assert_equal(dtype[1, 3, 7], eval('a[(0...) % 2]'))
-          assert_equal(dtype[2, 5, 11], eval('a[(-5..) % 2]'))
-          assert_equal(dtype[2, 5, 11], eval('a[(-5...) % 2]'))
-          # rubocop:enable Style/EvalWithLocation
+          assert_equal(dtype[1, 3, 7], a[(0..).step(2)])
+          assert_equal(dtype[1, 3, 7], a[(0..).step(2)])
+          assert_equal(dtype[1, 3, 7], a[(0...).step(2)])
+          assert_equal(dtype[2, 5, 11], a[(-5..).step(2)])
+          assert_equal(dtype[2, 5, 11], a[(-5...).step(2)])
+          assert_equal(dtype[1, 3, 7], a[(0..) % 2])
+          assert_equal(dtype[1, 3, 7], a[(0...) % 2])
+          assert_equal(dtype[2, 5, 11], a[(-5..) % 2])
+          assert_equal(dtype[2, 5, 11], a[(-5...) % 2])
         end
 
         assert_equal(dtype[1, 3, 7], a[(0..-1).step(2)])
