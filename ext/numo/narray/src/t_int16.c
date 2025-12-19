@@ -45,6 +45,7 @@ extern VALUE cRT;
 
 #include "mh/sum.h"
 #include "mh/prod.h"
+#include "mh/min.h"
 #include "mh/maximum.h"
 #include "mh/minimum.h"
 #include "mh/cumsum.h"
@@ -58,6 +59,7 @@ typedef int16_t int16; // Type aliases for shorter notation
                        // following the codebase naming convention.
 DEF_NARRAY_INT_SUM_METHOD_FUNC(int16, numo_cInt16, int64_t, numo_cInt64)
 DEF_NARRAY_INT_PROD_METHOD_FUNC(int16, numo_cInt16, int64_t, numo_cInt64)
+DEF_NARRAY_INT_MIN_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_INT_MAXIMUM_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_INT_MINIMUM_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_INT_CUMSUM_METHOD_FUNC(int16, numo_cInt16)
@@ -3827,39 +3829,6 @@ static VALUE int16_clip(VALUE self, VALUE min, VALUE max) {
   return Qnil;
 }
 
-static void iter_int16_min(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_min(n, p1, s1);
-}
-
-/*
-  min of self.
-  @overload min(axis:nil, keepdims:false)
-    @param [Numeric,Array,Range] axis  Performs min along the axis.
-    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-    dimensions with size one.
-    @return [Numo::Int16] returns result of min.
-*/
-static VALUE int16_min(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_int16_min, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-
-  return int16_extract(v);
-}
-
 static void iter_int16_max(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -5587,6 +5556,14 @@ void Init_numo_int16(void) {
    *   @return [Numo::Int64] returns result of prod.
    */
   rb_define_method(cT, "prod", int16_prod, -1);
+  /**
+   * min of self.
+   * @overload min(axis:nil, keepdims:false)
+   *   @param [Numeric,Array,Range] axis  Performs min along the axis.
+   *   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @return [Numo::Int16] returns result of min.
+   */
   rb_define_method(cT, "min", int16_min, -1);
   rb_define_method(cT, "max", int16_max, -1);
   rb_define_method(cT, "ptp", int16_ptp, -1);
