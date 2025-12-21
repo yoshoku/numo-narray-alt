@@ -50,6 +50,7 @@ extern VALUE cRT;
 #include "mh/ptp.h"
 #include "mh/maximum.h"
 #include "mh/minimum.h"
+#include "mh/minmax.h"
 #include "mh/cumsum.h"
 #include "mh/cumprod.h"
 #include "mh/mean.h"
@@ -66,6 +67,7 @@ DEF_NARRAY_INT_MAX_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_INT_PTP_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_INT_MAXIMUM_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_INT_MINIMUM_METHOD_FUNC(uint64, numo_cUInt64)
+DEF_NARRAY_INT_MINMAX_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_INT_CUMSUM_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_INT_CUMPROD_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_INT_MEAN_METHOD_FUNC(uint64, numo_cUInt64)
@@ -4155,42 +4157,6 @@ static VALUE uint64_argmin(int argc, VALUE* argv, VALUE self) {
   return na_ndloop(&ndf, 2, self, reduce);
 }
 
-static void iter_uint64_minmax(na_loop_t* const lp) {
-  size_t n;
-  char* p1;
-  ssize_t s1;
-  dtype xmin, xmax;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-
-  f_minmax(n, p1, s1, &xmin, &xmax);
-
-  *(dtype*)(lp->args[1].ptr + lp->args[1].iter[0].pos) = xmin;
-  *(dtype*)(lp->args[2].ptr + lp->args[2].iter[0].pos) = xmax;
-}
-
-/*
-  minmax of self.
-  @overload minmax(axis:nil, keepdims:false)
-    @param [Numeric,Array,Range] axis  Finds min-max along the axis.
-    @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
-    as dimensions with size one.
-    @return [Numo::UInt64,Numo::UInt64] min and max of self.
-*/
-static VALUE uint64_minmax(int argc, VALUE* argv, VALUE self) {
-  VALUE reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_t ndf = {
-    iter_uint64_minmax, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 2, 2, ain, aout
-  };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
-
-  return na_ndloop(&ndf, 2, self, reduce);
-}
-
 // ------- Integer count without weights -------
 
 static void iter_uint64_bincount_32(na_loop_t* const lp) {
@@ -5523,6 +5489,14 @@ void Init_numo_uint64(void) {
   rb_define_method(cT, "min_index", uint64_min_index, -1);
   rb_define_method(cT, "argmax", uint64_argmax, -1);
   rb_define_method(cT, "argmin", uint64_argmin, -1);
+  /**
+   * minmax of self.
+   * @overload minmax(axis:nil, keepdims:false)
+   *   @param [Numeric,Array,Range] axis  Finds min-max along the axis.
+   *   @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in
+   *     the result array as dimensions with size one.
+   *   @return [Numo::UInt64,Numo::UInt64] min and max of self.
+   */
   rb_define_method(cT, "minmax", uint64_minmax, -1);
   /**
    * Element-wise maximum of two arrays.

@@ -71,6 +71,7 @@ extern VALUE cRT;
 #include "mh/ptp.h"
 #include "mh/maximum.h"
 #include "mh/minimum.h"
+#include "mh/minmax.h"
 #include "mh/cumsum.h"
 #include "mh/cumprod.h"
 
@@ -87,6 +88,7 @@ DEF_NARRAY_FLT_MAX_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_PTP_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_MAXIMUM_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_MINIMUM_METHOD_FUNC(robject, numo_cRObject)
+DEF_NARRAY_FLT_MINMAX_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_CUMSUM_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_CUMPROD_METHOD_FUNC(robject, numo_cRObject)
 
@@ -4232,57 +4234,6 @@ static VALUE robject_argmin(int argc, VALUE* argv, VALUE self) {
   return na_ndloop(&ndf, 2, self, reduce);
 }
 
-static void iter_robject_minmax(na_loop_t* const lp) {
-  size_t n;
-  char* p1;
-  ssize_t s1;
-  dtype xmin, xmax;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-
-  f_minmax(n, p1, s1, &xmin, &xmax);
-
-  *(dtype*)(lp->args[1].ptr + lp->args[1].iter[0].pos) = xmin;
-  *(dtype*)(lp->args[2].ptr + lp->args[2].iter[0].pos) = xmax;
-}
-static void iter_robject_minmax_nan(na_loop_t* const lp) {
-  size_t n;
-  char* p1;
-  ssize_t s1;
-  dtype xmin, xmax;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-
-  f_minmax_nan(n, p1, s1, &xmin, &xmax);
-
-  *(dtype*)(lp->args[1].ptr + lp->args[1].iter[0].pos) = xmin;
-  *(dtype*)(lp->args[2].ptr + lp->args[2].iter[0].pos) = xmax;
-}
-
-/*
-  minmax of self.
-  @overload minmax(axis:nil, keepdims:false, nan:false)
-    @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
-    @param [Numeric,Array,Range] axis  Finds min-max along the axis.
-    @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
-    as dimensions with size one.
-    @return [Numo::RObject,Numo::RObject] min and max of self.
-*/
-static VALUE robject_minmax(int argc, VALUE* argv, VALUE self) {
-  VALUE reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_t ndf = {
-    iter_robject_minmax, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 2, 2, ain, aout
-  };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_robject_minmax_nan);
-
-  return na_ndloop(&ndf, 2, self, reduce);
-}
-
 //
 static void iter_robject_mulsum(na_loop_t* const lp) {
   size_t i, n;
@@ -5031,6 +4982,15 @@ void Init_numo_robject(void) {
   rb_define_method(cT, "min_index", robject_min_index, -1);
   rb_define_method(cT, "argmax", robject_argmax, -1);
   rb_define_method(cT, "argmin", robject_argmin, -1);
+  /**
+   * minmax of self.
+   * @overload minmax(axis:nil, keepdims:false, nan:false)
+   *   @param [TrueClass] nan  If true, apply NaN-aware algorithm (return NaN if exist).
+   *   @param [Numeric,Array,Range] axis  Finds min-max along the axis.
+   *   @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in
+   *     the result array as dimensions with size one.
+   *   @return [Numo::RObject,Numo::RObject] min and max of self.
+   */
   rb_define_method(cT, "minmax", robject_minmax, -1);
   /**
    * Element-wise maximum of two arrays.
