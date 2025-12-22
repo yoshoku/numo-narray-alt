@@ -51,6 +51,7 @@ extern VALUE cRT;
 #include "mh/max_index.h"
 #include "mh/min_index.h"
 #include "mh/argmax.h"
+#include "mh/argmin.h"
 #include "mh/maximum.h"
 #include "mh/minimum.h"
 #include "mh/minmax.h"
@@ -71,6 +72,7 @@ DEF_NARRAY_INT_PTP_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_INT_MAX_INDEX_METHOD_FUNC(int32)
 DEF_NARRAY_INT_MIN_INDEX_METHOD_FUNC(int32)
 DEF_NARRAY_INT_ARGMAX_METHOD_FUNC(int32)
+DEF_NARRAY_INT_ARGMIN_METHOD_FUNC(int32)
 DEF_NARRAY_INT_MAXIMUM_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_INT_MINIMUM_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_INT_MINMAX_METHOD_FUNC(int32, numo_cInt32)
@@ -3841,84 +3843,6 @@ static VALUE int32_clip(VALUE self, VALUE min, VALUE max) {
   return Qnil;
 }
 
-#define idx_t int64_t
-static void iter_int32_argmin_arg64(na_loop_t* const lp) {
-  size_t n, idx;
-  char *d_ptr, *o_ptr;
-  ssize_t d_step;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, d_ptr, d_step);
-
-  idx = f_min_index(n, d_ptr, d_step);
-
-  o_ptr = NDL_PTR(lp, 1);
-  *(idx_t*)o_ptr = (idx_t)idx;
-}
-#undef idx_t
-
-#define idx_t int32_t
-static void iter_int32_argmin_arg32(na_loop_t* const lp) {
-  size_t n, idx;
-  char *d_ptr, *o_ptr;
-  ssize_t d_step;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, d_ptr, d_step);
-
-  idx = f_min_index(n, d_ptr, d_step);
-
-  o_ptr = NDL_PTR(lp, 1);
-  *(idx_t*)o_ptr = (idx_t)idx;
-}
-#undef idx_t
-
-/*
-  Index of the minimum value.
-  @overload argmin(axis:nil)
-    @param [Numeric,Array,Range] axis  Finds minimum values along the axis and returns **indices
-    along the axis**.
-    @return [Integer,Numo::Int] returns the result indices.
-  @see #min_index
-  @see #min
-
-  @example
-      a = Numo::NArray[3,4,1,2]
-      a.argmin  #=> 2
-
-      b = Numo::NArray[[3,4,1],[2,0,5]]
-      b.argmin                       #=> 4
-      b.argmin(axis:1)               #=> [2, 1]
-      b.argmin(axis:0)               #=> [1, 1, 0]
-      b.at(b.argmin(axis:0), 0..-1)  #=> [2, 0, 1]
- */
-static VALUE int32_argmin(int argc, VALUE* argv, VALUE self) {
-  narray_t* na;
-  VALUE reduce;
-  ndfunc_arg_in_t ain[2] = { { Qnil, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { 0, 0, 0 } };
-  ndfunc_t ndf = { 0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_EXTRACT, 2, 1, ain, aout };
-
-  GetNArray(self, na);
-  if (na->ndim == 0) {
-    return INT2FIX(0);
-  }
-  if (na->size > (~(u_int32_t)0)) {
-    aout[0].type = numo_cInt64;
-    ndf.func = iter_int32_argmin_arg64;
-
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
-
-  } else {
-    aout[0].type = numo_cInt32;
-    ndf.func = iter_int32_argmin_arg32;
-
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
-  }
-
-  return na_ndloop(&ndf, 2, self, reduce);
-}
-
 // ------- Integer count without weights -------
 
 static void iter_int32_bincount_32(na_loop_t* const lp) {
@@ -5309,6 +5233,25 @@ void Init_numo_int32(void) {
    *     b.at(b.argmax(axis:0), 0..-1)  #=> [3, 4, 5]
    */
   rb_define_method(cT, "argmax", int32_argmax, -1);
+  /**
+   * Index of the minimum value.
+   * @overload argmin(axis:nil)
+   *   @param [Numeric,Array,Range] axis  Finds minimum values along the axis and
+   *     returns **indices along the axis**.
+   *   @return [Integer,Numo::Int] returns the result indices.
+   * @see #min_index
+   * @see #min
+   *
+   * @example
+   *     a = Numo::NArray[3,4,1,2]
+   *     a.argmin  #=> 2
+   *
+   *     b = Numo::NArray[[3,4,1],[2,0,5]]
+   *     b.argmin                       #=> 4
+   *     b.argmin(axis:1)               #=> [2, 1]
+   *     b.argmin(axis:0)               #=> [1, 1, 0]
+   *     b.at(b.argmin(axis:0), 0..-1)  #=> [2, 0, 1]
+   */
   rb_define_method(cT, "argmin", int32_argmin, -1);
   /**
    * minmax of self.
