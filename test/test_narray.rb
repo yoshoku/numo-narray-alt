@@ -168,6 +168,8 @@ class NArrayTest < NArrayTestBase
           assert_equal(dtype[1, 2, 3, 5, 5, 5], dtype.minimum(a, 5))
           assert_equal(dtype[1, 3, 6, 11, 18, 29], a.cumsum)
           assert_equal(dtype[1, 2, 6, 30], a[0...4].cumprod)
+          assert_equal(39, a[0...4].mulsum(a[0...4]))
+          assert_equal(32, a[0...4].mulsum(dtype[5, 4, 3, 2]))
         end
       end
     end
@@ -307,9 +309,17 @@ class NArrayTest < NArrayTestBase
         assert_equal(dtype[[1, 3, 6], [11, 18, 29]], a.cumsum)
         assert_equal(dtype[[1, 2, 3], [6, 9, 14]], a.cumsum(0))
         assert_equal(dtype[[1, 3, 6], [5, 12, 23]], a.cumsum(1))
-        assert_equal(dtype[[1, 2], [10, 70]], a[true, 0...2].cumprod)
-        assert_equal(dtype[[1, 2], [5, 14]], a[true, 0...2].cumprod(0))
-        assert_equal(dtype[[1, 2], [5, 35]], a[true, 0...2].cumprod(1))
+        sub_a = a[true, 0...2]
+        assert_equal(dtype[[1, 2], [10, 70]], sub_a.cumprod)
+        assert_equal(dtype[[1, 2], [5, 14]], sub_a.cumprod(0))
+        assert_equal(dtype[[1, 2], [5, 35]], sub_a.cumprod(1))
+        assert_equal(79, sub_a.mulsum(sub_a))
+        assert_equal(dtype[26, 53], sub_a.mulsum(sub_a, 0))
+        assert_equal(dtype[5, 74], sub_a.mulsum(sub_a, 1))
+        b = dtype[[3, 1, 2], [2, 1, 0]]
+        assert_equal(28, a.mulsum(b))
+        assert_equal(dtype[13, 9, 6], a.mulsum(b, 0))
+        assert_equal(dtype[11, 17], a.mulsum(b, 1))
 
         assert_predicate(a, :contiguous?)
         assert_predicate(a.reshape(3, 2), :contiguous?)
