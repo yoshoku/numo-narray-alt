@@ -145,6 +145,7 @@ class NArrayTest < NArrayTestBase
           assert_equal(Numo::SFloat.asarray(src), a.conj)
           assert_equal(Numo::SFloat[0, 0, 0, 0, 0, 0], a.angle)
         else
+          assert_equal(dtype[2, 2, 3, 5, 7, 7], a.clip(2, 7))
           assert_equal(1, a.min)
           assert_equal(11, a.max)
           assert_equal(0, a.min_index)
@@ -339,6 +340,7 @@ class NArrayTest < NArrayTestBase
           assert_equal(Numo::SFloat.asarray(src), a.conj)
           assert_equal(Numo::SFloat[[0, 0, 0], [0, 0, 0]], a.angle)
         else
+          assert_equal(dtype[[2, 2, 3], [5, 7, 7]], a.clip(2, 7))
           assert_equal(1, a.min)
           assert_equal(dtype[1, 5], a.min(axis: 1))
           assert_equal(dtype[1, 2, 3], a.min(axis: 0))
