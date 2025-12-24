@@ -42,6 +42,7 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/clip.h"
 #include "mh/sum.h"
 #include "mh/prod.h"
 #include "mh/mean.h"
@@ -93,6 +94,7 @@ extern VALUE cRT;
 
 typedef double dfloat; // Type aliases for shorter notation
                        // following the codebase naming convention.
+DEF_NARRAY_FLT_CLIP_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_SUM_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_PROD_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dfloat, numo_cDFloat, double, numo_cDFloat)
@@ -3944,93 +3946,6 @@ static VALUE dfloat_le(VALUE self, VALUE other) {
     v = rb_funcall(klass, id_cast, 1, self);
     return rb_funcall(v, id_le, 1, other);
   }
-}
-
-static void iter_dfloat_clip(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2, *p3, *p4;
-  ssize_t s1, s2, s3, s4;
-  dtype x, min, max;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-  INIT_PTR(lp, 3, p4, s4);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, min);
-    GET_DATA_STRIDE(p3, s3, dtype, max);
-    if (m_gt(min, max)) {
-      rb_raise(nary_eOperationError, "min is greater than max");
-    }
-    if (m_lt(x, min)) {
-      x = min;
-    }
-    if (m_gt(x, max)) {
-      x = max;
-    }
-    SET_DATA_STRIDE(p4, s4, dtype, x);
-  }
-}
-
-static void iter_dfloat_clip_min(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-  dtype x, min;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, min);
-    if (m_lt(x, min)) {
-      x = min;
-    }
-    SET_DATA_STRIDE(p3, s3, dtype, x);
-  }
-}
-
-static void iter_dfloat_clip_max(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-  dtype x, max;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, max);
-    if (m_gt(x, max)) {
-      x = max;
-    }
-    SET_DATA_STRIDE(p3, s3, dtype, x);
-  }
-}
-
-static VALUE dfloat_clip(VALUE self, VALUE min, VALUE max) {
-  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf_min = { iter_dfloat_clip_min, STRIDE_LOOP, 2, 1, ain, aout };
-  ndfunc_t ndf_max = { iter_dfloat_clip_max, STRIDE_LOOP, 2, 1, ain, aout };
-  ndfunc_t ndf_both = { iter_dfloat_clip, STRIDE_LOOP, 3, 1, ain, aout };
-
-  if (RTEST(min)) {
-    if (RTEST(max)) {
-      return na_ndloop(&ndf_both, 3, self, min, max);
-    } else {
-      return na_ndloop(&ndf_min, 2, self, min);
-    }
-  } else {
-    if (RTEST(max)) {
-      return na_ndloop(&ndf_max, 2, self, max);
-    }
-  }
-  rb_raise(rb_eArgError, "min and max are not given");
-  return Qnil;
 }
 
 static void iter_dfloat_isnan(na_loop_t* const lp) {
