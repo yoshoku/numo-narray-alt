@@ -57,6 +57,7 @@ extern VALUE cRT;
 #include "mh/minmax.h"
 #include "mh/cumsum.h"
 #include "mh/cumprod.h"
+#include "mh/mulsum.h"
 #include "mh/mean.h"
 #include "mh/var.h"
 #include "mh/stddev.h"
@@ -78,6 +79,7 @@ DEF_NARRAY_INT_MINIMUM_METHOD_FUNC(int64, numo_cInt64)
 DEF_NARRAY_INT_MINMAX_METHOD_FUNC(int64, numo_cInt64)
 DEF_NARRAY_INT_CUMSUM_METHOD_FUNC(int64, numo_cInt64)
 DEF_NARRAY_INT_CUMPROD_METHOD_FUNC(int64, numo_cInt64)
+DEF_NARRAY_INT_MULSUM_METHOD_FUNC(int64, numo_cInt64)
 DEF_NARRAY_INT_MEAN_METHOD_FUNC(int64, numo_cInt64)
 DEF_NARRAY_INT_VAR_METHOD_FUNC(int64, numo_cInt64)
 DEF_NARRAY_INT_STDDEV_METHOD_FUNC(int64, numo_cInt64)
@@ -4076,93 +4078,6 @@ static VALUE int64_bincount(int argc, VALUE* argv, VALUE self) {
   }
 }
 
-//
-static void iter_int64_mulsum(na_loop_t* const lp) {
-  size_t i, n;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-
-  if (s3 == 0) {
-    dtype z;
-    // Reduce loop
-    GET_DATA(p3, dtype, z);
-    for (i = 0; i < n; i++) {
-      dtype x, y;
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      GET_DATA_STRIDE(p2, s2, dtype, y);
-      m_mulsum(x, y, z);
-    }
-    SET_DATA(p3, dtype, z);
-    return;
-  } else {
-    for (i = 0; i < n; i++) {
-      dtype x, y, z;
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      GET_DATA_STRIDE(p2, s2, dtype, y);
-      GET_DATA(p3, dtype, z);
-      m_mulsum(x, y, z);
-      SET_DATA_STRIDE(p3, s3, dtype, z);
-    }
-  }
-}
-//
-
-static VALUE int64_mulsum_self(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  VALUE naryv[2];
-  ndfunc_arg_in_t ain[4] = { { cT, 0 }, { cT, 0 }, { sym_reduce, 0 }, { sym_init, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_int64_mulsum, STRIDE_LOOP_NIP, 4, 1, ain, aout };
-
-  if (argc < 1) {
-    rb_raise(rb_eArgError, "wrong number of arguments (%d for >=1)", argc);
-  }
-  // should fix below: [self.ndim,other.ndim].max or?
-  naryv[0] = self;
-  naryv[1] = argv[0];
-  //
-  reduce = na_reduce_dimension(argc - 1, argv + 1, 2, naryv, &ndf, 0);
-  //
-
-  v = na_ndloop(&ndf, 4, self, argv[0], reduce, m_mulsum_init);
-  return int64_extract(v);
-}
-
-/*
-  Binary mulsum.
-
-  @overload mulsum(other, axis:nil, keepdims:false)
-    @param [Numo::NArray,Numeric] other
-    @param [Numeric,Array,Range] axis  Performs mulsum along the axis.
-    @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
-    as dimensions with size one.
-    @return [Numo::NArray] mulsum of self and other.
-*/
-static VALUE int64_mulsum(int argc, VALUE* argv, VALUE self) {
-  //
-  VALUE klass, v;
-  //
-  if (argc < 1) {
-    rb_raise(rb_eArgError, "wrong number of arguments (%d for >=1)", argc);
-  }
-  //
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(argv[0]));
-  if (klass == cT) {
-    return int64_mulsum_self(argc, argv, self);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    //
-    return rb_funcallv_kw(v, rb_intern("mulsum"), argc, argv, RB_PASS_CALLED_KEYWORDS);
-    //
-  }
-  //
-}
-
 typedef double seq_data_t;
 
 typedef double seq_count_t;
@@ -5295,6 +5210,16 @@ void Init_numo_int64(void) {
    *   @return [Numo::Int64] cumprod of self.
    */
   rb_define_method(cT, "cumprod", int64_cumprod, -1);
+  /**
+   * Binary mulsum.
+   *
+   * @overload mulsum(other, axis:nil, keepdims:false)
+   *   @param [Numo::NArray,Numeric] other
+   *   @param [Numeric,Array,Range] axis  Performs mulsum along the axis.
+   *   @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in
+   *     the result array as dimensions with size one.
+   *   @return [Numo::NArray] mulsum of self and other.
+   */
   rb_define_method(cT, "mulsum", int64_mulsum, -1);
   rb_define_method(cT, "seq", int64_seq, -1);
   rb_define_method(cT, "eye", int64_eye, -1);

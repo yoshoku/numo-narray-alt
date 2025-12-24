@@ -78,6 +78,7 @@ extern VALUE cRT;
 #include "mh/minmax.h"
 #include "mh/cumsum.h"
 #include "mh/cumprod.h"
+#include "mh/mulsum.h"
 
 typedef VALUE robject; // Type aliases for shorter notation
                        // following the codebase naming convention.
@@ -99,6 +100,7 @@ DEF_NARRAY_FLT_MINIMUM_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_MINMAX_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_CUMSUM_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_CUMPROD_METHOD_FUNC(robject, numo_cRObject)
+DEF_NARRAY_FLT_MULSUM_METHOD_FUNC(robject, numo_cRObject)
 
 static VALUE robject_store(VALUE, VALUE);
 
@@ -3780,118 +3782,6 @@ static VALUE robject_isfinite(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-//
-static void iter_robject_mulsum(na_loop_t* const lp) {
-  size_t i, n;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-
-  if (s3 == 0) {
-    dtype z;
-    // Reduce loop
-    GET_DATA(p3, dtype, z);
-    for (i = 0; i < n; i++) {
-      dtype x, y;
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      GET_DATA_STRIDE(p2, s2, dtype, y);
-      m_mulsum(x, y, z);
-    }
-    SET_DATA(p3, dtype, z);
-    return;
-  } else {
-    for (i = 0; i < n; i++) {
-      dtype x, y, z;
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      GET_DATA_STRIDE(p2, s2, dtype, y);
-      GET_DATA(p3, dtype, z);
-      m_mulsum(x, y, z);
-      SET_DATA_STRIDE(p3, s3, dtype, z);
-    }
-  }
-}
-//
-static void iter_robject_mulsum_nan(na_loop_t* const lp) {
-  size_t i, n;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-
-  if (s3 == 0) {
-    dtype z;
-    // Reduce loop
-    GET_DATA(p3, dtype, z);
-    for (i = 0; i < n; i++) {
-      dtype x, y;
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      GET_DATA_STRIDE(p2, s2, dtype, y);
-      m_mulsum_nan(x, y, z);
-    }
-    SET_DATA(p3, dtype, z);
-    return;
-  } else {
-    for (i = 0; i < n; i++) {
-      dtype x, y, z;
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      GET_DATA_STRIDE(p2, s2, dtype, y);
-      GET_DATA(p3, dtype, z);
-      m_mulsum_nan(x, y, z);
-      SET_DATA_STRIDE(p3, s3, dtype, z);
-    }
-  }
-}
-//
-
-static VALUE robject_mulsum_self(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  VALUE naryv[2];
-  ndfunc_arg_in_t ain[4] = { { cT, 0 }, { cT, 0 }, { sym_reduce, 0 }, { sym_init, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_robject_mulsum, STRIDE_LOOP_NIP, 4, 1, ain, aout };
-
-  if (argc < 1) {
-    rb_raise(rb_eArgError, "wrong number of arguments (%d for >=1)", argc);
-  }
-  // should fix below: [self.ndim,other.ndim].max or?
-  naryv[0] = self;
-  naryv[1] = argv[0];
-  //
-  reduce = na_reduce_dimension(argc - 1, argv + 1, 2, naryv, &ndf, iter_robject_mulsum_nan);
-  //
-
-  v = na_ndloop(&ndf, 4, self, argv[0], reduce, m_mulsum_init);
-  return robject_extract(v);
-}
-
-/*
-  Binary mulsum.
-
-  @overload mulsum(other, axis:nil, keepdims:false, nan:false)
-    @param [Numo::NArray,Numeric] other
-    @param [Numeric,Array,Range] axis  Performs mulsum along the axis.
-    @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
-    as dimensions with size one.
-    @param [TrueClass] nan (keyword) If true, apply NaN-aware algorithm (avoid NaN if exists).
-    @return [Numo::NArray] mulsum of self and other.
-*/
-static VALUE robject_mulsum(int argc, VALUE* argv, VALUE self) {
-  //
-  if (argc < 1) {
-    rb_raise(rb_eArgError, "wrong number of arguments (%d for >=1)", argc);
-  }
-  //
-  return robject_mulsum_self(argc, argv, self);
-  //
-}
-
 typedef dtype seq_data_t;
 
 typedef size_t seq_count_t;
@@ -4655,6 +4545,18 @@ void Init_numo_robject(void) {
    *   @return [Numo::RObject] cumprod of self.
    */
   rb_define_method(cT, "cumprod", robject_cumprod, -1);
+  /**
+   * Binary mulsum.
+   *
+   * @overload mulsum(other, axis:nil, keepdims:false, nan:false)
+   *   @param [Numo::NArray,Numeric] other
+   *   @param [Numeric,Array,Range] axis  Performs mulsum along the axis.
+   *   @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in
+   *     the result array as dimensions with size one.
+   *   @param [TrueClass] nan (keyword) If true, apply NaN-aware algorithm
+   *     (avoid NaN if exists).
+   *   @return [Numo::NArray] mulsum of self and other.
+   */
   rb_define_method(cT, "mulsum", robject_mulsum, -1);
   rb_define_method(cT, "seq", robject_seq, -1);
   rb_define_method(cT, "logseq", robject_logseq, -1);

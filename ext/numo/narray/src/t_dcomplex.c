@@ -46,6 +46,7 @@ extern VALUE cRT;
 #include "mh/rms.h"
 #include "mh/cumsum.h"
 #include "mh/cumprod.h"
+#include "mh/mulsum.h"
 #include "mh/math/sqrt.h"
 #include "mh/math/cbrt.h"
 #include "mh/math/log.h"
@@ -76,6 +77,7 @@ DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(dcomplex, numo_cDComplex, double, numo_cDFloat
 DEF_NARRAY_FLT_RMS_METHOD_FUNC(dcomplex, numo_cDComplex, double, numo_cDFloat)
 DEF_NARRAY_FLT_CUMSUM_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_CUMPROD_METHOD_FUNC(dcomplex, numo_cDComplex)
+DEF_NARRAY_FLT_MULSUM_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_SQRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_CBRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_LOG_METHOD_FUNC(dcomplex, numo_cDComplex)
@@ -4055,128 +4057,6 @@ static VALUE dcomplex_kahan_sum(int argc, VALUE* argv, VALUE self) {
   return dcomplex_extract(v);
 }
 
-//
-static void iter_dcomplex_mulsum(na_loop_t* const lp) {
-  size_t i, n;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-
-  if (s3 == 0) {
-    dtype z;
-    // Reduce loop
-    GET_DATA(p3, dtype, z);
-    for (i = 0; i < n; i++) {
-      dtype x, y;
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      GET_DATA_STRIDE(p2, s2, dtype, y);
-      m_mulsum(x, y, z);
-    }
-    SET_DATA(p3, dtype, z);
-    return;
-  } else {
-    for (i = 0; i < n; i++) {
-      dtype x, y, z;
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      GET_DATA_STRIDE(p2, s2, dtype, y);
-      GET_DATA(p3, dtype, z);
-      m_mulsum(x, y, z);
-      SET_DATA_STRIDE(p3, s3, dtype, z);
-    }
-  }
-}
-//
-static void iter_dcomplex_mulsum_nan(na_loop_t* const lp) {
-  size_t i, n;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-
-  if (s3 == 0) {
-    dtype z;
-    // Reduce loop
-    GET_DATA(p3, dtype, z);
-    for (i = 0; i < n; i++) {
-      dtype x, y;
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      GET_DATA_STRIDE(p2, s2, dtype, y);
-      m_mulsum_nan(x, y, z);
-    }
-    SET_DATA(p3, dtype, z);
-    return;
-  } else {
-    for (i = 0; i < n; i++) {
-      dtype x, y, z;
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      GET_DATA_STRIDE(p2, s2, dtype, y);
-      GET_DATA(p3, dtype, z);
-      m_mulsum_nan(x, y, z);
-      SET_DATA_STRIDE(p3, s3, dtype, z);
-    }
-  }
-}
-//
-
-static VALUE dcomplex_mulsum_self(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  VALUE naryv[2];
-  ndfunc_arg_in_t ain[4] = { { cT, 0 }, { cT, 0 }, { sym_reduce, 0 }, { sym_init, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_dcomplex_mulsum, STRIDE_LOOP_NIP, 4, 1, ain, aout };
-
-  if (argc < 1) {
-    rb_raise(rb_eArgError, "wrong number of arguments (%d for >=1)", argc);
-  }
-  // should fix below: [self.ndim,other.ndim].max or?
-  naryv[0] = self;
-  naryv[1] = argv[0];
-  //
-  reduce = na_reduce_dimension(argc - 1, argv + 1, 2, naryv, &ndf, iter_dcomplex_mulsum_nan);
-  //
-
-  v = na_ndloop(&ndf, 4, self, argv[0], reduce, m_mulsum_init);
-  return dcomplex_extract(v);
-}
-
-/*
-  Binary mulsum.
-
-  @overload mulsum(other, axis:nil, keepdims:false, nan:false)
-    @param [Numo::NArray,Numeric] other
-    @param [Numeric,Array,Range] axis  Performs mulsum along the axis.
-    @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in the result array
-    as dimensions with size one.
-    @param [TrueClass] nan (keyword) If true, apply NaN-aware algorithm (avoid NaN if exists).
-    @return [Numo::NArray] mulsum of self and other.
-*/
-static VALUE dcomplex_mulsum(int argc, VALUE* argv, VALUE self) {
-  //
-  VALUE klass, v;
-  //
-  if (argc < 1) {
-    rb_raise(rb_eArgError, "wrong number of arguments (%d for >=1)", argc);
-  }
-  //
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(argv[0]));
-  if (klass == cT) {
-    return dcomplex_mulsum_self(argc, argv, self);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    //
-    return rb_funcallv_kw(v, rb_intern("mulsum"), argc, argv, RB_PASS_CALLED_KEYWORDS);
-    //
-  }
-  //
-}
-
 typedef dtype seq_data_t;
 
 typedef double seq_count_t;
@@ -4862,6 +4742,18 @@ void Init_numo_dcomplex(void) {
    *   @return [Numo::DComplex] cumprod of self.
    */
   rb_define_method(cT, "cumprod", dcomplex_cumprod, -1);
+  /**
+   * Binary mulsum.
+   *
+   * @overload mulsum(other, axis:nil, keepdims:false, nan:false)
+   *   @param [Numo::NArray,Numeric] other
+   *   @param [Numeric,Array,Range] axis  Performs mulsum along the axis.
+   *   @param [TrueClass] keepdims (keyword) If true, the reduced axes are left in
+   *     the result array as dimensions with size one.
+   *   @param [TrueClass] nan (keyword) If true, apply NaN-aware algorithm
+   *     (avoid NaN if exists).
+   *   @return [Numo::NArray] mulsum of self and other.
+   */
   rb_define_method(cT, "mulsum", dcomplex_mulsum, -1);
   rb_define_method(cT, "seq", dcomplex_seq, -1);
   rb_define_method(cT, "logseq", dcomplex_logseq, -1);
