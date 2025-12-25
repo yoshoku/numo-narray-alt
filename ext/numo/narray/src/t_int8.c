@@ -68,7 +68,7 @@ extern VALUE cRT;
 
 typedef int8_t int8; // Type aliases for shorter notation
                      // following the codebase naming convention.
-DEF_NARRAY_INT_CLIP_METHOD_FUNC(int8, numo_cInt8)
+DEF_NARRAY_CLIP_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT_SUM_METHOD_FUNC(int8, numo_cInt8, int64_t, numo_cInt64)
 DEF_NARRAY_INT_PROD_METHOD_FUNC(int8, numo_cInt8, int64_t, numo_cInt64)
 DEF_NARRAY_INT_MAX_METHOD_FUNC(int8, numo_cInt8)

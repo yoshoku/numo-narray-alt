@@ -86,7 +86,7 @@ extern VALUE cRT;
 
 typedef VALUE robject; // Type aliases for shorter notation
                        // following the codebase naming convention.
-DEF_NARRAY_FLT_CLIP_METHOD_FUNC(robject, numo_cRObject)
+DEF_NARRAY_CLIP_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_SUM_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_PROD_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_MEAN_METHOD_FUNC(robject, numo_cRObject, VALUE, numo_cRObject)

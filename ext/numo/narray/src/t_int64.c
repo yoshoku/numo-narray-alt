@@ -68,7 +68,7 @@ extern VALUE cRT;
 
 typedef int64_t int64; // Type aliases for shorter notation
                        // following the codebase naming convention.
-DEF_NARRAY_INT_CLIP_METHOD_FUNC(int64, numo_cInt64)
+DEF_NARRAY_CLIP_METHOD_FUNC(int64, numo_cInt64)
 DEF_NARRAY_INT_SUM_METHOD_FUNC(int64, numo_cInt64, int64_t, numo_cInt64)
 DEF_NARRAY_INT_PROD_METHOD_FUNC(int64, numo_cInt64, int64_t, numo_cInt64)
 DEF_NARRAY_INT_MIN_METHOD_FUNC(int64, numo_cInt64)

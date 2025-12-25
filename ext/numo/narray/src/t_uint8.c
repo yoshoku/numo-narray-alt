@@ -68,7 +68,7 @@ extern VALUE cRT;
 
 typedef u_int8_t uint8; // Type aliases for shorter notation
                         // following the codebase naming convention.
-DEF_NARRAY_INT_CLIP_METHOD_FUNC(uint8, numo_cUInt8)
+DEF_NARRAY_CLIP_METHOD_FUNC(uint8, numo_cUInt8)
 DEF_NARRAY_INT_SUM_METHOD_FUNC(uint8, numo_cUInt8, u_int64_t, numo_cUInt64)
 DEF_NARRAY_INT_PROD_METHOD_FUNC(uint8, numo_cUInt8, u_int64_t, numo_cUInt64)
 DEF_NARRAY_INT_MIN_METHOD_FUNC(uint8, numo_cUInt8)

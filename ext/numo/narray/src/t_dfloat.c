@@ -97,7 +97,7 @@ extern VALUE cRT;
 
 typedef double dfloat; // Type aliases for shorter notation
                        // following the codebase naming convention.
-DEF_NARRAY_FLT_CLIP_METHOD_FUNC(dfloat, numo_cDFloat)
+DEF_NARRAY_CLIP_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_SUM_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_PROD_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dfloat, numo_cDFloat, double, numo_cDFloat)
