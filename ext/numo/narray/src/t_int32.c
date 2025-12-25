@@ -59,6 +59,7 @@ extern VALUE cRT;
 #include "mh/cumsum.h"
 #include "mh/cumprod.h"
 #include "mh/mulsum.h"
+#include "mh/seq.h"
 #include "mh/cumprod.h"
 #include "mh/mean.h"
 #include "mh/var.h"
@@ -83,6 +84,7 @@ DEF_NARRAY_INT_MINMAX_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_INT_CUMSUM_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_INT_CUMPROD_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_INT_MULSUM_METHOD_FUNC(int32, numo_cInt32)
+DEF_NARRAY_INT_SEQ_METHOD_FUNC(int32)
 DEF_NARRAY_INT_MEAN_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_INT_VAR_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_INT_STDDEV_METHOD_FUNC(int32, numo_cInt32)
@@ -3964,87 +3966,6 @@ static VALUE int32_bincount(int argc, VALUE* argv, VALUE self) {
   }
 }
 
-typedef double seq_data_t;
-
-typedef double seq_count_t;
-
-typedef struct {
-  seq_data_t beg;
-  seq_data_t step;
-  seq_count_t count;
-} seq_opt_t;
-
-static void iter_int32_seq(na_loop_t* const lp) {
-  size_t i;
-  char* p1;
-  ssize_t s1;
-  size_t* idx1;
-  dtype x;
-  seq_data_t beg, step;
-  seq_count_t c;
-  seq_opt_t* g;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  g = (seq_opt_t*)(lp->opt_ptr);
-  beg = g->beg;
-  step = g->step;
-  c = g->count;
-  if (idx1) {
-    for (; i--;) {
-      x = f_seq(beg, step, c++);
-      *(dtype*)(p1 + *idx1) = x;
-      idx1++;
-    }
-  } else {
-    for (; i--;) {
-      x = f_seq(beg, step, c++);
-      *(dtype*)(p1) = x;
-      p1 += s1;
-    }
-  }
-  g->count = c;
-}
-
-/*
-  Set linear sequence of numbers to self. The sequence is obtained from
-     beg+i*step
-  where i is 1-dimensional index.
-  @overload seq([beg,[step]])
-    @param [Numeric] beg  beginning of sequence. (default=0)
-    @param [Numeric] step  step of sequence. (default=1)
-    @return [Numo::Int32] self.
-  @example
-    Numo::DFloat.new(6).seq(1,-0.2)
-    # => Numo::DFloat#shape=[6]
-    # [1, 0.8, 0.6, 0.4, 0.2, 0]
-
-    Numo::DComplex.new(6).seq(1,-0.2+0.2i)
-    # => Numo::DComplex#shape=[6]
-    # [1+0i, 0.8+0.2i, 0.6+0.4i, 0.4+0.6i, 0.2+0.8i, 0+1i]
-*/
-static VALUE int32_seq(int argc, VALUE* argv, VALUE self) {
-  seq_opt_t* g;
-  VALUE vbeg = Qnil, vstep = Qnil;
-  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
-  ndfunc_t ndf = { iter_int32_seq, FULL_LOOP, 1, 0, ain, 0 };
-
-  g = ALLOCA_N(seq_opt_t, 1);
-  g->beg = m_zero;
-  g->step = m_one;
-  g->count = 0;
-  rb_scan_args(argc, argv, "02", &vbeg, &vstep);
-  if (vbeg != Qnil) {
-    g->beg = NUM2DBL(vbeg);
-  }
-  if (vstep != Qnil) {
-    g->step = NUM2DBL(vstep);
-  }
-
-  na_ndloop3(&ndf, g, 1, self);
-  return self;
-}
-
 static void iter_int32_eye(na_loop_t* const lp) {
   size_t n0, n1;
   size_t i0, i1;
@@ -5135,6 +5056,23 @@ void Init_numo_int32(void) {
    *   @return [Numo::NArray] mulsum of self and other.
    */
   rb_define_method(cT, "mulsum", int32_mulsum, -1);
+  /**
+   * Set linear sequence of numbers to self. The sequence is obtained from
+   *    beg+i*step
+   * where i is 1-dimensional index.
+   * @overload seq([beg,[step]])
+   *   @param [Numeric] beg  beginning of sequence. (default=0)
+   *   @param [Numeric] step  step of sequence. (default=1)
+   *   @return [Numo::Int32] self.
+   * @example
+   *   Numo::DFloat.new(6).seq(1,-0.2)
+   *   # => Numo::DFloat#shape=[6]
+   *   # [1, 0.8, 0.6, 0.4, 0.2, 0]
+   *
+   *   Numo::DComplex.new(6).seq(1,-0.2+0.2i)
+   *   # => Numo::DComplex#shape=[6]
+   *   # [1+0i, 0.8+0.2i, 0.6+0.4i, 0.4+0.6i, 0.2+0.8i, 0+1i]
+   */
   rb_define_method(cT, "seq", int32_seq, -1);
   rb_define_method(cT, "eye", int32_eye, -1);
   rb_define_alias(cT, "indgen", "seq");

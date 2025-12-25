@@ -62,6 +62,7 @@ extern VALUE cRT;
 #include "mh/cumsum.h"
 #include "mh/cumprod.h"
 #include "mh/mulsum.h"
+#include "mh/seq.h"
 #include "mh/math/sqrt.h"
 #include "mh/math/cbrt.h"
 #include "mh/math/log.h"
@@ -114,6 +115,7 @@ DEF_NARRAY_FLT_MINMAX_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_CUMSUM_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_CUMPROD_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_MULSUM_METHOD_FUNC(dfloat, numo_cDFloat)
+DEF_NARRAY_FLT_SEQ_METHOD_FUNC(dfloat)
 #ifdef __SSE2__
 DEF_NARRAY_FLT_SQRT_SSE2_DBL_METHOD_FUNC(dfloat, numo_cDFloat)
 #else
@@ -4172,66 +4174,6 @@ static VALUE dfloat_kahan_sum(int argc, VALUE* argv, VALUE self) {
 typedef dtype seq_data_t;
 
 typedef double seq_count_t;
-
-typedef struct {
-  seq_data_t beg;
-  seq_data_t step;
-  seq_count_t count;
-} seq_opt_t;
-
-static void iter_dfloat_seq(na_loop_t* const lp) {
-  size_t i;
-  char* p1;
-  ssize_t s1;
-  size_t* idx1;
-  dtype x;
-  seq_data_t beg, step;
-  seq_count_t c;
-  seq_opt_t* g;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  g = (seq_opt_t*)(lp->opt_ptr);
-  beg = g->beg;
-  step = g->step;
-  c = g->count;
-  if (idx1) {
-    for (; i--;) {
-      x = f_seq(beg, step, c++);
-      *(dtype*)(p1 + *idx1) = x;
-      idx1++;
-    }
-  } else {
-    for (; i--;) {
-      x = f_seq(beg, step, c++);
-      *(dtype*)(p1) = x;
-      p1 += s1;
-    }
-  }
-  g->count = c;
-}
-
-static VALUE dfloat_seq(int argc, VALUE* args, VALUE self) {
-  seq_opt_t* g;
-  VALUE vbeg = Qnil, vstep = Qnil;
-  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
-  ndfunc_t ndf = { iter_dfloat_seq, FULL_LOOP, 1, 0, ain, 0 };
-
-  g = ALLOCA_N(seq_opt_t, 1);
-  g->beg = m_zero;
-  g->step = m_one;
-  g->count = 0;
-  rb_scan_args(argc, args, "02", &vbeg, &vstep);
-  if (vbeg != Qnil) {
-    g->beg = m_num_to_data(vbeg);
-  }
-  if (vstep != Qnil) {
-    g->step = m_num_to_data(vstep);
-  }
-
-  na_ndloop3(&ndf, g, 1, self);
-  return self;
-}
 
 typedef struct {
   seq_data_t beg;
