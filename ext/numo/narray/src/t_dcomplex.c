@@ -48,6 +48,7 @@ extern VALUE cRT;
 #include "mh/cumprod.h"
 #include "mh/mulsum.h"
 #include "mh/seq.h"
+#include "mh/logseq.h"
 #include "mh/math/sqrt.h"
 #include "mh/math/cbrt.h"
 #include "mh/math/log.h"
@@ -80,6 +81,7 @@ DEF_NARRAY_FLT_CUMSUM_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_CUMPROD_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_MULSUM_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_SEQ_METHOD_FUNC(dcomplex)
+DEF_NARRAY_FLT_LOGSEQ_METHOD_FUNC(dcomplex)
 DEF_NARRAY_FLT_SQRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_CBRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_LOG_METHOD_FUNC(dcomplex, numo_cDComplex)
@@ -4059,90 +4061,6 @@ static VALUE dcomplex_kahan_sum(int argc, VALUE* argv, VALUE self) {
   return dcomplex_extract(v);
 }
 
-typedef dtype seq_data_t;
-
-typedef double seq_count_t;
-
-typedef struct {
-  seq_data_t beg;
-  seq_data_t step;
-  seq_data_t base;
-  seq_count_t count;
-} logseq_opt_t;
-
-static void iter_dcomplex_logseq(na_loop_t* const lp) {
-  size_t i;
-  char* p1;
-  ssize_t s1;
-  size_t* idx1;
-  dtype x;
-  seq_data_t beg, step, base;
-  seq_count_t c;
-  logseq_opt_t* g;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  g = (logseq_opt_t*)(lp->opt_ptr);
-  beg = g->beg;
-  step = g->step;
-  base = g->base;
-  c = g->count;
-  if (idx1) {
-    for (; i--;) {
-      x = f_seq(beg, step, c++);
-      *(dtype*)(p1 + *idx1) = m_pow(base, x);
-      idx1++;
-    }
-  } else {
-    for (; i--;) {
-      x = f_seq(beg, step, c++);
-      *(dtype*)(p1) = m_pow(base, x);
-      p1 += s1;
-    }
-  }
-  g->count = c;
-}
-
-/*
-  Set logarithmic sequence of numbers to self. The sequence is obtained from
-     `base**(beg+i*step)`
-  where i is 1-dimensional index.
-  Applicable classes: DFloat, SFloat, DComplex, SCopmplex.
-
-  @overload logseq(beg,step,[base])
-    @param [Numeric] beg  The beginning of sequence.
-    @param [Numeric] step  The step of sequence.
-    @param [Numeric] base  The base of log space. (default=10)
-    @return [Numo::DComplex] self.
-
-  @example
-    Numo::DFloat.new(5).logseq(4,-1,2)
-    # => Numo::DFloat#shape=[5]
-    # [16, 8, 4, 2, 1]
-
-    Numo::DComplex.new(5).logseq(0,1i*Math::PI/3,Math::E)
-    # => Numo::DComplex#shape=[5]
-    # [1+7.26156e-310i, 0.5+0.866025i, -0.5+0.866025i, -1+1.22465e-16i, ...]
-*/
-static VALUE dcomplex_logseq(int argc, VALUE* argv, VALUE self) {
-  logseq_opt_t* g;
-  VALUE vbeg, vstep, vbase;
-  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
-  ndfunc_t ndf = { iter_dcomplex_logseq, FULL_LOOP, 1, 0, ain, 0 };
-
-  g = ALLOCA_N(logseq_opt_t, 1);
-  rb_scan_args(argc, argv, "21", &vbeg, &vstep, &vbase);
-  g->beg = m_num_to_data(vbeg);
-  g->step = m_num_to_data(vstep);
-  if (vbase == Qnil) {
-    g->base = m_from_real(10);
-  } else {
-    g->base = m_num_to_data(vbase);
-  }
-  na_ndloop3(&ndf, g, 1, self);
-  return self;
-}
-
 static void iter_dcomplex_eye(na_loop_t* const lp) {
   size_t n0, n1;
   size_t i0, i1;
@@ -4698,6 +4616,27 @@ void Init_numo_dcomplex(void) {
    *   # [1+0i, 0.8+0.2i, 0.6+0.4i, 0.4+0.6i, 0.2+0.8i, 0+1i]
    */
   rb_define_method(cT, "seq", dcomplex_seq, -1);
+  /**
+   * Set logarithmic sequence of numbers to self. The sequence is obtained from
+   *    `base**(beg+i*step)`
+   * where i is 1-dimensional index.
+   * Applicable classes: DFloat, SFloat, DComplex, SCopmplex.
+   *
+   * @overload logseq(beg,step,[base])
+   *   @param [Numeric] beg  The beginning of sequence.
+   *   @param [Numeric] step  The step of sequence.
+   *   @param [Numeric] base  The base of log space. (default=10)
+   *   @return [Numo::DComplex] self.
+   *
+   * @example
+   *   Numo::DFloat.new(5).logseq(4,-1,2)
+   *   # => Numo::DFloat#shape=[5]
+   *   # [16, 8, 4, 2, 1]
+   *
+   *   Numo::DComplex.new(5).logseq(0,1i*Math::PI/3,Math::E)
+   *   # => Numo::DComplex#shape=[5]
+   *   # [1+7.26156e-310i, 0.5+0.866025i, -0.5+0.866025i, -1+1.22465e-16i, ...]
+   */
   rb_define_method(cT, "logseq", dcomplex_logseq, -1);
   rb_define_method(cT, "eye", dcomplex_eye, -1);
   rb_define_alias(cT, "indgen", "seq");

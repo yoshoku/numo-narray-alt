@@ -197,6 +197,19 @@ class NArrayTest < NArrayTestBase
   def test_seq
     TYPES.each do |dtype|
       assert_equal(dtype[0, 1, 2, 3, 4], dtype.new(5).seq)
+      assert_equal(dtype[2, 3, 4, 5, 6], dtype.new(5).seq(2))
+      assert_equal(dtype[5, 8, 11, 14, 17], dtype.new(5).seq(5, 3))
+    end
+    [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |dtype|
+      assert_equal(dtype[1, 10, 100, 1000], dtype.new(4).logseq(0, 1))
+      assert_equal(dtype[16, 8, 4, 2, 1], dtype.new(5).logseq(4, -1, 2))
+    end
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      actual = dtype.new(3).logseq(2, 1, 1 + 2i)
+      assert_equal(3, actual.size)
+      [-3 + 4i, -11 - 2i, -7 - 24i].each_with_index do |expected, i|
+        assert_in_delta(expected, actual[i], 1e-5)
+      end
     end
   end
 
