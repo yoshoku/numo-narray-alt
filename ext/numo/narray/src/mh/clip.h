@@ -61,7 +61,7 @@
       if (m_lt(x, min)) {                                                                      \
         x = min;                                                                               \
       }                                                                                        \
-      SET_DATA_STRIDE(p3, s3, dtype, x);                                                       \
+      SET_DATA_STRIDE(p3, s3, tDType, x);                                                      \
     }                                                                                          \
   }                                                                                            \
                                                                                                \

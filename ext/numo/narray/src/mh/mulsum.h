@@ -18,7 +18,7 @@
                                                                                                \
     if (s3 == 0) {                                                                             \
       tDType z;                                                                                \
-      GET_DATA(p3, dtype, z);                                                                  \
+      GET_DATA(p3, tDType, z);                                                                 \
       for (size_t i = 0; i < n; i++) {                                                         \
         tDType x;                                                                              \
         tDType y;                                                                              \
