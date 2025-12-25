@@ -49,6 +49,7 @@ extern VALUE cRT;
 #include "mh/mulsum.h"
 #include "mh/seq.h"
 #include "mh/logseq.h"
+#include "mh/eye.h"
 #include "mh/math/sqrt.h"
 #include "mh/math/cbrt.h"
 #include "mh/math/log.h"
@@ -82,6 +83,7 @@ DEF_NARRAY_FLT_CUMPROD_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_MULSUM_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_SEQ_METHOD_FUNC(dcomplex)
 DEF_NARRAY_FLT_LOGSEQ_METHOD_FUNC(dcomplex)
+DEF_NARRAY_EYE_METHOD_FUNC(dcomplex)
 DEF_NARRAY_FLT_SQRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_CBRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_LOG_METHOD_FUNC(dcomplex, numo_cDComplex)
@@ -4061,102 +4063,6 @@ static VALUE dcomplex_kahan_sum(int argc, VALUE* argv, VALUE self) {
   return dcomplex_extract(v);
 }
 
-static void iter_dcomplex_eye(na_loop_t* const lp) {
-  size_t n0, n1;
-  size_t i0, i1;
-  ssize_t s0, s1;
-  char *p0, *p1;
-  char* g;
-  ssize_t kofs;
-  dtype data;
-
-  g = (char*)(lp->opt_ptr);
-  kofs = *(ssize_t*)g;
-  data = *(dtype*)(g + sizeof(ssize_t));
-
-  n0 = lp->args[0].shape[0];
-  n1 = lp->args[0].shape[1];
-  s0 = lp->args[0].iter[0].step;
-  s1 = lp->args[0].iter[1].step;
-  p0 = NDL_PTR(lp, 0);
-
-  for (i0 = 0; i0 < n0; i0++) {
-    p1 = p0;
-    for (i1 = 0; i1 < n1; i1++) {
-      *(dtype*)p1 = (i0 + kofs == i1) ? data : m_zero;
-      p1 += s1;
-    }
-    p0 += s0;
-  }
-}
-
-/*
-  Eye: Set a value to diagonal components, set 0 to non-diagonal components.
-  @overload eye([element,offset])
-    @param [Numeric] element  Diagonal element to be stored. Default is 1.
-    @param [Integer] offset Diagonal offset from the main diagonal.  The
-        default is 0. k>0 for diagonals above the main diagonal, and k<0
-        for diagonals below the main diagonal.
-    @return [Numo::DComplex] eye of self.
-*/
-static VALUE dcomplex_eye(int argc, VALUE* argv, VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 2 } };
-  ndfunc_t ndf = { iter_dcomplex_eye, NO_LOOP, 1, 0, ain, 0 };
-  ssize_t kofs;
-  dtype data;
-  char* g;
-  int nd;
-  narray_t* na;
-
-  // check arguments
-  if (argc > 2) {
-    rb_raise(rb_eArgError, "too many arguments (%d for 0..2)", argc);
-  } else if (argc == 2) {
-    data = m_num_to_data(argv[0]);
-    kofs = NUM2SSIZET(argv[1]);
-  } else if (argc == 1) {
-    data = m_num_to_data(argv[0]);
-    kofs = 0;
-  } else {
-    data = m_one;
-    kofs = 0;
-  }
-
-  GetNArray(self, na);
-  nd = na->ndim;
-  if (nd < 2) {
-    rb_raise(nary_eDimensionError, "less than 2-d array");
-  }
-
-  // Diagonal offset from the main diagonal.
-  if (kofs >= 0) {
-    if ((size_t)(kofs) >= na->shape[nd - 1]) {
-      rb_raise(
-        rb_eArgError,
-        "invalid diagonal offset(%" SZF "d) for "
-        "last dimension size(%" SZF "d)",
-        kofs, na->shape[nd - 1]
-      );
-    }
-  } else {
-    if ((size_t)(-kofs) >= na->shape[nd - 2]) {
-      rb_raise(
-        rb_eArgError,
-        "invalid diagonal offset(%" SZF "d) for "
-        "last-1 dimension size(%" SZF "d)",
-        kofs, na->shape[nd - 2]
-      );
-    }
-  }
-
-  g = ALLOCA_N(char, sizeof(ssize_t) + sizeof(dtype));
-  *(ssize_t*)g = kofs;
-  *(dtype*)(g + sizeof(ssize_t)) = data;
-
-  na_ndloop3(&ndf, g, 1, self);
-  return self;
-}
-
 typedef struct {
   dtype low;
   dtype max;
@@ -4638,6 +4544,15 @@ void Init_numo_dcomplex(void) {
    *   # [1+7.26156e-310i, 0.5+0.866025i, -0.5+0.866025i, -1+1.22465e-16i, ...]
    */
   rb_define_method(cT, "logseq", dcomplex_logseq, -1);
+  /**
+   * Eye: Set a value to diagonal components, set 0 to non-diagonal components.
+   * @overload eye([element,offset])
+   *   @param [Numeric] element  Diagonal element to be stored. Default is 1.
+   *   @param [Integer] offset Diagonal offset from the main diagonal.  The
+   *       default is 0. k>0 for diagonals above the main diagonal, and k<0
+   *       for diagonals below the main diagonal.
+   *   @return [Numo::DComplex] eye of self.
+   */
   rb_define_method(cT, "eye", dcomplex_eye, -1);
   rb_define_alias(cT, "indgen", "seq");
   rb_define_method(cT, "rand", dcomplex_rand, -1);

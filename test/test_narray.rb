@@ -407,6 +407,19 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_eye
+    TYPES.each do |dtype|
+      assert_equal(dtype[[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype.new(3, 3).eye)
+      assert_equal(dtype[[1, 0], [0, 1], [0, 0]], dtype.new(3, 2).eye)
+      assert_equal(dtype[[1, 0, 0], [0, 1, 0]], dtype.new(2, 3).eye)
+      assert_equal(dtype[[2, 0, 0], [0, 2, 0], [0, 0, 2]], dtype.new(3, 3).eye(2))
+      assert_equal(dtype[[0, 1, 0], [0, 0, 1], [0, 0, 0]], dtype.new(3, 3).eye(1, 1))
+      assert_equal(dtype[[0, 0, 1], [0, 0, 0], [0, 0, 0]], dtype.new(3, 3).eye(1, 2))
+      assert_equal(dtype[[0, 0, 0], [1, 0, 0], [0, 1, 0]], dtype.new(3, 3).eye(1, -1))
+      assert_equal(dtype[[0, 0, 0], [0, 0, 0], [1, 0, 0]], dtype.new(3, 3).eye(1, -2))
+    end
+  end
+
   def test_3d_narray # rubocop:disable Metrics/AbcSize, Minitest/MultipleAssertions
     TYPES.each do |dtype|
       a = dtype[[[1, 2], [3, 4]], [[5, 6], [7, 8]]]
