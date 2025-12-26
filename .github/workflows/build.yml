@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ['2.7', '3.2', '3.3', '3.4']
+        ruby: ['2.7', '3.2', '3.3', '3.4', '4.0']
     steps:
       - uses: actions/checkout@v6
       - name: Set up Ruby ${{ matrix.ruby }}
