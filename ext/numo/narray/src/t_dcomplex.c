@@ -50,6 +50,7 @@ extern VALUE cRT;
 #include "mh/seq.h"
 #include "mh/logseq.h"
 #include "mh/eye.h"
+#include "mh/rand.h"
 #include "mh/math/sqrt.h"
 #include "mh/math/cbrt.h"
 #include "mh/math/log.h"
@@ -84,6 +85,7 @@ DEF_NARRAY_FLT_MULSUM_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_SEQ_METHOD_FUNC(dcomplex)
 DEF_NARRAY_FLT_LOGSEQ_METHOD_FUNC(dcomplex)
 DEF_NARRAY_EYE_METHOD_FUNC(dcomplex)
+DEF_NARRAY_FLT_RAND_METHOD_FUNC(dcomplex)
 DEF_NARRAY_FLT_SQRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_CBRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_LOG_METHOD_FUNC(dcomplex, numo_cDComplex)
@@ -4064,88 +4066,6 @@ static VALUE dcomplex_kahan_sum(int argc, VALUE* argv, VALUE self) {
 }
 
 typedef struct {
-  dtype low;
-  dtype max;
-} rand_opt_t;
-
-static void iter_dcomplex_rand(na_loop_t* const lp) {
-  size_t i;
-  char* p1;
-  ssize_t s1;
-  size_t* idx1;
-  dtype x;
-  rand_opt_t* g;
-  dtype low;
-  dtype max;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  g = (rand_opt_t*)(lp->opt_ptr);
-  low = g->low;
-  max = g->max;
-
-  if (idx1) {
-    for (; i--;) {
-      x = m_add(m_rand(max), low);
-      SET_DATA_INDEX(p1, idx1, dtype, x);
-    }
-  } else {
-    for (; i--;) {
-      x = m_add(m_rand(max), low);
-      SET_DATA_STRIDE(p1, s1, dtype, x);
-    }
-  }
-}
-
-/*
-  Generate uniformly distributed random numbers on self narray.
-  @overload rand([[low],high])
-    @param [Numeric] low  lower inclusive boundary of random numbers. (default=0)
-    @param [Numeric] high  upper exclusive boundary of random numbers. (default=1 or 1+1i for
-    complex types)
-    @return [Numo::DComplex] self.
-  @example
-    Numo::DFloat.new(6).rand
-    # => Numo::DFloat#shape=[6]
-    # [0.0617545, 0.373067, 0.794815, 0.201042, 0.116041, 0.344032]
-
-    Numo::DComplex.new(6).rand(5+5i)
-    # => Numo::DComplex#shape=[6]
-    # [2.69974+3.68908i, 0.825443+0.254414i, 0.540323+0.34354i, 4.52061+2.39322i, ...]
-
-    Numo::Int32.new(6).rand(2,5)
-    # => Numo::Int32#shape=[6]
-    # [4, 3, 3, 2, 4, 2]
-*/
-static VALUE dcomplex_rand(int argc, VALUE* argv, VALUE self) {
-  rand_opt_t g;
-  VALUE v1 = Qnil, v2 = Qnil;
-  dtype high;
-  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
-  ndfunc_t ndf = { iter_dcomplex_rand, FULL_LOOP, 1, 0, ain, 0 };
-
-  rb_scan_args(argc, argv, "02", &v1, &v2);
-  if (v2 == Qnil) {
-    g.low = m_zero;
-    if (v1 == Qnil) {
-
-      g.max = high = c_new(1, 1);
-
-    } else {
-      g.max = high = m_num_to_data(v1);
-    }
-
-  } else {
-    g.low = m_num_to_data(v1);
-    high = m_num_to_data(v2);
-    g.max = m_sub(high, g.low);
-  }
-
-  na_ndloop3(&ndf, &g, 1, self);
-  return self;
-}
-
-typedef struct {
   dtype mu;
   rtype sigma;
 } randn_opt_t;
@@ -4555,6 +4475,26 @@ void Init_numo_dcomplex(void) {
    */
   rb_define_method(cT, "eye", dcomplex_eye, -1);
   rb_define_alias(cT, "indgen", "seq");
+  /**
+   * Generate uniformly distributed random numbers on self narray.
+   * @overload rand([[low],high])
+   *   @param [Numeric] low  lower inclusive boundary of random numbers. (default=0)
+   *   @param [Numeric] high  upper exclusive boundary of random numbers.
+   *     (default=1 or 1+1i for complex types)
+   *   @return [Numo::DComplex] self.
+   * @example
+   *   Numo::DFloat.new(6).rand
+   *   # => Numo::DFloat#shape=[6]
+   *   # [0.0617545, 0.373067, 0.794815, 0.201042, 0.116041, 0.344032]
+   *
+   *   Numo::DComplex.new(6).rand(5+5i)
+   *   # => Numo::DComplex#shape=[6]
+   *   # [2.69974+3.68908i, 0.825443+0.254414i, 0.540323+0.34354i, 4.52061+2.39322i, ...]
+   *
+   *   Numo::Int32.new(6).rand(2,5)
+   *   # => Numo::Int32#shape=[6]
+   *   # [4, 3, 3, 2, 4, 2]
+   */
   rb_define_method(cT, "rand", dcomplex_rand, -1);
   rb_define_method(cT, "rand_norm", dcomplex_rand_norm, -1);
   rb_define_method(cT, "poly", dcomplex_poly, -2);

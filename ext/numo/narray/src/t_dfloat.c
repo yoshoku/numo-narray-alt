@@ -65,6 +65,7 @@ extern VALUE cRT;
 #include "mh/seq.h"
 #include "mh/logseq.h"
 #include "mh/eye.h"
+#include "mh/rand.h"
 #include "mh/math/sqrt.h"
 #include "mh/math/cbrt.h"
 #include "mh/math/log.h"
@@ -120,6 +121,7 @@ DEF_NARRAY_FLT_MULSUM_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_SEQ_METHOD_FUNC(dfloat)
 DEF_NARRAY_FLT_LOGSEQ_METHOD_FUNC(dfloat)
 DEF_NARRAY_EYE_METHOD_FUNC(dfloat)
+DEF_NARRAY_FLT_RAND_METHOD_FUNC(dfloat)
 #ifdef __SSE2__
 DEF_NARRAY_FLT_SQRT_SSE2_DBL_METHOD_FUNC(dfloat, numo_cDFloat)
 #else
@@ -4173,68 +4175,6 @@ static VALUE dfloat_kahan_sum(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dfloat_extract(v);
-}
-
-typedef struct {
-  dtype low;
-  dtype max;
-} rand_opt_t;
-
-static void iter_dfloat_rand(na_loop_t* const lp) {
-  size_t i;
-  char* p1;
-  ssize_t s1;
-  size_t* idx1;
-  dtype x;
-  rand_opt_t* g;
-  dtype low;
-  dtype max;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  g = (rand_opt_t*)(lp->opt_ptr);
-  low = g->low;
-  max = g->max;
-
-  if (idx1) {
-    for (; i--;) {
-      x = m_add(m_rand(max), low);
-      SET_DATA_INDEX(p1, idx1, dtype, x);
-    }
-  } else {
-    for (; i--;) {
-      x = m_add(m_rand(max), low);
-      SET_DATA_STRIDE(p1, s1, dtype, x);
-    }
-  }
-}
-
-static VALUE dfloat_rand(int argc, VALUE* args, VALUE self) {
-  rand_opt_t g;
-  VALUE v1 = Qnil, v2 = Qnil;
-  dtype high;
-  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
-  ndfunc_t ndf = { iter_dfloat_rand, FULL_LOOP, 1, 0, ain, 0 };
-
-  rb_scan_args(argc, args, "02", &v1, &v2);
-  if (v2 == Qnil) {
-    g.low = m_zero;
-    if (v1 == Qnil) {
-
-      g.max = high = m_one;
-
-    } else {
-      g.max = high = m_num_to_data(v1);
-    }
-
-  } else {
-    g.low = m_num_to_data(v1);
-    high = m_num_to_data(v2);
-    g.max = m_sub(high, g.low);
-  }
-
-  na_ndloop3(&ndf, &g, 1, self);
-  return self;
 }
 
 typedef struct {

@@ -61,6 +61,7 @@ extern VALUE cRT;
 #include "mh/mulsum.h"
 #include "mh/seq.h"
 #include "mh/eye.h"
+#include "mh/rand.h"
 #include "mh/mean.h"
 #include "mh/var.h"
 #include "mh/stddev.h"
@@ -86,6 +87,7 @@ DEF_NARRAY_INT_CUMPROD_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_INT_MULSUM_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_INT_SEQ_METHOD_FUNC(uint16)
 DEF_NARRAY_EYE_METHOD_FUNC(uint16)
+DEF_NARRAY_INT_RAND_METHOD_FUNC(uint16)
 DEF_NARRAY_INT_MEAN_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_INT_VAR_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_INT_STDDEV_METHOD_FUNC(uint16, numo_cUInt16)
@@ -3963,121 +3965,6 @@ static VALUE uint16_bincount(int argc, VALUE* argv, VALUE self) {
   }
 }
 
-#define HWID (sizeof(dtype) * 4)
-
-static int msb_pos(uint32_t a) {
-  int width = HWID;
-  int pos = 0;
-  uint32_t mask = (((dtype)1 << HWID) - 1) << HWID;
-
-  if (a == 0) {
-    return -1;
-  }
-
-  while (width) {
-    if (a & mask) {
-      pos += width;
-    } else {
-      mask >>= width;
-    }
-    width >>= 1;
-    mask &= mask << width;
-  }
-  return pos;
-}
-
-/* generates a random number on [0,max) */
-inline static dtype m_rand(uint32_t max, int shift) {
-  uint32_t x;
-  do {
-    x = gen_rand32();
-    x >>= shift;
-  } while (x >= max);
-  return x;
-}
-
-typedef struct {
-  dtype low;
-  uint32_t max;
-} rand_opt_t;
-
-static void iter_uint16_rand(na_loop_t* const lp) {
-  size_t i;
-  char* p1;
-  ssize_t s1;
-  size_t* idx1;
-  dtype x;
-  rand_opt_t* g;
-  dtype low;
-  uint32_t max;
-  int shift;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  g = (rand_opt_t*)(lp->opt_ptr);
-  low = g->low;
-  max = g->max;
-  shift = 31 - msb_pos(max);
-
-  if (idx1) {
-    for (; i--;) {
-      x = m_add(m_rand(max, shift), low);
-      SET_DATA_INDEX(p1, idx1, dtype, x);
-    }
-  } else {
-    for (; i--;) {
-      x = m_add(m_rand(max, shift), low);
-      SET_DATA_STRIDE(p1, s1, dtype, x);
-    }
-  }
-}
-
-/*
-  Generate uniformly distributed random numbers on self narray.
-  @overload rand([[low],high])
-    @param [Numeric] low  lower inclusive boundary of random numbers. (default=0)
-    @param [Numeric] high  upper exclusive boundary of random numbers. (default=1 or 1+1i for
-    complex types)
-    @return [Numo::UInt16] self.
-  @example
-    Numo::DFloat.new(6).rand
-    # => Numo::DFloat#shape=[6]
-    # [0.0617545, 0.373067, 0.794815, 0.201042, 0.116041, 0.344032]
-
-    Numo::DComplex.new(6).rand(5+5i)
-    # => Numo::DComplex#shape=[6]
-    # [2.69974+3.68908i, 0.825443+0.254414i, 0.540323+0.34354i, 4.52061+2.39322i, ...]
-
-    Numo::Int32.new(6).rand(2,5)
-    # => Numo::Int32#shape=[6]
-    # [4, 3, 3, 2, 4, 2]
-*/
-static VALUE uint16_rand(int argc, VALUE* argv, VALUE self) {
-  rand_opt_t g;
-  VALUE v1 = Qnil, v2 = Qnil;
-  dtype high;
-  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
-  ndfunc_t ndf = { iter_uint16_rand, FULL_LOOP, 1, 0, ain, 0 };
-
-  rb_scan_args(argc, argv, "11", &v1, &v2);
-  if (v2 == Qnil) {
-    g.low = m_zero;
-    g.max = high = m_num_to_data(v1);
-
-  } else {
-    g.low = m_num_to_data(v1);
-    high = m_num_to_data(v2);
-    g.max = m_sub(high, g.low);
-  }
-
-  if (high <= g.low) {
-    rb_raise(rb_eArgError, "high must be larger than low");
-  }
-
-  na_ndloop3(&ndf, &g, 1, self);
-  return self;
-}
-
 static void iter_uint16_poly(na_loop_t* const lp) {
   size_t i;
   dtype x, y, a;
@@ -4986,6 +4873,26 @@ void Init_numo_uint16(void) {
    */
   rb_define_method(cT, "eye", uint16_eye, -1);
   rb_define_alias(cT, "indgen", "seq");
+  /**
+   * Generate uniformly distributed random numbers on self narray.
+   * @overload rand([[low],high])
+   *   @param [Numeric] low  lower inclusive boundary of random numbers. (default=0)
+   *   @param [Numeric] high  upper exclusive boundary of random numbers.
+   *     (default=1 or 1+1i for complex types)
+   *   @return [Numo::UInt16] self.
+   * @example
+   *   Numo::DFloat.new(6).rand
+   *   # => Numo::DFloat#shape=[6]
+   *   # [0.0617545, 0.373067, 0.794815, 0.201042, 0.116041, 0.344032]
+   *
+   *   Numo::DComplex.new(6).rand(5+5i)
+   *   # => Numo::DComplex#shape=[6]
+   *   # [2.69974+3.68908i, 0.825443+0.254414i, 0.540323+0.34354i, 4.52061+2.39322i, ...]
+   *
+   *   Numo::Int32.new(6).rand(2,5)
+   *   # => Numo::Int32#shape=[6]
+   *   # [4, 3, 3, 2, 4, 2]
+   */
   rb_define_method(cT, "rand", uint16_rand, -1);
   rb_define_method(cT, "poly", uint16_poly, -2);
 
