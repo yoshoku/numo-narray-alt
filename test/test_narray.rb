@@ -213,6 +213,107 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_rand # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Minitest/MultipleAssertions, Metrics/PerceivedComplexity
+    INTEGER_TYPES.each do |dtype|
+      Numo::NArray.srand(1_234_567_890)
+      if dtype.byte_size < 8
+        assert_equal(dtype[3, 4, 1, 4, 0, -2, -2, 2, -2, -3], dtype.new(10).rand(-3, 5))
+        assert_equal(dtype[[6, 5, 8, 2, 4], [1, 0, 4, 9, 2]], dtype.new(2, 5).rand(10))
+      else
+        assert_equal(dtype[3, 1, 4, -2, 2, -2, -3, 2, 1, -1], dtype.new(10).rand(-3, 5))
+        assert_equal(dtype[[3, 6, 1, 5, 7], [9, 9, 6, 4, 0]], dtype.new(2, 5).rand(10))
+      end
+    end
+    UNSIGNED_INTEGER_TYPES.each do |dtype|
+      Numo::NArray.srand(1_234_567_890)
+      if dtype.byte_size < 8
+        assert_equal(dtype[6, 7, 4, 7, 3, 1, 1, 5, 1, 0], dtype.new(10).rand(10))
+        assert_equal(dtype[[6, 5, 8, 2, 4], [1, 0, 4, 9, 2]], dtype.new(2, 5).rand(10))
+      else
+        assert_equal(dtype[6, 4, 7, 1, 5, 1, 0, 5, 8, 4], dtype.new(10).rand(10))
+        assert_equal(dtype[[2, 3, 6, 1, 5], [7, 9, 9, 6, 4]], dtype.new(2, 5).rand(10))
+      end
+    end
+    # rubocop:disable Performance/CollectionLiteralInLoop
+    [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |dtype|
+      Numo::NArray.srand(1_234_567_890)
+      actual1d = dtype.new(5).rand(-1, 1)
+      actual2d = dtype.new(2, 3).rand(-1, 1)
+      assert_equal(2, actual2d.ndim)
+      assert_equal(2, actual2d.shape[0])
+      assert_equal(3, actual2d.shape[1])
+      if dtype == Numo::SFloat
+        [-0.128008, -0.0780624, -0.470543, 0.808037, -0.00503415].each_with_index do |expected, i|
+          assert_in_delta(expected, actual1d[i], 1e-6)
+        end
+        [0.279245, 0.838221, -0.621664].each_with_index do |expected, i|
+          assert_in_delta(expected, actual2d[0, i], 1e-6)
+        end
+        [-0.860478, 0.933182, 0.592224].each_with_index do |expected, i|
+          assert_in_delta(expected, actual2d[1, i], 1e-6)
+        end
+      elsif dtype == Numo::DFloat
+        [-0.0780623, 0.808037, 0.279245, -0.621664, 0.933182].each_with_index do |expected, i|
+          assert_in_delta(expected, actual1d[i], 1e-6)
+        end
+        [-0.87189, 0.359531, 0.258884].each_with_index do |expected, i|
+          assert_in_delta(expected, actual2d[0, i], 1e-6)
+        end
+        [-0.248656, 0.766334, -0.625959].each_with_index do |expected, i|
+          assert_in_delta(expected, actual2d[1, i], 1e-6)
+        end
+      elsif dtype == Numo::RObject
+        [1.3048441, 3.520092, 2.198113, -0.054160, 3.832954].each_with_index do |expected, i|
+          assert_in_delta(expected, actual1d[i], 1e-6)
+        end
+        [-0.6797249, 2.3988273, 2.1472106].each_with_index do |expected, i|
+          assert_in_delta(expected, actual2d[0, i], 1e-6)
+        end
+        [0.8783600, 3.4158347, -0.0648968].each_with_index do |expected, i|
+          assert_in_delta(expected, actual2d[1, i], 1e-6)
+        end
+      end
+    end
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      Numo::NArray.srand(1_234_567_890)
+      actual1d = dtype.new(5).rand(2 + 3i)
+      actual2d = dtype.new(2, 3).rand(-2 - 3i, 1 + 2i)
+      assert_equal(2, actual2d.ndim)
+      assert_equal(2, actual2d.shape[0])
+      assert_equal(3, actual2d.shape[1])
+      if dtype == Numo::SComplex
+        [0.871991 + 1.382906i, 0.529456 + 2.712055i, 0.994965 + 1.918868i, 1.838220 + 0.567503i,
+         0.139521 + 2.899772i].each_with_index do |expected, i|
+          assert_in_delta(expected.real, actual1d[i].real, 1e-6)
+          assert_in_delta(expected.imag, actual1d[i].imag, 1e-6)
+        end
+        [0.388335 - 2.679724i, -1.060235 + 0.398827i, -1.702621 + 0.147211i].each_with_index do |expected, i|
+          assert_in_delta(expected.real, actual2d[0, i].real, 1e-6)
+          assert_in_delta(expected.imag, actual2d[0, i].imag, 1e-6)
+        end
+        [-1.871673 - 1.121639i, -0.888626 + 1.415834i, -0.451813 - 2.064896i].each_with_index do |expected, i|
+          assert_in_delta(expected.real, actual2d[1, i].real, 1e-6)
+          assert_in_delta(expected.imag, actual2d[1, i].imag, 1e-6)
+        end
+      elsif dtype == Numo::DComplex
+        [0.921937 + 2.712055i, 1.279245 + 0.567503i, 1.933181 + 0.192165i, 1.359530 + 1.888326i,
+         0.751344 + 2.649500i].each_with_index do |expected, i|
+          assert_in_delta(expected.real, actual1d[i].real, 1e-6)
+          assert_in_delta(expected.imag, actual1d[i].imag, 1e-6)
+        end
+        [-1.438938 - 1.474032i, -1.687581 + 0.280124i, -1.992894 - 0.0294957i].each_with_index do |expected, i|
+          assert_in_delta(expected.real, actual2d[0, i].real, 1e-6)
+          assert_in_delta(expected.imag, actual2d[0, i].imag, 1e-6)
+        end
+        [0.795879 - 1.566802i, 0.835083 - 1.379133i, 0.245460 + 1.054923i].each_with_index do |expected, i|
+          assert_in_delta(expected.real, actual2d[1, i].real, 1e-6)
+          assert_in_delta(expected.imag, actual2d[1, i].imag, 1e-6)
+        end
+      end
+    end
+    # rubocop:enable Performance/CollectionLiteralInLoop
+  end
+
   def test_2d_narray # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Minitest/MultipleAssertions
     TYPES.each do |dtype|
       [[proc { |tp, src| tp[*src] }, ''],
@@ -576,8 +677,7 @@ class NArrayTest < NArrayTestBase
       # sub_test_case "#{dtype}.from_binary" do
       # test 'frozen string' do
       shape = [2, 5]
-      a = dtype.new(*shape)
-      a.rand(0, 10)
+      a = dtype.new(*shape).rand(0, 10)
       original_data = a.to_binary
       data = original_data.dup.freeze
       restored_a = dtype.from_binary(data, shape)
@@ -589,8 +689,7 @@ class NArrayTest < NArrayTestBase
 
       # test 'not frozen string' do
       shape = [2, 5]
-      a = dtype.new(*shape)
-      a.rand(0, 10)
+      a = dtype.new(*shape).rand(0, 10)
       original_data = a.to_binary
       data = original_data.dup
       restored_a = dtype.from_binary(data, shape)
@@ -603,8 +702,7 @@ class NArrayTest < NArrayTestBase
       # sub_test_case "#{dtype}#store_binary" do
       # test 'frozen string' do
       shape = [2, 5]
-      a = dtype.new(*shape)
-      a.rand(0, 10)
+      a = dtype.new(*shape).rand(0, 10)
       original_data = a.to_binary
       data = original_data.dup.freeze
       restored_a = dtype.new(*shape)
@@ -617,8 +715,7 @@ class NArrayTest < NArrayTestBase
 
       # test 'not frozen string' do
       shape = [2, 5]
-      a = dtype.new(*shape)
-      a.rand(0, 10)
+      a = dtype.new(*shape).rand(0, 10)
       original_data = a.to_binary
       data = original_data.dup
       restored_a = dtype.new(*shape)
