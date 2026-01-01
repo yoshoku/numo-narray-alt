@@ -263,13 +263,13 @@ class NArrayTest < NArrayTestBase
           assert_in_delta(expected, actual2d[1, i], 1e-6)
         end
       elsif dtype == Numo::RObject
-        [1.3048441, 3.520092, 2.198113, -0.054160, 3.832954].each_with_index do |expected, i|
+        [-0.078062, 0.808036, 0.279245, -0.621664, 0.933181].each_with_index do |expected, i|
           assert_in_delta(expected, actual1d[i], 1e-6)
         end
-        [-0.6797249, 2.3988273, 2.1472106].each_with_index do |expected, i|
+        [-0.871889, 0.359530, 0.258884].each_with_index do |expected, i|
           assert_in_delta(expected, actual2d[0, i], 1e-6)
         end
-        [0.8783600, 3.4158347, -0.0648968].each_with_index do |expected, i|
+        [-0.248655, 0.766333, -0.625958].each_with_index do |expected, i|
           assert_in_delta(expected, actual2d[1, i], 1e-6)
         end
       end
