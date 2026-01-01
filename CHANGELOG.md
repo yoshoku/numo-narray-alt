@@ -1,3 +1,8 @@
+## [[0.9.11](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.10...v0.9.11)] - 2026-01-02
+
+- fixed maximum value specification not working in `rand` method of `Numo::RObject`: [ea94492](https://github.com/yoshoku/numo-narray-alt/compare/9e9e4ea...ea94492)
+- refactored multiple methods to use macro templates: minimum, maximum, cumsum, cumprod, sum, prod, min, max, ptp, minmax, max_index, min_index, argmax, argmin, mulsum, clip, seq, logseq, eye, and rand.
+
 ## [[0.9.10](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.9...v0.9.10)] - 2025-11-18
 
 - fix to use require for compatibility with distributions installing extensions separately: [b6ceeb6](https://github.com/yoshoku/numo-narray-alt/commit/b6ceeb6ccee122c24cebeb2676d4abd742767fdb)
