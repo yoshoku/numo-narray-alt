@@ -61,6 +61,7 @@ VALUE cT;
 extern VALUE cRT;
 
 #include "mh/clip.h"
+#include "mh/isnan.h"
 #include "mh/sum.h"
 #include "mh/prod.h"
 #include "mh/mean.h"
@@ -88,6 +89,7 @@ extern VALUE cRT;
 typedef VALUE robject; // Type aliases for shorter notation
                        // following the codebase naming convention.
 DEF_NARRAY_CLIP_METHOD_FUNC(robject, numo_cRObject)
+DEF_NARRAY_FLT_ISNAN_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_SUM_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_PROD_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_MEAN_METHOD_FUNC(robject, numo_cRObject, VALUE, numo_cRObject)
@@ -3465,48 +3467,6 @@ static VALUE robject_le(VALUE self, VALUE other) {
   return robject_le_self(self, other);
 }
 
-static void iter_robject_isnan(na_loop_t* const lp) {
-  size_t i;
-  char* p1;
-  BIT_DIGIT* a2;
-  size_t p2;
-  ssize_t s1, s2;
-  size_t* idx1;
-  dtype x;
-  BIT_DIGIT b;
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_BIT(lp, 1, a2, p2, s2);
-  if (idx1) {
-    for (; i--;) {
-      GET_DATA_INDEX(p1, idx1, dtype, x);
-      b = (m_isnan(x)) ? 1 : 0;
-      STORE_BIT(a2, p2, b);
-      p2 += s2;
-    }
-  } else {
-    for (; i--;) {
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      b = (m_isnan(x)) ? 1 : 0;
-      STORE_BIT(a2, p2, b);
-      p2 += s2;
-    }
-  }
-}
-
-/*
-  Condition of isnan.
-  @overload isnan
-    @return [Numo::Bit] Condition of isnan.
-*/
-static VALUE robject_isnan(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
-  ndfunc_t ndf = { iter_robject_isnan, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, self);
-}
-
 static void iter_robject_isinf(na_loop_t* const lp) {
   size_t i;
   char* p1;
@@ -3894,6 +3854,11 @@ void Init_numo_robject(void) {
    *     # [3, 4, 2, 3, 4, 5, 6, 7, 8, 8]
    */
   rb_define_method(cT, "clip", robject_clip, 2);
+  /**
+   * Condition of isnan.
+   * @overload isnan
+   *   @return [Numo::Bit] Condition of isnan.
+   */
   rb_define_method(cT, "isnan", robject_isnan, 0);
   rb_define_method(cT, "isinf", robject_isinf, 0);
   rb_define_method(cT, "isposinf", robject_isposinf, 0);

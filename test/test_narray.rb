@@ -314,6 +314,19 @@ class NArrayTest < NArrayTestBase
     # rubocop:enable Performance/CollectionLiteralInLoop
   end
 
+  def test_isnan
+    [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |dtype|
+      actual = dtype[1.0, Float::NAN, 2.0, Float::NAN, 3.0].isnan
+      assert_kind_of(Numo::Bit, actual)
+      assert_equal(Numo::Bit[0, 1, 0, 1, 0], actual)
+    end
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      actual = dtype[1.0 + 2.0i, Float::NAN - 2.0i, 4.0 + (Float::NAN * 1i), Float::NAN + (Float::NAN * 1i), 3.0 + 2.0i].isnan
+      assert_kind_of(Numo::Bit, actual)
+      assert_equal(Numo::Bit[0, 1, 1, 1, 0], actual)
+    end
+  end
+
   def test_2d_narray # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Minitest/MultipleAssertions
     TYPES.each do |dtype|
       [[proc { |tp, src| tp[*src] }, ''],
