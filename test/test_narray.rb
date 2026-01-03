@@ -369,6 +369,20 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_isfinite
+    [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |dtype|
+      actual = dtype[1.0, Float::INFINITY, -Float::INFINITY, 2.0, Float::NAN].isfinite
+      assert_kind_of(Numo::Bit, actual)
+      assert_equal(Numo::Bit[1, 0, 0, 1, 0], actual)
+    end
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      actual = dtype[1.0 + 2.0i, Float::INFINITY - 2.0i, 4.0 - (Float::INFINITY * 1i), Float::NAN + (Float::NAN * 1i),
+                     3.0 + 2.0i].isfinite
+      assert_kind_of(Numo::Bit, actual)
+      assert_equal(Numo::Bit[1, 0, 0, 0, 1], actual)
+    end
+  end
+
   def test_2d_narray # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Minitest/MultipleAssertions
     TYPES.each do |dtype|
       [[proc { |tp, src| tp[*src] }, ''],

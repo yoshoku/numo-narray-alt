@@ -47,6 +47,7 @@ extern VALUE cRT;
 #include "mh/isinf.h"
 #include "mh/isposinf.h"
 #include "mh/isneginf.h"
+#include "mh/isfinite.h"
 #include "mh/sum.h"
 #include "mh/prod.h"
 #include "mh/mean.h"
@@ -107,6 +108,7 @@ DEF_NARRAY_FLT_ISNAN_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_ISINF_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_ISPOSINF_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_ISNEGINF_METHOD_FUNC(dfloat, numo_cDFloat)
+DEF_NARRAY_FLT_ISFINITE_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_SUM_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_PROD_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dfloat, numo_cDFloat, double, numo_cDFloat)
@@ -3962,43 +3964,6 @@ static VALUE dfloat_le(VALUE self, VALUE other) {
     v = rb_funcall(klass, id_cast, 1, self);
     return rb_funcall(v, id_le, 1, other);
   }
-}
-
-static void iter_dfloat_isfinite(na_loop_t* const lp) {
-  size_t i;
-  char* p1;
-  BIT_DIGIT* a2;
-  size_t p2;
-  ssize_t s1, s2;
-  size_t* idx1;
-  dtype x;
-  BIT_DIGIT b;
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_BIT(lp, 1, a2, p2, s2);
-  if (idx1) {
-    for (; i--;) {
-      GET_DATA_INDEX(p1, idx1, dtype, x);
-      b = (m_isfinite(x)) ? 1 : 0;
-      STORE_BIT(a2, p2, b);
-      p2 += s2;
-    }
-  } else {
-    for (; i--;) {
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      b = (m_isfinite(x)) ? 1 : 0;
-      STORE_BIT(a2, p2, b);
-      p2 += s2;
-    }
-  }
-}
-
-static VALUE dfloat_isfinite(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
-  ndfunc_t ndf = { iter_dfloat_isfinite, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, self);
 }
 
 static void iter_dfloat_kahan_sum(na_loop_t* const lp) {
