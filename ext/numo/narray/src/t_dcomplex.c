@@ -41,6 +41,7 @@ extern VALUE cRT;
 #include "mh/isnan.h"
 #include "mh/isinf.h"
 #include "mh/isposinf.h"
+#include "mh/isneginf.h"
 #include "mh/sum.h"
 #include "mh/prod.h"
 #include "mh/mean.h"
@@ -79,6 +80,7 @@ extern VALUE cRT;
 DEF_NARRAY_FLT_ISNAN_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_ISINF_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_ISPOSINF_METHOD_FUNC(dcomplex, numo_cDComplex)
+DEF_NARRAY_FLT_ISNEGINF_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_SUM_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_PROD_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dcomplex, numo_cDComplex, dcomplex, numo_cDComplex)
@@ -3813,48 +3815,6 @@ static VALUE dcomplex_copysign(VALUE self, VALUE other) {
   }
 }
 
-static void iter_dcomplex_isneginf(na_loop_t* const lp) {
-  size_t i;
-  char* p1;
-  BIT_DIGIT* a2;
-  size_t p2;
-  ssize_t s1, s2;
-  size_t* idx1;
-  dtype x;
-  BIT_DIGIT b;
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_BIT(lp, 1, a2, p2, s2);
-  if (idx1) {
-    for (; i--;) {
-      GET_DATA_INDEX(p1, idx1, dtype, x);
-      b = (m_isneginf(x)) ? 1 : 0;
-      STORE_BIT(a2, p2, b);
-      p2 += s2;
-    }
-  } else {
-    for (; i--;) {
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      b = (m_isneginf(x)) ? 1 : 0;
-      STORE_BIT(a2, p2, b);
-      p2 += s2;
-    }
-  }
-}
-
-/*
-  Condition of isneginf.
-  @overload isneginf
-    @return [Numo::Bit] Condition of isneginf.
-*/
-static VALUE dcomplex_isneginf(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
-  ndfunc_t ndf = { iter_dcomplex_isneginf, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, self);
-}
-
 static void iter_dcomplex_isfinite(na_loop_t* const lp) {
   size_t i;
   char* p1;
@@ -4221,6 +4181,11 @@ void Init_numo_dcomplex(void) {
    *   @return [Numo::Bit] Condition of isposinf.
    */
   rb_define_method(cT, "isposinf", dcomplex_isposinf, 0);
+  /**
+   * Condition of isneginf.
+   * @overload isneginf
+   *   @return [Numo::Bit] Condition of isneginf.
+   */
   rb_define_method(cT, "isneginf", dcomplex_isneginf, 0);
   rb_define_method(cT, "isfinite", dcomplex_isfinite, 0);
   /**
