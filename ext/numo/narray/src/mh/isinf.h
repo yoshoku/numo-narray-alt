@@ -1,8 +1,8 @@
-#ifndef NUMO_NARRAY_MH_ISNAN_H
-#define NUMO_NARRAY_MH_ISNAN_H 1
+#ifndef NUMO_NARRAY_MH_ISINF_H
+#define NUMO_NARRAY_MH_ISINF_H 1
 
-#define DEF_NARRAY_FLT_ISNAN_METHOD_FUNC(tDType, tNAryClass)                                   \
-  static void iter_##tDType##_isnan(na_loop_t* const lp) {                                     \
+#define DEF_NARRAY_FLT_ISINF_METHOD_FUNC(tDType, tNAryClass)                                   \
+  static void iter_##tDType##_isinf(na_loop_t* const lp) {                                     \
     size_t n;                                                                                  \
     char* p1;                                                                                  \
     BIT_DIGIT* a2;                                                                             \
@@ -18,25 +18,25 @@
     if (idx1) {                                                                                \
       for (size_t i = 0; i < n; i++) {                                                         \
         GET_DATA_INDEX(p1, idx1, tDType, x);                                                   \
-        b = (m_isnan(x)) ? 1 : 0;                                                              \
+        b = (m_isinf(x)) ? 1 : 0;                                                              \
         STORE_BIT(a2, p2, b);                                                                  \
         p2 += s2;                                                                              \
       }                                                                                        \
     } else {                                                                                   \
       for (size_t i = 0; i < n; i++) {                                                         \
         GET_DATA_STRIDE(p1, s1, tDType, x);                                                    \
-        b = (m_isnan(x)) ? 1 : 0;                                                              \
+        b = (m_isinf(x)) ? 1 : 0;                                                              \
         STORE_BIT(a2, p2, b);                                                                  \
         p2 += s2;                                                                              \
       }                                                                                        \
     }                                                                                          \
   }                                                                                            \
                                                                                                \
-  static VALUE tDType##_isnan(VALUE self) {                                                    \
+  static VALUE tDType##_isinf(VALUE self) {                                                    \
     ndfunc_arg_in_t ain[1] = { { tNAryClass, 0 } };                                            \
     ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };                                           \
-    ndfunc_t ndf = { iter_##tDType##_isnan, FULL_LOOP, 1, 1, ain, aout };                      \
+    ndfunc_t ndf = { iter_##tDType##_isinf, FULL_LOOP, 1, 1, ain, aout };                      \
     return na_ndloop(&ndf, 1, self);                                                           \
   }
 
-#endif /* NUMO_NARRAY_MH_ISNAN_H */
+#endif /* NUMO_NARRAY_MH_ISINF_H */
