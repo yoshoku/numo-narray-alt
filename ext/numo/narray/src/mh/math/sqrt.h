@@ -3,10 +3,10 @@
 
 #include "unary_func.h"
 
-#define DEF_NARRAY_FLT_SQRT_METHOD_FUNC(tDType, tNAryType)                                     \
-  DEF_NARRAY_FLT_UNARY_MATH_METHOD_FUNC(sqrt, tDType, tNAryType)
+#define DEF_NARRAY_FLT_SQRT_METHOD_FUNC(tDType, tNAryClass)                                    \
+  DEF_NARRAY_FLT_UNARY_MATH_METHOD_FUNC(sqrt, tDType, tNAryClass)
 
-#define DEF_NARRAY_FLT_SQRT_SSE2_SGL_METHOD_FUNC(tDType, tNAryType)                            \
+#define DEF_NARRAY_FLT_SQRT_SSE2_SGL_METHOD_FUNC(tDType, tNAryClass)                           \
   static void iter_##tDType##_math_s_sqrt(na_loop_t* const lp) {                               \
     size_t i = 0;                                                                              \
     size_t n;                                                                                  \
@@ -97,13 +97,13 @@
   }                                                                                            \
                                                                                                \
   static VALUE tDType##_math_s_sqrt(VALUE mod, VALUE a1) {                                     \
-    ndfunc_arg_in_t ain[1] = { { tNAryType, 0 } };                                             \
-    ndfunc_arg_out_t aout[1] = { { tNAryType, 0 } };                                           \
+    ndfunc_arg_in_t ain[1] = { { tNAryClass, 0 } };                                            \
+    ndfunc_arg_out_t aout[1] = { { tNAryClass, 0 } };                                          \
     ndfunc_t ndf = { iter_##tDType##_math_s_sqrt, FULL_LOOP, 1, 1, ain, aout };                \
     return na_ndloop(&ndf, 1, a1);                                                             \
   }
 
-#define DEF_NARRAY_FLT_SQRT_SSE2_DBL_METHOD_FUNC(tDType, tNAryType)                            \
+#define DEF_NARRAY_FLT_SQRT_SSE2_DBL_METHOD_FUNC(tDType, tNAryClass)                           \
   static void iter_##tDType##_math_s_sqrt(na_loop_t* const lp) {                               \
     size_t i = 0;                                                                              \
     size_t n;                                                                                  \
@@ -194,8 +194,8 @@
   }                                                                                            \
                                                                                                \
   static VALUE tDType##_math_s_sqrt(VALUE mod, VALUE a1) {                                     \
-    ndfunc_arg_in_t ain[1] = { { tNAryType, 0 } };                                             \
-    ndfunc_arg_out_t aout[1] = { { tNAryType, 0 } };                                           \
+    ndfunc_arg_in_t ain[1] = { { tNAryClass, 0 } };                                            \
+    ndfunc_arg_out_t aout[1] = { { tNAryClass, 0 } };                                          \
     ndfunc_t ndf = { iter_##tDType##_math_s_sqrt, FULL_LOOP, 1, 1, ain, aout };                \
     return na_ndloop(&ndf, 1, a1);                                                             \
   }

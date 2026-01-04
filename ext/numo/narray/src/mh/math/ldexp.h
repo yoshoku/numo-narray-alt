@@ -1,7 +1,7 @@
 #ifndef NUMO_NARRAY_MH_MATH_LDEXP_H
 #define NUMO_NARRAY_MH_MATH_LDEXP_H 1
 
-#define DEF_NARRAY_FLT_LDEXP_METHOD_FUNC(tDType, tNAryType)                                    \
+#define DEF_NARRAY_FLT_LDEXP_METHOD_FUNC(tDType, tNAryClass)                                   \
   static void iter_##tDType##_math_s_ldexp(na_loop_t* const lp) {                              \
     size_t n;                                                                                  \
     char *p1, *p2, *p3;                                                                        \
@@ -20,8 +20,8 @@
   }                                                                                            \
                                                                                                \
   static VALUE tDType##_math_s_ldexp(VALUE mod, VALUE a1, VALUE a2) {                          \
-    ndfunc_arg_in_t ain[2] = { { tNAryType, 0 }, { tNAryType, 0 } };                           \
-    ndfunc_arg_out_t aout[1] = { { tNAryType, 0 } };                                           \
+    ndfunc_arg_in_t ain[2] = { { tNAryClass, 0 }, { tNAryClass, 0 } };                         \
+    ndfunc_arg_out_t aout[1] = { { tNAryClass, 0 } };                                          \
     ndfunc_t ndf = { iter_##tDType##_math_s_ldexp, STRIDE_LOOP, 2, 1, ain, aout };             \
     return na_ndloop(&ndf, 2, a1, a2);                                                         \
   }

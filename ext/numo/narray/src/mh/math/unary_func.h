@@ -1,7 +1,7 @@
 #ifndef NUMO_NARRAY_MH_MATH_UNARY_FUNC_H
 #define NUMO_NARRAY_MH_MATH_UNARY_FUNC_H 1
 
-#define DEF_NARRAY_FLT_UNARY_MATH_METHOD_FUNC(fMathFunc, tDType, tNAryType)                    \
+#define DEF_NARRAY_FLT_UNARY_MATH_METHOD_FUNC(fMathFunc, tDType, tNAryClass)                   \
   static void iter_##tDType##_math_s_##fMathFunc(na_loop_t* const lp) {                        \
     size_t n;                                                                                  \
     char *p1, *p2;                                                                             \
@@ -61,8 +61,8 @@
   }                                                                                            \
                                                                                                \
   static VALUE tDType##_math_s_##fMathFunc(VALUE mod, VALUE a1) {                              \
-    ndfunc_arg_in_t ain[1] = { { tNAryType, 0 } };                                             \
-    ndfunc_arg_out_t aout[1] = { { tNAryType, 0 } };                                           \
+    ndfunc_arg_in_t ain[1] = { { tNAryClass, 0 } };                                            \
+    ndfunc_arg_out_t aout[1] = { { tNAryClass, 0 } };                                          \
     ndfunc_t ndf = { iter_##tDType##_math_s_##fMathFunc, FULL_LOOP, 1, 1, ain, aout };         \
     return na_ndloop(&ndf, 1, a1);                                                             \
   }
