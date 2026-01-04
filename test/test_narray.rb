@@ -238,6 +238,17 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_rint
+    [Numo::DFloat, Numo::SFloat].each do |dtype|
+      actual = dtype[1.5, -2.5, 3.0, -4.5, 5.9].rint
+      assert_equal(dtype[2.0, -2.0, 3.0, -4.0, 6.0], actual)
+    end
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      actual = dtype[1.5 + 2.5i, -2.5 - 3.5i, 3.0 + 4.0i].rint
+      assert_equal(dtype[2.0 + 2.0i, -2.0 - 4.0i, 3.0 + 4.0i], actual)
+    end
+  end
+
   def test_seq
     TYPES.each do |dtype|
       assert_equal(dtype[0, 1, 2, 3, 4], dtype.new(5).seq)
