@@ -227,6 +227,17 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_trunc
+    [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |dtype|
+      actual = dtype[1.5, -2.3, 3.0, -4.7, 5.9].trunc
+      assert_equal(dtype[1.0, -2.0, 3.0, -4.0, 5.0], actual)
+    end
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      actual = dtype[1.5 + 2.3i, -2.3 - 3.7i, 3.0 + 4.0i].trunc
+      assert_equal(dtype[1.0 + 2.0i, -2.0 - 3.0i, 3.0 + 4.0i], actual)
+    end
+  end
+
   def test_seq
     TYPES.each do |dtype|
       assert_equal(dtype[0, 1, 2, 3, 4], dtype.new(5).seq)
