@@ -46,6 +46,7 @@ extern VALUE cRT;
 #include "mh/comp/gt.h"
 #include "mh/comp/ge.h"
 #include "mh/comp/lt.h"
+#include "mh/comp/le.h"
 #include "mh/clip.h"
 #include "mh/sum.h"
 #include "mh/prod.h"
@@ -75,6 +76,7 @@ typedef int16_t int16; // Type aliases for shorter notation
 DEF_NARRAY_GT_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_GE_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_LT_METHOD_FUNC(int16, numo_cInt16)
+DEF_NARRAY_LE_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_CLIP_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_INT_SUM_METHOD_FUNC(int16, numo_cInt16, int64_t, numo_cInt64)
 DEF_NARRAY_INT_PROD_METHOD_FUNC(int16, numo_cInt16, int64_t, numo_cInt64)
@@ -3554,53 +3556,6 @@ static VALUE int16_right_shift(VALUE self, VALUE other) {
   }
 }
 
-static void iter_int16_le(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  BIT_DIGIT* a3;
-  size_t p3;
-  ssize_t s1, s2, s3;
-  dtype x, y;
-  BIT_DIGIT b;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR_BIT(lp, 2, a3, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    b = (m_le(x, y)) ? 1 : 0;
-    STORE_BIT(a3, p3, b);
-    p3 += s3;
-  }
-}
-
-static VALUE int16_le_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
-  ndfunc_t ndf = { iter_int16_le, STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Comparison le other.
-  @overload le other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::Bit] result of self le other.
-*/
-static VALUE int16_le(VALUE self, VALUE other) {
-
-  VALUE klass, v;
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
-  if (klass == cT) {
-    return int16_le_self(self, other);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    return rb_funcall(v, id_le, 1, other);
-  }
-}
-
 // ------- Integer count without weights -------
 
 static void iter_int16_bincount_32(na_loop_t* const lp) {
@@ -4519,6 +4474,12 @@ void Init_numo_int16(void) {
    *   @return [Numo::Bit] result of self lt other.
    */
   rb_define_method(cT, "lt", int16_lt, 1);
+  /**
+   * Comparison le other.
+   * @overload le other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::Bit] result of self le other.
+   */
   rb_define_method(cT, "le", int16_le, 1);
   rb_define_alias(cT, ">", "gt");
   rb_define_alias(cT, ">=", "ge");
