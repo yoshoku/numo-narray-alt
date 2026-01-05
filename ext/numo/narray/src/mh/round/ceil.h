@@ -1,5 +1,5 @@
-#ifndef NUMO_MH_ROUND_CEIL_H
-#define NUMO_MH_ROUND_CEIL_H 1
+#ifndef NUMO_NARRAY_MH_ROUND_CEIL_H
+#define NUMO_NARRAY_MH_ROUND_CEIL_H 1
 
 #include "unary_func.h"
 
@@ -8,4 +8,4 @@
 
 #define DEF_NARRAY_ROBJ_CEIL_METHOD_FUNC() DEF_NARRAY_ROBJ_UNARY_ROUND_METHOD_FUNC(ceil)
 
-#endif
+#endif /* NUMO_NARRAY_MH_ROUND_CEIL_H */
