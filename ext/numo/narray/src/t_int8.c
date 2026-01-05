@@ -44,6 +44,7 @@ VALUE cT;
 extern VALUE cRT;
 
 #include "mh/comp/gt.h"
+#include "mh/comp/ge.h"
 #include "mh/clip.h"
 #include "mh/sum.h"
 #include "mh/prod.h"
@@ -71,6 +72,7 @@ extern VALUE cRT;
 typedef int8_t int8; // Type aliases for shorter notation
                      // following the codebase naming convention.
 DEF_NARRAY_GT_METHOD_FUNC(int8, numo_cInt8)
+DEF_NARRAY_GE_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_CLIP_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT_SUM_METHOD_FUNC(int8, numo_cInt8, int64_t, numo_cInt64)
 DEF_NARRAY_INT_PROD_METHOD_FUNC(int8, numo_cInt8, int64_t, numo_cInt64)
@@ -3128,53 +3130,6 @@ static VALUE int8_right_shift(VALUE self, VALUE other) {
   }
 }
 
-static void iter_int8_ge(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  BIT_DIGIT* a3;
-  size_t p3;
-  ssize_t s1, s2, s3;
-  dtype x, y;
-  BIT_DIGIT b;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR_BIT(lp, 2, a3, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    b = (m_ge(x, y)) ? 1 : 0;
-    STORE_BIT(a3, p3, b);
-    p3 += s3;
-  }
-}
-
-static VALUE int8_ge_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
-  ndfunc_t ndf = { iter_int8_ge, STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Comparison ge other.
-  @overload ge other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::Bit] result of self ge other.
-*/
-static VALUE int8_ge(VALUE self, VALUE other) {
-
-  VALUE klass, v;
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
-  if (klass == cT) {
-    return int8_ge_self(self, other);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    return rb_funcall(v, id_ge, 1, other);
-  }
-}
-
 static void iter_int8_lt(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -4173,6 +4128,12 @@ void Init_numo_int8(void) {
    *   @return [Numo::Bit] result of self gt other.
    */
   rb_define_method(cT, "gt", int8_gt, 1);
+  /**
+   * Comparison ge other.
+   * @overload ge other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::Bit] result of self ge other.
+   */
   rb_define_method(cT, "ge", int8_ge, 1);
   rb_define_method(cT, "lt", int8_lt, 1);
   rb_define_method(cT, "le", int8_le, 1);
