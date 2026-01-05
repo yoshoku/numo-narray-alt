@@ -60,6 +60,7 @@ static ID id_truncate;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/to_a.h"
 #include "mh/round/floor.h"
 #include "mh/round/round.h"
 #include "mh/round/ceil.h"
@@ -103,6 +104,7 @@ extern VALUE cRT;
 
 typedef VALUE robject; // Type aliases for shorter notation
                        // following the codebase naming convention.
+DEF_NARRAY_TO_A_METHOD_FUNC(robject)
 DEF_NARRAY_ROBJ_FLOOR_METHOD_FUNC()
 DEF_NARRAY_ROBJ_ROUND_METHOD_FUNC()
 DEF_NARRAY_ROBJ_CEIL_METHOD_FUNC()
@@ -1325,44 +1327,6 @@ static VALUE robject_aset(int argc, VALUE* argv, VALUE self) {
 */
 static VALUE robject_coerce_cast(VALUE self, VALUE type) {
   return Qnil;
-}
-
-static void iter_robject_to_a(na_loop_t* const lp) {
-  size_t i, s1;
-  char* p1;
-  size_t* idx1;
-  dtype x;
-  volatile VALUE a, y;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  a = rb_ary_new2(i);
-  rb_ary_push(lp->args[1].value, a);
-  if (idx1) {
-    for (; i--;) {
-      GET_DATA_INDEX(p1, idx1, dtype, x);
-      y = m_data_to_num(x);
-      rb_ary_push(a, y);
-    }
-  } else {
-    for (; i--;) {
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      y = m_data_to_num(x);
-      rb_ary_push(a, y);
-    }
-  }
-}
-
-/*
-  Convert self to Array.
-  @overload to_a
-    @return [Array]
-*/
-static VALUE robject_to_a(VALUE self) {
-  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
-  ndfunc_arg_out_t aout[1] = { { rb_cArray, 0 } }; // dummy?
-  ndfunc_t ndf = { iter_robject_to_a, FULL_LOOP_NIP, 3, 1, ain, aout };
-  return na_ndloop_cast_narray_to_rarray(&ndf, self, Qnil);
 }
 
 static void iter_robject_fill(na_loop_t* const lp) {
@@ -3133,6 +3097,11 @@ void Init_numo_robject(void) {
   rb_define_method(cT, "[]", robject_aref, -1);
   rb_define_method(cT, "[]=", robject_aset, -1);
   rb_define_method(cT, "coerce_cast", robject_coerce_cast, 1);
+  /**
+   * Convert self to Array.
+   * @overload to_a
+   *   @return [Array]
+   */
   rb_define_method(cT, "to_a", robject_to_a, 0);
   rb_define_method(cT, "fill", robject_fill, 1);
   rb_define_method(cT, "format", robject_format, -1);

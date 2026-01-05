@@ -43,6 +43,7 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/to_a.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/gt.h"
@@ -76,6 +77,7 @@ extern VALUE cRT;
 
 typedef int32_t int32; // Type aliases for shorter notation
                        // following the codebase naming convention.
+DEF_NARRAY_TO_A_METHOD_FUNC(int32)
 DEF_NARRAY_EQ_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_NE_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_GT_METHOD_FUNC(int32, numo_cInt32)
@@ -1272,44 +1274,6 @@ static VALUE int32_aset(int argc, VALUE* argv, VALUE self) {
 */
 static VALUE int32_coerce_cast(VALUE self, VALUE type) {
   return Qnil;
-}
-
-static void iter_int32_to_a(na_loop_t* const lp) {
-  size_t i, s1;
-  char* p1;
-  size_t* idx1;
-  dtype x;
-  volatile VALUE a, y;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  a = rb_ary_new2(i);
-  rb_ary_push(lp->args[1].value, a);
-  if (idx1) {
-    for (; i--;) {
-      GET_DATA_INDEX(p1, idx1, dtype, x);
-      y = m_data_to_num(x);
-      rb_ary_push(a, y);
-    }
-  } else {
-    for (; i--;) {
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      y = m_data_to_num(x);
-      rb_ary_push(a, y);
-    }
-  }
-}
-
-/*
-  Convert self to Array.
-  @overload to_a
-    @return [Array]
-*/
-static VALUE int32_to_a(VALUE self) {
-  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
-  ndfunc_arg_out_t aout[1] = { { rb_cArray, 0 } }; // dummy?
-  ndfunc_t ndf = { iter_int32_to_a, FULL_LOOP_NIP, 3, 1, ain, aout };
-  return na_ndloop_cast_narray_to_rarray(&ndf, self, Qnil);
 }
 
 static void iter_int32_fill(na_loop_t* const lp) {
@@ -4324,6 +4288,11 @@ void Init_numo_int32(void) {
   rb_define_method(cT, "[]", int32_aref, -1);
   rb_define_method(cT, "[]=", int32_aset, -1);
   rb_define_method(cT, "coerce_cast", int32_coerce_cast, 1);
+  /**
+   * Convert self to Array.
+   * @overload to_a
+   *   @return [Array]
+   */
   rb_define_method(cT, "to_a", int32_to_a, 0);
   rb_define_method(cT, "fill", int32_fill, 1);
   rb_define_method(cT, "format", int32_format, -1);
