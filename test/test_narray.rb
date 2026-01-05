@@ -194,6 +194,36 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_nearly_eq # rubocop:disable Metrics/AbcSize
+    a = Numo::SFloat[1.0, 1.0, 1.0, 1.0]
+    b = Numo::SFloat[1.0 + 1e-7, 1.0 - 1e-7, 1.0 + 1e-6, 1.0 - 1e-6]
+    actual = a.nearly_eq(b)
+    assert_kind_of(Numo::Bit, actual)
+    assert_equal(Numo::Bit[1, 1, 0, 0], actual)
+    a = Numo::DFloat[1.0, 1.0, 1.0, 1.0]
+    b = Numo::DFloat[1.0 + 1e-16, 1.0 - 1e-16, 1.0 + 1e-15, 1.0 - 1e-15]
+    actual = a.nearly_eq(b)
+    assert_kind_of(Numo::Bit, actual)
+    assert_equal(Numo::Bit[1, 1, 0, 0], actual)
+    a = Numo::RObject[1.0, 1.0, 1.0, 1.0]
+    b = Numo::RObject[1.0 + 1e-16, 1.0 - 1e-16, 1.0 + 1e-15, 1.0 - 1e-15]
+    actual = a.nearly_eq(b)
+    assert_kind_of(Numo::Bit, actual)
+    assert_equal(Numo::Bit[1, 1, 0, 0], actual)
+    a = Numo::SComplex[1.0 + 1.0i, 1.0 + 1.0i, 1.0 + 1.0i, 1.0 + 1.0i]
+    b = Numo::SComplex[1.0 + 1.0i + (1e-7 + 1e-7i), 1.0 + 1.0i - (1e-7 + 1e-7i),
+                       1.0 + 1.0i + (1e-6 + 1e-6i), 1.0 + 1.0i - (1e-6 + 1e-6i)]
+    actual = a.nearly_eq(b)
+    assert_kind_of(Numo::Bit, actual)
+    assert_equal(Numo::Bit[1, 1, 0, 0], actual)
+    a = Numo::DComplex[1.0 + 1.0i, 1.0 + 1.0i, 1.0 + 1.0i, 1.0 + 1.0i]
+    b = Numo::DComplex[1.0 + 1.0i + (1e-16 + 1e-16i), 1.0 + 1.0i - (1e-16 + 1e-16i),
+                       1.0 + 1.0i + (1e-15 + 1e-15i), 1.0 + 1.0i - (1e-15 + 1e-15i)]
+    actual = a.nearly_eq(b)
+    assert_kind_of(Numo::Bit, actual)
+    assert_equal(Numo::Bit[1, 1, 0, 0], actual)
+  end
+
   def test_floor
     [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |dtype|
       actual = dtype[1.5, -2.3, 3.0, -4.7, 5.9].floor
