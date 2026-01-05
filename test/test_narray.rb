@@ -460,6 +460,7 @@ class NArrayTest < NArrayTestBase
         assert_kind_of(Array, a.to_a)
 
         assert_equal(Numo::Bit[[1, 0, 1], [0, 1, 0]], a.eq([[1, 1, 3], [3, 7, 7]]))
+        assert_equal(Numo::Bit[[0, 1, 0], [1, 0, 1]], a.ne([[1, 1, 3], [3, 7, 7]]))
         assert_equal(11, a[5])
         assert_equal(11, a[-1])
         assert_equal(src[1][0], a[1, 0])
@@ -608,6 +609,7 @@ class NArrayTest < NArrayTestBase
           assert_equal(Numo::Bit[[1, 1, 1], [0, 0, 0]], a <= 3)
           assert_equal(Numo::Bit[[1, 1, 0], [0, 0, 0]], a < 3)
           assert_equal(Numo::Bit[[0, 0, 1], [0, 0, 0]], a.eq(3))
+          assert_equal(Numo::Bit[[1, 1, 0], [1, 1, 1]], a.ne(3))
           assert_equal(dtype[1, 2, 5, 7, 11], a[a.ne(3)])
           assert_equal(dtype[[1, 2, 3]], a[a[true, 2] < 5, true])
           assert_equal(dtype[[2, 3], [7, 11]], a[true, a[1, true] > 5])
