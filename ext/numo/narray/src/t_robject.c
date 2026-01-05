@@ -64,6 +64,7 @@ extern VALUE cRT;
 #include "mh/round/round.h"
 #include "mh/round/ceil.h"
 #include "mh/round/trunc.h"
+#include "mh/comp/gt.h"
 #include "mh/clip.h"
 #include "mh/isnan.h"
 #include "mh/isinf.h"
@@ -100,6 +101,7 @@ DEF_NARRAY_ROBJ_FLOOR_METHOD_FUNC()
 DEF_NARRAY_ROBJ_ROUND_METHOD_FUNC()
 DEF_NARRAY_ROBJ_CEIL_METHOD_FUNC()
 DEF_NARRAY_ROBJ_TRUNC_METHOD_FUNC()
+DEF_NARRAY_ROBJ_GT_METHOD_FUNC()
 DEF_NARRAY_CLIP_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_ISNAN_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_ISINF_METHOD_FUNC(robject, numo_cRObject)
@@ -3095,45 +3097,6 @@ static VALUE robject_right_shift(VALUE self, VALUE other) {
   return robject_right_shift_self(self, other);
 }
 
-static void iter_robject_gt(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  BIT_DIGIT* a3;
-  size_t p3;
-  ssize_t s1, s2, s3;
-  dtype x, y;
-  BIT_DIGIT b;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR_BIT(lp, 2, a3, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    b = (m_gt(x, y)) ? 1 : 0;
-    STORE_BIT(a3, p3, b);
-    p3 += s3;
-  }
-}
-
-static VALUE robject_gt_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
-  ndfunc_t ndf = { iter_robject_gt, STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Comparison gt other.
-  @overload gt other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::Bit] result of self gt other.
-*/
-static VALUE robject_gt(VALUE self, VALUE other) {
-  return robject_gt_self(self, other);
-}
-
 static void iter_robject_ge(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -3451,6 +3414,12 @@ void Init_numo_robject(void) {
    *   @return [Numo::RObject] trunc of self.
    */
   rb_define_method(cT, "trunc", robject_trunc, 0);
+  /**
+   * Comparison gt other.
+   * @overload gt other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::Bit] result of self gt other.
+   */
   rb_define_method(cT, "gt", robject_gt, 1);
   rb_define_method(cT, "ge", robject_ge, 1);
   rb_define_method(cT, "lt", robject_lt, 1);
