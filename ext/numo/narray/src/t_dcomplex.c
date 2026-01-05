@@ -38,6 +38,8 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/comp/eq.h"
+#include "mh/comp/ne.h"
 #include "mh/round/floor.h"
 #include "mh/round/round.h"
 #include "mh/round/ceil.h"
@@ -83,6 +85,8 @@ extern VALUE cRT;
 #include "mh/math/atanh.h"
 #include "mh/math/sinc.h"
 
+DEF_NARRAY_EQ_METHOD_FUNC(dcomplex, numo_cDComplex)
+DEF_NARRAY_NE_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_FLOOR_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_ROUND_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_CEIL_METHOD_FUNC(dcomplex, numo_cDComplex)
@@ -3193,100 +3197,6 @@ static VALUE dcomplex_set_real(VALUE self, VALUE a1) {
   return a1;
 }
 
-static void iter_dcomplex_eq(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  BIT_DIGIT* a3;
-  size_t p3;
-  ssize_t s1, s2, s3;
-  dtype x, y;
-  BIT_DIGIT b;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR_BIT(lp, 2, a3, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    b = (m_eq(x, y)) ? 1 : 0;
-    STORE_BIT(a3, p3, b);
-    p3 += s3;
-  }
-}
-
-static VALUE dcomplex_eq_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
-  ndfunc_t ndf = { iter_dcomplex_eq, STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Comparison eq other.
-  @overload eq other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::Bit] result of self eq other.
-*/
-static VALUE dcomplex_eq(VALUE self, VALUE other) {
-
-  VALUE klass, v;
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
-  if (klass == cT) {
-    return dcomplex_eq_self(self, other);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    return rb_funcall(v, id_eq, 1, other);
-  }
-}
-
-static void iter_dcomplex_ne(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  BIT_DIGIT* a3;
-  size_t p3;
-  ssize_t s1, s2, s3;
-  dtype x, y;
-  BIT_DIGIT b;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR_BIT(lp, 2, a3, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    b = (m_ne(x, y)) ? 1 : 0;
-    STORE_BIT(a3, p3, b);
-    p3 += s3;
-  }
-}
-
-static VALUE dcomplex_ne_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
-  ndfunc_t ndf = { iter_dcomplex_ne, STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Comparison ne other.
-  @overload ne other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::Bit] result of self ne other.
-*/
-static VALUE dcomplex_ne(VALUE self, VALUE other) {
-
-  VALUE klass, v;
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
-  if (klass == cT) {
-    return dcomplex_ne_self(self, other);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    return rb_funcall(v, id_ne, 1, other);
-  }
-}
-
 static void iter_dcomplex_nearly_eq(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -3748,7 +3658,19 @@ void Init_numo_dcomplex(void) {
   rb_define_alias(cT, "imag=", "set_imag");
   rb_define_alias(cT, "real=", "set_real");
   rb_define_alias(cT, "conjugate", "conj");
+  /**
+   * Comparison eq other.
+   * @overload eq other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::Bit] result of self eq other.
+   */
   rb_define_method(cT, "eq", dcomplex_eq, 1);
+  /**
+   * Comparison ne other.
+   * @overload ne other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::Bit] result of self ne other.
+   */
   rb_define_method(cT, "ne", dcomplex_ne, 1);
   rb_define_method(cT, "nearly_eq", dcomplex_nearly_eq, 1);
   rb_define_alias(cT, "close_to", "nearly_eq");
