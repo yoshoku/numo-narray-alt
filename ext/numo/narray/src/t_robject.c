@@ -64,6 +64,7 @@ extern VALUE cRT;
 #include "mh/round/round.h"
 #include "mh/round/ceil.h"
 #include "mh/round/trunc.h"
+#include "mh/comp/eq.h"
 #include "mh/comp/gt.h"
 #include "mh/comp/ge.h"
 #include "mh/comp/lt.h"
@@ -104,6 +105,7 @@ DEF_NARRAY_ROBJ_FLOOR_METHOD_FUNC()
 DEF_NARRAY_ROBJ_ROUND_METHOD_FUNC()
 DEF_NARRAY_ROBJ_CEIL_METHOD_FUNC()
 DEF_NARRAY_ROBJ_TRUNC_METHOD_FUNC()
+DEF_NARRAY_ROBJ_EQ_METHOD_FUNC()
 DEF_NARRAY_ROBJ_GT_METHOD_FUNC()
 DEF_NARRAY_ROBJ_GE_METHOD_FUNC()
 DEF_NARRAY_ROBJ_LT_METHOD_FUNC()
@@ -2543,45 +2545,6 @@ static VALUE robject_square(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-static void iter_robject_eq(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  BIT_DIGIT* a3;
-  size_t p3;
-  ssize_t s1, s2, s3;
-  dtype x, y;
-  BIT_DIGIT b;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR_BIT(lp, 2, a3, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    b = (m_eq(x, y)) ? 1 : 0;
-    STORE_BIT(a3, p3, b);
-    p3 += s3;
-  }
-}
-
-static VALUE robject_eq_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
-  ndfunc_t ndf = { iter_robject_eq, STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Comparison eq other.
-  @overload eq other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::Bit] result of self eq other.
-*/
-static VALUE robject_eq(VALUE self, VALUE other) {
-  return robject_eq_self(self, other);
-}
-
 static void iter_robject_ne(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -3269,6 +3232,12 @@ void Init_numo_robject(void) {
   rb_define_alias(cT, "conj", "view");
   rb_define_alias(cT, "im", "view");
   rb_define_alias(cT, "conjugate", "conj");
+  /**
+   * Comparison eq other.
+   * @overload eq other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::Bit] result of self eq other.
+   */
   rb_define_method(cT, "eq", robject_eq, 1);
   rb_define_method(cT, "ne", robject_ne, 1);
   rb_define_method(cT, "nearly_eq", robject_nearly_eq, 1);
