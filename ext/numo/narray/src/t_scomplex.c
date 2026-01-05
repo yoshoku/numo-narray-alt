@@ -40,6 +40,7 @@ extern VALUE cRT;
 
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
+#include "mh/comp/nearly_eq.h"
 #include "mh/round/floor.h"
 #include "mh/round/round.h"
 #include "mh/round/ceil.h"
@@ -87,6 +88,7 @@ extern VALUE cRT;
 
 DEF_NARRAY_EQ_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_NE_METHOD_FUNC(scomplex, numo_cSComplex)
+DEF_NARRAY_NEARLY_EQ_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_FLOOR_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_ROUND_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_CEIL_METHOD_FUNC(scomplex, numo_cSComplex)
@@ -3197,53 +3199,6 @@ static VALUE scomplex_set_real(VALUE self, VALUE a1) {
   return a1;
 }
 
-static void iter_scomplex_nearly_eq(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  BIT_DIGIT* a3;
-  size_t p3;
-  ssize_t s1, s2, s3;
-  dtype x, y;
-  BIT_DIGIT b;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR_BIT(lp, 2, a3, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    b = (m_nearly_eq(x, y)) ? 1 : 0;
-    STORE_BIT(a3, p3, b);
-    p3 += s3;
-  }
-}
-
-static VALUE scomplex_nearly_eq_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
-  ndfunc_t ndf = { iter_scomplex_nearly_eq, STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Comparison nearly_eq other.
-  @overload nearly_eq other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::Bit] result of self nearly_eq other.
-*/
-static VALUE scomplex_nearly_eq(VALUE self, VALUE other) {
-
-  VALUE klass, v;
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
-  if (klass == cT) {
-    return scomplex_nearly_eq_self(self, other);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    return rb_funcall(v, id_nearly_eq, 1, other);
-  }
-}
-
 #define check_intdivzero(y)                                                                    \
   {}
 
@@ -3603,6 +3558,12 @@ void Init_numo_scomplex(void) {
    *   @return [Numo::Bit] result of self ne other.
    */
   rb_define_method(cT, "ne", scomplex_ne, 1);
+  /**
+   * Comparison nearly_eq other.
+   * @overload nearly_eq other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::Bit] result of self nearly_eq other.
+   */
   rb_define_method(cT, "nearly_eq", scomplex_nearly_eq, 1);
   rb_define_alias(cT, "close_to", "nearly_eq");
   /**
