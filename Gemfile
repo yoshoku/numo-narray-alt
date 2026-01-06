@@ -15,7 +15,6 @@ gem 'rubocop-minitest', '~> 0.38.2'
 gem 'rubocop-performance', '~> 1.26'
 gem 'rubocop-rake', '~> 0.7.1'
 gem 'simplecov', '~> 0.22.0'
-gem 'test-unit', '~> 3.7'
 gem 'yard', '~> 0.9.37'
 
 group :memcheck, optional: true do
