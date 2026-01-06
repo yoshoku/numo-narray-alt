@@ -43,6 +43,7 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
@@ -76,6 +77,7 @@ extern VALUE cRT;
 
 typedef int8_t int8; // Type aliases for shorter notation
                      // following the codebase naming convention.
+DEF_NARRAY_COERCE_CAST_METHOD_FUNC(int8)
 DEF_NARRAY_TO_A_METHOD_FUNC(int8)
 DEF_NARRAY_EQ_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_NE_METHOD_FUNC(int8, numo_cInt8)
@@ -1264,15 +1266,6 @@ static VALUE int8_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-/*
-  return NArray with cast to the type of self.
-  @overload coerce_cast(type)
-    @return [nil]
-*/
-static VALUE int8_coerce_cast(VALUE self, VALUE type) {
-  return Qnil;
 }
 
 static void iter_int8_fill(na_loop_t* const lp) {
@@ -3864,6 +3857,11 @@ void Init_numo_int8(void) {
   rb_define_singleton_method(cT, "cast", int8_s_cast, 1);
   rb_define_method(cT, "[]", int8_aref, -1);
   rb_define_method(cT, "[]=", int8_aset, -1);
+  /**
+   * return NArray with cast to the type of self.
+   * @overload coerce_cast(type)
+   *   @return [nil]
+   */
   rb_define_method(cT, "coerce_cast", int8_coerce_cast, 1);
   /**
    * Convert self to Array.

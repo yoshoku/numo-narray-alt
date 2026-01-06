@@ -60,6 +60,7 @@ static ID id_truncate;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/round/floor.h"
 #include "mh/round/round.h"
@@ -104,6 +105,7 @@ extern VALUE cRT;
 
 typedef VALUE robject; // Type aliases for shorter notation
                        // following the codebase naming convention.
+DEF_NARRAY_COERCE_CAST_METHOD_FUNC(robject)
 DEF_NARRAY_TO_A_METHOD_FUNC(robject)
 DEF_NARRAY_ROBJ_FLOOR_METHOD_FUNC()
 DEF_NARRAY_ROBJ_ROUND_METHOD_FUNC()
@@ -1318,15 +1320,6 @@ static VALUE robject_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-/*
-  return NArray with cast to the type of self.
-  @overload coerce_cast(type)
-    @return [nil]
-*/
-static VALUE robject_coerce_cast(VALUE self, VALUE type) {
-  return Qnil;
 }
 
 static void iter_robject_fill(na_loop_t* const lp) {
@@ -3096,6 +3089,11 @@ void Init_numo_robject(void) {
   rb_define_singleton_method(cT, "cast", robject_s_cast, 1);
   rb_define_method(cT, "[]", robject_aref, -1);
   rb_define_method(cT, "[]=", robject_aset, -1);
+  /**
+   * return NArray with cast to the type of self.
+   * @overload coerce_cast(type)
+   *   @return [nil]
+   */
   rb_define_method(cT, "coerce_cast", robject_coerce_cast, 1);
   /**
    * Convert self to Array.

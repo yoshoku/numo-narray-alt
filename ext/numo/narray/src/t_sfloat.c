@@ -42,6 +42,7 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/round/floor.h"
 #include "mh/round/round.h"
@@ -116,6 +117,7 @@ extern VALUE cRT;
 
 typedef float sfloat; // Type aliases for shorter notation
                       // following the codebase naming convention.
+DEF_NARRAY_COERCE_CAST_METHOD_FUNC(sfloat)
 DEF_NARRAY_TO_A_METHOD_FUNC(sfloat)
 DEF_NARRAY_FLT_FLOOR_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_ROUND_METHOD_FUNC(sfloat, numo_cSFloat)
@@ -1309,10 +1311,6 @@ static VALUE sfloat_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-static VALUE sfloat_coerce_cast(VALUE self, VALUE type) {
-  return Qnil;
 }
 
 static void iter_sfloat_fill(na_loop_t* const lp) {

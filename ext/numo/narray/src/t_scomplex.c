@@ -38,6 +38,7 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
@@ -87,6 +88,7 @@ extern VALUE cRT;
 #include "mh/math/atanh.h"
 #include "mh/math/sinc.h"
 
+DEF_NARRAY_COERCE_CAST_METHOD_FUNC(scomplex)
 DEF_NARRAY_TO_A_METHOD_FUNC(scomplex)
 DEF_NARRAY_EQ_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_NE_METHOD_FUNC(scomplex, numo_cSComplex)
@@ -1417,15 +1419,6 @@ static VALUE scomplex_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-/*
-  return NArray with cast to the type of self.
-  @overload coerce_cast(type)
-    @return [nil]
-*/
-static VALUE scomplex_coerce_cast(VALUE self, VALUE type) {
-  return Qnil;
 }
 
 static void iter_scomplex_fill(na_loop_t* const lp) {
@@ -3476,6 +3469,11 @@ void Init_numo_scomplex(void) {
   rb_define_singleton_method(cT, "cast", scomplex_s_cast, 1);
   rb_define_method(cT, "[]", scomplex_aref, -1);
   rb_define_method(cT, "[]=", scomplex_aset, -1);
+  /**
+   * return NArray with cast to the type of self.
+   * @overload coerce_cast(type)
+   *   @return [nil]
+   */
   rb_define_method(cT, "coerce_cast", scomplex_coerce_cast, 1);
   /**
    * Convert self to Array.

@@ -67,6 +67,9 @@ class NArrayTest < NArrayTestBase
         refute_same(a.dup, a)
         refute_same(a.clone, a)
 
+        assert_nil(a.coerce_cast(Numo::Bit))
+        assert_kind_of(dtype, a)
+
         assert_equal(Numo::Bit[1, 0, 1, 0, 1, 0], a.eq([1, 1, 3, 3, 7, 7]))
         assert_equal(dtype[5, 7], a[3..4])
         assert_equal(11, a[5])

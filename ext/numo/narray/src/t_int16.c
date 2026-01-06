@@ -43,6 +43,7 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
@@ -76,6 +77,7 @@ extern VALUE cRT;
 
 typedef int16_t int16; // Type aliases for shorter notation
                        // following the codebase naming convention.
+DEF_NARRAY_COERCE_CAST_METHOD_FUNC(int16)
 DEF_NARRAY_TO_A_METHOD_FUNC(int16)
 DEF_NARRAY_EQ_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_NE_METHOD_FUNC(int16, numo_cInt16)
@@ -1264,15 +1266,6 @@ static VALUE int16_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-/*
-  return NArray with cast to the type of self.
-  @overload coerce_cast(type)
-    @return [nil]
-*/
-static VALUE int16_coerce_cast(VALUE self, VALUE type) {
-  return Qnil;
 }
 
 static void iter_int16_fill(na_loop_t* const lp) {
@@ -4286,6 +4279,11 @@ void Init_numo_int16(void) {
   rb_define_singleton_method(cT, "cast", int16_s_cast, 1);
   rb_define_method(cT, "[]", int16_aref, -1);
   rb_define_method(cT, "[]=", int16_aset, -1);
+  /**
+   * return NArray with cast to the type of self.
+   * @overload coerce_cast(type)
+   *   @return [nil]
+   */
   rb_define_method(cT, "coerce_cast", int16_coerce_cast, 1);
   /**
    * Convert self to Array.

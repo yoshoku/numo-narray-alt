@@ -31,12 +31,14 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/mean.h"
 #include "mh/var.h"
 #include "mh/stddev.h"
 #include "mh/rms.h"
 
+DEF_NARRAY_COERCE_CAST_METHOD_FUNC(bit)
 DEF_NARRAY_BIT_TO_A_METHOD_FUNC()
 DEF_NARRAY_BIT_MEAN_METHOD_FUNC()
 DEF_NARRAY_BIT_VAR_METHOD_FUNC()
@@ -1353,15 +1355,6 @@ static VALUE bit_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-/*
-  return NArray with cast to the type of self.
-  @overload coerce_cast(type)
-    @return [nil]
-*/
-static VALUE bit_coerce_cast(VALUE self, VALUE type) {
-  return Qnil;
 }
 
 static void iter_bit_fill(na_loop_t* const lp) {
@@ -3182,6 +3175,11 @@ void Init_numo_bit(void) {
   rb_define_singleton_method(cT, "cast", bit_s_cast, 1);
   rb_define_method(cT, "[]", bit_aref, -1);
   rb_define_method(cT, "[]=", bit_aset, -1);
+  /**
+   * return NArray with cast to the type of self.
+   * @overload coerce_cast(type)
+   *   @return [nil]
+   */
   rb_define_method(cT, "coerce_cast", bit_coerce_cast, 1);
   /**
    * Convert self to Array.
