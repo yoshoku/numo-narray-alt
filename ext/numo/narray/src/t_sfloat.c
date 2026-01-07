@@ -45,6 +45,7 @@ extern VALUE cRT;
 #include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/fill.h"
+#include "mh/format.h"
 #include "mh/round/floor.h"
 #include "mh/round/round.h"
 #include "mh/round/ceil.h"
@@ -121,6 +122,7 @@ typedef float sfloat; // Type aliases for shorter notation
 DEF_NARRAY_COERCE_CAST_METHOD_FUNC(sfloat)
 DEF_NARRAY_TO_A_METHOD_FUNC(sfloat)
 DEF_NARRAY_FILL_METHOD_FUNC(sfloat)
+DEF_NARRAY_FORMAT_METHOD_FUNC(sfloat)
 DEF_NARRAY_FLT_FLOOR_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_ROUND_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_CEIL_METHOD_FUNC(sfloat, numo_cSFloat)
@@ -1313,57 +1315,6 @@ static VALUE sfloat_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-static VALUE format_sfloat(VALUE fmt, dtype* x) {
-  // fix-me
-  char s[48];
-  int n;
-
-  if (NIL_P(fmt)) {
-    n = m_sprintf(s, *x);
-    return rb_str_new(s, n);
-  }
-  return rb_funcall(fmt, '%', 1, m_data_to_num(*x));
-}
-
-static void iter_sfloat_format(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t* idx1;
-  dtype* x;
-  VALUE y;
-  VALUE fmt = lp->option;
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR(lp, 1, p2, s2);
-  if (idx1) {
-    for (; i--;) {
-      x = (dtype*)(p1 + *idx1);
-      idx1++;
-      y = format_sfloat(fmt, x);
-      SET_DATA_STRIDE(p2, s2, VALUE, y);
-    }
-  } else {
-    for (; i--;) {
-      x = (dtype*)p1;
-      p1 += s1;
-      y = format_sfloat(fmt, x);
-      SET_DATA_STRIDE(p2, s2, VALUE, y);
-    }
-  }
-}
-
-static VALUE sfloat_format(int argc, VALUE* argv, VALUE self) {
-  VALUE fmt = Qnil;
-
-  ndfunc_arg_in_t ain[2] = { { Qnil, 0 }, { sym_option } };
-  ndfunc_arg_out_t aout[1] = { { numo_cRObject, 0 } };
-  ndfunc_t ndf = { iter_sfloat_format, FULL_LOOP_NIP, 2, 1, ain, aout };
-
-  rb_scan_args(argc, argv, "01", &fmt);
-  return na_ndloop(&ndf, 2, self, fmt);
 }
 
 static void iter_sfloat_format_to_a(na_loop_t* const lp) {
