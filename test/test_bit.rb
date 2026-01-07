@@ -28,6 +28,10 @@ class NArrayBitTest < NArrayTestBase
       refute_predicate(a, :all?)
       assert_predicate(a, :any?)
       assert_predicate(a, :any?)
+      assert_equal(Numo::Bit[1, 1, 1, 1, 1, 1, 1, 1], a.fill(1))
+      assert_equal(Numo::Bit[1, 1, 1, 1, 1, 1, 1, 1], a)
+      assert_equal(Numo::Bit[0, 0, 0, 0, 0, 0, 0, 0], a.fill(0))
+      assert_equal(Numo::Bit[0, 0, 0, 0, 0, 0, 0, 0], a)
     end
 
     [[proc { |tp, a| tp[*a] }, ''],

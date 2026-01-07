@@ -45,6 +45,7 @@ extern VALUE cRT;
 
 #include "mh/coerce_cast.h"
 #include "mh/to_a.h"
+#include "mh/fill.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/gt.h"
@@ -79,6 +80,7 @@ typedef u_int64_t uint64; // Type aliases for shorter notation
                           // following the codebase naming convention.
 DEF_NARRAY_COERCE_CAST_METHOD_FUNC(uint64)
 DEF_NARRAY_TO_A_METHOD_FUNC(uint64)
+DEF_NARRAY_FILL_METHOD_FUNC(uint64)
 DEF_NARRAY_EQ_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_NE_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_GT_METHOD_FUNC(uint64, numo_cUInt64)
@@ -1266,41 +1268,6 @@ static VALUE uint64_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-static void iter_uint64_fill(na_loop_t* const lp) {
-  size_t i;
-  char* p1;
-  ssize_t s1;
-  size_t* idx1;
-  VALUE x = lp->option;
-  dtype y;
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  y = m_num_to_data(x);
-  if (idx1) {
-    for (; i--;) {
-      SET_DATA_INDEX(p1, idx1, dtype, y);
-    }
-  } else {
-    for (; i--;) {
-      SET_DATA_STRIDE(p1, s1, dtype, y);
-    }
-  }
-}
-
-/*
-  Fill elements with other.
-  @overload fill other
-    @param [Numeric] other
-    @return [Numo::UInt64] self.
-*/
-static VALUE uint64_fill(VALUE self, VALUE val) {
-  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { sym_option } };
-  ndfunc_t ndf = { iter_uint64_fill, FULL_LOOP, 2, 0, ain, 0 };
-
-  na_ndloop(&ndf, 2, self, val);
-  return self;
 }
 
 static VALUE format_uint64(VALUE fmt, dtype* x) {
@@ -4287,6 +4254,12 @@ void Init_numo_uint64(void) {
    *   @return [Array]
    */
   rb_define_method(cT, "to_a", uint64_to_a, 0);
+  /**
+   * Fill elements with other.
+   * @overload fill other
+   *   @param [Numeric] other
+   *   @return [Numo::UInt64] self.
+   */
   rb_define_method(cT, "fill", uint64_fill, 1);
   rb_define_method(cT, "format", uint64_format, -1);
   rb_define_method(cT, "format_to_a", uint64_format_to_a, -1);
