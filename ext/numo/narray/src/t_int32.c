@@ -47,6 +47,7 @@ extern VALUE cRT;
 #include "mh/to_a.h"
 #include "mh/fill.h"
 #include "mh/format.h"
+#include "mh/format_to_a.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/gt.h"
@@ -84,6 +85,7 @@ DEF_NARRAY_COERCE_CAST_METHOD_FUNC(int32)
 DEF_NARRAY_TO_A_METHOD_FUNC(int32)
 DEF_NARRAY_FILL_METHOD_FUNC(int32)
 DEF_NARRAY_FORMAT_METHOD_FUNC(int32)
+DEF_NARRAY_FORMAT_TO_A_METHOD_FUNC(int32)
 DEF_NARRAY_EQ_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_NE_METHOD_FUNC(int32, numo_cInt32)
 DEF_NARRAY_GT_METHOD_FUNC(int32, numo_cInt32)
@@ -1271,52 +1273,6 @@ static VALUE int32_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-static void iter_int32_format_to_a(na_loop_t* const lp) {
-  size_t i;
-  char* p1;
-  ssize_t s1;
-  size_t* idx1;
-  dtype* x;
-  VALUE y;
-  volatile VALUE a;
-  VALUE fmt = lp->option;
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  a = rb_ary_new2(i);
-  rb_ary_push(lp->args[1].value, a);
-  if (idx1) {
-    for (; i--;) {
-      x = (dtype*)(p1 + *idx1);
-      idx1++;
-      y = format_int32(fmt, x);
-      rb_ary_push(a, y);
-    }
-  } else {
-    for (; i--;) {
-      x = (dtype*)p1;
-      p1 += s1;
-      y = format_int32(fmt, x);
-      rb_ary_push(a, y);
-    }
-  }
-}
-
-/*
-  Format elements into strings.
-  @overload format_to_a format
-    @param [String] format
-    @return [Array] array of formatted strings.
-*/
-static VALUE int32_format_to_a(int argc, VALUE* argv, VALUE self) {
-  VALUE fmt = Qnil;
-  ndfunc_arg_in_t ain[3] = { { Qnil, 0 }, { sym_loop_opt }, { sym_option } };
-  ndfunc_arg_out_t aout[1] = { { rb_cArray, 0 } }; // dummy?
-  ndfunc_t ndf = { iter_int32_format_to_a, FULL_LOOP_NIP, 3, 1, ain, aout };
-
-  rb_scan_args(argc, argv, "01", &fmt);
-  return na_ndloop_cast_narray_to_rarray(&ndf, self, fmt);
 }
 
 static VALUE iter_int32_inspect(char* ptr, size_t pos, VALUE fmt) {
@@ -4218,6 +4174,12 @@ void Init_numo_int32(void) {
    *   @return [Numo::RObject] array of formatted strings.
    */
   rb_define_method(cT, "format", int32_format, -1);
+  /**
+   * Format elements into strings.
+   * @overload format_to_a format
+   *   @param [String] format
+   *   @return [Array] array of formatted strings.
+   */
   rb_define_method(cT, "format_to_a", int32_format_to_a, -1);
   rb_define_method(cT, "inspect", int32_inspect, 0);
   rb_define_method(cT, "each", int32_each, 0);
