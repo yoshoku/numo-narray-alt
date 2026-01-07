@@ -48,6 +48,7 @@ extern VALUE cRT;
 #include "mh/fill.h"
 #include "mh/format.h"
 #include "mh/format_to_a.h"
+#include "mh/inspect.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/gt.h"
@@ -85,6 +86,7 @@ DEF_NARRAY_TO_A_METHOD_FUNC(int64)
 DEF_NARRAY_FILL_METHOD_FUNC(int64)
 DEF_NARRAY_FORMAT_METHOD_FUNC(int64)
 DEF_NARRAY_FORMAT_TO_A_METHOD_FUNC(int64)
+DEF_NARRAY_INSPECT_METHOD_FUNC(int64)
 DEF_NARRAY_EQ_METHOD_FUNC(int64, numo_cInt64)
 DEF_NARRAY_NE_METHOD_FUNC(int64, numo_cInt64)
 DEF_NARRAY_GT_METHOD_FUNC(int64, numo_cInt64)
@@ -1272,19 +1274,6 @@ static VALUE int64_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-static VALUE iter_int64_inspect(char* ptr, size_t pos, VALUE fmt) {
-  return format_int64(fmt, (dtype*)(ptr + pos));
-}
-
-/*
-  Returns a string containing a human-readable representation of NArray.
-  @overload inspect
-    @return [String]
-*/
-static VALUE int64_inspect(VALUE ary) {
-  return na_ndloop_inspect(ary, iter_int64_inspect, Qnil);
 }
 
 static void iter_int64_each(na_loop_t* const lp) {
@@ -4180,6 +4169,11 @@ void Init_numo_int64(void) {
    *   @return [Array] array of formatted strings.
    */
   rb_define_method(cT, "format_to_a", int64_format_to_a, -1);
+  /**
+   * Returns a string containing a human-readable representation of NArray.
+   * @overload inspect
+   *   @return [String]
+   */
   rb_define_method(cT, "inspect", int64_inspect, 0);
   rb_define_method(cT, "each", int64_each, 0);
   rb_define_method(cT, "map", int64_map, 0);

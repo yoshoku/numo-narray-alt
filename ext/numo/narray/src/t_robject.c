@@ -65,6 +65,7 @@ extern VALUE cRT;
 #include "mh/fill.h"
 #include "mh/format.h"
 #include "mh/format_to_a.h"
+#include "mh/inspect.h"
 #include "mh/round/floor.h"
 #include "mh/round/round.h"
 #include "mh/round/ceil.h"
@@ -113,6 +114,7 @@ DEF_NARRAY_TO_A_METHOD_FUNC(robject)
 DEF_NARRAY_FILL_METHOD_FUNC(robject)
 DEF_NARRAY_FORMAT_METHOD_FUNC(robject)
 DEF_NARRAY_FORMAT_TO_A_METHOD_FUNC(robject)
+DEF_NARRAY_ROBJ_INSPECT_METHOD_FUNC()
 DEF_NARRAY_ROBJ_FLOOR_METHOD_FUNC()
 DEF_NARRAY_ROBJ_ROUND_METHOD_FUNC()
 DEF_NARRAY_ROBJ_CEIL_METHOD_FUNC()
@@ -1326,19 +1328,6 @@ static VALUE robject_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-static VALUE iter_robject_inspect(char* ptr, size_t pos, VALUE fmt) {
-  return rb_inspect(*(VALUE*)(ptr + pos));
-}
-
-/*
-  Returns a string containing a human-readable representation of NArray.
-  @overload inspect
-    @return [String]
-*/
-static VALUE robject_inspect(VALUE ary) {
-  return na_ndloop_inspect(ary, iter_robject_inspect, Qnil);
 }
 
 static void iter_robject_each(na_loop_t* const lp) {
@@ -2990,6 +2979,11 @@ void Init_numo_robject(void) {
    *   @return [Array] array of formatted strings.
    */
   rb_define_method(cT, "format_to_a", robject_format_to_a, -1);
+  /**
+   * Returns a string containing a human-readable representation of NArray.
+   * @overload inspect
+   *   @return [String]
+   */
   rb_define_method(cT, "inspect", robject_inspect, 0);
   rb_define_method(cT, "each", robject_each, 0);
   rb_define_method(cT, "map", robject_map, 0);

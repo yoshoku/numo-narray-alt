@@ -138,6 +138,7 @@ class NArrayTest < NArrayTestBase
           formatted_a = a.format_to_a
           assert_kind_of(Array, formatted_a)
           assert_equal(['1+0i', '2+0i', '3+0i', '5+0i', '7+0i', '11+0i'], formatted_a)
+          assert_match(/#{a.class}(\(view\))?#shape=\[6\]\n\[1\+0i, 2\+0i, 3\+0i, 5\+0i, 7\+0i, 11\+0i\]/, a.inspect)
         else
           formatted_a = a.format('%.1f')
           assert_kind_of(Numo::RObject, formatted_a)
@@ -145,6 +146,7 @@ class NArrayTest < NArrayTestBase
           formatted_a = a.format_to_a('%.1f')
           assert_kind_of(Array, formatted_a)
           assert_equal(['1.0', '2.0', '3.0', '5.0', '7.0', '11.0'], formatted_a)
+          assert_match(/#{a.class}(\(view\))?#shape=\[6\]\n\[1, 2, 3, 5, 7, 11\]/, a.inspect)
         end
         assert_equal(dtype[2, 3, 4, 6, 8, 12], a + 1)
         assert_equal(dtype[0, 1, 2, 4, 6, 10], a - 1)
@@ -676,6 +678,8 @@ class NArrayTest < NArrayTestBase
           formatted_a = a.format_to_a
           assert_kind_of(Array, formatted_a)
           assert_equal([['1+0i', '2+0i', '3+0i'], ['5+0i', '7+0i', '11+0i']], formatted_a)
+          assert_match(/#{a.class}(\(view\))?#shape=\[2,3\]\n\[\[1\+0i, 2\+0i, 3\+0i\], \n \[5\+0i, 7\+0i, 11\+0i\]\]/,
+                       a.inspect)
         else
           formatted_a = a.format('%.1f')
           assert_kind_of(Numo::RObject, formatted_a)
@@ -683,6 +687,7 @@ class NArrayTest < NArrayTestBase
           formatted_a = a.format_to_a('%.1f')
           assert_kind_of(Array, formatted_a)
           assert_equal([['1.0', '2.0', '3.0'], ['5.0', '7.0', '11.0']], formatted_a)
+          assert_match(/#{a.class}(\(view\))?#shape=\[2,3\]\n\[\[1, 2, 3\], \n \[5, 7, 11\]\]/, a.inspect)
         end
         assert_equal(dtype[[2, 3, 4], [6, 8, 12]], a + 1)
         assert_equal(dtype[[2, 4, 6], [6, 9, 14]], a + [1, 2, 3])

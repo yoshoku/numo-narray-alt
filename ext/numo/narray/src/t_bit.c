@@ -36,6 +36,7 @@ extern VALUE cRT;
 #include "mh/fill.h"
 #include "mh/format.h"
 #include "mh/format_to_a.h"
+#include "mh/inspect.h"
 #include "mh/mean.h"
 #include "mh/var.h"
 #include "mh/stddev.h"
@@ -46,6 +47,7 @@ DEF_NARRAY_BIT_TO_A_METHOD_FUNC()
 DEF_NARRAY_BIT_FILL_METHOD_FUNC()
 DEF_NARRAY_BIT_FORMAT_METHOD_FUNC()
 DEF_NARRAY_BIT_FORMAT_TO_A_METHOD_FUNC()
+DEF_NARRAY_BIT_INSPECT_METHOD_FUNC()
 DEF_NARRAY_BIT_MEAN_METHOD_FUNC()
 DEF_NARRAY_BIT_VAR_METHOD_FUNC()
 DEF_NARRAY_BIT_STDDEV_METHOD_FUNC()
@@ -1361,21 +1363,6 @@ static VALUE bit_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-static VALUE iter_bit_inspect(char* ptr, size_t pos, VALUE fmt) {
-  dtype x;
-  LOAD_BIT(ptr, pos, x);
-  return format_bit(fmt, x);
-}
-
-/*
-  Returns a string containing a human-readable representation of NArray.
-  @overload inspect
-    @return [String]
-*/
-static VALUE bit_inspect(VALUE ary) {
-  return na_ndloop_inspect(ary, iter_bit_inspect, Qnil);
 }
 
 static void iter_bit_each(na_loop_t* const lp) {
@@ -3046,6 +3033,11 @@ void Init_numo_bit(void) {
    *   @return [Array] array of formatted strings.
    */
   rb_define_method(cT, "format_to_a", bit_format_to_a, -1);
+  /**
+   * Returns a string containing a human-readable representation of NArray.
+   * @overload inspect
+   *   @return [String]
+   */
   rb_define_method(cT, "inspect", bit_inspect, 0);
   rb_define_method(cT, "each", bit_each, 0);
   rb_define_method(cT, "each_with_index", bit_each_with_index, 0);

@@ -43,6 +43,7 @@ extern VALUE cRT;
 #include "mh/fill.h"
 #include "mh/format.h"
 #include "mh/format_to_a.h"
+#include "mh/inspect.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/nearly_eq.h"
@@ -96,6 +97,7 @@ DEF_NARRAY_TO_A_METHOD_FUNC(dcomplex)
 DEF_NARRAY_FILL_METHOD_FUNC(dcomplex)
 DEF_NARRAY_FORMAT_METHOD_FUNC(dcomplex)
 DEF_NARRAY_FORMAT_TO_A_METHOD_FUNC(dcomplex)
+DEF_NARRAY_INSPECT_METHOD_FUNC(dcomplex)
 DEF_NARRAY_EQ_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_NE_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_NEARLY_EQ_METHOD_FUNC(dcomplex, numo_cDComplex)
@@ -1425,19 +1427,6 @@ static VALUE dcomplex_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-static VALUE iter_dcomplex_inspect(char* ptr, size_t pos, VALUE fmt) {
-  return format_dcomplex(fmt, (dtype*)(ptr + pos));
-}
-
-/*
-  Returns a string containing a human-readable representation of NArray.
-  @overload inspect
-    @return [String]
-*/
-static VALUE dcomplex_inspect(VALUE ary) {
-  return na_ndloop_inspect(ary, iter_dcomplex_inspect, Qnil);
 }
 
 static void iter_dcomplex_each(na_loop_t* const lp) {
@@ -3439,6 +3428,11 @@ void Init_numo_dcomplex(void) {
    *   @return [Array] array of formatted strings.
    */
   rb_define_method(cT, "format_to_a", dcomplex_format_to_a, -1);
+  /**
+   * Returns a string containing a human-readable representation of NArray.
+   * @overload inspect
+   *   @return [String]
+   */
   rb_define_method(cT, "inspect", dcomplex_inspect, 0);
   rb_define_method(cT, "each", dcomplex_each, 0);
   rb_define_method(cT, "map", dcomplex_map, 0);

@@ -47,6 +47,7 @@ extern VALUE cRT;
 #include "mh/fill.h"
 #include "mh/format.h"
 #include "mh/format_to_a.h"
+#include "mh/inspect.h"
 #include "mh/round/floor.h"
 #include "mh/round/round.h"
 #include "mh/round/ceil.h"
@@ -125,6 +126,7 @@ DEF_NARRAY_TO_A_METHOD_FUNC(sfloat)
 DEF_NARRAY_FILL_METHOD_FUNC(sfloat)
 DEF_NARRAY_FORMAT_METHOD_FUNC(sfloat)
 DEF_NARRAY_FORMAT_TO_A_METHOD_FUNC(sfloat)
+DEF_NARRAY_INSPECT_METHOD_FUNC(sfloat)
 DEF_NARRAY_FLT_FLOOR_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_ROUND_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_CEIL_METHOD_FUNC(sfloat, numo_cSFloat)
@@ -1317,14 +1319,6 @@ static VALUE sfloat_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-static VALUE iter_sfloat_inspect(char* ptr, size_t pos, VALUE fmt) {
-  return format_sfloat(fmt, (dtype*)(ptr + pos));
-}
-
-static VALUE sfloat_inspect(VALUE ary) {
-  return na_ndloop_inspect(ary, iter_sfloat_inspect, Qnil);
 }
 
 static void iter_sfloat_each(na_loop_t* const lp) {

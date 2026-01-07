@@ -34,6 +34,7 @@ class NArrayBitTest < NArrayTestBase
       formatted_a = a.format_to_a('%.1f')
       assert_kind_of(Array, formatted_a)
       assert_equal(['0.0', '1.0', '1.0', '0.0', '1.0', '0.0', '0.0', '1.0'], formatted_a)
+      assert_match(/Numo::Bit(\(view\))?#shape=\[8\]\n\[0, 1, 1, 0, 1, 0, 0, 1\]/, a.inspect)
       assert_equal(Numo::Bit[1, 1, 1, 1, 1, 1, 1, 1], a.fill(1))
       assert_equal(Numo::Bit[1, 1, 1, 1, 1, 1, 1, 1], a)
       assert_equal(Numo::Bit[0, 0, 0, 0, 0, 0, 0, 0], a.fill(0))
