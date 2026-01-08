@@ -66,6 +66,7 @@ extern VALUE cRT;
 #include "mh/format.h"
 #include "mh/format_to_a.h"
 #include "mh/inspect.h"
+#include "mh/op/add.h"
 #include "mh/round/floor.h"
 #include "mh/round/round.h"
 #include "mh/round/ceil.h"
@@ -115,6 +116,7 @@ DEF_NARRAY_FILL_METHOD_FUNC(robject)
 DEF_NARRAY_FORMAT_METHOD_FUNC(robject)
 DEF_NARRAY_FORMAT_TO_A_METHOD_FUNC(robject)
 DEF_NARRAY_ROBJ_INSPECT_METHOD_FUNC()
+DEF_NARRAY_ROBJ_ADD_METHOD_FUNC()
 DEF_NARRAY_ROBJ_FLOOR_METHOD_FUNC()
 DEF_NARRAY_ROBJ_ROUND_METHOD_FUNC()
 DEF_NARRAY_ROBJ_CEIL_METHOD_FUNC()
@@ -1642,83 +1644,6 @@ static VALUE robject_abs(VALUE self) {
 #define check_intdivzero(y)                                                                    \
   {}
 
-static void iter_robject_add(na_loop_t* const lp) {
-  size_t i = 0;
-  size_t n;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-
-  //
-
-  if (s2 == 0) { // Broadcasting from scalar value.
-    check_intdivzero(*(dtype*)p2);
-    if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
-      if (p1 == p3) { // inplace case
-        for (; i < n; i++) {
-          ((dtype*)p1)[i] = m_add(((dtype*)p1)[i], *(dtype*)p2);
-        }
-      } else {
-        for (; i < n; i++) {
-          ((dtype*)p3)[i] = m_add(((dtype*)p1)[i], *(dtype*)p2);
-        }
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        *(dtype*)p3 = m_add(*(dtype*)p1, *(dtype*)p2);
-        p1 += s1;
-        p3 += s3;
-      }
-    }
-  } else {
-    if (p1 == p3) { // inplace case
-      for (i = 0; i < n; i++) {
-        check_intdivzero(*(dtype*)p2);
-        *(dtype*)p1 = m_add(*(dtype*)p1, *(dtype*)p2);
-        p1 += s1;
-        p2 += s2;
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        check_intdivzero(*(dtype*)p2);
-        *(dtype*)p3 = m_add(*(dtype*)p1, *(dtype*)p2);
-        p1 += s1;
-        p2 += s2;
-        p3 += s3;
-      }
-    }
-  }
-
-  return;
-  //
-}
-#undef check_intdivzero
-
-static VALUE robject_add_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_robject_add, STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Binary add.
-  @overload + other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::NArray] self + other
-*/
-static VALUE robject_add(VALUE self, VALUE other) {
-  return robject_add_self(self, other);
-}
-
-#define check_intdivzero(y)                                                                    \
-  {}
-
 static void iter_robject_sub(na_loop_t* const lp) {
   size_t i = 0;
   size_t n;
@@ -2990,6 +2915,12 @@ void Init_numo_robject(void) {
   rb_define_method(cT, "each_with_index", robject_each_with_index, 0);
   rb_define_method(cT, "map_with_index", robject_map_with_index, 0);
   rb_define_method(cT, "abs", robject_abs, 0);
+  /**
+   * Binary add.
+   * @overload + other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::NArray] self + other
+   */
   rb_define_method(cT, "+", robject_add, 1);
   rb_define_method(cT, "-", robject_sub, 1);
   rb_define_method(cT, "*", robject_mul, 1);
