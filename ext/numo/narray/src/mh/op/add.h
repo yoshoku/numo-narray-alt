@@ -1,6 +1,19 @@
 #ifndef NUMO_NARRAY_MH_OP_ADD_H
 #define NUMO_NARRAY_MH_OP_ADD_H 1
 
+#ifndef PARALLEL_FOR_OMP_SIMD
+#if defined(_OPENMP)
+#include <omp.h>
+#if _OPENMP >= 201511
+#define PARALLEL_FOR_OMP_SIMD _Pragma("omp parallel for simd")
+#else
+#define PARALLEL_FOR_OMP_SIMD
+#endif /* _OPENMP >= 201511 */
+#else
+#define PARALLEL_FOR_OMP_SIMD
+#endif /* defined(_OPENMP) */
+#endif /* PARALLEL_FOR_OMP */
+
 /* Common macro for variable declaration and initialization */
 #define ITER_ADD_INIT_VARS()                                                                   \
   size_t n;                                                                                    \
@@ -18,10 +31,12 @@
 /* Common macro for in-place or new array operation */
 #define ITER_ADD_INPLACE_OR_NEW_P2_ARY(tDType)                                                 \
   if (p1 == p3) {                                                                              \
+    PARALLEL_FOR_OMP_SIMD                                                                      \
     for (size_t i = 0; i < n; i++) {                                                           \
       ((tDType*)p1)[i] = m_add(((tDType*)p1)[i], ((tDType*)p2)[i]);                            \
     }                                                                                          \
   } else {                                                                                     \
+    PARALLEL_FOR_OMP_SIMD                                                                      \
     for (size_t i = 0; i < n; i++) {                                                           \
       ((tDType*)p3)[i] = m_add(((tDType*)p1)[i], ((tDType*)p2)[i]);                            \
     }                                                                                          \

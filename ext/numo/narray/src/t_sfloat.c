@@ -129,13 +129,13 @@ DEF_NARRAY_FILL_METHOD_FUNC(sfloat)
 DEF_NARRAY_FORMAT_METHOD_FUNC(sfloat)
 DEF_NARRAY_FORMAT_TO_A_METHOD_FUNC(sfloat)
 DEF_NARRAY_INSPECT_METHOD_FUNC(sfloat)
-#ifdef __SSE2__
-DEF_NARRAY_SFLT_ADD_SSE2_METHOD_FUNC()
-DEF_NARRAY_SFLT_SUB_SSE2_METHOD_FUNC()
-#else
+// #ifdef __SSE2__
+// DEF_NARRAY_SFLT_ADD_SSE2_METHOD_FUNC()
+// DEF_NARRAY_SFLT_SUB_SSE2_METHOD_FUNC()
+// #else
 DEF_NARRAY_ADD_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_SUB_METHOD_FUNC(sfloat, numo_cSFloat)
-#endif
+// #endif
 DEF_NARRAY_FLT_FLOOR_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_ROUND_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_CEIL_METHOD_FUNC(sfloat, numo_cSFloat)
@@ -3780,6 +3780,9 @@ void Init_numo_sfloat(void) {
   rb_define_const(cT, "MAX", M_MAX);
   /* The smallest respresentable value of SFloat */
   rb_define_const(cT, "MIN", M_MIN);
+#if defined(_OPENMP)
+  rb_define_const(cT, "OPENMP_VERSION", INT2NUM(_OPENMP));
+#endif
   rb_define_alloc_func(cT, sfloat_s_alloc_func);
   rb_define_method(cT, "allocate", sfloat_allocate, 0);
   /**
