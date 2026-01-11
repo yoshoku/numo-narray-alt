@@ -79,7 +79,8 @@ have_var('rb_cComplex')
 
 $objs = srcs.collect { |i| "#{i}.o" }
 
-$CFLAGS << ' -fopenmp' if have_header('omp.h') && have_library('gomp')
+#$CFLAGS << ' -fopenmp' if have_header('omp.h') && have_library('gomp')
+$CFLAGS << ' -Xpreprocessor -fopenmp -march=native -Wno-undef' if have_header('omp.h') && have_library('omp')
 
 create_header d('numo/extconf.h')
 
