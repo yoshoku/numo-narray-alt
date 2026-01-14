@@ -79,6 +79,10 @@ have_var('rb_cComplex')
 
 $objs = srcs.collect { |i| "#{i}.o" }
 
+if try_cflags(' -march=native')
+  $CFLAGS << ' -march=native'
+end
+
 create_header d('numo/extconf.h')
 
 create_makefile('numo/narray/narray')
