@@ -6,7 +6,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'irb', '~> 1.15'
-gem 'minitest', '~> 5.25'
+gem 'minitest', '~> 6.0'
 gem 'rake', '~> 13.3'
 gem 'rake-compiler', '~> 1.3'
 gem 'rdoc', '~> 6.15'
