@@ -47,6 +47,7 @@ extern VALUE cRT;
 #include "mh/op/add.h"
 #include "mh/op/sub.h"
 #include "mh/op/mul.h"
+#include "mh/op/div.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/nearly_eq.h"
@@ -104,6 +105,7 @@ DEF_NARRAY_INSPECT_METHOD_FUNC(dcomplex)
 DEF_NARRAY_ADD_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_SUB_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_MUL_METHOD_FUNC(dcomplex, numo_cDComplex)
+DEF_NARRAY_FLT_DIV_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_EQ_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_NE_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_NEARLY_EQ_METHOD_FUNC(dcomplex, numo_cDComplex)
@@ -1761,124 +1763,6 @@ static VALUE dcomplex_abs(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#define check_intdivzero(y)                                                                    \
-  {}
-
-static void iter_dcomplex_div(na_loop_t* const lp) {
-  size_t i = 0;
-  size_t n;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-
-  //
-  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) &&
-      is_aligned(p3, sizeof(dtype))) {
-
-    if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
-      if (p1 == p3) { // inplace case
-        for (; i < n; i++) {
-          check_intdivzero(((dtype*)p2)[i]);
-          ((dtype*)p1)[i] = m_div(((dtype*)p1)[i], ((dtype*)p2)[i]);
-        }
-      } else {
-        for (; i < n; i++) {
-          check_intdivzero(((dtype*)p2)[i]);
-          ((dtype*)p3)[i] = m_div(((dtype*)p1)[i], ((dtype*)p2)[i]);
-        }
-      }
-      return;
-    }
-
-    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) &&
-        is_aligned_step(s3, sizeof(dtype))) {
-      //
-
-      if (s2 == 0) { // Broadcasting from scalar value.
-        check_intdivzero(*(dtype*)p2);
-        if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
-          if (p1 == p3) { // inplace case
-            for (; i < n; i++) {
-              ((dtype*)p1)[i] = m_div(((dtype*)p1)[i], *(dtype*)p2);
-            }
-          } else {
-            for (; i < n; i++) {
-              ((dtype*)p3)[i] = m_div(((dtype*)p1)[i], *(dtype*)p2);
-            }
-          }
-        } else {
-          for (i = 0; i < n; i++) {
-            *(dtype*)p3 = m_div(*(dtype*)p1, *(dtype*)p2);
-            p1 += s1;
-            p3 += s3;
-          }
-        }
-      } else {
-        if (p1 == p3) { // inplace case
-          for (i = 0; i < n; i++) {
-            check_intdivzero(*(dtype*)p2);
-            *(dtype*)p1 = m_div(*(dtype*)p1, *(dtype*)p2);
-            p1 += s1;
-            p2 += s2;
-          }
-        } else {
-          for (i = 0; i < n; i++) {
-            check_intdivzero(*(dtype*)p2);
-            *(dtype*)p3 = m_div(*(dtype*)p1, *(dtype*)p2);
-            p1 += s1;
-            p2 += s2;
-            p3 += s3;
-          }
-        }
-      }
-
-      return;
-      //
-    }
-  }
-  for (i = 0; i < n; i++) {
-    dtype x, y, z;
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    check_intdivzero(y);
-    z = m_div(x, y);
-    SET_DATA_STRIDE(p3, s3, dtype, z);
-  }
-  //
-}
-#undef check_intdivzero
-
-static VALUE dcomplex_div_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_dcomplex_div, STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Binary div.
-  @overload / other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::NArray] self / other
-*/
-static VALUE dcomplex_div(VALUE self, VALUE other) {
-
-  VALUE klass, v;
-
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
-  if (klass == cT) {
-    return dcomplex_div_self(self, other);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    return rb_funcall(v, '/', 1, other);
-  }
-}
-
 static void iter_dcomplex_pow(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2, *p3;
@@ -3112,6 +2996,12 @@ void Init_numo_dcomplex(void) {
    *   @return [Numo::NArray] self * other
    */
   rb_define_method(cT, "*", dcomplex_mul, 1);
+  /**
+   * Binary div.
+   * @overload / other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::NArray] self / other
+   */
   rb_define_method(cT, "/", dcomplex_div, 1);
   rb_define_method(cT, "**", dcomplex_pow, 1);
   rb_define_alias(cT, "pow", "**");

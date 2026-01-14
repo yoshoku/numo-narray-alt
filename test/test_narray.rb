@@ -152,6 +152,11 @@ class NArrayTest < NArrayTestBase
         assert_equal(dtype[0, 1, 2, 4, 6, 10], a - 1)
         assert_equal(dtype[3, 6, 9, 15, 21, 33], a * 3)
         assert_equal(dtype[2, 4, 6, 10, 14, 22], a / 0.5)
+        unless FLOAT_TYPES.include?(dtype)
+          assert_raises(ZeroDivisionError) { a / 0 }
+          assert_raises(ZeroDivisionError) { a / [0] }
+          assert_raises(ZeroDivisionError) { a / [1, 1, 1, 1, 1, 0] }
+        end
         assert_equal(dtype[-1, -2, -3, -5, -7, -11], -a)
         assert_equal(dtype[1, 4, 9, 25, 49, 121], a**2)
         assert_equal(Numo::SFloat[1, 2, 3, 5, 7, 11], a.swap_byte.swap_byte) if dtype != Numo::RObject
@@ -696,6 +701,11 @@ class NArrayTest < NArrayTestBase
         assert_equal(dtype[[3, 6, 9], [15, 21, 33]], a * 3)
         assert_equal(dtype[[1, 4, 9], [5, 14, 33]], a * [1, 2, 3])
         assert_equal(dtype[[2, 4, 6], [10, 14, 22]], a / 0.5)
+        unless FLOAT_TYPES.include?(dtype)
+          assert_raises(ZeroDivisionError) { a / 0 }
+          assert_raises(ZeroDivisionError) { a / [0] }
+          assert_raises(ZeroDivisionError) { a / dtype[[1, 1, 1], [1, 1, 0]] }
+        end
         assert_equal(dtype[[-1, -2, -3], [-5, -7, -11]], -a)
         assert_equal(dtype[[1, 4, 9], [25, 49, 121]], a**2)
         assert_equal(Numo::SFloat.asarray(src), a.swap_byte.swap_byte) if dtype != Numo::RObject
