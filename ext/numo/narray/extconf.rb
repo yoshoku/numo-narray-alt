@@ -79,6 +79,23 @@ have_var('rb_cComplex')
 
 $objs = srcs.collect { |i| "#{i}.o" }
 
+if have_header('omp.h')
+  if have_library('gomp')
+    $CFLAGS << ' -fopenmp' if try_cflags('-fopenmp')
+  elsif have_library('omp')
+    if try_cflags('-Xpreprocessor -fopenmp') # for macOS clang
+      $CFLAGS << ' -Xpreprocessor -fopenmp'
+      if try_cflags('-march=native')
+        $CFLAGS << ' -march=native'
+      elsif try_cflags('-mcpu=native')
+        $CFLAGS << ' -mcpu=native'
+      end
+    elsif try_cflags('-fopenmp')
+      $CFLAGS << ' -fopenmp'
+    end
+  end
+end
+
 create_header d('numo/extconf.h')
 
 create_makefile('numo/narray/narray')
