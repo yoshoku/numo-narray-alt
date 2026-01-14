@@ -53,6 +53,7 @@ extern VALUE cRT;
 #include "mh/op/sub.h"
 #include "mh/op/mul.h"
 #include "mh/op/div.h"
+#include "mh/op/mod.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/gt.h"
@@ -95,6 +96,7 @@ DEF_NARRAY_INT8_ADD_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT8_SUB_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT8_MUL_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT8_DIV_METHOD_FUNC(int8, numo_cInt8)
+DEF_NARRAY_INT8_MOD_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_EQ_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_NE_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_GT_METHOD_FUNC(int8, numo_cInt8)
@@ -1591,95 +1593,6 @@ static VALUE int8_abs(VALUE self) {
   ndfunc_t ndf = { iter_int8_abs, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
-}
-
-#define check_intdivzero(y)                                                                    \
-  if ((y) == 0) {                                                                              \
-    lp->err_type = rb_eZeroDivError;                                                           \
-    return;                                                                                    \
-  }
-
-static void iter_int8_mod(na_loop_t* const lp) {
-  size_t i = 0;
-  size_t n;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-
-  //
-
-  if (s2 == 0) { // Broadcasting from scalar value.
-    check_intdivzero(*(dtype*)p2);
-    if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
-      if (p1 == p3) { // inplace case
-        for (; i < n; i++) {
-          ((dtype*)p1)[i] = m_mod(((dtype*)p1)[i], *(dtype*)p2);
-        }
-      } else {
-        for (; i < n; i++) {
-          ((dtype*)p3)[i] = m_mod(((dtype*)p1)[i], *(dtype*)p2);
-        }
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        *(dtype*)p3 = m_mod(*(dtype*)p1, *(dtype*)p2);
-        p1 += s1;
-        p3 += s3;
-      }
-    }
-  } else {
-    if (p1 == p3) { // inplace case
-      for (i = 0; i < n; i++) {
-        check_intdivzero(*(dtype*)p2);
-        *(dtype*)p1 = m_mod(*(dtype*)p1, *(dtype*)p2);
-        p1 += s1;
-        p2 += s2;
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        check_intdivzero(*(dtype*)p2);
-        *(dtype*)p3 = m_mod(*(dtype*)p1, *(dtype*)p2);
-        p1 += s1;
-        p2 += s2;
-        p3 += s3;
-      }
-    }
-  }
-
-  return;
-  //
-}
-#undef check_intdivzero
-
-static VALUE int8_mod_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_int8_mod, STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Binary mod.
-  @overload % other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::NArray] self % other
-*/
-static VALUE int8_mod(VALUE self, VALUE other) {
-
-  VALUE klass, v;
-
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
-  if (klass == cT) {
-    return int8_mod_self(self, other);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    return rb_funcall(v, '%', 1, other);
-  }
 }
 
 static void iter_int8_divmod(na_loop_t* const lp) {
@@ -3447,6 +3360,12 @@ void Init_numo_int8(void) {
    *   @return [Numo::NArray] self / other
    */
   rb_define_method(cT, "/", int8_div, 1);
+  /**
+   * Binary mod.
+   * @overload % other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::NArray] self % other
+   */
   rb_define_method(cT, "%", int8_mod, 1);
   rb_define_method(cT, "divmod", int8_divmod, 1);
   rb_define_method(cT, "**", int8_pow, 1);

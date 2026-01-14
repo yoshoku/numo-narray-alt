@@ -157,6 +157,12 @@ class NArrayTest < NArrayTestBase
           assert_raises(ZeroDivisionError) { a / [0] }
           assert_raises(ZeroDivisionError) { a / [1, 1, 1, 1, 1, 0] }
         end
+        assert_equal(dtype[1, 2, 0, 2, 1, 2], a % 3) unless [Numo::DComplex, Numo::SComplex].include?(dtype)
+        unless FLOAT_TYPES.include?(dtype)
+          assert_raises(ZeroDivisionError) { a % 0 }
+          assert_raises(ZeroDivisionError) { a % [0] } # rubocop:disable Style/FormatString
+          assert_raises(ZeroDivisionError) { a % [1, 1, 1, 1, 1, 0] } # rubocop:disable Style/FormatString
+        end
         assert_equal(dtype[-1, -2, -3, -5, -7, -11], -a)
         assert_equal(dtype[1, 4, 9, 25, 49, 121], a**2)
         assert_equal(Numo::SFloat[1, 2, 3, 5, 7, 11], a.swap_byte.swap_byte) if dtype != Numo::RObject
@@ -493,7 +499,7 @@ class NArrayTest < NArrayTestBase
     end
   end
 
-  def test_2d_narray # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Minitest/MultipleAssertions
+  def test_2d_narray # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity, Minitest/MultipleAssertions
     TYPES.each do |dtype|
       [[proc { |tp, src| tp[*src] }, ''],
        [proc { |tp, src| tp[*src][true, true] }, '[true,true]'],
@@ -705,6 +711,15 @@ class NArrayTest < NArrayTestBase
           assert_raises(ZeroDivisionError) { a / 0 }
           assert_raises(ZeroDivisionError) { a / [0] }
           assert_raises(ZeroDivisionError) { a / dtype[[1, 1, 1], [1, 1, 0]] }
+        end
+        unless [Numo::DComplex, Numo::SComplex].include?(dtype)
+          assert_equal(dtype[[1, 2, 0], [2, 1, 2]], a % 3)
+          assert_equal(dtype[[1, 0, 3], [2, 1, 1]], a % [3, 2, 5]) # rubocop:disable Style/FormatString
+        end
+        unless FLOAT_TYPES.include?(dtype)
+          assert_raises(ZeroDivisionError) { a % 0 }
+          assert_raises(ZeroDivisionError) { a % [0] } # rubocop:disable Style/FormatString
+          assert_raises(ZeroDivisionError) { a % dtype[[1, 1, 1], [1, 1, 0]] }
         end
         assert_equal(dtype[[-1, -2, -3], [-5, -7, -11]], -a)
         assert_equal(dtype[[1, 4, 9], [25, 49, 121]], a**2)
