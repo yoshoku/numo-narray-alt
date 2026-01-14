@@ -50,6 +50,7 @@ extern VALUE cRT;
 #include "mh/inspect.h"
 #include "mh/op/add.h"
 #include "mh/op/sub.h"
+#include "mh/op/mul.h"
 #include "mh/round/floor.h"
 #include "mh/round/round.h"
 #include "mh/round/ceil.h"
@@ -132,9 +133,11 @@ DEF_NARRAY_INSPECT_METHOD_FUNC(sfloat)
 #ifdef __SSE2__
 DEF_NARRAY_SFLT_ADD_SSE2_METHOD_FUNC()
 DEF_NARRAY_SFLT_SUB_SSE2_METHOD_FUNC()
+DEF_NARRAY_SFLT_MUL_SSE2_METHOD_FUNC()
 #else
 DEF_NARRAY_ADD_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_SUB_METHOD_FUNC(sfloat, numo_cSFloat)
+DEF_NARRAY_MUL_METHOD_FUNC(sfloat, numo_cSFloat)
 #endif
 DEF_NARRAY_FLT_FLOOR_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_ROUND_METHOD_FUNC(sfloat, numo_cSFloat)
@@ -1610,239 +1613,6 @@ static VALUE sfloat_abs(VALUE self) {
   ndfunc_t ndf = { iter_sfloat_abs, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
-}
-
-#define check_intdivzero(y)                                                                    \
-  {}
-
-static void iter_sfloat_mul(na_loop_t* const lp) {
-  size_t i = 0;
-  size_t n;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-#ifdef __SSE2__
-  size_t cnt;
-  size_t cnt_simd_loop = -1;
-
-  __m128 a;
-  __m128 b;
-
-  size_t num_pack; // Number of elements packed for SIMD.
-  num_pack = SIMD_ALIGNMENT_SIZE / sizeof(dtype);
-#endif
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-
-  //
-  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) &&
-      is_aligned(p3, sizeof(dtype))) {
-
-    if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
-#ifdef __SSE2__
-      // Check number of elements. & Check same alignment.
-      if ((n >= num_pack) &&
-          is_same_aligned3(
-            &((dtype*)p1)[i], &((dtype*)p2)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE
-          )) {
-        // Calculate up to the position just before the start of SIMD computation.
-        cnt = get_count_of_elements_not_aligned_to_simd_size(
-          &((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype)
-        );
-#endif
-        if (p1 == p3) { // inplace case
-#ifdef __SSE2__
-          for (; i < cnt; i++) {
-#else
-        for (; i < n; i++) {
-          check_intdivzero(((dtype*)p2)[i]);
-#endif
-            ((dtype*)p1)[i] = m_mul(((dtype*)p1)[i], ((dtype*)p2)[i]);
-          }
-        } else {
-#ifdef __SSE2__
-          for (; i < cnt; i++) {
-#else
-        for (; i < n; i++) {
-          check_intdivzero(((dtype*)p2)[i]);
-#endif
-            ((dtype*)p3)[i] = m_mul(((dtype*)p1)[i], ((dtype*)p2)[i]);
-          }
-        }
-
-#ifdef __SSE2__
-        // Get the count of SIMD computation loops.
-        cnt_simd_loop = (n - i) % num_pack;
-
-        // SIMD computation.
-        if (p1 == p3) { // inplace case
-          for (; i < n - cnt_simd_loop; i += num_pack) {
-            a = _mm_load_ps(&((dtype*)p1)[i]);
-            b = _mm_load_ps(&((dtype*)p2)[i]);
-            a = _mm_mul_ps(a, b);
-            _mm_store_ps(&((dtype*)p1)[i], a);
-          }
-        } else {
-          for (; i < n - cnt_simd_loop; i += num_pack) {
-            a = _mm_load_ps(&((dtype*)p1)[i]);
-            b = _mm_load_ps(&((dtype*)p2)[i]);
-            a = _mm_mul_ps(a, b);
-            _mm_stream_ps(&((dtype*)p3)[i], a);
-          }
-        }
-      }
-
-      // Compute the remainder of the SIMD operation.
-      if (cnt_simd_loop != 0) {
-        if (p1 == p3) { // inplace case
-          for (; i < n; i++) {
-            check_intdivzero(((dtype*)p2)[i]);
-            ((dtype*)p1)[i] = m_mul(((dtype*)p1)[i], ((dtype*)p2)[i]);
-          }
-        } else {
-          for (; i < n; i++) {
-            check_intdivzero(((dtype*)p2)[i]);
-            ((dtype*)p3)[i] = m_mul(((dtype*)p1)[i], ((dtype*)p2)[i]);
-          }
-        }
-      }
-#endif
-      return;
-    }
-
-    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) &&
-        is_aligned_step(s3, sizeof(dtype))) {
-      //
-
-      if (s2 == 0) { // Broadcasting from scalar value.
-        check_intdivzero(*(dtype*)p2);
-        if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
-#ifdef __SSE2__
-          // Broadcast a scalar value and use it for SIMD computation.
-          b = _mm_load1_ps(&((dtype*)p2)[0]);
-
-          // Check number of elements. & Check same alignment.
-          if ((n >= num_pack) &&
-              is_same_aligned2(&((dtype*)p1)[i], &((dtype*)p3)[i], SIMD_ALIGNMENT_SIZE)) {
-            // Calculate up to the position just before the start of SIMD computation.
-            cnt = get_count_of_elements_not_aligned_to_simd_size(
-              &((dtype*)p1)[i], SIMD_ALIGNMENT_SIZE, sizeof(dtype)
-            );
-#endif
-            if (p1 == p3) { // inplace case
-#ifdef __SSE2__
-              for (; i < cnt; i++) {
-#else
-            for (; i < n; i++) {
-#endif
-                ((dtype*)p1)[i] = m_mul(((dtype*)p1)[i], *(dtype*)p2);
-              }
-            } else {
-#ifdef __SSE2__
-              for (; i < cnt; i++) {
-#else
-            for (; i < n; i++) {
-#endif
-                ((dtype*)p3)[i] = m_mul(((dtype*)p1)[i], *(dtype*)p2);
-              }
-            }
-
-#ifdef __SSE2__
-            // Get the count of SIMD computation loops.
-            cnt_simd_loop = (n - i) % num_pack;
-
-            // SIMD computation.
-            if (p1 == p3) { // inplace case
-              for (; i < n - cnt_simd_loop; i += num_pack) {
-                a = _mm_load_ps(&((dtype*)p1)[i]);
-                a = _mm_mul_ps(a, b);
-                _mm_store_ps(&((dtype*)p1)[i], a);
-              }
-            } else {
-              for (; i < n - cnt_simd_loop; i += num_pack) {
-                a = _mm_load_ps(&((dtype*)p1)[i]);
-                a = _mm_mul_ps(a, b);
-                _mm_stream_ps(&((dtype*)p3)[i], a);
-              }
-            }
-          }
-
-          // Compute the remainder of the SIMD operation.
-          if (cnt_simd_loop != 0) {
-            if (p1 == p3) { // inplace case
-              for (; i < n; i++) {
-                ((dtype*)p1)[i] = m_mul(((dtype*)p1)[i], *(dtype*)p2);
-              }
-            } else {
-              for (; i < n; i++) {
-                ((dtype*)p3)[i] = m_mul(((dtype*)p1)[i], *(dtype*)p2);
-              }
-            }
-          }
-#endif
-        } else {
-          for (i = 0; i < n; i++) {
-            *(dtype*)p3 = m_mul(*(dtype*)p1, *(dtype*)p2);
-            p1 += s1;
-            p3 += s3;
-          }
-        }
-      } else {
-        if (p1 == p3) { // inplace case
-          for (i = 0; i < n; i++) {
-            check_intdivzero(*(dtype*)p2);
-            *(dtype*)p1 = m_mul(*(dtype*)p1, *(dtype*)p2);
-            p1 += s1;
-            p2 += s2;
-          }
-        } else {
-          for (i = 0; i < n; i++) {
-            check_intdivzero(*(dtype*)p2);
-            *(dtype*)p3 = m_mul(*(dtype*)p1, *(dtype*)p2);
-            p1 += s1;
-            p2 += s2;
-            p3 += s3;
-          }
-        }
-      }
-
-      return;
-      //
-    }
-  }
-  for (i = 0; i < n; i++) {
-    dtype x, y, z;
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    check_intdivzero(y);
-    z = m_mul(x, y);
-    SET_DATA_STRIDE(p3, s3, dtype, z);
-  }
-  //
-}
-#undef check_intdivzero
-
-static VALUE sfloat_mul_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_sfloat_mul, STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-static VALUE sfloat_mul(VALUE self, VALUE other) {
-
-  VALUE klass, v;
-
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
-  if (klass == cT) {
-    return sfloat_mul_self(self, other);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    return rb_funcall(v, '*', 1, other);
-  }
 }
 
 #define check_intdivzero(y)                                                                    \
