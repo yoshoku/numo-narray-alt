@@ -365,4 +365,64 @@
   DEF_BINARY_SELF_FUNC(sub, dfloat, numo_cDFloat)                                              \
   DEF_BINARY_FUNC(sub, '-', dfloat, numo_cDFloat)
 
+#ifdef NUMO_USE_NEON
+/* NEON optimized sfloat sub method */
+#define DEF_NARRAY_SFLT_SUB_NEON_METHOD_FUNC()                                                 \
+  static void iter_sfloat_sub(na_loop_t* const lp) {                                           \
+    ITER_BINARY_INIT_VARS()                                                                    \
+    if (is_aligned(p1, sizeof(sfloat)) && is_aligned(p2, sizeof(sfloat)) &&                    \
+        is_aligned(p3, sizeof(sfloat))) {                                                      \
+      if (s1 == sizeof(sfloat) && s2 == sizeof(sfloat) && s3 == sizeof(sfloat)) {              \
+        ITER_BINARY_INPLACE_OR_NEW_ARY_NEON_SFLOAT(sub, vsubq_f32)                             \
+        return;                                                                                \
+      }                                                                                        \
+      if (is_aligned_step(s1, sizeof(sfloat)) && is_aligned_step(s2, sizeof(sfloat)) &&        \
+          is_aligned_step(s3, sizeof(sfloat))) {                                               \
+        if (s2 == 0) {                                                                         \
+          if (s1 == sizeof(sfloat) && s3 == sizeof(sfloat)) {                                  \
+            ITER_BINARY_INPLACE_OR_NEW_SCL_NEON_SFLOAT(sub, vsubq_f32)                         \
+          } else {                                                                             \
+            ITER_BINARY_NEW_PTR_SCL(sub, sfloat)                                               \
+          }                                                                                    \
+        } else {                                                                               \
+          ITER_BINARY_INPLACE_OR_NEW_PTR_ARY(sub, sfloat)                                      \
+        }                                                                                      \
+        return;                                                                                \
+      }                                                                                        \
+    }                                                                                          \
+    ITER_BINARY_FALLBACK_LOOP(sub, sfloat)                                                     \
+  }                                                                                            \
+  DEF_BINARY_SELF_FUNC(sub, sfloat, numo_cSFloat)                                              \
+  DEF_BINARY_FUNC(sub, '-', sfloat, numo_cSFloat)
+
+/* NEON optimized dfloat sub method */
+#define DEF_NARRAY_DFLT_SUB_NEON_METHOD_FUNC()                                                 \
+  static void iter_dfloat_sub(na_loop_t* const lp) {                                           \
+    ITER_BINARY_INIT_VARS()                                                                    \
+    if (is_aligned(p1, sizeof(dfloat)) && is_aligned(p2, sizeof(dfloat)) &&                    \
+        is_aligned(p3, sizeof(dfloat))) {                                                      \
+      if (s1 == sizeof(dfloat) && s2 == sizeof(dfloat) && s3 == sizeof(dfloat)) {              \
+        ITER_BINARY_INPLACE_OR_NEW_ARY_NEON_DFLOAT(sub, vsubq_f64)                             \
+        return;                                                                                \
+      }                                                                                        \
+      if (is_aligned_step(s1, sizeof(dfloat)) && is_aligned_step(s2, sizeof(dfloat)) &&        \
+          is_aligned_step(s3, sizeof(dfloat))) {                                               \
+        if (s2 == 0) {                                                                         \
+          if (s1 == sizeof(dfloat) && s3 == sizeof(dfloat)) {                                  \
+            ITER_BINARY_INPLACE_OR_NEW_SCL_NEON_DFLOAT(sub, vsubq_f64)                         \
+          } else {                                                                             \
+            ITER_BINARY_NEW_PTR_SCL(sub, dfloat)                                               \
+          }                                                                                    \
+        } else {                                                                               \
+          ITER_BINARY_INPLACE_OR_NEW_PTR_ARY(sub, dfloat)                                      \
+        }                                                                                      \
+        return;                                                                                \
+      }                                                                                        \
+    }                                                                                          \
+    ITER_BINARY_FALLBACK_LOOP(sub, dfloat)                                                     \
+  }                                                                                            \
+  DEF_BINARY_SELF_FUNC(sub, dfloat, numo_cDFloat)                                              \
+  DEF_BINARY_FUNC(sub, '-', dfloat, numo_cDFloat)
+#endif /* NUMO_USE_NEON */
+
 #endif /* NUMO_NARRAY_MH_OP_SUB_H */

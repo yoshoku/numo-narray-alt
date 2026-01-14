@@ -407,4 +407,64 @@
   DEF_BINARY_SELF_FUNC(div, dfloat, numo_cDFloat)                                              \
   DEF_BINARY_FUNC(div, '/', dfloat, numo_cDFloat)
 
+#ifdef NUMO_USE_NEON
+/* NEON optimized sfloat div method */
+#define DEF_NARRAY_SFLT_DIV_NEON_METHOD_FUNC()                                                 \
+  static void iter_sfloat_div(na_loop_t* const lp) {                                           \
+    ITER_BINARY_INIT_VARS()                                                                    \
+    if (is_aligned(p1, sizeof(sfloat)) && is_aligned(p2, sizeof(sfloat)) &&                    \
+        is_aligned(p3, sizeof(sfloat))) {                                                      \
+      if (s1 == sizeof(sfloat) && s2 == sizeof(sfloat) && s3 == sizeof(sfloat)) {              \
+        ITER_BINARY_INPLACE_OR_NEW_ARY_NEON_SFLOAT(div, vdivq_f32)                             \
+        return;                                                                                \
+      }                                                                                        \
+      if (is_aligned_step(s1, sizeof(sfloat)) && is_aligned_step(s2, sizeof(sfloat)) &&        \
+          is_aligned_step(s3, sizeof(sfloat))) {                                               \
+        if (s2 == 0) {                                                                         \
+          if (s1 == sizeof(sfloat) && s3 == sizeof(sfloat)) {                                  \
+            ITER_BINARY_INPLACE_OR_NEW_SCL_NEON_SFLOAT(div, vdivq_f32)                         \
+          } else {                                                                             \
+            ITER_BINARY_NEW_PTR_SCL(div, sfloat)                                               \
+          }                                                                                    \
+        } else {                                                                               \
+          ITER_BINARY_INPLACE_OR_NEW_PTR_ARY(div, sfloat)                                      \
+        }                                                                                      \
+        return;                                                                                \
+      }                                                                                        \
+    }                                                                                          \
+    ITER_BINARY_FALLBACK_LOOP(div, sfloat)                                                     \
+  }                                                                                            \
+  DEF_BINARY_SELF_FUNC(div, sfloat, numo_cSFloat)                                              \
+  DEF_BINARY_FUNC(div, '/', sfloat, numo_cSFloat)
+
+/* NEON optimized dfloat div method */
+#define DEF_NARRAY_DFLT_DIV_NEON_METHOD_FUNC()                                                 \
+  static void iter_dfloat_div(na_loop_t* const lp) {                                           \
+    ITER_BINARY_INIT_VARS()                                                                    \
+    if (is_aligned(p1, sizeof(dfloat)) && is_aligned(p2, sizeof(dfloat)) &&                    \
+        is_aligned(p3, sizeof(dfloat))) {                                                      \
+      if (s1 == sizeof(dfloat) && s2 == sizeof(dfloat) && s3 == sizeof(dfloat)) {              \
+        ITER_BINARY_INPLACE_OR_NEW_ARY_NEON_DFLOAT(div, vdivq_f64)                             \
+        return;                                                                                \
+      }                                                                                        \
+      if (is_aligned_step(s1, sizeof(dfloat)) && is_aligned_step(s2, sizeof(dfloat)) &&        \
+          is_aligned_step(s3, sizeof(dfloat))) {                                               \
+        if (s2 == 0) {                                                                         \
+          if (s1 == sizeof(dfloat) && s3 == sizeof(dfloat)) {                                  \
+            ITER_BINARY_INPLACE_OR_NEW_SCL_NEON_DFLOAT(div, vdivq_f64)                         \
+          } else {                                                                             \
+            ITER_BINARY_NEW_PTR_SCL(div, dfloat)                                               \
+          }                                                                                    \
+        } else {                                                                               \
+          ITER_BINARY_INPLACE_OR_NEW_PTR_ARY(div, dfloat)                                      \
+        }                                                                                      \
+        return;                                                                                \
+      }                                                                                        \
+    }                                                                                          \
+    ITER_BINARY_FALLBACK_LOOP(div, dfloat)                                                     \
+  }                                                                                            \
+  DEF_BINARY_SELF_FUNC(div, dfloat, numo_cDFloat)                                              \
+  DEF_BINARY_FUNC(div, '/', dfloat, numo_cDFloat)
+#endif /* NUMO_USE_NEON */
+
 #endif /* NUMO_NARRAY_MH_OP_DIV_H */

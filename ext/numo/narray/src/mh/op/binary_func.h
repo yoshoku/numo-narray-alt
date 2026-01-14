@@ -1,6 +1,11 @@
 #ifndef NUMO_NARRAY_MH_OP_BINARY_FUNC_H
 #define NUMO_NARRAY_MH_OP_BINARY_FUNC_H 1
 
+#if defined(__ARM_NEON) || defined(__aarch64__)
+#include <arm_neon.h>
+#define NUMO_USE_NEON 1
+#endif
+
 #define ITER_BINARY_INIT_VARS()                                                                \
   size_t n;                                                                                    \
   char* p1;                                                                                    \
@@ -24,6 +29,162 @@
       ((tDType*)p3)[i] = m_##fOpFunc(((tDType*)p1)[i], ((tDType*)p2)[i]);                      \
     }                                                                                          \
   }
+
+#ifdef NUMO_USE_NEON
+/* NEON vectorized binary operation for sfloat (float32) arrays */
+#define ITER_BINARY_INPLACE_OR_NEW_ARY_NEON_SFLOAT(fOpFunc, neonOp)                            \
+  {                                                                                            \
+    const size_t num_pack = SIMD_ALIGNMENT_SIZE / sizeof(sfloat);                              \
+    size_t i = 0;                                                                              \
+    size_t cnt = get_count_of_elements_not_aligned_to_simd_size(p1, SIMD_ALIGNMENT_SIZE,       \
+                                                                sizeof(sfloat));              \
+    size_t cnt_simd_loop;                                                                      \
+    if (p1 == p3) {                                                                            \
+      for (i = 0; i < cnt && i < n; i++) {                                                     \
+        ((sfloat*)p1)[i] = m_##fOpFunc(((sfloat*)p1)[i], ((sfloat*)p2)[i]);                    \
+      }                                                                                        \
+      cnt_simd_loop = (n - i) / num_pack;                                                      \
+      for (size_t j = 0; j < cnt_simd_loop; j++, i += num_pack) {                              \
+        float32x4_t a = vld1q_f32(&((sfloat*)p1)[i]);                                          \
+        float32x4_t b = vld1q_f32(&((sfloat*)p2)[i]);                                          \
+        a = neonOp(a, b);                                                                      \
+        vst1q_f32(&((sfloat*)p1)[i], a);                                                       \
+      }                                                                                        \
+      for (; i < n; i++) {                                                                     \
+        ((sfloat*)p1)[i] = m_##fOpFunc(((sfloat*)p1)[i], ((sfloat*)p2)[i]);                    \
+      }                                                                                        \
+    } else {                                                                                   \
+      for (i = 0; i < cnt && i < n; i++) {                                                     \
+        ((sfloat*)p3)[i] = m_##fOpFunc(((sfloat*)p1)[i], ((sfloat*)p2)[i]);                    \
+      }                                                                                        \
+      cnt_simd_loop = (n - i) / num_pack;                                                      \
+      for (size_t j = 0; j < cnt_simd_loop; j++, i += num_pack) {                              \
+        float32x4_t a = vld1q_f32(&((sfloat*)p1)[i]);                                          \
+        float32x4_t b = vld1q_f32(&((sfloat*)p2)[i]);                                          \
+        a = neonOp(a, b);                                                                      \
+        vst1q_f32(&((sfloat*)p3)[i], a);                                                       \
+      }                                                                                        \
+      for (; i < n; i++) {                                                                     \
+        ((sfloat*)p3)[i] = m_##fOpFunc(((sfloat*)p1)[i], ((sfloat*)p2)[i]);                    \
+      }                                                                                        \
+    }                                                                                          \
+  }
+
+/* NEON vectorized binary operation for dfloat (float64) arrays */
+#define ITER_BINARY_INPLACE_OR_NEW_ARY_NEON_DFLOAT(fOpFunc, neonOp)                            \
+  {                                                                                            \
+    const size_t num_pack = SIMD_ALIGNMENT_SIZE / sizeof(dfloat);                              \
+    size_t i = 0;                                                                              \
+    size_t cnt = get_count_of_elements_not_aligned_to_simd_size(p1, SIMD_ALIGNMENT_SIZE,       \
+                                                                sizeof(dfloat));              \
+    size_t cnt_simd_loop;                                                                      \
+    if (p1 == p3) {                                                                            \
+      for (i = 0; i < cnt && i < n; i++) {                                                     \
+        ((dfloat*)p1)[i] = m_##fOpFunc(((dfloat*)p1)[i], ((dfloat*)p2)[i]);                    \
+      }                                                                                        \
+      cnt_simd_loop = (n - i) / num_pack;                                                      \
+      for (size_t j = 0; j < cnt_simd_loop; j++, i += num_pack) {                              \
+        float64x2_t a = vld1q_f64(&((dfloat*)p1)[i]);                                          \
+        float64x2_t b = vld1q_f64(&((dfloat*)p2)[i]);                                          \
+        a = neonOp(a, b);                                                                      \
+        vst1q_f64(&((dfloat*)p1)[i], a);                                                       \
+      }                                                                                        \
+      for (; i < n; i++) {                                                                     \
+        ((dfloat*)p1)[i] = m_##fOpFunc(((dfloat*)p1)[i], ((dfloat*)p2)[i]);                    \
+      }                                                                                        \
+    } else {                                                                                   \
+      for (i = 0; i < cnt && i < n; i++) {                                                     \
+        ((dfloat*)p3)[i] = m_##fOpFunc(((dfloat*)p1)[i], ((dfloat*)p2)[i]);                    \
+      }                                                                                        \
+      cnt_simd_loop = (n - i) / num_pack;                                                      \
+      for (size_t j = 0; j < cnt_simd_loop; j++, i += num_pack) {                              \
+        float64x2_t a = vld1q_f64(&((dfloat*)p1)[i]);                                          \
+        float64x2_t b = vld1q_f64(&((dfloat*)p2)[i]);                                          \
+        a = neonOp(a, b);                                                                      \
+        vst1q_f64(&((dfloat*)p3)[i], a);                                                       \
+      }                                                                                        \
+      for (; i < n; i++) {                                                                     \
+        ((dfloat*)p3)[i] = m_##fOpFunc(((dfloat*)p1)[i], ((dfloat*)p2)[i]);                    \
+      }                                                                                        \
+    }                                                                                          \
+  }
+
+/* NEON vectorized scalar operation for sfloat (float32) arrays */
+#define ITER_BINARY_INPLACE_OR_NEW_SCL_NEON_SFLOAT(fOpFunc, neonOp)                            \
+  {                                                                                            \
+    const size_t num_pack = SIMD_ALIGNMENT_SIZE / sizeof(sfloat);                              \
+    size_t i = 0;                                                                              \
+    size_t cnt = get_count_of_elements_not_aligned_to_simd_size(p1, SIMD_ALIGNMENT_SIZE,       \
+                                                                sizeof(sfloat));              \
+    size_t cnt_simd_loop;                                                                      \
+    float32x4_t b = vdupq_n_f32(*(sfloat*)p2);                                                 \
+    if (p1 == p3) {                                                                            \
+      for (i = 0; i < cnt && i < n; i++) {                                                     \
+        ((sfloat*)p1)[i] = m_##fOpFunc(((sfloat*)p1)[i], *(sfloat*)p2);                        \
+      }                                                                                        \
+      cnt_simd_loop = (n - i) / num_pack;                                                      \
+      for (size_t j = 0; j < cnt_simd_loop; j++, i += num_pack) {                              \
+        float32x4_t a = vld1q_f32(&((sfloat*)p1)[i]);                                          \
+        a = neonOp(a, b);                                                                      \
+        vst1q_f32(&((sfloat*)p1)[i], a);                                                       \
+      }                                                                                        \
+      for (; i < n; i++) {                                                                     \
+        ((sfloat*)p1)[i] = m_##fOpFunc(((sfloat*)p1)[i], *(sfloat*)p2);                        \
+      }                                                                                        \
+    } else {                                                                                   \
+      for (i = 0; i < cnt && i < n; i++) {                                                     \
+        ((sfloat*)p3)[i] = m_##fOpFunc(((sfloat*)p1)[i], *(sfloat*)p2);                        \
+      }                                                                                        \
+      cnt_simd_loop = (n - i) / num_pack;                                                      \
+      for (size_t j = 0; j < cnt_simd_loop; j++, i += num_pack) {                              \
+        float32x4_t a = vld1q_f32(&((sfloat*)p1)[i]);                                          \
+        a = neonOp(a, b);                                                                      \
+        vst1q_f32(&((sfloat*)p3)[i], a);                                                       \
+      }                                                                                        \
+      for (; i < n; i++) {                                                                     \
+        ((sfloat*)p3)[i] = m_##fOpFunc(((sfloat*)p1)[i], *(sfloat*)p2);                        \
+      }                                                                                        \
+    }                                                                                          \
+  }
+
+/* NEON vectorized scalar operation for dfloat (float64) arrays */
+#define ITER_BINARY_INPLACE_OR_NEW_SCL_NEON_DFLOAT(fOpFunc, neonOp)                            \
+  {                                                                                            \
+    const size_t num_pack = SIMD_ALIGNMENT_SIZE / sizeof(dfloat);                              \
+    size_t i = 0;                                                                              \
+    size_t cnt = get_count_of_elements_not_aligned_to_simd_size(p1, SIMD_ALIGNMENT_SIZE,       \
+                                                                sizeof(dfloat));              \
+    size_t cnt_simd_loop;                                                                      \
+    float64x2_t b = vdupq_n_f64(*(dfloat*)p2);                                                 \
+    if (p1 == p3) {                                                                            \
+      for (i = 0; i < cnt && i < n; i++) {                                                     \
+        ((dfloat*)p1)[i] = m_##fOpFunc(((dfloat*)p1)[i], *(dfloat*)p2);                        \
+      }                                                                                        \
+      cnt_simd_loop = (n - i) / num_pack;                                                      \
+      for (size_t j = 0; j < cnt_simd_loop; j++, i += num_pack) {                              \
+        float64x2_t a = vld1q_f64(&((dfloat*)p1)[i]);                                          \
+        a = neonOp(a, b);                                                                      \
+        vst1q_f64(&((dfloat*)p1)[i], a);                                                       \
+      }                                                                                        \
+      for (; i < n; i++) {                                                                     \
+        ((dfloat*)p1)[i] = m_##fOpFunc(((dfloat*)p1)[i], *(dfloat*)p2);                        \
+      }                                                                                        \
+    } else {                                                                                   \
+      for (i = 0; i < cnt && i < n; i++) {                                                     \
+        ((dfloat*)p3)[i] = m_##fOpFunc(((dfloat*)p1)[i], *(dfloat*)p2);                        \
+      }                                                                                        \
+      cnt_simd_loop = (n - i) / num_pack;                                                      \
+      for (size_t j = 0; j < cnt_simd_loop; j++, i += num_pack) {                              \
+        float64x2_t a = vld1q_f64(&((dfloat*)p1)[i]);                                          \
+        a = neonOp(a, b);                                                                      \
+        vst1q_f64(&((dfloat*)p3)[i], a);                                                       \
+      }                                                                                        \
+      for (; i < n; i++) {                                                                     \
+        ((dfloat*)p3)[i] = m_##fOpFunc(((dfloat*)p1)[i], *(dfloat*)p2);                        \
+      }                                                                                        \
+    }                                                                                          \
+  }
+#endif /* NUMO_USE_NEON */
 
 #define ITER_BINARY_INPLACE_OR_NEW_ARY_ZERODIV(fOpFunc, tDType)                                \
   if (p1 == p3) {                                                                              \
