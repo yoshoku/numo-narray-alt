@@ -85,6 +85,10 @@ elsif try_cflags('-mcpu=native')
   $CFLAGS << ' -mcpu=native'
 end
 
+if try_cflags('-ftree-vectorize')
+  $CFLAGS << ' -ftree-vectorize'
+end
+
 create_header d('numo/extconf.h')
 
 create_makefile('numo/narray/narray')
