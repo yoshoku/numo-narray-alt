@@ -3,7 +3,7 @@
 
 #define DEF_NARRAY_INSPECT_METHOD_FUNC(tDType)                                                 \
   static VALUE iter_##tDType##_inspect(char* ptr, size_t pos, VALUE fmt) {                     \
-    return format_##tDType(fmt, (dtype*)(ptr + pos));                                          \
+    return format_##tDType(fmt, (tDType*)(ptr + pos));                                         \
   }                                                                                            \
                                                                                                \
   static VALUE tDType##_inspect(VALUE ary) {                                                   \

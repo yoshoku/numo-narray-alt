@@ -26,12 +26,12 @@
     if (idx1) {                                                                                \
       for (size_t i = 0; i < n; i++) {                                                         \
         x = m_add(m_rand(max), low);                                                           \
-        SET_DATA_INDEX(p1, idx1, dtype, x);                                                    \
+        SET_DATA_INDEX(p1, idx1, tDType, x);                                                   \
       }                                                                                        \
     } else {                                                                                   \
       for (size_t i = 0; i < n; i++) {                                                         \
         x = m_add(m_rand(max), low);                                                           \
-        SET_DATA_STRIDE(p1, s1, dtype, x);                                                     \
+        SET_DATA_STRIDE(p1, s1, tDType, x);                                                    \
       }                                                                                        \
     }                                                                                          \
   }                                                                                            \
