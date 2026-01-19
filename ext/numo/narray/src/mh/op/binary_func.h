@@ -5,11 +5,14 @@
 #if defined(_OPENMP)
 #include <omp.h>
 #if _OPENMP >= 201511
+#define OMP_SIMD _Pragma("omp simd")
 #define PARALLEL_FOR_OMP_SIMD _Pragma("omp parallel for simd")
 #else
+#define OMP_SIMD
 #define PARALLEL_FOR_OMP_SIMD
 #endif /* _OPENMP >= 201511 */
 #else
+#define OMP_SIMD
 #define PARALLEL_FOR_OMP_SIMD
 #endif /* defined(_OPENMP) */
 #endif /* PARALLEL_FOR_OMP */
@@ -29,12 +32,12 @@
 
 #define ITER_BINARY_INPLACE_OR_NEW_ARY(fOpFunc, tDType)                                        \
   if (p1 == p3) {                                                                              \
-    PARALLEL_FOR_OMP_SIMD                                                                      \
+    OMP_SIMD                                                                                   \
     for (size_t i = 0; i < n; i++) {                                                           \
       ((tDType*)p1)[i] = m_##fOpFunc(((tDType*)p1)[i], ((tDType*)p2)[i]);                      \
     }                                                                                          \
   } else {                                                                                     \
-    PARALLEL_FOR_OMP_SIMD                                                                      \
+    OMP_SIMD                                                                                   \
     for (size_t i = 0; i < n; i++) {                                                           \
       ((tDType*)p3)[i] = m_##fOpFunc(((tDType*)p1)[i], ((tDType*)p2)[i]);                      \
     }                                                                                          \
@@ -100,13 +103,16 @@
   }
 
 #define ITER_BINARY_INPLACE_OR_NEW_SCL(fOpFunc, tDType)                                        \
+  const tDType scalar = *(tDType*)p2;                                                          \
   if (p1 == p3) {                                                                              \
+    OMP_SIMD                                                                                   \
     for (size_t i = 0; i < n; i++) {                                                           \
-      ((tDType*)p1)[i] = m_##fOpFunc(((tDType*)p1)[i], *(tDType*)p2);                          \
+      ((tDType*)p1)[i] = m_##fOpFunc(((tDType*)p1)[i], scalar);                                \
     }                                                                                          \
   } else {                                                                                     \
+    OMP_SIMD                                                                                   \
     for (size_t i = 0; i < n; i++) {                                                           \
-      ((tDType*)p3)[i] = m_##fOpFunc(((tDType*)p1)[i], *(tDType*)p2);                          \
+      ((tDType*)p3)[i] = m_##fOpFunc(((tDType*)p1)[i], scalar);                                \
     }                                                                                          \
   }
 
