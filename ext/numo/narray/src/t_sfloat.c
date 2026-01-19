@@ -3170,6 +3170,10 @@ void Init_numo_sfloat(void) {
   // alias of SFloat
   rb_define_const(mNumo, "Float32", numo_cSFloat);
 
+#if defined(_OPENMP)
+  rb_define_const(cT, "OPENMP_VERSION", INT2NUM(_OPENMP));
+#endif
+
   hCast = rb_hash_new();
   /* Upcasting rules of SFloat. */
   rb_define_const(cT, "UPCAST", hCast);
