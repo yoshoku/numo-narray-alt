@@ -15,13 +15,23 @@
   INIT_PTR(lp, 2, p3, s3);
 
 #define ITER_BINARY_INPLACE_OR_NEW_ARY(fOpFunc, tDType)                                        \
+  size_t n_elements_per_cache = 64 / sizeof(tDType);                                           \
+  if (n_elements_per_cache == 0) {                                                             \
+    n_elements_per_cache = 1;                                                                  \
+  }                                                                                            \
   if (p1 == p3) {                                                                              \
-    for (size_t i = 0; i < n; i++) {                                                           \
-      ((tDType*)p1)[i] = m_##fOpFunc(((tDType*)p1)[i], ((tDType*)p2)[i]);                      \
+    for (size_t i = 0; i < n; i += n_elements_per_cache) {                                     \
+      size_t end_chunk = i + n_elements_per_cache > n ? n : i + n_elements_per_cache;          \
+      for (size_t j = i; j < end_chunk; j++) {                                                 \
+        ((tDType*)p1)[j] = m_##fOpFunc(((tDType*)p1)[j], ((tDType*)p2)[j]);                    \
+      }                                                                                        \
     }                                                                                          \
   } else {                                                                                     \
-    for (size_t i = 0; i < n; i++) {                                                           \
-      ((tDType*)p3)[i] = m_##fOpFunc(((tDType*)p1)[i], ((tDType*)p2)[i]);                      \
+    for (size_t i = 0; i < n; i += n_elements_per_cache) {                                     \
+      size_t end_chunk = i + n_elements_per_cache > n ? n : i + n_elements_per_cache;          \
+      for (size_t j = i; j < end_chunk; j++) {                                                 \
+        ((tDType*)p3)[j] = m_##fOpFunc(((tDType*)p1)[j], ((tDType*)p2)[j]);                    \
+      }                                                                                        \
     }                                                                                          \
   }
 
@@ -85,13 +95,23 @@
   }
 
 #define ITER_BINARY_INPLACE_OR_NEW_SCL(fOpFunc, tDType)                                        \
+  size_t n_elements_per_cache = 64 / sizeof(tDType);                                           \
+  if (n_elements_per_cache == 0) {                                                             \
+    n_elements_per_cache = 1;                                                                  \
+  }                                                                                            \
   if (p1 == p3) {                                                                              \
-    for (size_t i = 0; i < n; i++) {                                                           \
-      ((tDType*)p1)[i] = m_##fOpFunc(((tDType*)p1)[i], *(tDType*)p2);                          \
+    for (size_t i = 0; i < n; i += n_elements_per_cache) {                                     \
+      size_t end_chunk = i + n_elements_per_cache > n ? n : i + n_elements_per_cache;          \
+      for (size_t j = i; j < end_chunk; j++) {                                                 \
+        ((tDType*)p1)[j] = m_##fOpFunc(((tDType*)p1)[j], *(tDType*)p2);                        \
+      }                                                                                        \
     }                                                                                          \
   } else {                                                                                     \
-    for (size_t i = 0; i < n; i++) {                                                           \
-      ((tDType*)p3)[i] = m_##fOpFunc(((tDType*)p1)[i], *(tDType*)p2);                          \
+    for (size_t i = 0; i < n; i += n_elements_per_cache) {                                     \
+      size_t end_chunk = i + n_elements_per_cache > n ? n : i + n_elements_per_cache;          \
+      for (size_t j = i; j < end_chunk; j++) {                                                 \
+        ((tDType*)p3)[j] = m_##fOpFunc(((tDType*)p1)[j], *(tDType*)p2);                        \
+      }                                                                                        \
     }                                                                                          \
   }
 
