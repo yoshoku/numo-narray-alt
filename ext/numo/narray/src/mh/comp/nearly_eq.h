@@ -1,10 +1,10 @@
 #ifndef NUMO_NARRAY_MH_COMP_NEARLY_EQ_H
 #define NUMO_NARRAY_MH_COMP_NEARLY_EQ_H 1
 
-#include "unary_func.h"
+#include "binary_func.h"
 
 #define DEF_NARRAY_NEARLY_EQ_METHOD_FUNC(tDType, tNAryClass)                                   \
-  DEF_NARRAY_UNARY_COMPARISON_METHOD_FUNC(nearly_eq, tDType, tNAryClass)                       \
+  DEF_NARRAY_BINARY_COMPARISON_METHOD_FUNC(nearly_eq, tDType, tNAryClass)                      \
                                                                                                \
   static VALUE tDType##_nearly_eq(VALUE self, VALUE other) {                                   \
     VALUE klass = na_upcast(rb_obj_class(self), rb_obj_class(other));                          \
@@ -17,7 +17,7 @@
   }
 
 #define DEF_NARRAY_ROBJ_NEARLY_EQ_METHOD_FUNC()                                                \
-  DEF_NARRAY_UNARY_COMPARISON_METHOD_FUNC(nearly_eq, robject, numo_cRObject)                   \
+  DEF_NARRAY_BINARY_COMPARISON_METHOD_FUNC(nearly_eq, robject, numo_cRObject)                  \
                                                                                                \
   static VALUE robject_nearly_eq(VALUE self, VALUE other) {                                    \
     return robject_nearly_eq_self(self, other);                                                \

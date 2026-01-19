@@ -1,7 +1,7 @@
-#ifndef NUMO_NARRAY_MH_COMP_UNARY_FUNC_H
-#define NUMO_NARRAY_MH_COMP_UNARY_FUNC_H 1
+#ifndef NUMO_NARRAY_MH_COMP_BINARY_FUNC_H
+#define NUMO_NARRAY_MH_COMP_BINARY_FUNC_H 1
 
-#define DEF_NARRAY_UNARY_COMPARISON_METHOD_FUNC(fCompFunc, tDType, tNAryClass)                 \
+#define DEF_NARRAY_BINARY_COMPARISON_METHOD_FUNC(fCompFunc, tDType, tNAryClass)                \
   static void iter_##tDType##_##fCompFunc(na_loop_t* const lp) {                               \
     size_t n;                                                                                  \
     char* p1;                                                                                  \
@@ -34,4 +34,4 @@
     return na_ndloop(&ndf, 2, self, other);                                                    \
   }
 
-#endif /* NUMO_NARRAY_MH_COMP_UNARY_FUNC_H */
+#endif /* NUMO_NARRAY_MH_COMP_BINARY_FUNC_H */
