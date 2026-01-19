@@ -32,12 +32,12 @@
 
 #define ITER_BINARY_INPLACE_OR_NEW_ARY(fOpFunc, tDType)                                        \
   if (p1 == p3) {                                                                              \
-    OMP_SIMD                                                                                   \
+    PARALLEL_FOR_OMP_SIMD                                                                                   \
     for (size_t i = 0; i < n; i++) {                                                           \
       ((tDType*)p1)[i] = m_##fOpFunc(((tDType*)p1)[i], ((tDType*)p2)[i]);                      \
     }                                                                                          \
   } else {                                                                                     \
-    OMP_SIMD                                                                                   \
+    PARALLEL_FOR_OMP_SIMD                                                                                   \
     for (size_t i = 0; i < n; i++) {                                                           \
       ((tDType*)p3)[i] = m_##fOpFunc(((tDType*)p1)[i], ((tDType*)p2)[i]);                      \
     }                                                                                          \
