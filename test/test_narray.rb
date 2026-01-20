@@ -499,6 +499,25 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_bincount
+    INTEGER_TYPES.each do |dtype|
+      actual = dtype[0, 1, 1, 3, 2, 1, 7].bincount
+      assert_kind_of(Numo::UInt32, actual)
+      assert_equal(Numo::UInt32[1, 3, 1, 1, 0, 0, 0, 1], actual)
+      x = dtype[0, 1, 1, 3, 2, 1, 7, 23]
+      assert_equal(x.max + 1, x.bincount.size)
+      w = Numo::DFloat[0.3, 0.5, 0.2, 0.7, 1.0, -0.6]
+      x = dtype[0, 1, 1, 2, 2, 2]
+      actual = x.bincount(w)
+      assert_kind_of(Numo::DFloat, actual)
+      assert_equal(Numo::DFloat[0.3, 0.7, 1.1], actual)
+      w = Numo::SFloat[0.3, 0.5, 0.2, 0.7, 1.0, -0.6]
+      actual = x.bincount(w)
+      assert_kind_of(Numo::SFloat, actual)
+      assert_equal(Numo::SFloat[0.3, 0.7, 1.1], actual)
+    end
+  end
+
   def test_2d_narray # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity, Minitest/MultipleAssertions
     TYPES.each do |dtype|
       [[proc { |tp, src| tp[*src] }, ''],

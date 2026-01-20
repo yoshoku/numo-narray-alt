@@ -73,6 +73,7 @@ extern VALUE cRT;
 #include "mh/maximum.h"
 #include "mh/minimum.h"
 #include "mh/minmax.h"
+#include "mh/bincount.h"
 #include "mh/cumsum.h"
 #include "mh/cumprod.h"
 #include "mh/mulsum.h"
@@ -116,6 +117,7 @@ DEF_NARRAY_INT_ARGMIN_METHOD_FUNC(uint16)
 DEF_NARRAY_INT_MAXIMUM_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_INT_MINIMUM_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_INT_MINMAX_METHOD_FUNC(uint16, numo_cUInt16)
+DEF_NARRAY_UINT_BINCOUNT_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_INT_CUMSUM_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_INT_CUMPROD_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_INT_MULSUM_METHOD_FUNC(uint16, numo_cUInt16)
@@ -2694,235 +2696,6 @@ static VALUE uint16_right_shift(VALUE self, VALUE other) {
   }
 }
 
-// ------- Integer count without weights -------
-
-static void iter_uint16_bincount_32(na_loop_t* const lp) {
-  size_t i, x, n;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t* idx1;
-
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR(lp, 1, p2, s2);
-  i = lp->args[0].shape[0];
-  n = lp->args[1].shape[0];
-
-  // initialize
-  for (x = 0; x < n; x++) {
-    *(u_int32_t*)(p2 + s2 * x) = 0;
-  }
-
-  if (idx1) {
-    for (; i--;) {
-      GET_DATA_INDEX(p1, idx1, dtype, x);
-      (*(u_int32_t*)(p2 + s2 * x))++;
-    }
-  } else {
-    for (; i--;) {
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      (*(u_int32_t*)(p2 + s2 * x))++;
-    }
-  }
-}
-
-static VALUE uint16_bincount_32(VALUE self, size_t length) {
-  size_t shape_out[1] = { length };
-  ndfunc_arg_in_t ain[1] = { { cT, 1 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cUInt32, 1, shape_out } };
-  ndfunc_t ndf = {
-    iter_uint16_bincount_32, NO_LOOP | NDF_STRIDE_LOOP | NDF_INDEX_LOOP, 1, 1, ain, aout
-  };
-
-  return na_ndloop(&ndf, 1, self);
-}
-
-static void iter_uint16_bincount_64(na_loop_t* const lp) {
-  size_t i, x, n;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t* idx1;
-
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR(lp, 1, p2, s2);
-  i = lp->args[0].shape[0];
-  n = lp->args[1].shape[0];
-
-  // initialize
-  for (x = 0; x < n; x++) {
-    *(u_int64_t*)(p2 + s2 * x) = 0;
-  }
-
-  if (idx1) {
-    for (; i--;) {
-      GET_DATA_INDEX(p1, idx1, dtype, x);
-      (*(u_int64_t*)(p2 + s2 * x))++;
-    }
-  } else {
-    for (; i--;) {
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      (*(u_int64_t*)(p2 + s2 * x))++;
-    }
-  }
-}
-
-static VALUE uint16_bincount_64(VALUE self, size_t length) {
-  size_t shape_out[1] = { length };
-  ndfunc_arg_in_t ain[1] = { { cT, 1 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cUInt64, 1, shape_out } };
-  ndfunc_t ndf = {
-    iter_uint16_bincount_64, NO_LOOP | NDF_STRIDE_LOOP | NDF_INDEX_LOOP, 1, 1, ain, aout
-  };
-
-  return na_ndloop(&ndf, 1, self);
-}
-// ------- end of Integer count without weights -------
-
-// ------- Float count with weights -------
-
-static void iter_uint16_bincount_sf(na_loop_t* const lp) {
-  float w;
-  size_t i, x, n, m;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-  i = lp->args[0].shape[0];
-  m = lp->args[1].shape[0];
-  n = lp->args[2].shape[0];
-
-  if (i != m) {
-    rb_raise(nary_eShapeError, "size mismatch along last axis between self and weight");
-  }
-
-  // initialize
-  for (x = 0; x < n; x++) {
-    *(float*)(p3 + s3 * x) = 0;
-  }
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, float, w);
-    (*(float*)(p3 + s3 * x)) += w;
-  }
-}
-
-static VALUE uint16_bincount_sf(VALUE self, VALUE weight, size_t length) {
-  size_t shape_out[1] = { length };
-  ndfunc_arg_in_t ain[2] = { { cT, 1 }, { numo_cSFloat, 1 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cSFloat, 1, shape_out } };
-  ndfunc_t ndf = { iter_uint16_bincount_sf, NO_LOOP | NDF_STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, weight);
-}
-
-static void iter_uint16_bincount_df(na_loop_t* const lp) {
-  double w;
-  size_t i, x, n, m;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-  i = lp->args[0].shape[0];
-  m = lp->args[1].shape[0];
-  n = lp->args[2].shape[0];
-
-  if (i != m) {
-    rb_raise(nary_eShapeError, "size mismatch along last axis between self and weight");
-  }
-
-  // initialize
-  for (x = 0; x < n; x++) {
-    *(double*)(p3 + s3 * x) = 0;
-  }
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, double, w);
-    (*(double*)(p3 + s3 * x)) += w;
-  }
-}
-
-static VALUE uint16_bincount_df(VALUE self, VALUE weight, size_t length) {
-  size_t shape_out[1] = { length };
-  ndfunc_arg_in_t ain[2] = { { cT, 1 }, { numo_cDFloat, 1 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cDFloat, 1, shape_out } };
-  ndfunc_t ndf = { iter_uint16_bincount_df, NO_LOOP | NDF_STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, weight);
-}
-// ------- end of Float count with weights -------
-
-/*
-  Count the number of occurrences of each non-negative integer value.
-  Only Integer-types has this method.
-
-  @overload bincount([weight], minlength:nil)
-    @param [SFloat or DFloat or Array] weight (optional) Array of
-      float values. Its size along last axis should be same as that of self.
-    @param [Integer] minlength (keyword, optional) Minimum size along
-      last axis for the output array.
-    @return [UInt32 or UInt64 or SFloat or DFloat]
-      Returns Float NArray if weight array is supplied,
-      otherwise returns UInt32 or UInt64 depending on the size along last axis.
-  @example
-    Numo::Int32[0..4].bincount
-    # => Numo::UInt32#shape=[5]
-    # [1, 1, 1, 1, 1]
-
-    Numo::Int32[0, 1, 1, 3, 2, 1, 7].bincount
-    # => Numo::UInt32#shape=[8]
-    # [1, 3, 1, 1, 0, 0, 0, 1]
-
-    x = Numo::Int32[0, 1, 1, 3, 2, 1, 7, 23]
-    x.bincount.size == x.max+1
-    # => true
-
-    w = Numo::DFloat[0.3, 0.5, 0.2, 0.7, 1.0, -0.6]
-    x = Numo::Int32[0, 1, 1, 2, 2, 2]
-    x.bincount(w)
-    # => Numo::DFloat#shape=[3]
-    # [0.3, 0.7, 1.1]
-
-*/
-static VALUE uint16_bincount(int argc, VALUE* argv, VALUE self) {
-  VALUE weight = Qnil, kw = Qnil;
-  VALUE opts[1] = { Qundef };
-  VALUE v, wclass;
-  ID table[1] = { id_minlength };
-  size_t length, minlength;
-
-  rb_scan_args(argc, argv, "01:", &weight, &kw);
-  rb_get_kwargs(kw, table, 0, 1, opts);
-
-  v = uint16_max(0, 0, self);
-
-  length = NUM2SIZET(v) + 1;
-
-  if (opts[0] != Qundef) {
-    minlength = NUM2SIZET(opts[0]);
-    if (minlength > length) {
-      length = minlength;
-    }
-  }
-
-  if (NIL_P(weight)) {
-    if (length > 4294967295ul) {
-      return uint16_bincount_64(self, length);
-    } else {
-      return uint16_bincount_32(self, length);
-    }
-  } else {
-    wclass = rb_obj_class(weight);
-    if (wclass == numo_cSFloat) {
-      return uint16_bincount_sf(self, weight, length);
-    } else {
-      return uint16_bincount_df(self, weight, length);
-    }
-  }
-}
-
 static void iter_uint16_poly(na_loop_t* const lp) {
   size_t i;
   dtype x, y, a;
@@ -3873,6 +3646,37 @@ void Init_numo_uint16(void) {
    *   @return [Numo::UInt16]
    */
   rb_define_module_function(cT, "minimum", uint16_s_minimum, -1);
+  /**
+   * Count the number of occurrences of each non-negative integer value.
+   * Only Integer-types has this method.
+   *
+   * @overload bincount([weight], minlength:nil)
+   *   @param [SFloat or DFloat or Array] weight (optional) Array of
+   *     float values. Its size along last axis should be same as that of self.
+   *   @param [Integer] minlength (keyword, optional) Minimum size along
+   *     last axis for the output array.
+   *   @return [UInt32 or UInt64 or SFloat or DFloat]
+   *     Returns Float NArray if weight array is supplied,
+   *     otherwise returns UInt32 or UInt64 depending on the size along last axis.
+   * @example
+   *   Numo::Int32[0..4].bincount
+   *   # => Numo::UInt32#shape=[5]
+   *   # [1, 1, 1, 1, 1]
+   *
+   *   Numo::Int32[0, 1, 1, 3, 2, 1, 7].bincount
+   *   # => Numo::UInt32#shape=[8]
+   *   # [1, 3, 1, 1, 0, 0, 0, 1]
+   *
+   *   x = Numo::Int32[0, 1, 1, 3, 2, 1, 7, 23]
+   *   x.bincount.size == x.max+1
+   *   # => true
+   *
+   *   w = Numo::DFloat[0.3, 0.5, 0.2, 0.7, 1.0, -0.6]
+   *   x = Numo::Int32[0, 1, 1, 2, 2, 2]
+   *   x.bincount(w)
+   *   # => Numo::DFloat#shape=[3]
+   *   # [0.3, 0.7, 1.1]
+   */
   rb_define_method(cT, "bincount", uint16_bincount, -1);
   /**
    * cumsum of self.
