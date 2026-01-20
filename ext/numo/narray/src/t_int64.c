@@ -63,6 +63,7 @@ extern VALUE cRT;
 #include "mh/bit/and.h"
 #include "mh/bit/or.h"
 #include "mh/bit/xor.h"
+#include "mh/bit/not.h"
 #include "mh/clip.h"
 #include "mh/sum.h"
 #include "mh/prod.h"
@@ -110,6 +111,7 @@ DEF_NARRAY_LE_METHOD_FUNC(int64, numo_cInt64)
 DEF_NARRAY_INT_BIT_AND_METHOD_FUNC(int64, numo_cInt64)
 DEF_NARRAY_INT_BIT_OR_METHOD_FUNC(int64, numo_cInt64)
 DEF_NARRAY_INT_BIT_XOR_METHOD_FUNC(int64, numo_cInt64)
+DEF_NARRAY_INT_BIT_NOT_METHOD_FUNC(int64, numo_cInt64)
 DEF_NARRAY_CLIP_METHOD_FUNC(int64, numo_cInt64)
 DEF_NARRAY_INT_SUM_METHOD_FUNC(int64, numo_cInt64, int64_t, numo_cInt64)
 DEF_NARRAY_INT_PROD_METHOD_FUNC(int64, numo_cInt64, int64_t, numo_cInt64)
@@ -2037,81 +2039,6 @@ static VALUE int64_square(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-static void iter_int64_bit_not(na_loop_t* const lp) {
-  size_t i, n;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t *idx1, *idx2;
-  dtype x;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-
-  if (idx1) {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_bit_not(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_bit_not(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-    }
-  } else {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_bit_not(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      //
-      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
-        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
-          for (i = 0; i < n; i++) {
-            ((dtype*)p2)[i] = m_bit_not(((dtype*)p1)[i]);
-          }
-          return;
-        }
-        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
-          //
-          for (i = 0; i < n; i++) {
-            *(dtype*)p2 = m_bit_not(*(dtype*)p1);
-            p1 += s1;
-            p2 += s2;
-          }
-          return;
-          //
-        }
-      }
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_bit_not(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-      //
-    }
-  }
-}
-
-/*
-  Unary bit_not.
-  @overload ~
-    @return [Numo::Int64] bit_not of self.
-*/
-static VALUE int64_bit_not(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_int64_bit_not, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, self);
-}
-
 #define check_intdivzero(y)                                                                    \
   {}
 
@@ -3097,6 +3024,11 @@ void Init_numo_int64(void) {
    *   @return [Numo::NArray] self ^ other
    */
   rb_define_method(cT, "^", int64_bit_xor, 1);
+  /**
+   * Unary bit_not.
+   * @overload ~
+   *   @return [Numo::Int64] bit_not of self.
+   */
   rb_define_method(cT, "~", int64_bit_not, 0);
   rb_define_method(cT, "<<", int64_left_shift, 1);
   rb_define_method(cT, ">>", int64_right_shift, 1);

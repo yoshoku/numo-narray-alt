@@ -85,6 +85,7 @@ extern VALUE cRT;
 #include "mh/bit/and.h"
 #include "mh/bit/or.h"
 #include "mh/bit/xor.h"
+#include "mh/bit/not.h"
 #include "mh/clip.h"
 #include "mh/isnan.h"
 #include "mh/isinf.h"
@@ -142,6 +143,7 @@ DEF_NARRAY_ROBJ_LE_METHOD_FUNC()
 DEF_NARRAY_ROBJ_BIT_AND_METHOD_FUNC()
 DEF_NARRAY_ROBJ_BIT_OR_METHOD_FUNC()
 DEF_NARRAY_ROBJ_BIT_XOR_METHOD_FUNC()
+DEF_NARRAY_ROBJ_BIT_NOT_METHOD_FUNC()
 DEF_NARRAY_CLIP_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_ISNAN_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_ISINF_METHOD_FUNC(robject, numo_cRObject)
@@ -1988,64 +1990,6 @@ static VALUE robject_square(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-static void iter_robject_bit_not(na_loop_t* const lp) {
-  size_t i, n;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t *idx1, *idx2;
-  dtype x;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-
-  if (idx1) {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_bit_not(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_bit_not(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-    }
-  } else {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_bit_not(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      //
-      for (i = 0; i < n; i++) {
-        *(dtype*)p2 = m_bit_not(*(dtype*)p1);
-        p1 += s1;
-        p2 += s2;
-      }
-      return;
-      //
-    }
-  }
-}
-
-/*
-  Unary bit_not.
-  @overload ~
-    @return [Numo::RObject] bit_not of self.
-*/
-static VALUE robject_bit_not(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_robject_bit_not, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, self);
-}
-
 #define check_intdivzero(y)                                                                    \
   {}
 
@@ -2472,6 +2416,11 @@ void Init_numo_robject(void) {
    *   @return [Numo::NArray] self ^ other
    */
   rb_define_method(cT, "^", robject_bit_xor, 1);
+  /**
+   * Unary bit_not.
+   * @overload ~
+   *   @return [Numo::RObject] bit_not of self.
+   */
   rb_define_method(cT, "~", robject_bit_not, 0);
   rb_define_method(cT, "<<", robject_left_shift, 1);
   rb_define_method(cT, ">>", robject_right_shift, 1);
