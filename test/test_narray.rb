@@ -273,6 +273,10 @@ class NArrayTest < NArrayTestBase
       assert_equal(dtype[0, 1, 2, 0, 0], x & y)
       assert_equal(dtype[0, 1, 2, 3, 5], x | y)
       assert_equal(dtype[0, 0, 0, 3, 5], x ^ y)
+      y = Numo::UInt32[0, 1, 2, 0, 1]
+      assert_equal(dtype[0, 1, 2, 0, 0], x & y)
+      assert_equal(dtype[0, 1, 2, 3, 5], x | y)
+      assert_equal(dtype[0, 0, 0, 3, 5], x ^ y)
       assert_equal(-1 - x, ~x)
       assert_equal(dtype[0, 2, 4, 6, 8], x << 1)
       assert_equal(dtype[0, 2, 4, 6, 8], (x << 2) >> 1)
@@ -280,6 +284,10 @@ class NArrayTest < NArrayTestBase
     UNSIGNED_INTEGER_TYPES.each do |dtype|
       x = dtype.new(5).seq
       y = dtype[0, 1, 2, 0, 1]
+      assert_equal(dtype[0, 1, 2, 0, 0], x & y)
+      assert_equal(dtype[0, 1, 2, 3, 5], x | y)
+      assert_equal(dtype[0, 0, 0, 3, 5], x ^ y)
+      y = Numo::Int32[0, 1, 2, 0, 1]
       assert_equal(dtype[0, 1, 2, 0, 0], x & y)
       assert_equal(dtype[0, 1, 2, 3, 5], x | y)
       assert_equal(dtype[0, 0, 0, 3, 5], x ^ y)
