@@ -82,6 +82,7 @@ extern VALUE cRT;
 #include "mh/comp/ge.h"
 #include "mh/comp/lt.h"
 #include "mh/comp/le.h"
+#include "mh/bit/and.h"
 #include "mh/clip.h"
 #include "mh/isnan.h"
 #include "mh/isinf.h"
@@ -136,6 +137,7 @@ DEF_NARRAY_ROBJ_GT_METHOD_FUNC()
 DEF_NARRAY_ROBJ_GE_METHOD_FUNC()
 DEF_NARRAY_ROBJ_LT_METHOD_FUNC()
 DEF_NARRAY_ROBJ_LE_METHOD_FUNC()
+DEF_NARRAY_ROBJ_BIT_AND_METHOD_FUNC()
 DEF_NARRAY_CLIP_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_ISNAN_METHOD_FUNC(robject, numo_cRObject)
 DEF_NARRAY_FLT_ISINF_METHOD_FUNC(robject, numo_cRObject)
@@ -1985,83 +1987,6 @@ static VALUE robject_square(VALUE self) {
 #define check_intdivzero(y)                                                                    \
   {}
 
-static void iter_robject_bit_and(na_loop_t* const lp) {
-  size_t i = 0;
-  size_t n;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-
-  //
-
-  if (s2 == 0) { // Broadcasting from scalar value.
-    check_intdivzero(*(dtype*)p2);
-    if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
-      if (p1 == p3) { // inplace case
-        for (; i < n; i++) {
-          ((dtype*)p1)[i] = m_bit_and(((dtype*)p1)[i], *(dtype*)p2);
-        }
-      } else {
-        for (; i < n; i++) {
-          ((dtype*)p3)[i] = m_bit_and(((dtype*)p1)[i], *(dtype*)p2);
-        }
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        *(dtype*)p3 = m_bit_and(*(dtype*)p1, *(dtype*)p2);
-        p1 += s1;
-        p3 += s3;
-      }
-    }
-  } else {
-    if (p1 == p3) { // inplace case
-      for (i = 0; i < n; i++) {
-        check_intdivzero(*(dtype*)p2);
-        *(dtype*)p1 = m_bit_and(*(dtype*)p1, *(dtype*)p2);
-        p1 += s1;
-        p2 += s2;
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        check_intdivzero(*(dtype*)p2);
-        *(dtype*)p3 = m_bit_and(*(dtype*)p1, *(dtype*)p2);
-        p1 += s1;
-        p2 += s2;
-        p3 += s3;
-      }
-    }
-  }
-
-  return;
-  //
-}
-#undef check_intdivzero
-
-static VALUE robject_bit_and_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_robject_bit_and, STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Binary bit_and.
-  @overload & other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::NArray] self & other
-*/
-static VALUE robject_bit_and(VALUE self, VALUE other) {
-  return robject_bit_and_self(self, other);
-}
-
-#define check_intdivzero(y)                                                                    \
-  {}
-
 static void iter_robject_bit_or(na_loop_t* const lp) {
   size_t i = 0;
   size_t n;
@@ -2676,6 +2601,12 @@ void Init_numo_robject(void) {
    */
   rb_define_method(cT, "nearly_eq", robject_nearly_eq, 1);
   rb_define_alias(cT, "close_to", "nearly_eq");
+  /**
+   * Binary bit_and.
+   * @overload & other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::NArray] self & other
+   */
   rb_define_method(cT, "&", robject_bit_and, 1);
   rb_define_method(cT, "|", robject_bit_or, 1);
   rb_define_method(cT, "^", robject_bit_xor, 1);

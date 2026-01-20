@@ -266,6 +266,53 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_bit_operations # rubocop:disable Metrics/AbcSize, Minitest/MultipleAssertions
+    INTEGER_TYPES.each do |dtype|
+      x = dtype.new(5).seq
+      y = dtype[0, 1, 2, 0, 1]
+      assert_equal(dtype[0, 1, 2, 0, 0], x & y)
+      assert_equal(dtype[0, 1, 2, 3, 5], x | y)
+      assert_equal(dtype[0, 0, 0, 3, 5], x ^ y)
+      assert_equal(-1 - x, ~x)
+      assert_equal(dtype[0, 2, 4, 6, 8], x << 1)
+      assert_equal(dtype[0, 2, 4, 6, 8], (x << 2) >> 1)
+    end
+    UNSIGNED_INTEGER_TYPES.each do |dtype|
+      x = dtype.new(5).seq
+      y = dtype[0, 1, 2, 0, 1]
+      assert_equal(dtype[0, 1, 2, 0, 0], x & y)
+      assert_equal(dtype[0, 1, 2, 3, 5], x | y)
+      assert_equal(dtype[0, 0, 0, 3, 5], x ^ y)
+      assert_equal(dtype::MAX - x, ~x)
+      assert_equal(dtype[0, 2, 4, 6, 8], x << 1)
+      assert_equal(dtype[0, 2, 4, 6, 8], (x << 2) >> 1)
+    end
+    Integer.class_eval %{
+      def bit_and(other)
+        self & other
+      end
+
+      def bit_or(other)
+        self | other
+      end
+
+      def bit_xor(other)
+        self ^ other
+      end
+
+      def bit_not
+        ~self
+      end
+    }, __FILE__, __LINE__ - 16
+    x = Numo::RObject[0, 1, 2]
+    assert_equal(Numo::RObject[0, 0, 2], x & 2)
+    assert_equal(Numo::RObject[2, 3, 2], x | 2)
+    assert_equal(Numo::RObject[2, 3, 0], x ^ 2)
+    assert_equal(Numo::RObject[-1, -2, -3], ~x)
+    assert_equal(Numo::RObject[0, 2, 4], x << 1)
+    assert_equal(Numo::RObject[0, 2, 4], (x << 2) >> 1)
+  end
+
   def test_round
     [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |dtype|
       actual = dtype[1.5, -2.3, 3.0, -4.7, 5.9].round
@@ -500,7 +547,7 @@ class NArrayTest < NArrayTestBase
   end
 
   def test_bincount
-    INTEGER_TYPES.each do |dtype|
+    [*INTEGER_TYPES, *UNSIGNED_INTEGER_TYPES].each do |dtype|
       actual = dtype[0, 1, 1, 3, 2, 1, 7].bincount
       assert_kind_of(Numo::UInt32, actual)
       assert_equal(Numo::UInt32[1, 3, 1, 1, 0, 0, 0, 1], actual)
