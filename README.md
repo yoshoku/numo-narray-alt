@@ -43,6 +43,13 @@ Numo::DFloat#shape=[2,2]
 irb(main):004>
 ```
 
+If you want to explicitly load numo-narray-alt, write the require method as follows:
+
+```ruby
+irb(main):001> require 'numo/narray/alt'
+=> true
+```
+
 ## Documentation
 
 - [API Documentation on Gemdocs](https://gemdocs.org/gems/numo-narray-alt/)
