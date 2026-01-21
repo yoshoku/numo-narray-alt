@@ -64,6 +64,7 @@ extern VALUE cRT;
 #include "mh/bit/or.h"
 #include "mh/bit/xor.h"
 #include "mh/bit/not.h"
+#include "mh/bit/left_shift.h"
 #include "mh/clip.h"
 #include "mh/sum.h"
 #include "mh/prod.h"
@@ -112,6 +113,7 @@ DEF_NARRAY_INT8_BIT_AND_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT8_BIT_OR_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT8_BIT_XOR_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT8_BIT_NOT_METHOD_FUNC(int8, numo_cInt8)
+DEF_NARRAY_INT8_LEFT_SHIFT_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_CLIP_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT_SUM_METHOD_FUNC(int8, numo_cInt8, int64_t, numo_cInt64)
 DEF_NARRAY_INT_PROD_METHOD_FUNC(int8, numo_cInt8, int64_t, numo_cInt64)
@@ -1957,92 +1959,6 @@ static VALUE int8_square(VALUE self) {
 #define check_intdivzero(y)                                                                    \
   {}
 
-static void iter_int8_left_shift(na_loop_t* const lp) {
-  size_t i = 0;
-  size_t n;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-
-  //
-
-  if (s2 == 0) { // Broadcasting from scalar value.
-    check_intdivzero(*(dtype*)p2);
-    if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
-      if (p1 == p3) { // inplace case
-        for (; i < n; i++) {
-          ((dtype*)p1)[i] = m_left_shift(((dtype*)p1)[i], *(dtype*)p2);
-        }
-      } else {
-        for (; i < n; i++) {
-          ((dtype*)p3)[i] = m_left_shift(((dtype*)p1)[i], *(dtype*)p2);
-        }
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        *(dtype*)p3 = m_left_shift(*(dtype*)p1, *(dtype*)p2);
-        p1 += s1;
-        p3 += s3;
-      }
-    }
-  } else {
-    if (p1 == p3) { // inplace case
-      for (i = 0; i < n; i++) {
-        check_intdivzero(*(dtype*)p2);
-        *(dtype*)p1 = m_left_shift(*(dtype*)p1, *(dtype*)p2);
-        p1 += s1;
-        p2 += s2;
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        check_intdivzero(*(dtype*)p2);
-        *(dtype*)p3 = m_left_shift(*(dtype*)p1, *(dtype*)p2);
-        p1 += s1;
-        p2 += s2;
-        p3 += s3;
-      }
-    }
-  }
-
-  return;
-  //
-}
-#undef check_intdivzero
-
-static VALUE int8_left_shift_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_int8_left_shift, STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Binary left_shift.
-  @overload << other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::NArray] self << other
-*/
-static VALUE int8_left_shift(VALUE self, VALUE other) {
-
-  VALUE klass, v;
-
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
-  if (klass == cT) {
-    return int8_left_shift_self(self, other);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    return rb_funcall(v, id_left_shift, 1, other);
-  }
-}
-
-#define check_intdivzero(y)                                                                    \
-  {}
-
 static void iter_int8_right_shift(na_loop_t* const lp) {
   size_t i = 0;
   size_t n;
@@ -2881,6 +2797,12 @@ void Init_numo_int8(void) {
    *   @return [Numo::Int8] bit_not of self.
    */
   rb_define_method(cT, "~", int8_bit_not, 0);
+  /**
+   * Binary left_shift.
+   * @overload << other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::NArray] self << other
+   */
   rb_define_method(cT, "<<", int8_left_shift, 1);
   rb_define_method(cT, ">>", int8_right_shift, 1);
   rb_define_alias(cT, "floor", "view");
