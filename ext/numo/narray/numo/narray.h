@@ -13,8 +13,8 @@ extern "C" {
 #endif
 #endif
 
-#define NARRAY_VERSION "0.9.11"
-#define NARRAY_VERSION_CODE 9110
+#define NARRAY_VERSION "0.9.12"
+#define NARRAY_VERSION_CODE 9120
 
 #include <math.h>
 #include "numo/compat.h"

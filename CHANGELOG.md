@@ -1,3 +1,10 @@
+## [[0.9.12](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.11...v0.9.12)] - 2026-01-21
+
+- fixed the `divmod` method for `Numo::RObject` to also return the modulo result: [687b3bf](https://github.com/yoshoku/numo-narray-alt/commit/687b3bf5588c46212b71d75d8a17487b4de7122e)
+- refactored multiple methods to use macro templates: isnan, isinf, isposinf, isneginf, isfinite, floor, round,
+  ceil, trunc, rint, gt, ge, lt, le, eq, ne, nearly_eq, to_a, coerce_cast, fill, format, format_to_a, inspect,
+  add, sub, mul, div, mod, bincount, &, |, ^, ~, <<, >>, and divmod.
+
 ## [[0.9.11](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.10...v0.9.11)] - 2026-01-02
 
 - fixed maximum value specification not working in `rand` method of `Numo::RObject`: [ea94492](https://github.com/yoshoku/numo-narray-alt/compare/9e9e4ea...ea94492)
