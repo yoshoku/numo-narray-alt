@@ -71,6 +71,7 @@ extern VALUE cRT;
 #include "mh/op/mul.h"
 #include "mh/op/div.h"
 #include "mh/op/mod.h"
+#include "mh/divmod.h"
 #include "mh/round/floor.h"
 #include "mh/round/round.h"
 #include "mh/round/ceil.h"
@@ -131,6 +132,7 @@ DEF_NARRAY_ROBJ_SUB_METHOD_FUNC()
 DEF_NARRAY_ROBJ_MUL_METHOD_FUNC()
 DEF_NARRAY_ROBJ_DIV_METHOD_FUNC()
 DEF_NARRAY_ROBJ_MOD_METHOD_FUNC()
+DEF_NARRAY_ROBJ_DIVMOD_METHOD_FUNC()
 DEF_NARRAY_ROBJ_FLOOR_METHOD_FUNC()
 DEF_NARRAY_ROBJ_ROUND_METHOD_FUNC()
 DEF_NARRAY_ROBJ_CEIL_METHOD_FUNC()
@@ -1661,47 +1663,6 @@ static VALUE robject_abs(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-static void iter_robject_divmod(na_loop_t* const lp) {
-  size_t i, n;
-  char *p1, *p2, *p3, *p4;
-  ssize_t s1, s2, s3, s4;
-  dtype x, y, a, b;
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-  INIT_PTR(lp, 3, p4, s4);
-  for (i = n; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    if (y == 0) {
-      lp->err_type = rb_eZeroDivError;
-      return;
-    }
-    m_divmod(x, y, a, b);
-    SET_DATA_STRIDE(p3, s3, dtype, a);
-    SET_DATA_STRIDE(p4, s4, dtype, b);
-  }
-}
-
-static VALUE robject_divmod_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_t ndf = { iter_robject_divmod, STRIDE_LOOP, 2, 2, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Binary divmod.
-  @overload divmod other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::NArray] divmod of self and other.
-*/
-static VALUE robject_divmod(VALUE self, VALUE other) {
-  return robject_divmod_self(self, other);
-}
-
 static void iter_robject_pow(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2, *p3;
@@ -2213,6 +2174,12 @@ void Init_numo_robject(void) {
    *   @return [Numo::NArray] self % other
    */
   rb_define_method(cT, "%", robject_mod, 1);
+  /**
+   * Binary divmod.
+   * @overload divmod other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::NArray] divmod of self and other.
+   */
   rb_define_method(cT, "divmod", robject_divmod, 1);
   rb_define_method(cT, "**", robject_pow, 1);
   rb_define_alias(cT, "pow", "**");

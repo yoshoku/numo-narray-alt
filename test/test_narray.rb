@@ -163,6 +163,30 @@ class NArrayTest < NArrayTestBase
           assert_raises(ZeroDivisionError) { a % [0] } # rubocop:disable Style/FormatString
           assert_raises(ZeroDivisionError) { a % [1, 1, 1, 1, 1, 0] } # rubocop:disable Style/FormatString
         end
+        unless [Numo::DComplex, Numo::SComplex].include?(dtype)
+          actual = a.divmod(2)
+          assert_kind_of(Array, actual)
+          assert_equal(2, actual.size)
+          if FLOAT_TYPES.include?(dtype)
+            assert_equal(dtype[0.5, 1, 1.5, 2.5, 3.5, 5.5], actual[0])
+            assert_equal(dtype[1, 0, 1, 1, 1, 1], actual[1])
+          else
+            assert_equal(dtype[0, 1, 1, 2, 3, 5], actual[0])
+            assert_equal(dtype[1, 0, 1, 1, 1, 1], actual[1])
+            assert_raises(ZeroDivisionError) { a.divmod(0) }
+          end
+          actual = a.divmod([2])
+          assert_kind_of(Array, actual)
+          assert_equal(2, actual.size)
+          if FLOAT_TYPES.include?(dtype)
+            assert_equal(dtype[0.5, 1, 1.5, 2.5, 3.5, 5.5], actual[0])
+            assert_equal(dtype[1, 0, 1, 1, 1, 1], actual[1])
+          else
+            assert_equal(dtype[0, 1, 1, 2, 3, 5], actual[0])
+            assert_equal(dtype[1, 0, 1, 1, 1, 1], actual[1])
+            assert_raises(ZeroDivisionError) { a.divmod([0]) }
+          end
+        end
         assert_equal(dtype[-1, -2, -3, -5, -7, -11], -a)
         assert_equal(dtype[1, 4, 9, 25, 49, 121], a**2)
         assert_equal(Numo::SFloat[1, 2, 3, 5, 7, 11], a.swap_byte.swap_byte) if dtype != Numo::RObject

@@ -54,6 +54,7 @@ extern VALUE cRT;
 #include "mh/op/mul.h"
 #include "mh/op/div.h"
 #include "mh/op/mod.h"
+#include "mh/divmod.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/gt.h"
@@ -104,6 +105,7 @@ DEF_NARRAY_INT8_SUB_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT8_MUL_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT8_DIV_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_INT8_MOD_METHOD_FUNC(int8, numo_cInt8)
+DEF_NARRAY_INT_DIVMOD_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_EQ_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_NE_METHOD_FUNC(int8, numo_cInt8)
 DEF_NARRAY_GT_METHOD_FUNC(int8, numo_cInt8)
@@ -1609,55 +1611,6 @@ static VALUE int8_abs(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-static void iter_int8_divmod(na_loop_t* const lp) {
-  size_t i, n;
-  char *p1, *p2, *p3, *p4;
-  ssize_t s1, s2, s3, s4;
-  dtype x, y, a, b;
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-  INIT_PTR(lp, 3, p4, s4);
-  for (i = n; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    if (y == 0) {
-      lp->err_type = rb_eZeroDivError;
-      return;
-    }
-    m_divmod(x, y, a, b);
-    SET_DATA_STRIDE(p3, s3, dtype, a);
-    SET_DATA_STRIDE(p4, s4, dtype, b);
-  }
-}
-
-static VALUE int8_divmod_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_t ndf = { iter_int8_divmod, STRIDE_LOOP, 2, 2, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Binary divmod.
-  @overload divmod other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::NArray] divmod of self and other.
-*/
-static VALUE int8_divmod(VALUE self, VALUE other) {
-
-  VALUE klass, v;
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
-  if (klass == cT) {
-    return int8_divmod_self(self, other);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    return rb_funcall(v, id_divmod, 1, other);
-  }
-}
-
 static void iter_int8_pow(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2, *p3;
@@ -2660,6 +2613,12 @@ void Init_numo_int8(void) {
    *   @return [Numo::NArray] self % other
    */
   rb_define_method(cT, "%", int8_mod, 1);
+  /**
+   * Binary divmod.
+   * @overload divmod other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::NArray] divmod of self and other.
+   */
   rb_define_method(cT, "divmod", int8_divmod, 1);
   rb_define_method(cT, "**", int8_pow, 1);
   rb_define_alias(cT, "pow", "**");
