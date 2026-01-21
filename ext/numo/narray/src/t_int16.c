@@ -65,6 +65,7 @@ extern VALUE cRT;
 #include "mh/bit/xor.h"
 #include "mh/bit/not.h"
 #include "mh/bit/left_shift.h"
+#include "mh/bit/right_shift.h"
 #include "mh/clip.h"
 #include "mh/sum.h"
 #include "mh/prod.h"
@@ -114,6 +115,7 @@ DEF_NARRAY_INT_BIT_OR_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_INT_BIT_XOR_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_INT_BIT_NOT_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_INT_LEFT_SHIFT_METHOD_FUNC(int16, numo_cInt16)
+DEF_NARRAY_INT_RIGHT_SHIFT_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_CLIP_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_INT_SUM_METHOD_FUNC(int16, numo_cInt16, int64_t, numo_cInt64)
 DEF_NARRAY_INT_PROD_METHOD_FUNC(int16, numo_cInt16, int64_t, numo_cInt64)
@@ -2041,124 +2043,6 @@ static VALUE int16_square(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-#define check_intdivzero(y)                                                                    \
-  {}
-
-static void iter_int16_right_shift(na_loop_t* const lp) {
-  size_t i = 0;
-  size_t n;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-
-  //
-  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) &&
-      is_aligned(p3, sizeof(dtype))) {
-
-    if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
-      if (p1 == p3) { // inplace case
-        for (; i < n; i++) {
-          check_intdivzero(((dtype*)p2)[i]);
-          ((dtype*)p1)[i] = m_right_shift(((dtype*)p1)[i], ((dtype*)p2)[i]);
-        }
-      } else {
-        for (; i < n; i++) {
-          check_intdivzero(((dtype*)p2)[i]);
-          ((dtype*)p3)[i] = m_right_shift(((dtype*)p1)[i], ((dtype*)p2)[i]);
-        }
-      }
-      return;
-    }
-
-    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) &&
-        is_aligned_step(s3, sizeof(dtype))) {
-      //
-
-      if (s2 == 0) { // Broadcasting from scalar value.
-        check_intdivzero(*(dtype*)p2);
-        if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
-          if (p1 == p3) { // inplace case
-            for (; i < n; i++) {
-              ((dtype*)p1)[i] = m_right_shift(((dtype*)p1)[i], *(dtype*)p2);
-            }
-          } else {
-            for (; i < n; i++) {
-              ((dtype*)p3)[i] = m_right_shift(((dtype*)p1)[i], *(dtype*)p2);
-            }
-          }
-        } else {
-          for (i = 0; i < n; i++) {
-            *(dtype*)p3 = m_right_shift(*(dtype*)p1, *(dtype*)p2);
-            p1 += s1;
-            p3 += s3;
-          }
-        }
-      } else {
-        if (p1 == p3) { // inplace case
-          for (i = 0; i < n; i++) {
-            check_intdivzero(*(dtype*)p2);
-            *(dtype*)p1 = m_right_shift(*(dtype*)p1, *(dtype*)p2);
-            p1 += s1;
-            p2 += s2;
-          }
-        } else {
-          for (i = 0; i < n; i++) {
-            check_intdivzero(*(dtype*)p2);
-            *(dtype*)p3 = m_right_shift(*(dtype*)p1, *(dtype*)p2);
-            p1 += s1;
-            p2 += s2;
-            p3 += s3;
-          }
-        }
-      }
-
-      return;
-      //
-    }
-  }
-  for (i = 0; i < n; i++) {
-    dtype x, y, z;
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    check_intdivzero(y);
-    z = m_right_shift(x, y);
-    SET_DATA_STRIDE(p3, s3, dtype, z);
-  }
-  //
-}
-#undef check_intdivzero
-
-static VALUE int16_right_shift_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_int16_right_shift, STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Binary right_shift.
-  @overload >> other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::NArray] self >> other
-*/
-static VALUE int16_right_shift(VALUE self, VALUE other) {
-
-  VALUE klass, v;
-
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
-  if (klass == cT) {
-    return int16_right_shift_self(self, other);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    return rb_funcall(v, id_right_shift, 1, other);
-  }
-}
-
 static void iter_int16_poly(na_loop_t* const lp) {
   size_t i;
   dtype x, y, a;
@@ -2921,6 +2805,12 @@ void Init_numo_int16(void) {
    *   @return [Numo::NArray] self << other
    */
   rb_define_method(cT, "<<", int16_left_shift, 1);
+  /**
+   * Binary right_shift.
+   * @overload >> other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::NArray] self >> other
+   */
   rb_define_method(cT, ">>", int16_right_shift, 1);
   rb_define_alias(cT, "floor", "view");
   rb_define_alias(cT, "round", "view");
