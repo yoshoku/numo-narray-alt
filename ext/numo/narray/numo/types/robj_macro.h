@@ -22,7 +22,7 @@
   {                                                                                            \
     x = rb_funcall(x, id_divmod, 1, y);                                                        \
     a = RARRAY_PTR(x)[0];                                                                      \
-    b = RARRAY_PTR(x)[0];                                                                      \
+    b = RARRAY_PTR(x)[1];                                                                      \
   }
 #define m_pow(x, y) rb_funcall(x, id_pow, 1, y)
 #define m_pow_int(x, y) rb_funcall(x, id_pow, 1, y)
