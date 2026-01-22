@@ -57,6 +57,7 @@ extern VALUE cRT;
 #include "mh/divmod.h"
 #include "mh/pow.h"
 #include "mh/minus.h"
+#include "mh/reciprocal.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/gt.h"
@@ -110,6 +111,7 @@ DEF_NARRAY_INT_MOD_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_INT_DIVMOD_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_POW_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_MINUS_METHOD_FUNC(uint64, numo_cUInt64)
+DEF_NARRAY_RECIPROCAL_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_EQ_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_NE_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_GT_METHOD_FUNC(uint64, numo_cUInt64)
@@ -1632,81 +1634,6 @@ static VALUE uint64_abs(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-static void iter_uint64_reciprocal(na_loop_t* const lp) {
-  size_t i, n;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t *idx1, *idx2;
-  dtype x;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-
-  if (idx1) {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_reciprocal(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_reciprocal(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-    }
-  } else {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_reciprocal(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      //
-      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
-        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
-          for (i = 0; i < n; i++) {
-            ((dtype*)p2)[i] = m_reciprocal(((dtype*)p1)[i]);
-          }
-          return;
-        }
-        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
-          //
-          for (i = 0; i < n; i++) {
-            *(dtype*)p2 = m_reciprocal(*(dtype*)p1);
-            p1 += s1;
-            p2 += s2;
-          }
-          return;
-          //
-        }
-      }
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_reciprocal(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-      //
-    }
-  }
-}
-
-/*
-  Unary reciprocal.
-  @overload reciprocal
-    @return [Numo::UInt64] reciprocal of self.
-*/
-static VALUE uint64_reciprocal(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_uint64_reciprocal, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, self);
-}
-
 static void iter_uint64_sign(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2;
@@ -2580,6 +2507,11 @@ void Init_numo_uint64(void) {
    *   @return [Numo::UInt64] minus of self.
    */
   rb_define_method(cT, "-@", uint64_minus, 0);
+  /**
+   * Unary reciprocal.
+   * @overload reciprocal
+   *   @return [Numo::UInt64] reciprocal of self.
+   */
   rb_define_method(cT, "reciprocal", uint64_reciprocal, 0);
   rb_define_method(cT, "sign", uint64_sign, 0);
   rb_define_method(cT, "square", uint64_square, 0);

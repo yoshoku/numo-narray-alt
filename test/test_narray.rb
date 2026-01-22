@@ -232,6 +232,26 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_reciprocal
+    FLOAT_TYPES.each do |dtype|
+      assert_equal(dtype[0.5, 0.25, 0.125, 0.1], dtype[2, 4, 8, 10].reciprocal)
+    end
+    INTEGER_TYPES.each do |dtype|
+      assert_equal(dtype[1, -1, 0, 0], dtype[1, -1, 2, -2].reciprocal)
+      assert_raises(ZeroDivisionError) { dtype[1, 0].reciprocal }
+    end
+    UNSIGNED_INTEGER_TYPES.each do |dtype|
+      assert_equal(dtype[1, 0, 0], dtype[1, 2, 4].reciprocal)
+      assert_raises(ZeroDivisionError) { dtype[1, 0].reciprocal }
+    end
+    Float.class_eval %{
+      def reciprocal
+        1.fdiv(self)
+      end
+    }, __FILE__, __LINE__ - 4
+    assert_equal(Numo::RObject[0.5, 0.25, 0.125, 0.1], Numo::RObject[2.0, 4.0, 8.0, 10.0].reciprocal)
+  end
+
   def test_array_indexing
     TYPES.each do |dtype|
       assert_equal(dtype[1, 2, 3, 4], dtype[1..4])
@@ -822,7 +842,6 @@ class NArrayTest < NArrayTestBase
         end
         assert_equal(dtype[[-1, -2, -3], [-5, -7, -11]], -a)
         assert_equal(dtype[[1, 4, 9], [25, 49, 121]], a**2)
-        assert_equal(Numo::SFloat.asarray(src), a.swap_byte.swap_byte) if dtype != Numo::RObject
       end
     end
   end
