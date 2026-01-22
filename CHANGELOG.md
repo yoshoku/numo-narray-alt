@@ -1,3 +1,8 @@
+## [[0.9.13](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.12...v0.9.13)] - 2026-01-23
+
+- fixed the `rand` method for `Numo::DComplex` to return the complex values when no arguments are given: [78423e5](https://github.com/yoshoku/numo-narray-alt/commit/78423e5e0c300374ea87affa1e5433d821862089)
+- refactored multiple methods to use macro templates: pow, minus, reciprocal, sign, square, and rand_norm.
+
 ## [[0.9.12](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.11...v0.9.12)] - 2026-01-21
 
 - fixed the `divmod` method for `Numo::RObject` to also return the modulo result: [687b3bf](https://github.com/yoshoku/numo-narray-alt/commit/687b3bf5588c46212b71d75d8a17487b4de7122e)
