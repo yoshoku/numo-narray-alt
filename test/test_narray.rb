@@ -543,6 +543,12 @@ class NArrayTest < NArrayTestBase
           assert_in_delta(expected.imag, actual2d[1, i].imag, 1e-6)
         end
       end
+      actual = Numo::SComplex.new(5).rand
+      assert(actual.real.to_a.any? { |v| v != 0.0 })
+      assert(actual.imag.to_a.any? { |v| v != 0.0 })
+      actual = Numo::DComplex.new(5).rand
+      assert(actual.real.to_a.any? { |v| v != 0.0 })
+      assert(actual.imag.to_a.any? { |v| v != 0.0 })
     end
     # rubocop:enable Performance/CollectionLiteralInLoop
   end
