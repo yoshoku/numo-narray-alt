@@ -252,6 +252,22 @@ class NArrayTest < NArrayTestBase
     assert_equal(Numo::RObject[0.5, 0.25, 0.125, 0.1], Numo::RObject[2.0, 4.0, 8.0, 10.0].reciprocal)
   end
 
+  def test_sign
+    [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |dtype|
+      assert_equal(dtype[1, -1, 0, 1, -1], dtype[3.5, -2.1, 0.0, 0.7, -0.9].sign)
+    end
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      assert_equal(dtype[1 + 1i, -1 - 1i, 0 + 0i, 0 - 1i, -1 + 0i],
+                   dtype[3 + 2i, -2 - 3i, 0 + 0i, 0 - 4i, -5 + 0i].sign)
+    end
+    INTEGER_TYPES.each do |dtype|
+      assert_equal(dtype[1, -1, 0, 1, -1], dtype[3, -2, 0, 7, -9].sign)
+    end
+    UNSIGNED_INTEGER_TYPES.each do |dtype|
+      assert_equal(dtype[1, 0, 0, 1, 0], dtype[3, 0, 0, 7, 0].sign)
+    end
+  end
+
   def test_array_indexing
     TYPES.each do |dtype|
       assert_equal(dtype[1, 2, 3, 4], dtype[1..4])
