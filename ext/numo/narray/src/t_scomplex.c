@@ -79,6 +79,7 @@ extern VALUE cRT;
 #include "mh/logseq.h"
 #include "mh/eye.h"
 #include "mh/rand.h"
+#include "mh/rand_norm.h"
 #include "mh/math/sqrt.h"
 #include "mh/math/cbrt.h"
 #include "mh/math/log.h"
@@ -142,6 +143,7 @@ DEF_NARRAY_FLT_SEQ_METHOD_FUNC(scomplex)
 DEF_NARRAY_FLT_LOGSEQ_METHOD_FUNC(scomplex)
 DEF_NARRAY_EYE_METHOD_FUNC(scomplex)
 DEF_NARRAY_CMP_RAND_METHOD_FUNC(scomplex)
+DEF_NARRAY_CMP_RAND_NORM_METHOD_FUNC(scomplex, float)
 DEF_NARRAY_FLT_SQRT_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_CBRT_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_LOG_METHOD_FUNC(scomplex, numo_cSComplex)
@@ -2309,78 +2311,6 @@ static VALUE scomplex_copysign(VALUE self, VALUE other) {
   }
 }
 
-typedef struct {
-  dtype mu;
-  rtype sigma;
-} randn_opt_t;
-
-static void iter_scomplex_rand_norm(na_loop_t* const lp) {
-  size_t i;
-  char* p1;
-  ssize_t s1;
-  size_t* idx1;
-
-  dtype* a0;
-
-  dtype mu;
-  rtype sigma;
-  randn_opt_t* g;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  g = (randn_opt_t*)(lp->opt_ptr);
-  mu = g->mu;
-  sigma = g->sigma;
-
-  if (idx1) {
-
-    for (; i--;) {
-      a0 = (dtype*)(p1 + *idx1);
-      m_rand_norm(mu, sigma, a0);
-      idx1 += 1;
-    }
-
-  } else {
-
-    for (; i--;) {
-      a0 = (dtype*)(p1);
-      m_rand_norm(mu, sigma, a0);
-      p1 += s1;
-    }
-  }
-}
-
-/*
-  Generates random numbers from the normal distribution on self narray
-  using Box-Muller Transformation.
-
-  @overload rand_norm([mu,[sigma]])
-    @param [Numeric] mu  mean of normal distribution. (default=0)
-    @param [Numeric] sigma  standard deviation of normal distribution. (default=1)
-    @return [Numo::SComplex] self.
-*/
-static VALUE scomplex_rand_norm(int argc, VALUE* argv, VALUE self) {
-  int n;
-  randn_opt_t g;
-  VALUE v1 = Qnil, v2 = Qnil;
-  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
-  ndfunc_t ndf = { iter_scomplex_rand_norm, FULL_LOOP, 1, 0, ain, 0 };
-
-  n = rb_scan_args(argc, argv, "02", &v1, &v2);
-  if (n == 0) {
-    g.mu = m_zero;
-  } else {
-    g.mu = m_num_to_data(v1);
-  }
-  if (n == 2) {
-    g.sigma = NUM2DBL(v2);
-  } else {
-    g.sigma = 1;
-  }
-  na_ndloop3(&ndf, &g, 1, self);
-  return self;
-}
-
 static void iter_scomplex_poly(na_loop_t* const lp) {
   size_t i;
   dtype x, y, a;
@@ -2869,6 +2799,15 @@ void Init_numo_scomplex(void) {
    *   # [4, 3, 3, 2, 4, 2]
    */
   rb_define_method(cT, "rand", scomplex_rand, -1);
+  /**
+   * Generates random numbers from the normal distribution on self narray
+   * using Box-Muller Transformation.
+   *
+   * @overload rand_norm([mu,[sigma]])
+   *   @param [Numeric] mu  mean of normal distribution. (default=0)
+   *   @param [Numeric] sigma  standard deviation of normal distribution. (default=1)
+   *   @return [Numo::SComplex] self.
+   */
   rb_define_method(cT, "rand_norm", scomplex_rand_norm, -1);
   rb_define_method(cT, "poly", scomplex_poly, -2);
   rb_define_singleton_method(cT, "[]", scomplex_s_cast, -2);

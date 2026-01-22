@@ -100,6 +100,7 @@ extern VALUE cRT;
 #include "mh/logseq.h"
 #include "mh/eye.h"
 #include "mh/rand.h"
+#include "mh/rand_norm.h"
 #include "mh/math/sqrt.h"
 #include "mh/math/cbrt.h"
 #include "mh/math/log.h"
@@ -197,6 +198,7 @@ DEF_NARRAY_FLT_SEQ_METHOD_FUNC(dfloat)
 DEF_NARRAY_FLT_LOGSEQ_METHOD_FUNC(dfloat)
 DEF_NARRAY_EYE_METHOD_FUNC(dfloat)
 DEF_NARRAY_FLT_RAND_METHOD_FUNC(dfloat)
+DEF_NARRAY_FLT_RAND_NORM_METHOD_FUNC(dfloat)
 #ifdef __SSE2__
 DEF_NARRAY_FLT_SQRT_SSE2_DBL_METHOD_FUNC(dfloat, numo_cDFloat)
 #else
@@ -1840,79 +1842,6 @@ static VALUE dfloat_kahan_sum(int argc, VALUE* argv, VALUE self) {
   v = na_ndloop(&ndf, 2, self, reduce);
 
   return dfloat_extract(v);
-}
-
-typedef struct {
-  dtype mu;
-  rtype sigma;
-} randn_opt_t;
-
-static void iter_dfloat_rand_norm(na_loop_t* const lp) {
-  size_t i;
-  char* p1;
-  ssize_t s1;
-  size_t* idx1;
-
-  dtype *a0, *a1;
-
-  dtype mu;
-  rtype sigma;
-  randn_opt_t* g;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  g = (randn_opt_t*)(lp->opt_ptr);
-  mu = g->mu;
-  sigma = g->sigma;
-
-  if (idx1) {
-
-    for (; i > 1; i -= 2) {
-      a0 = (dtype*)(p1 + *idx1);
-      a1 = (dtype*)(p1 + *(idx1 + 1));
-      m_rand_norm(mu, sigma, a0, a1);
-      idx1 += 2;
-    }
-    if (i > 0) {
-      a0 = (dtype*)(p1 + *idx1);
-      m_rand_norm(mu, sigma, a0, 0);
-    }
-
-  } else {
-
-    for (; i > 1; i -= 2) {
-      a0 = (dtype*)(p1);
-      a1 = (dtype*)(p1 + s1);
-      m_rand_norm(mu, sigma, a0, a1);
-      p1 += s1 * 2;
-    }
-    if (i > 0) {
-      a0 = (dtype*)(p1);
-      m_rand_norm(mu, sigma, a0, 0);
-    }
-  }
-}
-
-static VALUE dfloat_rand_norm(int argc, VALUE* args, VALUE self) {
-  int n;
-  randn_opt_t g;
-  VALUE v1 = Qnil, v2 = Qnil;
-  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
-  ndfunc_t ndf = { iter_dfloat_rand_norm, FULL_LOOP, 1, 0, ain, 0 };
-
-  n = rb_scan_args(argc, args, "02", &v1, &v2);
-  if (n == 0) {
-    g.mu = m_zero;
-  } else {
-    g.mu = m_num_to_data(v1);
-  }
-  if (n == 2) {
-    g.sigma = NUM2DBL(v2);
-  } else {
-    g.sigma = 1;
-  }
-  na_ndloop3(&ndf, &g, 1, self);
-  return self;
 }
 
 static void iter_dfloat_poly(na_loop_t* const lp) {

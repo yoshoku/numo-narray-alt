@@ -547,6 +547,23 @@ class NArrayTest < NArrayTestBase
     # rubocop:enable Performance/CollectionLiteralInLoop
   end
 
+  def test_rand_norm
+    [Numo::DFloat, Numo::SFloat].each do |dtype|
+      Numo::NArray.srand(1_234_567)
+      actual = dtype.new(100_000).rand_norm
+      assert_in_delta(0.0, actual.mean, 0.01)
+      assert_in_delta(1.0, actual.var, 0.01)
+    end
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      Numo::NArray.srand(1_234_567)
+      actual = dtype.new(100_000).rand_norm
+      assert_in_delta(0.0, actual.mean.real, 0.01)
+      assert_in_delta(0.0, actual.mean.imag, 0.01)
+      assert_in_delta(1.0, actual.real.var, 0.01)
+      assert_in_delta(1.0, actual.imag.var, 0.01)
+    end
+  end
+
   def test_isnan
     [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |dtype|
       actual = dtype[1.0, Float::NAN, 2.0, Float::NAN, 3.0].isnan

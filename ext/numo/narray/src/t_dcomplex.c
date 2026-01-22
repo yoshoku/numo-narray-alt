@@ -79,6 +79,7 @@ extern VALUE cRT;
 #include "mh/logseq.h"
 #include "mh/eye.h"
 #include "mh/rand.h"
+#include "mh/rand_norm.h"
 #include "mh/math/sqrt.h"
 #include "mh/math/cbrt.h"
 #include "mh/math/log.h"
@@ -142,6 +143,7 @@ DEF_NARRAY_FLT_SEQ_METHOD_FUNC(dcomplex)
 DEF_NARRAY_FLT_LOGSEQ_METHOD_FUNC(dcomplex)
 DEF_NARRAY_EYE_METHOD_FUNC(dcomplex)
 DEF_NARRAY_FLT_RAND_METHOD_FUNC(dcomplex)
+DEF_NARRAY_CMP_RAND_NORM_METHOD_FUNC(dcomplex, double)
 DEF_NARRAY_FLT_SQRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_CBRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_LOG_METHOD_FUNC(dcomplex, numo_cDComplex)
@@ -2357,99 +2359,6 @@ static VALUE dcomplex_kahan_sum(int argc, VALUE* argv, VALUE self) {
   return dcomplex_extract(v);
 }
 
-typedef struct {
-  dtype mu;
-  rtype sigma;
-} randn_opt_t;
-
-static void iter_dcomplex_rand_norm(na_loop_t* const lp) {
-  size_t i;
-  char* p1;
-  ssize_t s1;
-  size_t* idx1;
-
-  dtype* a0;
-
-  dtype mu;
-  rtype sigma;
-  randn_opt_t* g;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  g = (randn_opt_t*)(lp->opt_ptr);
-  mu = g->mu;
-  sigma = g->sigma;
-
-  if (idx1) {
-
-    for (; i--;) {
-      a0 = (dtype*)(p1 + *idx1);
-      m_rand_norm(mu, sigma, a0);
-      idx1 += 1;
-    }
-
-  } else {
-
-    for (; i--;) {
-      a0 = (dtype*)(p1);
-      m_rand_norm(mu, sigma, a0);
-      p1 += s1;
-    }
-  }
-}
-
-/*
-  Generates random numbers from the normal distribution on self narray
-  using Box-Muller Transformation.
-  @overload rand_norm([mu,[sigma]])
-    @param [Numeric] mu  mean of normal distribution. (default=0)
-    @param [Numeric] sigma  standard deviation of normal distribution. (default=1)
-    @return [Numo::DComplex] self.
-  @example
-    Numo::DFloat.new(5,5).rand_norm
-    # => Numo::DFloat#shape=[5,5]
-    # [[-0.581255, -0.168354, 0.586895, -0.595142, -0.802802],
-    #  [-0.326106, 0.282922, 1.68427, 0.918499, -0.0485384],
-    #  [-0.464453, -0.992194, 0.413794, -0.60717, -0.699695],
-    #  [-1.64168, 0.48676, -0.875871, -1.43275, 0.812172],
-    #  [-0.209975, -0.103612, -0.878617, -1.42495, 1.0968]]
-
-    Numo::DFloat.new(5,5).rand_norm(10,0.1)
-    # => Numo::DFloat#shape=[5,5]
-    # [[9.9019, 9.90339, 10.0826, 9.98384, 9.72861],
-    #  [9.81507, 10.0272, 9.91445, 10.0568, 9.88923],
-    #  [10.0234, 9.97874, 9.96011, 9.9006, 9.99964],
-    #  [10.0186, 9.94598, 9.92236, 9.99811, 9.97003],
-    #  [9.79266, 9.95044, 9.95212, 9.93692, 10.2027]]
-
-    Numo::DComplex.new(3,3).rand_norm(5+5i)
-    # => Numo::DComplex#shape=[3,3]
-    # [[5.84303+4.40052i, 4.00984+6.08982i, 5.10979+5.13215i],
-    #  [4.26477+3.99655i, 4.90052+5.00763i, 4.46607+2.3444i],
-    #  [4.5528+7.11003i, 5.62117+6.69094i, 5.05443+5.35133i]]
-*/
-static VALUE dcomplex_rand_norm(int argc, VALUE* argv, VALUE self) {
-  int n;
-  randn_opt_t g;
-  VALUE v1 = Qnil, v2 = Qnil;
-  ndfunc_arg_in_t ain[1] = { { OVERWRITE, 0 } };
-  ndfunc_t ndf = { iter_dcomplex_rand_norm, FULL_LOOP, 1, 0, ain, 0 };
-
-  n = rb_scan_args(argc, argv, "02", &v1, &v2);
-  if (n == 0) {
-    g.mu = m_zero;
-  } else {
-    g.mu = m_num_to_data(v1);
-  }
-  if (n == 2) {
-    g.sigma = NUM2DBL(v2);
-  } else {
-    g.sigma = 1;
-  }
-  na_ndloop3(&ndf, &g, 1, self);
-  return self;
-}
-
 static void iter_dcomplex_poly(na_loop_t* const lp) {
   size_t i;
   dtype x, y, a;
@@ -2939,6 +2848,36 @@ void Init_numo_dcomplex(void) {
    *   # [4, 3, 3, 2, 4, 2]
    */
   rb_define_method(cT, "rand", dcomplex_rand, -1);
+  /**
+   * Generates random numbers from the normal distribution on self narray
+   * using Box-Muller Transformation.
+   * @overload rand_norm([mu,[sigma]])
+   *   @param [Numeric] mu  mean of normal distribution. (default=0)
+   *   @param [Numeric] sigma  standard deviation of normal distribution. (default=1)
+   *   @return [Numo::DComplex] self.
+   * @example
+   *   Numo::DFloat.new(5,5).rand_norm
+   *   # => Numo::DFloat#shape=[5,5]
+   *   # [[-0.581255, -0.168354, 0.586895, -0.595142, -0.802802],
+   *   #  [-0.326106, 0.282922, 1.68427, 0.918499, -0.0485384],
+   *   #  [-0.464453, -0.992194, 0.413794, -0.60717, -0.699695],
+   *   #  [-1.64168, 0.48676, -0.875871, -1.43275, 0.812172],
+   *   #  [-0.209975, -0.103612, -0.878617, -1.42495, 1.0968]]
+   *
+   *   Numo::DFloat.new(5,5).rand_norm(10,0.1)
+   *   # => Numo::DFloat#shape=[5,5]
+   *   # [[9.9019, 9.90339, 10.0826, 9.98384, 9.72861],
+   *   #  [9.81507, 10.0272, 9.91445, 10.0568, 9.88923],
+   *   #  [10.0234, 9.97874, 9.96011, 9.9006, 9.99964],
+   *   #  [10.0186, 9.94598, 9.92236, 9.99811, 9.97003],
+   *   #  [9.79266, 9.95044, 9.95212, 9.93692, 10.2027]]
+   *
+   *   Numo::DComplex.new(3,3).rand_norm(5+5i)
+   *   # => Numo::DComplex#shape=[3,3]
+   *   # [[5.84303+4.40052i, 4.00984+6.08982i, 5.10979+5.13215i],
+   *   #  [4.26477+3.99655i, 4.90052+5.00763i, 4.46607+2.3444i],
+   *   #  [4.5528+7.11003i, 5.62117+6.69094i, 5.05443+5.35133i]]
+   */
   rb_define_method(cT, "rand_norm", dcomplex_rand_norm, -1);
   rb_define_method(cT, "poly", dcomplex_poly, -2);
   rb_define_singleton_method(cT, "[]", dcomplex_s_cast, -2);
