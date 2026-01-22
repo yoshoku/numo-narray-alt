@@ -188,6 +188,7 @@ class NArrayTest < NArrayTestBase
           end
         end
         assert_equal(dtype[-1, -2, -3, -5, -7, -11], -a)
+        assert_equal(dtype[-1, -2, -3, -5, -7, -11], a.-@)
         assert_equal(dtype[1, 4, 9, 25, 49, 121], a**2)
         assert_equal(Numo::SFloat[1, 2, 3, 5, 7, 11], a.swap_byte.swap_byte) if dtype != Numo::RObject
 
