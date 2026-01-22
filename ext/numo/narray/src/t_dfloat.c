@@ -54,6 +54,7 @@ extern VALUE cRT;
 #include "mh/op/div.h"
 #include "mh/op/mod.h"
 #include "mh/divmod.h"
+#include "mh/pow.h"
 #include "mh/round/floor.h"
 #include "mh/round/round.h"
 #include "mh/round/ceil.h"
@@ -146,6 +147,7 @@ DEF_NARRAY_FLT_DIV_METHOD_FUNC(dfloat, numo_cDFloat)
 #endif
 DEF_NARRAY_FLT_MOD_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_DIVMOD_METHOD_FUNC(dfloat, numo_cDFloat)
+DEF_NARRAY_POW_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_FLOOR_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_ROUND_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_CEIL_METHOD_FUNC(dfloat, numo_cDFloat)
@@ -1620,68 +1622,6 @@ static VALUE dfloat_abs(VALUE self) {
   ndfunc_t ndf = { iter_dfloat_abs, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop(&ndf, 1, self);
-}
-
-static void iter_dfloat_pow(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-  dtype x, y;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    x = m_pow(x, y);
-    SET_DATA_STRIDE(p3, s3, dtype, x);
-  }
-}
-
-static void iter_dfloat_pow_int32(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-  dtype x;
-  int32_t y;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, int32_t, y);
-    x = m_pow_int(x, y);
-    SET_DATA_STRIDE(p3, s3, dtype, x);
-  }
-}
-
-static VALUE dfloat_pow_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_in_t ain_i[2] = { { cT, 0 }, { numo_cInt32, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_dfloat_pow, STRIDE_LOOP, 2, 1, ain, aout };
-  ndfunc_t ndf_i = { iter_dfloat_pow_int32, STRIDE_LOOP, 2, 1, ain_i, aout };
-
-  // fixme : use na.integer?
-  if (FIXNUM_P(other) || rb_obj_is_kind_of(other, numo_cInt32)) {
-    return na_ndloop(&ndf_i, 2, self, other);
-  } else {
-    return na_ndloop(&ndf, 2, self, other);
-  }
-}
-
-static VALUE dfloat_pow(VALUE self, VALUE other) {
-
-  VALUE klass, v;
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
-  if (klass == cT) {
-    return dfloat_pow_self(self, other);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    return rb_funcall(v, id_pow, 1, other);
-  }
 }
 
 static void iter_dfloat_minus(na_loop_t* const lp) {

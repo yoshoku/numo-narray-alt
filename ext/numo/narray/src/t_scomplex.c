@@ -48,6 +48,7 @@ extern VALUE cRT;
 #include "mh/op/sub.h"
 #include "mh/op/mul.h"
 #include "mh/op/div.h"
+#include "mh/pow.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/nearly_eq.h"
@@ -106,6 +107,7 @@ DEF_NARRAY_ADD_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_SUB_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_MUL_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_DIV_METHOD_FUNC(scomplex, numo_cSComplex)
+DEF_NARRAY_POW_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_EQ_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_NE_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_NEARLY_EQ_METHOD_FUNC(scomplex, numo_cSComplex)
@@ -1763,74 +1765,6 @@ static VALUE scomplex_abs(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-static void iter_scomplex_pow(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-  dtype x, y;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    x = m_pow(x, y);
-    SET_DATA_STRIDE(p3, s3, dtype, x);
-  }
-}
-
-static void iter_scomplex_pow_int32(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-  dtype x;
-  int32_t y;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, int32_t, y);
-    x = m_pow_int(x, y);
-    SET_DATA_STRIDE(p3, s3, dtype, x);
-  }
-}
-
-static VALUE scomplex_pow_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_in_t ain_i[2] = { { cT, 0 }, { numo_cInt32, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_scomplex_pow, STRIDE_LOOP, 2, 1, ain, aout };
-  ndfunc_t ndf_i = { iter_scomplex_pow_int32, STRIDE_LOOP, 2, 1, ain_i, aout };
-
-  // fixme : use na.integer?
-  if (FIXNUM_P(other) || rb_obj_is_kind_of(other, numo_cInt32)) {
-    return na_ndloop(&ndf_i, 2, self, other);
-  } else {
-    return na_ndloop(&ndf, 2, self, other);
-  }
-}
-
-/*
-  Binary power.
-  @overload ** other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::NArray] self to the other-th power.
-*/
-static VALUE scomplex_pow(VALUE self, VALUE other) {
-
-  VALUE klass, v;
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
-  if (klass == cT) {
-    return scomplex_pow_self(self, other);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    return rb_funcall(v, id_pow, 1, other);
-  }
-}
-
 static void iter_scomplex_minus(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2;
@@ -2934,6 +2868,12 @@ void Init_numo_scomplex(void) {
    *   @return [Numo::NArray] self / other
    */
   rb_define_method(cT, "/", scomplex_div, 1);
+  /**
+   * Binary power.
+   * @overload ** other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::NArray] self to the other-th power.
+   */
   rb_define_method(cT, "**", scomplex_pow, 1);
   rb_define_alias(cT, "pow", "**");
   rb_define_method(cT, "-@", scomplex_minus, 0);
