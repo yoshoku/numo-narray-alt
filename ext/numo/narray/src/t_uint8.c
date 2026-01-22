@@ -59,6 +59,7 @@ extern VALUE cRT;
 #include "mh/minus.h"
 #include "mh/reciprocal.h"
 #include "mh/sign.h"
+#include "mh/square.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/gt.h"
@@ -114,6 +115,7 @@ DEF_NARRAY_POW_METHOD_FUNC(uint8, numo_cUInt8)
 DEF_NARRAY_INT8_MINUS_METHOD_FUNC(uint8, numo_cUInt8)
 DEF_NARRAY_INT8_RECIPROCAL_METHOD_FUNC(uint8, numo_cUInt8)
 DEF_NARRAY_INT8_SIGN_METHOD_FUNC(uint8, numo_cUInt8)
+DEF_NARRAY_INT8_SQUARE_METHOD_FUNC(uint8, numo_cUInt8)
 DEF_NARRAY_EQ_METHOD_FUNC(uint8, numo_cUInt8)
 DEF_NARRAY_NE_METHOD_FUNC(uint8, numo_cUInt8)
 DEF_NARRAY_GT_METHOD_FUNC(uint8, numo_cUInt8)
@@ -1619,64 +1621,6 @@ static VALUE uint8_abs(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-static void iter_uint8_square(na_loop_t* const lp) {
-  size_t i, n;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t *idx1, *idx2;
-  dtype x;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-
-  if (idx1) {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_square(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_square(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-    }
-  } else {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_square(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      //
-      for (i = 0; i < n; i++) {
-        *(dtype*)p2 = m_square(*(dtype*)p1);
-        p1 += s1;
-        p2 += s2;
-      }
-      return;
-      //
-    }
-  }
-}
-
-/*
-  Unary square.
-  @overload square
-    @return [Numo::UInt8] square of self.
-*/
-static VALUE uint8_square(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_uint8_square, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, self);
-}
-
 static void iter_uint8_poly(na_loop_t* const lp) {
   size_t i;
   dtype x, y, a;
@@ -2412,6 +2356,11 @@ void Init_numo_uint8(void) {
    *   @return [Numo::UInt8] sign of self.
    */
   rb_define_method(cT, "sign", uint8_sign, 0);
+  /**
+   * Unary square.
+   * @overload square
+   *   @return [Numo::UInt8] square of self.
+   */
   rb_define_method(cT, "square", uint8_square, 0);
   rb_define_alias(cT, "conj", "view");
   rb_define_alias(cT, "im", "view");

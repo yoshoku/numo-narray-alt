@@ -59,6 +59,7 @@ extern VALUE cRT;
 #include "mh/minus.h"
 #include "mh/reciprocal.h"
 #include "mh/sign.h"
+#include "mh/square.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/gt.h"
@@ -114,6 +115,7 @@ DEF_NARRAY_POW_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_MINUS_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_RECIPROCAL_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_SIGN_METHOD_FUNC(uint16, numo_cUInt16)
+DEF_NARRAY_SQUARE_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_EQ_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_NE_METHOD_FUNC(uint16, numo_cUInt16)
 DEF_NARRAY_GT_METHOD_FUNC(uint16, numo_cUInt16)
@@ -1636,81 +1638,6 @@ static VALUE uint16_abs(VALUE self) {
   return na_ndloop(&ndf, 1, self);
 }
 
-static void iter_uint16_square(na_loop_t* const lp) {
-  size_t i, n;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t *idx1, *idx2;
-  dtype x;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-
-  if (idx1) {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_square(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_square(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-    }
-  } else {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_square(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      //
-      if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype))) {
-        if (s1 == sizeof(dtype) && s2 == sizeof(dtype)) {
-          for (i = 0; i < n; i++) {
-            ((dtype*)p2)[i] = m_square(((dtype*)p1)[i]);
-          }
-          return;
-        }
-        if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype))) {
-          //
-          for (i = 0; i < n; i++) {
-            *(dtype*)p2 = m_square(*(dtype*)p1);
-            p1 += s1;
-            p2 += s2;
-          }
-          return;
-          //
-        }
-      }
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_square(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-      //
-    }
-  }
-}
-
-/*
-  Unary square.
-  @overload square
-    @return [Numo::UInt16] square of self.
-*/
-static VALUE uint16_square(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_uint16_square, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, self);
-}
-
 static void iter_uint16_poly(na_loop_t* const lp) {
   size_t i;
   dtype x, y, a;
@@ -2446,6 +2373,11 @@ void Init_numo_uint16(void) {
    *   @return [Numo::UInt16] sign of self.
    */
   rb_define_method(cT, "sign", uint16_sign, 0);
+  /**
+   * Unary square.
+   * @overload square
+   *   @return [Numo::UInt16] square of self.
+   */
   rb_define_method(cT, "square", uint16_square, 0);
   rb_define_alias(cT, "conj", "view");
   rb_define_alias(cT, "im", "view");
