@@ -66,6 +66,7 @@ extern VALUE cRT;
 #include "mh/round/trunc.h"
 #include "mh/round/rint.h"
 #include "mh/copysign.h"
+#include "mh/signbit.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/nearly_eq.h"
@@ -166,6 +167,7 @@ DEF_NARRAY_FLT_CEIL_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_TRUNC_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_RINT_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_COPYSIGN_METHOD_FUNC(dfloat, numo_cDFloat)
+DEF_NARRAY_SIGNBIT_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_EQ_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_NE_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_NEARLY_EQ_METHOD_FUNC(dfloat, numo_cDFloat)
@@ -1587,43 +1589,6 @@ static VALUE dfloat_map_with_index(VALUE self) {
   ndfunc_t ndf = { iter_dfloat_map_with_index, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop_with_index(&ndf, 1, self);
-}
-
-static void iter_dfloat_signbit(na_loop_t* const lp) {
-  size_t i;
-  char* p1;
-  BIT_DIGIT* a2;
-  size_t p2;
-  ssize_t s1, s2;
-  size_t* idx1;
-  dtype x;
-  BIT_DIGIT b;
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_BIT(lp, 1, a2, p2, s2);
-  if (idx1) {
-    for (; i--;) {
-      GET_DATA_INDEX(p1, idx1, dtype, x);
-      b = (m_signbit(x)) ? 1 : 0;
-      STORE_BIT(a2, p2, b);
-      p2 += s2;
-    }
-  } else {
-    for (; i--;) {
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      b = (m_signbit(x)) ? 1 : 0;
-      STORE_BIT(a2, p2, b);
-      p2 += s2;
-    }
-  }
-}
-
-static VALUE dfloat_signbit(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { numo_cBit, 0 } };
-  ndfunc_t ndf = { iter_dfloat_signbit, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, self);
 }
 
 static void iter_dfloat_modf(na_loop_t* const lp) {

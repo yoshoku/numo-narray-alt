@@ -464,6 +464,14 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_signbit
+    [Numo::DFloat, Numo::SFloat].each do |dtype|
+      actual = dtype[1.0, -2.0, 0.0, -0.0, 3.5].signbit
+      assert_kind_of(Numo::Bit, actual)
+      assert_equal(Numo::Bit[0, 1, 0, 1, 0], actual)
+    end
+  end
+
   def test_seq
     TYPES.each do |dtype|
       assert_equal(dtype[0, 1, 2, 3, 4], dtype.new(5).seq)
