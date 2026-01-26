@@ -62,6 +62,7 @@ extern VALUE cRT;
 #include "mh/round/ceil.h"
 #include "mh/round/trunc.h"
 #include "mh/round/rint.h"
+#include "mh/copysign.h"
 #include "mh/isnan.h"
 #include "mh/isinf.h"
 #include "mh/isposinf.h"
@@ -127,6 +128,7 @@ DEF_NARRAY_FLT_ROUND_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_CEIL_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_TRUNC_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_RINT_METHOD_FUNC(scomplex, numo_cSComplex)
+DEF_NARRAY_COPYSIGN_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_ISNAN_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_ISINF_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_FLT_ISPOSINF_METHOD_FUNC(scomplex, numo_cSComplex)
@@ -2141,124 +2143,6 @@ static VALUE scomplex_set_real(VALUE self, VALUE a1) {
   return a1;
 }
 
-#define check_intdivzero(y)                                                                    \
-  {}
-
-static void iter_scomplex_copysign(na_loop_t* const lp) {
-  size_t i = 0;
-  size_t n;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-
-  //
-  if (is_aligned(p1, sizeof(dtype)) && is_aligned(p2, sizeof(dtype)) &&
-      is_aligned(p3, sizeof(dtype))) {
-
-    if (s1 == sizeof(dtype) && s2 == sizeof(dtype) && s3 == sizeof(dtype)) {
-      if (p1 == p3) { // inplace case
-        for (; i < n; i++) {
-          check_intdivzero(((dtype*)p2)[i]);
-          ((dtype*)p1)[i] = m_copysign(((dtype*)p1)[i], ((dtype*)p2)[i]);
-        }
-      } else {
-        for (; i < n; i++) {
-          check_intdivzero(((dtype*)p2)[i]);
-          ((dtype*)p3)[i] = m_copysign(((dtype*)p1)[i], ((dtype*)p2)[i]);
-        }
-      }
-      return;
-    }
-
-    if (is_aligned_step(s1, sizeof(dtype)) && is_aligned_step(s2, sizeof(dtype)) &&
-        is_aligned_step(s3, sizeof(dtype))) {
-      //
-
-      if (s2 == 0) { // Broadcasting from scalar value.
-        check_intdivzero(*(dtype*)p2);
-        if (s1 == sizeof(dtype) && s3 == sizeof(dtype)) {
-          if (p1 == p3) { // inplace case
-            for (; i < n; i++) {
-              ((dtype*)p1)[i] = m_copysign(((dtype*)p1)[i], *(dtype*)p2);
-            }
-          } else {
-            for (; i < n; i++) {
-              ((dtype*)p3)[i] = m_copysign(((dtype*)p1)[i], *(dtype*)p2);
-            }
-          }
-        } else {
-          for (i = 0; i < n; i++) {
-            *(dtype*)p3 = m_copysign(*(dtype*)p1, *(dtype*)p2);
-            p1 += s1;
-            p3 += s3;
-          }
-        }
-      } else {
-        if (p1 == p3) { // inplace case
-          for (i = 0; i < n; i++) {
-            check_intdivzero(*(dtype*)p2);
-            *(dtype*)p1 = m_copysign(*(dtype*)p1, *(dtype*)p2);
-            p1 += s1;
-            p2 += s2;
-          }
-        } else {
-          for (i = 0; i < n; i++) {
-            check_intdivzero(*(dtype*)p2);
-            *(dtype*)p3 = m_copysign(*(dtype*)p1, *(dtype*)p2);
-            p1 += s1;
-            p2 += s2;
-            p3 += s3;
-          }
-        }
-      }
-
-      return;
-      //
-    }
-  }
-  for (i = 0; i < n; i++) {
-    dtype x, y, z;
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    GET_DATA_STRIDE(p2, s2, dtype, y);
-    check_intdivzero(y);
-    z = m_copysign(x, y);
-    SET_DATA_STRIDE(p3, s3, dtype, z);
-  }
-  //
-}
-#undef check_intdivzero
-
-static VALUE scomplex_copysign_self(VALUE self, VALUE other) {
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_scomplex_copysign, STRIDE_LOOP, 2, 1, ain, aout };
-
-  return na_ndloop(&ndf, 2, self, other);
-}
-
-/*
-  Binary copysign.
-  @overload copysign other
-    @param [Numo::NArray,Numeric] other
-    @return [Numo::NArray] self copysign other
-*/
-static VALUE scomplex_copysign(VALUE self, VALUE other) {
-
-  VALUE klass, v;
-
-  klass = na_upcast(rb_obj_class(self), rb_obj_class(other));
-  if (klass == cT) {
-    return scomplex_copysign_self(self, other);
-  } else {
-    v = rb_funcall(klass, id_cast, 1, self);
-    return rb_funcall(v, id_copysign, 1, other);
-  }
-}
-
 static void iter_scomplex_poly(na_loop_t* const lp) {
   size_t i;
   dtype x, y, a;
@@ -2554,6 +2438,12 @@ void Init_numo_scomplex(void) {
    *   @return [Numo::SComplex] rint of self.
    */
   rb_define_method(cT, "rint", scomplex_rint, 0);
+  /**
+   * Binary copysign.
+   * @overload copysign other
+   *   @param [Numo::NArray,Numeric] other
+   *   @return [Numo::NArray] self copysign other
+   */
   rb_define_method(cT, "copysign", scomplex_copysign, 1);
   /**
    * Condition of isnan.

@@ -451,6 +451,19 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_copysign
+    [Numo::DFloat, Numo::SFloat].each do |dtype|
+      actual = dtype[1, -2, 3, -4, 5].copysign(dtype[-1, 1, -1, 1, 0])
+      assert_kind_of(dtype, actual)
+      assert_equal(dtype[-1, 2, -3, 4, 5], actual)
+    end
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      actual = dtype[1 + 2i, -2 - 3i, 3 + 4i].copysign(dtype[-1 + 1i, 1 - 1i, -1 + 0i])
+      assert_kind_of(dtype, actual)
+      assert_equal(dtype[-1 + 2i, 2 - 3i, -3 + 4i], actual)
+    end
+  end
+
   def test_seq
     TYPES.each do |dtype|
       assert_equal(dtype[0, 1, 2, 3, 4], dtype.new(5).seq)
