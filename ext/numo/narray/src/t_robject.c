@@ -66,6 +66,7 @@ extern VALUE cRT;
 #include "mh/format.h"
 #include "mh/format_to_a.h"
 #include "mh/inspect.h"
+#include "mh/abs.h"
 #include "mh/op/add.h"
 #include "mh/op/sub.h"
 #include "mh/op/mul.h"
@@ -132,6 +133,7 @@ DEF_NARRAY_FILL_METHOD_FUNC(robject)
 DEF_NARRAY_FORMAT_METHOD_FUNC(robject)
 DEF_NARRAY_FORMAT_TO_A_METHOD_FUNC(robject)
 DEF_NARRAY_ROBJ_INSPECT_METHOD_FUNC()
+DEF_NARRAY_ABS_METHOD_FUNC(robject, numo_cRObject, robject, numo_cRObject)
 DEF_NARRAY_ROBJ_ADD_METHOD_FUNC()
 DEF_NARRAY_ROBJ_SUB_METHOD_FUNC()
 DEF_NARRAY_ROBJ_MUL_METHOD_FUNC()
@@ -1619,60 +1621,6 @@ static VALUE robject_map_with_index(VALUE self) {
   return na_ndloop_with_index(&ndf, 1, self);
 }
 
-static void iter_robject_abs(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t *idx1, *idx2;
-  dtype x;
-  rtype y;
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-  if (idx1) {
-    if (idx2) {
-      for (; i--;) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        y = m_abs(x);
-        SET_DATA_INDEX(p2, idx2, rtype, y);
-      }
-    } else {
-      for (; i--;) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        y = m_abs(x);
-        SET_DATA_STRIDE(p2, s2, rtype, y);
-      }
-    }
-  } else {
-    if (idx2) {
-      for (; i--;) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        y = m_abs(x);
-        SET_DATA_INDEX(p2, idx2, rtype, y);
-      }
-    } else {
-      for (; i--;) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        y = m_abs(x);
-        SET_DATA_STRIDE(p2, s2, rtype, y);
-      }
-    }
-  }
-}
-
-/*
-  abs of self.
-  @overload abs
-    @return [Numo::RObject] abs of self.
-*/
-static VALUE robject_abs(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
-  ndfunc_t ndf = { iter_robject_abs, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, self);
-}
-
 static void iter_robject_poly(na_loop_t* const lp) {
   size_t i;
   dtype x, y, a;
@@ -1856,6 +1804,11 @@ void Init_numo_robject(void) {
   rb_define_method(cT, "map", robject_map, 0);
   rb_define_method(cT, "each_with_index", robject_each_with_index, 0);
   rb_define_method(cT, "map_with_index", robject_map_with_index, 0);
+  /**
+   * abs of self.
+   * @overload abs
+   *   @return [Numo::RObject] abs of self.
+   */
   rb_define_method(cT, "abs", robject_abs, 0);
   /**
    * Binary add.

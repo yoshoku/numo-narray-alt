@@ -49,6 +49,7 @@ extern VALUE cRT;
 #include "mh/format.h"
 #include "mh/format_to_a.h"
 #include "mh/inspect.h"
+#include "mh/abs.h"
 #include "mh/op/add.h"
 #include "mh/op/sub.h"
 #include "mh/op/mul.h"
@@ -105,6 +106,7 @@ DEF_NARRAY_FILL_METHOD_FUNC(uint64)
 DEF_NARRAY_FORMAT_METHOD_FUNC(uint64)
 DEF_NARRAY_FORMAT_TO_A_METHOD_FUNC(uint64)
 DEF_NARRAY_INSPECT_METHOD_FUNC(uint64)
+DEF_NARRAY_ABS_METHOD_FUNC(uint64, numo_cUInt64, uint64, numo_cUInt64)
 DEF_NARRAY_ADD_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_SUB_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_MUL_METHOD_FUNC(uint64, numo_cUInt64)
@@ -1584,60 +1586,6 @@ static VALUE uint64_map_with_index(VALUE self) {
   return na_ndloop_with_index(&ndf, 1, self);
 }
 
-static void iter_uint64_abs(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t *idx1, *idx2;
-  dtype x;
-  rtype y;
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-  if (idx1) {
-    if (idx2) {
-      for (; i--;) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        y = m_abs(x);
-        SET_DATA_INDEX(p2, idx2, rtype, y);
-      }
-    } else {
-      for (; i--;) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        y = m_abs(x);
-        SET_DATA_STRIDE(p2, s2, rtype, y);
-      }
-    }
-  } else {
-    if (idx2) {
-      for (; i--;) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        y = m_abs(x);
-        SET_DATA_INDEX(p2, idx2, rtype, y);
-      }
-    } else {
-      for (; i--;) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        y = m_abs(x);
-        SET_DATA_STRIDE(p2, s2, rtype, y);
-      }
-    }
-  }
-}
-
-/*
-  abs of self.
-  @overload abs
-    @return [Numo::UInt64] abs of self.
-*/
-static VALUE uint64_abs(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
-  ndfunc_t ndf = { iter_uint64_abs, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, self);
-}
-
 static void iter_uint64_poly(na_loop_t* const lp) {
   size_t i;
   dtype x, y, a;
@@ -2304,6 +2252,11 @@ void Init_numo_uint64(void) {
   rb_define_method(cT, "map", uint64_map, 0);
   rb_define_method(cT, "each_with_index", uint64_each_with_index, 0);
   rb_define_method(cT, "map_with_index", uint64_map_with_index, 0);
+  /**
+   * abs of self.
+   * @overload abs
+   *   @return [Numo::UInt64] abs of self.
+   */
   rb_define_method(cT, "abs", uint64_abs, 0);
   /**
    * Binary add.

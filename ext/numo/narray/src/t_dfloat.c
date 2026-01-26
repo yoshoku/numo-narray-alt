@@ -48,6 +48,7 @@ extern VALUE cRT;
 #include "mh/format.h"
 #include "mh/format_to_a.h"
 #include "mh/inspect.h"
+#include "mh/abs.h"
 #include "mh/op/add.h"
 #include "mh/op/sub.h"
 #include "mh/op/mul.h"
@@ -139,6 +140,7 @@ DEF_NARRAY_FILL_METHOD_FUNC(dfloat)
 DEF_NARRAY_FORMAT_METHOD_FUNC(dfloat)
 DEF_NARRAY_FORMAT_TO_A_METHOD_FUNC(dfloat)
 DEF_NARRAY_INSPECT_METHOD_FUNC(dfloat)
+DEF_NARRAY_ABS_METHOD_FUNC(dfloat, numo_cDFloat, dfloat, numo_cDFloat)
 #ifdef __SSE2__
 DEF_NARRAY_DFLT_ADD_SSE2_METHOD_FUNC()
 DEF_NARRAY_DFLT_SUB_SSE2_METHOD_FUNC()
@@ -1583,55 +1585,6 @@ static VALUE dfloat_map_with_index(VALUE self) {
   ndfunc_t ndf = { iter_dfloat_map_with_index, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop_with_index(&ndf, 1, self);
-}
-
-static void iter_dfloat_abs(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t *idx1, *idx2;
-  dtype x;
-  rtype y;
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-  if (idx1) {
-    if (idx2) {
-      for (; i--;) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        y = m_abs(x);
-        SET_DATA_INDEX(p2, idx2, rtype, y);
-      }
-    } else {
-      for (; i--;) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        y = m_abs(x);
-        SET_DATA_STRIDE(p2, s2, rtype, y);
-      }
-    }
-  } else {
-    if (idx2) {
-      for (; i--;) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        y = m_abs(x);
-        SET_DATA_INDEX(p2, idx2, rtype, y);
-      }
-    } else {
-      for (; i--;) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        y = m_abs(x);
-        SET_DATA_STRIDE(p2, s2, rtype, y);
-      }
-    }
-  }
-}
-
-static VALUE dfloat_abs(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
-  ndfunc_t ndf = { iter_dfloat_abs, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, self);
 }
 
 #define check_intdivzero(y)                                                                    \

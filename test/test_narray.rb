@@ -233,6 +233,30 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_abs
+    [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |dtype|
+      actual = dtype[3.5, -2.1, 0.0, -0.7, -0.9].abs
+      assert_kind_of(dtype, actual)
+      assert_equal(dtype[3.5, 2.1, 0.0, 0.7, 0.9], actual)
+    end
+    INTEGER_TYPES.each do |dtype|
+      actual = dtype[3, -2, 0, -7, -9].abs
+      assert_kind_of(dtype, actual)
+      assert_equal(dtype[3, 2, 0, 7, 9], actual)
+    end
+    UNSIGNED_INTEGER_TYPES.each do |dtype|
+      actual = dtype[3, 0, 0, 7, 9].abs
+      assert_kind_of(dtype, actual)
+      assert_equal(dtype[3, 0, 0, 7, 9], actual)
+    end
+    actual = Numo::DComplex[3 + 4i, -8 - 6i, 0 + 0i, 0 - 4i, -5 + 12i].abs
+    assert_kind_of(Numo::DFloat, actual)
+    assert_equal(Numo::DFloat[5, 10, 0, 4, 13], actual)
+    actual = Numo::SComplex[3 + 4i, -8 - 6i, 0 + 0i, 0 - 4i, -5 + 12i].abs
+    assert_kind_of(Numo::SFloat, actual)
+    assert_equal(Numo::SFloat[5, 10, 0, 4, 13], actual)
+  end
+
   def test_reciprocal
     FLOAT_TYPES.each do |dtype|
       assert_equal(dtype[0.5, 0.25, 0.125, 0.1], dtype[2, 4, 8, 10].reciprocal)
