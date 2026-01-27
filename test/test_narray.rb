@@ -201,6 +201,11 @@ class NArrayTest < NArrayTestBase
           assert_equal(Numo::SFloat[0, 0, 0, 0, 0, 0], a.imag)
           assert_equal(Numo::SFloat.asarray(src), a.conj)
           assert_equal(Numo::SFloat[0, 0, 0, 0, 0, 0], a.angle)
+          b = dtype[1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i, 9 + 10i, 11 + 12i]
+          actual = b.conj
+          assert_kind_of(dtype, actual)
+          assert_equal(dtype[1 - 2i, 3 - 4i, 5 - 6i, 7 - 8i, 9 - 10i, 11 - 12i], actual)
+          assert_equal(b, actual.conj)
         else
           assert_equal(dtype[2, 2, 3, 5, 7, 7], a.clip(2, 7))
           assert_equal(1, a.min)
