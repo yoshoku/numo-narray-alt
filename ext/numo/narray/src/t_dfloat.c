@@ -67,6 +67,7 @@ extern VALUE cRT;
 #include "mh/round/rint.h"
 #include "mh/copysign.h"
 #include "mh/signbit.h"
+#include "mh/modf.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/nearly_eq.h"
@@ -168,6 +169,7 @@ DEF_NARRAY_FLT_TRUNC_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_FLT_RINT_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_COPYSIGN_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_SIGNBIT_METHOD_FUNC(dfloat, numo_cDFloat)
+DEF_NARRAY_MODF_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_EQ_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_NE_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_NEARLY_EQ_METHOD_FUNC(dfloat, numo_cDFloat)
@@ -1589,31 +1591,6 @@ static VALUE dfloat_map_with_index(VALUE self) {
   ndfunc_t ndf = { iter_dfloat_map_with_index, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop_with_index(&ndf, 1, self);
-}
-
-static void iter_dfloat_modf(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2, *p3;
-  ssize_t s1, s2, s3;
-  dtype x, y, z;
-  INIT_COUNTER(lp, i);
-  INIT_PTR(lp, 0, p1, s1);
-  INIT_PTR(lp, 1, p2, s2);
-  INIT_PTR(lp, 2, p3, s3);
-  for (; i--;) {
-    GET_DATA_STRIDE(p1, s1, dtype, x);
-    m_modf(x, y, z);
-    SET_DATA_STRIDE(p2, s2, dtype, y);
-    SET_DATA_STRIDE(p3, s3, dtype, z);
-  }
-}
-
-static VALUE dfloat_modf(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[2] = { { cT, 0 }, { cT, 0 } };
-  ndfunc_t ndf = { iter_dfloat_modf, STRIDE_LOOP, 1, 2, ain, aout };
-
-  return na_ndloop(&ndf, 1, self);
 }
 
 static void iter_dfloat_kahan_sum(na_loop_t* const lp) {

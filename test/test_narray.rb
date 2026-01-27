@@ -472,6 +472,22 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_modf
+    # rubocop:disable Performance/CollectionLiteralInLoop
+    [Numo::DFloat, Numo::SFloat].each do |dtype|
+      actual = dtype[1.5, -2.1, 3.0, -4.7, 5.9].modf
+      assert_kind_of(Array, actual)
+      assert_equal(2, actual.size)
+      assert_kind_of(dtype, actual[0])
+      [0.5, -0.1, 0, -0.7, 0.9].each_with_index do |expected, i|
+        assert_in_delta(expected, actual[0][i], 1e-6)
+      end
+      assert_kind_of(dtype, actual[1])
+      assert_equal(dtype[1, -2, 3, -4, 5], actual[1])
+    end
+    # rubocop:enable Performance/CollectionLiteralInLoop
+  end
+
   def test_seq
     TYPES.each do |dtype|
       assert_equal(dtype[0, 1, 2, 3, 4], dtype.new(5).seq)
