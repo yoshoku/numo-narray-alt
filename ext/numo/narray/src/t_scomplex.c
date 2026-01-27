@@ -60,6 +60,7 @@ extern VALUE cRT;
 #include "mh/imag.h"
 #include "mh/arg.h"
 #include "mh/set_imag.h"
+#include "mh/set_real.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/nearly_eq.h"
@@ -132,6 +133,7 @@ DEF_NARRAY_REAL_METHOD_FUNC(scomplex, numo_cSComplex, float, numo_cSFloat)
 DEF_NARRAY_IMAG_METHOD_FUNC(scomplex, numo_cSComplex, float, numo_cSFloat)
 DEF_NARRAY_ARG_METHOD_FUNC(scomplex, numo_cSComplex, float, numo_cSFloat)
 DEF_NARRAY_SET_IMAG_METHOD_FUNC(scomplex, numo_cSComplex, float, numo_cSFloat)
+DEF_NARRAY_SET_REAL_METHOD_FUNC(scomplex, numo_cSComplex, float, numo_cSFloat)
 DEF_NARRAY_EQ_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_NE_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_NEARLY_EQ_METHOD_FUNC(scomplex, numo_cSComplex)
@@ -1735,59 +1737,6 @@ static VALUE scomplex_map_with_index(VALUE self) {
   ndfunc_t ndf = { iter_scomplex_map_with_index, FULL_LOOP, 1, 1, ain, aout };
 
   return na_ndloop_with_index(&ndf, 1, self);
-}
-
-static void iter_scomplex_set_real(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t *idx1, *idx2;
-  dtype x;
-  rtype y;
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-  if (idx1) {
-    if (idx2) {
-      for (; i--;) {
-        GET_DATA(p1 + *idx1, dtype, x);
-        GET_DATA_INDEX(p2, idx2, rtype, y);
-        x = m_set_real(x, y);
-        SET_DATA_INDEX(p1, idx1, dtype, x);
-      }
-    } else {
-      for (; i--;) {
-        GET_DATA(p1 + *idx1, dtype, x);
-        GET_DATA_STRIDE(p2, s2, rtype, y);
-        x = m_set_real(x, y);
-        SET_DATA_INDEX(p1, idx1, dtype, x);
-      }
-    }
-  } else {
-    if (idx2) {
-      for (; i--;) {
-        GET_DATA(p1, dtype, x);
-        GET_DATA_INDEX(p2, idx2, rtype, y);
-        x = m_set_real(x, y);
-        SET_DATA_STRIDE(p1, s1, dtype, x);
-      }
-    } else {
-      for (; i--;) {
-        GET_DATA(p1, dtype, x);
-        GET_DATA_STRIDE(p2, s2, rtype, y);
-        x = m_set_real(x, y);
-        SET_DATA_STRIDE(p1, s1, dtype, x);
-      }
-    }
-  }
-}
-
-static VALUE scomplex_set_real(VALUE self, VALUE a1) {
-  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { cRT, 0 } };
-  ndfunc_t ndf = { iter_scomplex_set_real, FULL_LOOP, 2, 0, ain, 0 };
-
-  na_ndloop(&ndf, 2, self, a1);
-  return a1;
 }
 
 static void iter_scomplex_poly(na_loop_t* const lp) {

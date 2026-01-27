@@ -229,10 +229,14 @@ class NArrayTest < NArrayTestBase
           actual = b.im
           assert_kind_of(dtype, actual)
           assert_equal(dtype[-2 + 1i, -4 + 3i, -6 + 5i, -8 + 7i, -10 + 9i, -12 + 11i], actual)
-          b.set_imag(0.5)
+          b.imag = 0.5
           assert_equal(dtype[1 + 0.5i, 3 + 0.5i, 5 + 0.5i, 7 + 0.5i, 9 + 0.5i, 11 + 0.5i], b)
-          b.set_imag([10, 40, 60, 80, 100, 120])
+          b.imag = [10, 40, 60, 80, 100, 120]
           assert_equal(dtype[1 + 10i, 3 + 40i, 5 + 60i, 7 + 80i, 9 + 100i, 11 + 120i], b)
+          b.real = 0.5
+          assert_equal(dtype[0.5 + 10i, 0.5 + 40i, 0.5 + 60i, 0.5 + 80i, 0.5 + 100i, 0.5 + 120i], b)
+          b.real = [9, 8, 7, 6, 5, 4]
+          assert_equal(dtype[9 + 10i, 8 + 40i, 7 + 60i, 6 + 80i, 5 + 100i, 4 + 120i], b)
         else
           assert_equal(dtype[2, 2, 3, 5, 7, 7], a.clip(2, 7))
           assert_equal(1, a.min)
