@@ -206,6 +206,9 @@ class NArrayTest < NArrayTestBase
           assert_kind_of(dtype, actual)
           assert_equal(dtype[1 - 2i, 3 - 4i, 5 - 6i, 7 - 8i, 9 - 10i, 11 - 12i], actual)
           assert_equal(b, actual.conj)
+          actual = b.im
+          assert_kind_of(dtype, actual)
+          assert_equal(dtype[-2 + 1i, -4 + 3i, -6 + 5i, -8 + 7i, -10 + 9i, -12 + 11i], actual)
         else
           assert_equal(dtype[2, 2, 3, 5, 7, 7], a.clip(2, 7))
           assert_equal(1, a.min)
