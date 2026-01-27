@@ -202,11 +202,16 @@ class NArrayTest < NArrayTestBase
           if dtype == Numo::DComplex
             assert_kind_of(Numo::DFloat, actual)
             assert_equal(Numo::DFloat[1, 3, 5, 7, 9, 11], actual)
+            actual = b.imag
+            assert_kind_of(Numo::DFloat, actual)
+            assert_equal(Numo::DFloat[2, 4, 6, 8, 10, 12], actual)
           else
             assert_kind_of(Numo::SFloat, actual)
             assert_equal(Numo::SFloat[1, 3, 5, 7, 9, 11], actual)
+            actual = b.imag
+            assert_kind_of(Numo::SFloat, actual)
+            assert_equal(Numo::SFloat[2, 4, 6, 8, 10, 12], actual)
           end
-          assert_equal(Numo::SFloat[0, 0, 0, 0, 0, 0], a.imag)
           assert_equal(Numo::SFloat[0, 0, 0, 0, 0, 0], a.angle)
           b = dtype[1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i, 9 + 10i, 11 + 12i]
           actual = b.conj
