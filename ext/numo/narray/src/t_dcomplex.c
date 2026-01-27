@@ -70,6 +70,7 @@ extern VALUE cRT;
 #include "mh/isfinite.h"
 #include "mh/sum.h"
 #include "mh/prod.h"
+#include "mh/kahan_sum.h"
 #include "mh/mean.h"
 #include "mh/var.h"
 #include "mh/stddev.h"
@@ -136,6 +137,7 @@ DEF_NARRAY_FLT_ISNEGINF_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_ISFINITE_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_SUM_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_PROD_METHOD_FUNC(dcomplex, numo_cDComplex)
+DEF_NARRAY_KAHAN_SUM_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_MEAN_METHOD_FUNC(dcomplex, numo_cDComplex, dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_VAR_METHOD_FUNC(dcomplex, numo_cDComplex, double, numo_cDFloat)
 DEF_NARRAY_FLT_STDDEV_METHOD_FUNC(dcomplex, numo_cDComplex, double, numo_cDFloat)
@@ -2143,54 +2145,6 @@ static VALUE dcomplex_set_real(VALUE self, VALUE a1) {
   return a1;
 }
 
-static void iter_dcomplex_kahan_sum(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_kahan_sum(n, p1, s1);
-}
-static void iter_dcomplex_kahan_sum_nan(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  ssize_t s1;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, p1, s1);
-  p2 = lp->args[1].ptr + lp->args[1].iter[0].pos;
-
-  *(dtype*)p2 = f_kahan_sum_nan(n, p1, s1);
-}
-
-/*
-  kahan_sum of self.
-  @overload kahan_sum(axis:nil, keepdims:false, nan:false)
-    @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc, or,
-    return NaN for min/max etc).
-    @param [Numeric,Array,Range] axis  Performs kahan_sum along the axis.
-    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-    dimensions with size one.
-    @return [Numo::DComplex] returns result of kahan_sum.
-*/
-static VALUE dcomplex_kahan_sum(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { cT, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = {
-    iter_dcomplex_kahan_sum, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE, 2, 1, ain, aout
-  };
-
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_dcomplex_kahan_sum_nan);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-
-  return dcomplex_extract(v);
-}
-
 static void iter_dcomplex_poly(na_loop_t* const lp) {
   size_t i;
   dtype x, y, a;
@@ -2545,6 +2499,16 @@ void Init_numo_dcomplex(void) {
    *   @return [Numo::DComplex] returns result of prod.
    */
   rb_define_method(cT, "prod", dcomplex_prod, -1);
+  /**
+   * kahan_sum of self.
+   * @overload kahan_sum(axis:nil, keepdims:false, nan:false)
+   *   @param [TrueClass] nan  If true, apply NaN-aware algorithm (avoid NaN for sum/mean etc,
+   *     or, return NaN for min/max etc).
+   *   @param [Numeric,Array,Range] axis  Performs kahan_sum along the axis.
+   *   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+   *     dimensions with size one.
+   *   @return [Numo::DComplex] returns result of kahan_sum.
+   */
   rb_define_method(cT, "kahan_sum", dcomplex_kahan_sum, -1);
   /**
    * mean of self.

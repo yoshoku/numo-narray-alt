@@ -488,6 +488,13 @@ class NArrayTest < NArrayTestBase
     # rubocop:enable Performance/CollectionLiteralInLoop
   end
 
+  def test_kahan_sum
+    a = Numo::DFloat.new(1_000_000).fill(1e-6)
+    assert_in_delta(1, a.kahan_sum, 1e-10)
+    a = Numo::DComplex.new(1_000_000).fill(1e-6 + 1e-6i)
+    assert_in_delta(1 + 1i, a.kahan_sum, 1e-10)
+  end
+
   def test_seq
     TYPES.each do |dtype|
       assert_equal(dtype[0, 1, 2, 3, 4], dtype.new(5).seq)
