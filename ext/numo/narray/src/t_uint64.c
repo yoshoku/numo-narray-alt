@@ -49,6 +49,7 @@ extern VALUE cRT;
 #include "mh/format.h"
 #include "mh/format_to_a.h"
 #include "mh/inspect.h"
+#include "mh/each.h"
 #include "mh/abs.h"
 #include "mh/op/add.h"
 #include "mh/op/sub.h"
@@ -106,6 +107,7 @@ DEF_NARRAY_FILL_METHOD_FUNC(uint64)
 DEF_NARRAY_FORMAT_METHOD_FUNC(uint64)
 DEF_NARRAY_FORMAT_TO_A_METHOD_FUNC(uint64)
 DEF_NARRAY_INSPECT_METHOD_FUNC(uint64)
+DEF_NARRAY_EACH_METHOD_FUNC(uint64)
 DEF_NARRAY_ABS_METHOD_FUNC(uint64, numo_cUInt64, uint64, numo_cUInt64)
 DEF_NARRAY_ADD_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_SUB_METHOD_FUNC(uint64, numo_cUInt64)
@@ -1314,48 +1316,6 @@ static VALUE uint64_aset(int argc, VALUE* argv, VALUE self) {
   return argv[argc];
 }
 
-static void iter_uint64_each(na_loop_t* const lp) {
-  size_t i, s1;
-  char* p1;
-  size_t* idx1;
-  dtype x;
-  VALUE y;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  if (idx1) {
-    for (; i--;) {
-      GET_DATA_INDEX(p1, idx1, dtype, x);
-      y = m_data_to_num(x);
-      rb_yield(y);
-    }
-  } else {
-    for (; i--;) {
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      y = m_data_to_num(x);
-      rb_yield(y);
-    }
-  }
-}
-
-/*
-  Calls the given block once for each element in self,
-  passing that element as a parameter.
-  @overload each
-    @return [Numo::NArray] self
-    For a block `{|x| ... }`,
-    @yieldparam [Numeric] x  an element of NArray.
-  @see #each_with_index
-  @see #map
-*/
-static VALUE uint64_each(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
-  ndfunc_t ndf = { iter_uint64_each, FULL_LOOP_NIP, 1, 0, ain, 0 };
-
-  na_ndloop(&ndf, 1, self);
-  return self;
-}
-
 static void iter_uint64_map(na_loop_t* const lp) {
   size_t i, n;
   char *p1, *p2;
@@ -2248,6 +2208,16 @@ void Init_numo_uint64(void) {
    *   @return [String]
    */
   rb_define_method(cT, "inspect", uint64_inspect, 0);
+  /**
+   * Calls the given block once for each element in self,
+   * passing that element as a parameter.
+   * @overload each
+   *   @return [Numo::NArray] self
+   *   For a block `{|x| ... }`,
+   *   @yieldparam [Numeric] x  an element of NArray.
+   * @see #each_with_index
+   * @see #map
+   */
   rb_define_method(cT, "each", uint64_each, 0);
   rb_define_method(cT, "map", uint64_map, 0);
   rb_define_method(cT, "each_with_index", uint64_each_with_index, 0);

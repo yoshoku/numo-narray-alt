@@ -269,6 +269,18 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_each
+    TYPES.each do |dtype|
+      a = dtype[1, 2, 3, 5, 7, 11]
+      actual = []
+      a.each { |e| actual << e } # rubocop:disable Style/MapIntoArray
+      assert_equal([1, 2, 3, 5, 7, 11], actual)
+      actual = []
+      a[[0, 3, 5]].each { |e| actual << e } # rubocop:disable Style/MapIntoArray
+      assert_equal([1, 5, 11], actual)
+    end
+  end
+
   def test_abs
     [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |dtype|
       actual = dtype[3.5, -2.1, 0.0, -0.7, -0.9].abs

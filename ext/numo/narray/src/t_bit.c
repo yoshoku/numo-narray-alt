@@ -37,6 +37,7 @@ extern VALUE cRT;
 #include "mh/format.h"
 #include "mh/format_to_a.h"
 #include "mh/inspect.h"
+#include "mh/each.h"
 #include "mh/mean.h"
 #include "mh/var.h"
 #include "mh/stddev.h"
@@ -48,6 +49,7 @@ DEF_NARRAY_BIT_FILL_METHOD_FUNC()
 DEF_NARRAY_BIT_FORMAT_METHOD_FUNC()
 DEF_NARRAY_BIT_FORMAT_TO_A_METHOD_FUNC()
 DEF_NARRAY_BIT_INSPECT_METHOD_FUNC()
+DEF_NARRAY_BIT_EACH_METHOD_FUNC()
 DEF_NARRAY_BIT_MEAN_METHOD_FUNC()
 DEF_NARRAY_BIT_VAR_METHOD_FUNC()
 DEF_NARRAY_BIT_STDDEV_METHOD_FUNC()
@@ -1363,49 +1365,6 @@ static VALUE bit_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-static void iter_bit_each(na_loop_t* const lp) {
-  size_t i;
-  BIT_DIGIT *a1, x = 0;
-  size_t p1;
-  ssize_t s1;
-  size_t* idx1;
-  VALUE y;
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR_BIT_IDX(lp, 0, a1, p1, s1, idx1);
-  if (idx1) {
-    for (; i--;) {
-      LOAD_BIT(a1, p1 + *idx1, x);
-      idx1++;
-      y = m_data_to_num(x);
-      rb_yield(y);
-    }
-  } else {
-    for (; i--;) {
-      LOAD_BIT(a1, p1, x);
-      p1 += s1;
-      y = m_data_to_num(x);
-      rb_yield(y);
-    }
-  }
-}
-
-/*
-  Calls the given block once for each element in self,
-  passing that element as a parameter.
-  @overload each
-    @return [Numo::NArray] self
-    For a block {|x| ... }
-    @yield [x]  x is element of NArray.
-*/
-static VALUE bit_each(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
-  ndfunc_t ndf = { iter_bit_each, FULL_LOOP_NIP, 1, 0, ain, 0 };
-
-  na_ndloop(&ndf, 1, self);
-  return self;
 }
 
 static inline void yield_each_with_index(dtype x, size_t* c, VALUE* a, int nd, int md) {
@@ -3039,6 +2998,14 @@ void Init_numo_bit(void) {
    *   @return [String]
    */
   rb_define_method(cT, "inspect", bit_inspect, 0);
+  /**
+   * Calls the given block once for each element in self,
+   * passing that element as a parameter.
+   * @overload each
+   *   @return [Numo::NArray] self
+   *   For a block {|x| ... }
+   *   @yield [x]  x is element of NArray.
+   */
   rb_define_method(cT, "each", bit_each, 0);
   rb_define_method(cT, "each_with_index", bit_each_with_index, 0);
   rb_define_method(cT, "copy", bit_copy, 0);
