@@ -56,6 +56,7 @@ extern VALUE cRT;
 #include "mh/square.h"
 #include "mh/conj.h"
 #include "mh/im.h"
+#include "mh/real.h"
 #include "mh/comp/eq.h"
 #include "mh/comp/ne.h"
 #include "mh/comp/nearly_eq.h"
@@ -124,6 +125,7 @@ DEF_NARRAY_SIGN_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_SQUARE_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_CONJ_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_IM_METHOD_FUNC(scomplex, numo_cSComplex)
+DEF_NARRAY_REAL_METHOD_FUNC(scomplex, numo_cSComplex, float, numo_cSFloat)
 DEF_NARRAY_EQ_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_NE_METHOD_FUNC(scomplex, numo_cSComplex)
 DEF_NARRAY_NEARLY_EQ_METHOD_FUNC(scomplex, numo_cSComplex)
@@ -1729,60 +1731,6 @@ static VALUE scomplex_map_with_index(VALUE self) {
   return na_ndloop_with_index(&ndf, 1, self);
 }
 
-static void iter_scomplex_real(na_loop_t* const lp) {
-  size_t i;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t *idx1, *idx2;
-  dtype x;
-  rtype y;
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-  if (idx1) {
-    if (idx2) {
-      for (; i--;) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        y = m_real(x);
-        SET_DATA_INDEX(p2, idx2, rtype, y);
-      }
-    } else {
-      for (; i--;) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        y = m_real(x);
-        SET_DATA_STRIDE(p2, s2, rtype, y);
-      }
-    }
-  } else {
-    if (idx2) {
-      for (; i--;) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        y = m_real(x);
-        SET_DATA_INDEX(p2, idx2, rtype, y);
-      }
-    } else {
-      for (; i--;) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        y = m_real(x);
-        SET_DATA_STRIDE(p2, s2, rtype, y);
-      }
-    }
-  }
-}
-
-/*
-  real of self.
-  @overload real
-    @return [Numo::SFloat] real of self.
-*/
-static VALUE scomplex_real(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cRT, 0 } };
-  ndfunc_t ndf = { iter_scomplex_real, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, self);
-}
-
 static void iter_scomplex_imag(na_loop_t* const lp) {
   size_t i;
   char *p1, *p2;
@@ -2241,6 +2189,11 @@ void Init_numo_scomplex(void) {
    *   @return [Numo::SComplex] im of self.
    */
   rb_define_method(cT, "im", scomplex_im, 0);
+  /**
+   * real of self.
+   * @overload real
+   *   @return [Numo::SFloat] real of self.
+   */
   rb_define_method(cT, "real", scomplex_real, 0);
   rb_define_method(cT, "imag", scomplex_imag, 0);
   rb_define_method(cT, "arg", scomplex_arg, 0);

@@ -41,7 +41,7 @@ class NArrayTest < NArrayTestBase
     end
   end
 
-  def test_1d_narray # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Minitest/MultipleAssertions
+  def test_1d_narray # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity, Minitest/MultipleAssertions
     TYPES.each do |dtype|
       [[proc { |tp, a| tp[*a] }, ''],
        [proc { |tp, a| tp[*a][true] }, '[true]'],
@@ -197,9 +197,16 @@ class NArrayTest < NArrayTestBase
         assert_predicate(a.transpose, :contiguous?)
 
         if [Numo::DComplex, Numo::SComplex].include?(dtype)
-          assert_equal(Numo::SFloat.asarray(src), a.real)
+          b = dtype[1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i, 9 + 10i, 11 + 12i]
+          actual = b.real
+          if dtype == Numo::DComplex
+            assert_kind_of(Numo::DFloat, actual)
+            assert_equal(Numo::DFloat[1, 3, 5, 7, 9, 11], actual)
+          else
+            assert_kind_of(Numo::SFloat, actual)
+            assert_equal(Numo::SFloat[1, 3, 5, 7, 9, 11], actual)
+          end
           assert_equal(Numo::SFloat[0, 0, 0, 0, 0, 0], a.imag)
-          assert_equal(Numo::SFloat.asarray(src), a.conj)
           assert_equal(Numo::SFloat[0, 0, 0, 0, 0, 0], a.angle)
           b = dtype[1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i, 9 + 10i, 11 + 12i]
           actual = b.conj
