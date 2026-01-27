@@ -205,15 +205,23 @@ class NArrayTest < NArrayTestBase
             actual = b.imag
             assert_kind_of(Numo::DFloat, actual)
             assert_equal(Numo::DFloat[2, 4, 6, 8, 10, 12], actual)
+            actual = b.angle
+            assert_kind_of(Numo::DFloat, actual)
+            Numo::NMath.atan(b.imag / b.real).each_with_index do |expected, i|
+              assert_in_delta(expected, actual[i], 1e-8)
+            end
           else
             assert_kind_of(Numo::SFloat, actual)
             assert_equal(Numo::SFloat[1, 3, 5, 7, 9, 11], actual)
             actual = b.imag
             assert_kind_of(Numo::SFloat, actual)
             assert_equal(Numo::SFloat[2, 4, 6, 8, 10, 12], actual)
+            actual = b.angle
+            assert_kind_of(Numo::SFloat, actual)
+            Numo::NMath.atan(b.imag / b.real).each_with_index do |expected, i|
+              assert_in_delta(expected, actual[i], 1e-6)
+            end
           end
-          assert_equal(Numo::SFloat[0, 0, 0, 0, 0, 0], a.angle)
-          b = dtype[1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i, 9 + 10i, 11 + 12i]
           actual = b.conj
           assert_kind_of(dtype, actual)
           assert_equal(dtype[1 - 2i, 3 - 4i, 5 - 6i, 7 - 8i, 9 - 10i, 11 - 12i], actual)
