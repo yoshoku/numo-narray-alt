@@ -50,6 +50,7 @@ extern VALUE cRT;
 #include "mh/format_to_a.h"
 #include "mh/inspect.h"
 #include "mh/each.h"
+#include "mh/map.h"
 #include "mh/abs.h"
 #include "mh/op/add.h"
 #include "mh/op/sub.h"
@@ -108,6 +109,7 @@ DEF_NARRAY_FORMAT_METHOD_FUNC(uint8)
 DEF_NARRAY_FORMAT_TO_A_METHOD_FUNC(uint8)
 DEF_NARRAY_INSPECT_METHOD_FUNC(uint8)
 DEF_NARRAY_EACH_METHOD_FUNC(uint8)
+DEF_NARRAY_MAP_METHOD_FUNC(uint8, numo_cUInt8)
 DEF_NARRAY_ABS_METHOD_FUNC(uint8, numo_cUInt8, uint8, numo_cUInt8)
 DEF_NARRAY_INT8_ADD_METHOD_FUNC(uint8, numo_cUInt8)
 DEF_NARRAY_INT8_SUB_METHOD_FUNC(uint8, numo_cUInt8)
@@ -1316,64 +1318,6 @@ static VALUE uint8_aset(int argc, VALUE* argv, VALUE self) {
   return argv[argc];
 }
 
-static void iter_uint8_map(na_loop_t* const lp) {
-  size_t i, n;
-  char *p1, *p2;
-  ssize_t s1, s2;
-  size_t *idx1, *idx2;
-  dtype x;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  INIT_PTR_IDX(lp, 1, p2, s2, idx2);
-
-  if (idx1) {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_map(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      for (i = 0; i < n; i++) {
-        GET_DATA_INDEX(p1, idx1, dtype, x);
-        x = m_map(x);
-        SET_DATA_STRIDE(p2, s2, dtype, x);
-      }
-    }
-  } else {
-    if (idx2) {
-      for (i = 0; i < n; i++) {
-        GET_DATA_STRIDE(p1, s1, dtype, x);
-        x = m_map(x);
-        SET_DATA_INDEX(p2, idx2, dtype, x);
-      }
-    } else {
-      //
-      for (i = 0; i < n; i++) {
-        *(dtype*)p2 = m_map(*(dtype*)p1);
-        p1 += s1;
-        p2 += s2;
-      }
-      return;
-      //
-    }
-  }
-}
-
-/*
-  Unary map.
-  @overload map
-    @return [Numo::UInt8] map of self.
-*/
-static VALUE uint8_map(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { cT, 0 } };
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_uint8_map, FULL_LOOP, 1, 1, ain, aout };
-
-  return na_ndloop(&ndf, 1, self);
-}
-
 static inline void yield_each_with_index(dtype x, size_t* c, VALUE* a, int nd, int md) {
   int j;
 
@@ -2202,6 +2146,11 @@ void Init_numo_uint8(void) {
    * @see #map
    */
   rb_define_method(cT, "each", uint8_each, 0);
+  /**
+   * Unary map.
+   * @overload map
+   *   @return [Numo::UInt8] map of self.
+   */
   rb_define_method(cT, "map", uint8_map, 0);
   rb_define_method(cT, "each_with_index", uint8_each_with_index, 0);
   rb_define_method(cT, "map_with_index", uint8_map_with_index, 0);

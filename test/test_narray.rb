@@ -281,6 +281,18 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_map
+    TYPES.each do |dtype|
+      a = dtype[1, 2, 3, 5, 7, 11]
+      actual = a.map { |e| e * 2 }
+      assert_kind_of(dtype, actual)
+      assert_equal(dtype[2, 4, 6, 10, 14, 22], actual)
+      actual = a[[0, 3, 5]].map { |e| e + 1 }
+      assert_kind_of(dtype, actual)
+      assert_equal(dtype[2, 6, 12], actual)
+    end
+  end
+
   def test_abs
     [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |dtype|
       actual = dtype[3.5, -2.1, 0.0, -0.7, -0.9].abs
