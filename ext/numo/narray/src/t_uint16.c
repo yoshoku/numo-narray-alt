@@ -1912,8 +1912,8 @@ void Init_numo_uint16(void) {
   /**
    * Multi-dimensional element reference.
    * @overload [](dim0,...,dimL)
-   *   @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
-   *   dim0,...,dimL  multi-dimensional indices.
+   *   @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,
+   *     Symbol] dim0,...,dimL  multi-dimensional indices.
    *   @return [Numeric,Numo::UInt16] an element or NArray view.
    * @see Numo::NArray#[]
    * @see #[]=
