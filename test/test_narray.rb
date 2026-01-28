@@ -269,6 +269,18 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_extract
+    TYPES.each do |dtype|
+      a = dtype.cast(10.0)
+      actual = a.extract
+      assert_equal(10, actual)
+      assert_kind_of(Complex, actual) if [Numo::DComplex, Numo::SComplex].include?(dtype)
+      assert_kind_of(Float, actual) if [Numo::DFloat, Numo::SFloat, Numo::RObject].include?(dtype)
+      assert_kind_of(Integer, actual) if INTEGER_TYPES.include?(dtype)
+      assert_kind_of(Integer, actual) if UNSIGNED_INTEGER_TYPES.include?(dtype)
+    end
+  end
+
   def test_each
     TYPES.each do |dtype|
       a = dtype[1, 2, 3, 5, 7, 11]

@@ -60,6 +60,7 @@ static ID id_truncate;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/extract.h"
 #include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/fill.h"
@@ -131,6 +132,7 @@ extern VALUE cRT;
 
 typedef VALUE robject; // Type aliases for shorter notation
                        // following the codebase naming convention.
+DEF_NARRAY_EXTRACT_METHOD_FUNC(robject)
 DEF_NARRAY_COERCE_CAST_METHOD_FUNC(robject)
 DEF_NARRAY_TO_A_METHOD_FUNC(robject)
 DEF_NARRAY_FILL_METHOD_FUNC(robject)
@@ -321,28 +323,6 @@ static VALUE robject_allocate(VALUE self) {
     //  to be implemented
   default:
     rb_bug("invalid narray type : %d", NA_TYPE(na));
-  }
-  return self;
-}
-
-/*
-  Extract an element only if self is a dimensionless NArray.
-  @overload extract
-    @return [Numeric,Numo::NArray]
-    --- Extract element value as Ruby Object if self is a dimensionless NArray,
-    otherwise returns self.
-*/
-static VALUE robject_extract(VALUE self) {
-  volatile VALUE v;
-  char* ptr;
-  narray_t* na;
-  GetNArray(self, na);
-
-  if (na->ndim == 0) {
-    ptr = na_get_pointer_for_read(self) + na_get_offset(self);
-    v = m_extract(ptr);
-    na_release_lock(self);
-    return v;
   }
   return self;
 }
@@ -1507,6 +1487,13 @@ void Init_numo_robject(void) {
   rb_undef_method(cT, "to_swapped");
   rb_define_alloc_func(cT, robject_s_alloc_func);
   rb_define_method(cT, "allocate", robject_allocate, 0);
+  /**
+   * Extract an element only if self is a dimensionless NArray.
+   * @overload extract
+   *   @return [Numeric,Numo::NArray]
+   *   --- Extract element value as Ruby Object if self is a dimensionless NArray,
+   *   otherwise returns self.
+   */
   rb_define_method(cT, "extract", robject_extract, 0);
 
   rb_define_method(cT, "store", robject_store, 1);

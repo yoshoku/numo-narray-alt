@@ -31,6 +31,7 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/extract.h"
 #include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/fill.h"
@@ -44,6 +45,7 @@ extern VALUE cRT;
 #include "mh/stddev.h"
 #include "mh/rms.h"
 
+DEF_NARRAY_BIT_EXTRACT_METHOD_FUNC()
 DEF_NARRAY_COERCE_CAST_METHOD_FUNC(bit)
 DEF_NARRAY_BIT_TO_A_METHOD_FUNC()
 DEF_NARRAY_BIT_FILL_METHOD_FUNC()
@@ -152,30 +154,6 @@ static VALUE bit_allocate(VALUE self) {
     break;
   default:
     rb_raise(rb_eRuntimeError, "invalid narray type");
-  }
-  return self;
-}
-
-/*
-  Extract an element only if self is a dimensionless NArray.
-  @overload extract
-    @return [Numeric,Numo::NArray]
-    --- Extract element value as Ruby Object if self is a dimensionless NArray,
-    otherwise returns self.
-*/
-
-static VALUE bit_extract(VALUE self) {
-  BIT_DIGIT *ptr, val;
-  size_t pos;
-  narray_t* na;
-  GetNArray(self, na);
-
-  if (na->ndim == 0) {
-    pos = na_get_offset(self);
-    ptr = (BIT_DIGIT*)na_get_pointer_for_read(self);
-    val = ((*((ptr) + (pos) / NB)) >> ((pos) % NB)) & 1u;
-    na_release_lock(self);
-    return INT2FIX(val);
   }
   return self;
 }
@@ -2892,6 +2870,13 @@ void Init_numo_bit(void) {
   rb_define_const(cT, "CONTIGUOUS_STRIDE", INT2FIX(1));
   rb_define_alloc_func(cT, bit_s_alloc_func);
   rb_define_method(cT, "allocate", bit_allocate, 0);
+  /**
+   * Extract an element only if self is a dimensionless NArray.
+   * @overload extract
+   *   @return [Numeric,Numo::NArray]
+   *   --- Extract element value as Ruby Object if self is a dimensionless NArray,
+   *   otherwise returns self.
+   */
   rb_define_method(cT, "extract", bit_extract, 0);
 
   rb_define_method(cT, "store", bit_store, 1);

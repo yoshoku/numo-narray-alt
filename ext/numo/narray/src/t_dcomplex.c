@@ -38,6 +38,7 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/extract.h"
 #include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/fill.h"
@@ -116,6 +117,7 @@ extern VALUE cRT;
 #include "mh/math/atanh.h"
 #include "mh/math/sinc.h"
 
+DEF_NARRAY_EXTRACT_METHOD_FUNC(dcomplex)
 DEF_NARRAY_COERCE_CAST_METHOD_FUNC(dcomplex)
 DEF_NARRAY_TO_A_METHOD_FUNC(dcomplex)
 DEF_NARRAY_FILL_METHOD_FUNC(dcomplex)
@@ -293,28 +295,6 @@ static VALUE dcomplex_allocate(VALUE self) {
     //  to be implemented
   default:
     rb_bug("invalid narray type : %d", NA_TYPE(na));
-  }
-  return self;
-}
-
-/*
-  Extract an element only if self is a dimensionless NArray.
-  @overload extract
-    @return [Numeric,Numo::NArray]
-    --- Extract element value as Ruby Object if self is a dimensionless NArray,
-  otherwise returns self.
-*/
-static VALUE dcomplex_extract(VALUE self) {
-  volatile VALUE v;
-  char* ptr;
-  narray_t* na;
-  GetNArray(self, na);
-
-  if (na->ndim == 0) {
-    ptr = na_get_pointer_for_read(self) + na_get_offset(self);
-    v = m_extract(ptr);
-    na_release_lock(self);
-    return v;
   }
   return self;
 }
@@ -1593,6 +1573,13 @@ void Init_numo_dcomplex(void) {
   rb_define_const(cT, "MIN", M_MIN);
   rb_define_alloc_func(cT, dcomplex_s_alloc_func);
   rb_define_method(cT, "allocate", dcomplex_allocate, 0);
+  /**
+   * Extract an element only if self is a dimensionless NArray.
+   * @overload extract
+   *   @return [Numeric,Numo::NArray]
+   *   --- Extract element value as Ruby Object if self is a dimensionless NArray,
+   * otherwise returns self.
+   */
   rb_define_method(cT, "extract", dcomplex_extract, 0);
 
   rb_define_method(cT, "store", dcomplex_store, 1);

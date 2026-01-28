@@ -42,6 +42,7 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
+#include "mh/extract.h"
 #include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/fill.h"
@@ -141,6 +142,7 @@ extern VALUE cRT;
 
 typedef float sfloat; // Type aliases for shorter notation
                       // following the codebase naming convention.
+DEF_NARRAY_EXTRACT_METHOD_FUNC(sfloat)
 DEF_NARRAY_COERCE_CAST_METHOD_FUNC(sfloat)
 DEF_NARRAY_TO_A_METHOD_FUNC(sfloat)
 DEF_NARRAY_FILL_METHOD_FUNC(sfloat)
@@ -348,21 +350,6 @@ static VALUE sfloat_allocate(VALUE self) {
     //  to be implemented
   default:
     rb_bug("invalid narray type : %d", NA_TYPE(na));
-  }
-  return self;
-}
-
-static VALUE sfloat_extract(VALUE self) {
-  volatile VALUE v;
-  char* ptr;
-  narray_t* na;
-  GetNArray(self, na);
-
-  if (na->ndim == 0) {
-    ptr = na_get_pointer_for_read(self) + na_get_offset(self);
-    v = m_extract(ptr);
-    na_release_lock(self);
-    return v;
   }
   return self;
 }
