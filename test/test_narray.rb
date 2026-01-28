@@ -305,6 +305,18 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_map_with_index
+    TYPES.each do |dtype|
+      a = dtype[1, 2, 3, 5, 7, 11]
+      actual = a.map_with_index { |e, i| e + i }
+      assert_kind_of(dtype, actual)
+      assert_equal(dtype[1, 3, 5, 8, 11, 16], actual)
+      actual = a[[0, 3, 5]].map_with_index { |e, i| e * i }
+      assert_kind_of(dtype, actual)
+      assert_equal(dtype[0, 5, 22], actual)
+    end
+  end
+
   def test_abs
     [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |dtype|
       actual = dtype[3.5, -2.1, 0.0, -0.7, -0.9].abs
