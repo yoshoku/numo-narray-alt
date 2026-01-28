@@ -43,6 +43,7 @@ VALUE cT;
 extern VALUE cRT;
 
 #include "mh/extract.h"
+#include "mh/aref.h"
 #include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/fill.h"
@@ -144,6 +145,7 @@ extern VALUE cRT;
 typedef double dfloat; // Type aliases for shorter notation
                        // following the codebase naming convention.
 DEF_NARRAY_EXTRACT_METHOD_FUNC(dfloat)
+DEF_NARRAY_AREF_METHOD_FUNC(dfloat)
 DEF_NARRAY_COERCE_CAST_METHOD_FUNC(dfloat)
 DEF_NARRAY_TO_A_METHOD_FUNC(dfloat)
 DEF_NARRAY_FILL_METHOD_FUNC(dfloat)
@@ -1317,20 +1319,6 @@ static VALUE dfloat_s_cast(VALUE type, VALUE obj) {
 
   rb_raise(nary_eCastError, "cannot cast to %s", rb_class2name(type));
   return Qnil;
-}
-
-static VALUE dfloat_aref(int argc, VALUE* argv, VALUE self) {
-  int nd;
-  size_t pos;
-  char* ptr;
-
-  nd = na_get_result_dimension(self, argc, argv, sizeof(dtype), &pos);
-  if (nd) {
-    return na_aref_main(argc, argv, self, 0, nd);
-  } else {
-    ptr = na_get_pointer_for_read(self) + pos;
-    return m_extract(ptr);
-  }
 }
 
 static VALUE dfloat_aset(int argc, VALUE* argv, VALUE self) {

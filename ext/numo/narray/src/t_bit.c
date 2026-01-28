@@ -32,6 +32,7 @@ VALUE cT;
 extern VALUE cRT;
 
 #include "mh/extract.h"
+#include "mh/aref.h"
 #include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/fill.h"
@@ -46,6 +47,7 @@ extern VALUE cRT;
 #include "mh/rms.h"
 
 DEF_NARRAY_BIT_EXTRACT_METHOD_FUNC()
+DEF_NARRAY_BIT_AREF_METHOD_FUNC()
 DEF_NARRAY_COERCE_CAST_METHOD_FUNC(bit)
 DEF_NARRAY_BIT_TO_A_METHOD_FUNC()
 DEF_NARRAY_BIT_FILL_METHOD_FUNC()
@@ -1248,53 +1250,6 @@ static VALUE bit_s_cast(VALUE type, VALUE obj) {
 
   rb_raise(nary_eCastError, "cannot cast to %s", rb_class2name(type));
   return Qnil;
-}
-
-/*
-  Multi-dimensional element reference.
-  @overload [](dim0,...,dimL)
-    @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
-    dim0,...,dimL  multi-dimensional indices.
-    @return [Numeric,Numo::Bit] an element or NArray view.
-  @see Numo::NArray#[]
-  @see #[]=
-
-  @example
-      a = Numo::Int32.new(3,4).seq
-      # => Numo::Int32#shape=[3,4]
-      # [[0, 1, 2, 3],
-      #  [4, 5, 6, 7],
-      #  [8, 9, 10, 11]]
-
-      b = (a%2).eq(0)
-      # => Numo::Bit#shape=[3,4]
-      # [[1, 0, 1, 0],
-      #  [1, 0, 1, 0],
-      #  [1, 0, 1, 0]]
-
-      b[true,(0..-1)%2]
-      # => Numo::Bit(view)#shape=[3,2]
-      # [[1, 1],
-      #  [1, 1],
-      #  [1, 1]]
-
-      b[1,1]
-      # => 0
- */
-static VALUE bit_aref(int argc, VALUE* argv, VALUE self) {
-  int nd;
-  size_t pos;
-  char* ptr;
-  dtype x;
-
-  nd = na_get_result_dimension(self, argc, argv, 1, &pos);
-  if (nd) {
-    return na_aref_main(argc, argv, self, 0, nd);
-  } else {
-    ptr = na_get_pointer_for_read(self);
-    LOAD_BIT(ptr, pos, x);
-    return m_data_to_num(x);
-  }
 }
 
 /*
@@ -2882,6 +2837,37 @@ void Init_numo_bit(void) {
   rb_define_method(cT, "store", bit_store, 1);
 
   rb_define_singleton_method(cT, "cast", bit_s_cast, 1);
+  /**
+   * Multi-dimensional element reference.
+   * @overload [](dim0,...,dimL)
+   *   @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+   *   dim0,...,dimL  multi-dimensional indices.
+   *   @return [Numeric,Numo::Bit] an element or NArray view.
+   * @see Numo::NArray#[]
+   * @see #[]=
+   *
+   * @example
+   *     a = Numo::Int32.new(3,4).seq
+   *     # => Numo::Int32#shape=[3,4]
+   *     # [[0, 1, 2, 3],
+   *     #  [4, 5, 6, 7],
+   *     #  [8, 9, 10, 11]]
+   *
+   *     b = (a%2).eq(0)
+   *     # => Numo::Bit#shape=[3,4]
+   *     # [[1, 0, 1, 0],
+   *     #  [1, 0, 1, 0],
+   *     #  [1, 0, 1, 0]]
+   *
+   *     b[true,(0..-1)%2]
+   *     # => Numo::Bit(view)#shape=[3,2]
+   *     # [[1, 1],
+   *     #  [1, 1],
+   *     #  [1, 1]]
+   *
+   *     b[1,1]
+   *     # => 0
+   */
   rb_define_method(cT, "[]", bit_aref, -1);
   rb_define_method(cT, "[]=", bit_aset, -1);
   /**

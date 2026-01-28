@@ -39,6 +39,7 @@ VALUE cT;
 extern VALUE cRT;
 
 #include "mh/extract.h"
+#include "mh/aref.h"
 #include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/fill.h"
@@ -117,6 +118,7 @@ extern VALUE cRT;
 #include "mh/math/sinc.h"
 
 DEF_NARRAY_EXTRACT_METHOD_FUNC(scomplex)
+DEF_NARRAY_AREF_METHOD_FUNC(scomplex)
 DEF_NARRAY_COERCE_CAST_METHOD_FUNC(scomplex)
 DEF_NARRAY_TO_A_METHOD_FUNC(scomplex)
 DEF_NARRAY_FILL_METHOD_FUNC(scomplex)
@@ -1399,29 +1401,6 @@ static VALUE scomplex_s_cast(VALUE type, VALUE obj) {
 }
 
 /*
-  Multi-dimensional element reference.
-  @overload [](dim0,...,dimL)
-    @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
-    dim0,...,dimL  multi-dimensional indices.
-    @return [Numeric,Numo::SComplex] an element or NArray view.
-    @see Numo::NArray#[]
-    @see #[]=
- */
-static VALUE scomplex_aref(int argc, VALUE* argv, VALUE self) {
-  int nd;
-  size_t pos;
-  char* ptr;
-
-  nd = na_get_result_dimension(self, argc, argv, sizeof(dtype), &pos);
-  if (nd) {
-    return na_aref_main(argc, argv, self, 0, nd);
-  } else {
-    ptr = na_get_pointer_for_read(self) + pos;
-    return m_extract(ptr);
-  }
-}
-
-/*
   Multi-dimensional element assignment.
   @overload []=(dim0,...,dimL,val)
     @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
@@ -1583,6 +1562,15 @@ void Init_numo_scomplex(void) {
   rb_define_method(cT, "store", scomplex_store, 1);
 
   rb_define_singleton_method(cT, "cast", scomplex_s_cast, 1);
+  /**
+   * Multi-dimensional element reference.
+   * @overload [](dim0,...,dimL)
+   *   @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+   *   dim0,...,dimL  multi-dimensional indices.
+   *   @return [Numeric,Numo::SComplex] an element or NArray view.
+   *   @see Numo::NArray#[]
+   *   @see #[]=
+   */
   rb_define_method(cT, "[]", scomplex_aref, -1);
   rb_define_method(cT, "[]=", scomplex_aset, -1);
   /**

@@ -61,6 +61,7 @@ VALUE cT;
 extern VALUE cRT;
 
 #include "mh/extract.h"
+#include "mh/aref.h"
 #include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/fill.h"
@@ -133,6 +134,7 @@ extern VALUE cRT;
 typedef VALUE robject; // Type aliases for shorter notation
                        // following the codebase naming convention.
 DEF_NARRAY_EXTRACT_METHOD_FUNC(robject)
+DEF_NARRAY_AREF_METHOD_FUNC(robject)
 DEF_NARRAY_COERCE_CAST_METHOD_FUNC(robject)
 DEF_NARRAY_TO_A_METHOD_FUNC(robject)
 DEF_NARRAY_FILL_METHOD_FUNC(robject)
@@ -1298,29 +1300,6 @@ static VALUE robject_s_cast(VALUE type, VALUE obj) {
 }
 
 /*
-  Multi-dimensional element reference.
-  @overload [](dim0,...,dimL)
-    @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
-    dim0,...,dimL  multi-dimensional indices.
-    @return [Numeric,Numo::RObject] an element or NArray view.
-  @see Numo::NArray#[]
-  @see #[]=
- */
-static VALUE robject_aref(int argc, VALUE* argv, VALUE self) {
-  int nd;
-  size_t pos;
-  char* ptr;
-
-  nd = na_get_result_dimension(self, argc, argv, sizeof(dtype), &pos);
-  if (nd) {
-    return na_aref_main(argc, argv, self, 0, nd);
-  } else {
-    ptr = na_get_pointer_for_read(self) + pos;
-    return m_extract(ptr);
-  }
-}
-
-/*
   Multi-dimensional element assignment.
   @overload []=(dim0,...,dimL,val)
     @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
@@ -1499,6 +1478,15 @@ void Init_numo_robject(void) {
   rb_define_method(cT, "store", robject_store, 1);
 
   rb_define_singleton_method(cT, "cast", robject_s_cast, 1);
+  /**
+   * Multi-dimensional element reference.
+   * @overload [](dim0,...,dimL)
+   *   @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
+   *   dim0,...,dimL  multi-dimensional indices.
+   *   @return [Numeric,Numo::RObject] an element or NArray view.
+   * @see Numo::NArray#[]
+   * @see #[]=
+   */
   rb_define_method(cT, "[]", robject_aref, -1);
   rb_define_method(cT, "[]=", robject_aset, -1);
   /**
