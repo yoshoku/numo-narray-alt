@@ -68,6 +68,7 @@ extern VALUE cRT;
 #include "mh/inspect.h"
 #include "mh/each.h"
 #include "mh/map.h"
+#include "mh/each_with_index.h"
 #include "mh/abs.h"
 #include "mh/op/add.h"
 #include "mh/op/sub.h"
@@ -137,6 +138,7 @@ DEF_NARRAY_FORMAT_TO_A_METHOD_FUNC(robject)
 DEF_NARRAY_ROBJ_INSPECT_METHOD_FUNC()
 DEF_NARRAY_EACH_METHOD_FUNC(robject)
 DEF_NARRAY_ROBJ_MAP_METHOD_FUNC()
+DEF_NARRAY_EACH_WITH_INDEX_METHOD_FUNC(robject)
 DEF_NARRAY_ABS_METHOD_FUNC(robject, numo_cRObject, robject, numo_cRObject)
 DEF_NARRAY_ROBJ_ADD_METHOD_FUNC()
 DEF_NARRAY_ROBJ_SUB_METHOD_FUNC()
@@ -1370,70 +1372,6 @@ static VALUE robject_aset(int argc, VALUE* argv, VALUE self) {
   return argv[argc];
 }
 
-static inline void yield_each_with_index(dtype x, size_t* c, VALUE* a, int nd, int md) {
-  int j;
-
-  a[0] = m_data_to_num(x);
-  for (j = 0; j <= nd; j++) {
-    a[j + 1] = SIZET2NUM(c[j]);
-  }
-  rb_yield(rb_ary_new4(md, a));
-}
-
-static void iter_robject_each_with_index(na_loop_t* const lp) {
-  size_t i, s1;
-  char* p1;
-  size_t* idx1;
-  dtype x;
-  VALUE* a;
-  size_t* c;
-  int nd, md;
-
-  c = (size_t*)(lp->opt_ptr);
-  nd = lp->ndim;
-  if (nd > 0) {
-    nd--;
-  }
-  md = nd + 2;
-  a = ALLOCA_N(VALUE, md);
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  c[nd] = 0;
-  if (idx1) {
-    for (; i--;) {
-      GET_DATA_INDEX(p1, idx1, dtype, x);
-      yield_each_with_index(x, c, a, nd, md);
-      c[nd]++;
-    }
-  } else {
-    for (; i--;) {
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      yield_each_with_index(x, c, a, nd, md);
-      c[nd]++;
-    }
-  }
-}
-
-/*
-  Invokes the given block once for each element of self,
-  passing that element and indices along each axis as parameters.
-  @overload each_with_index
-    For a block `{|x,i,j,...| ... }`,
-    @yieldparam [Numeric] x  an element
-    @yieldparam [Integer] i,j,...  multitimensional indices
-    @return [Numo::NArray] self
-  @see #each
-  @see #map_with_index
-*/
-static VALUE robject_each_with_index(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
-  ndfunc_t ndf = { iter_robject_each_with_index, FULL_LOOP_NIP, 1, 0, ain, 0 };
-
-  na_ndloop_with_index(&ndf, 1, self);
-  return self;
-}
-
 static inline dtype yield_map_with_index(dtype x, size_t* c, VALUE* a, int nd, int md) {
   int j;
   VALUE y;
@@ -1721,6 +1659,17 @@ void Init_numo_robject(void) {
    *   @return [Numo::RObject] map of self.
    */
   rb_define_method(cT, "map", robject_map, 0);
+  /**
+   * Invokes the given block once for each element of self,
+   * passing that element and indices along each axis as parameters.
+   * @overload each_with_index
+   *   For a block `{|x,i,j,...| ... }`,
+   *   @yieldparam [Numeric] x  an element
+   *   @yieldparam [Integer] i,j,...  multitimensional indices
+   *   @return [Numo::NArray] self
+   * @see #each
+   * @see #map_with_index
+   */
   rb_define_method(cT, "each_with_index", robject_each_with_index, 0);
   rb_define_method(cT, "map_with_index", robject_map_with_index, 0);
   /**

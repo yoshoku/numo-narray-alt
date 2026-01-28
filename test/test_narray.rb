@@ -293,6 +293,18 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_each_with_index
+    TYPES.each do |dtype|
+      a = dtype[1, 2, 3, 5, 7, 11]
+      actual = []
+      a.each_with_index { |e, i| actual << [i, e] }
+      assert_equal([[0, 1], [1, 2], [2, 3], [3, 5], [4, 7], [5, 11]], actual)
+      actual = []
+      a[[0, 3, 5]].each_with_index { |e, i| actual << [i, e] }
+      assert_equal([[0, 1], [1, 5], [2, 11]], actual)
+    end
+  end
+
   def test_abs
     [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |dtype|
       actual = dtype[3.5, -2.1, 0.0, -0.7, -0.9].abs

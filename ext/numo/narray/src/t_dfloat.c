@@ -50,6 +50,7 @@ extern VALUE cRT;
 #include "mh/inspect.h"
 #include "mh/each.h"
 #include "mh/map.h"
+#include "mh/each_with_index.h"
 #include "mh/abs.h"
 #include "mh/op/add.h"
 #include "mh/op/sub.h"
@@ -148,6 +149,7 @@ DEF_NARRAY_FORMAT_TO_A_METHOD_FUNC(dfloat)
 DEF_NARRAY_INSPECT_METHOD_FUNC(dfloat)
 DEF_NARRAY_EACH_METHOD_FUNC(dfloat)
 DEF_NARRAY_MAP_METHOD_FUNC(dfloat, numo_cDFloat)
+DEF_NARRAY_EACH_WITH_INDEX_METHOD_FUNC(dfloat)
 DEF_NARRAY_ABS_METHOD_FUNC(dfloat, numo_cDFloat, dfloat, numo_cDFloat)
 #ifdef __SSE2__
 DEF_NARRAY_DFLT_ADD_SSE2_METHOD_FUNC()
@@ -1364,59 +1366,6 @@ static VALUE dfloat_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-static inline void yield_each_with_index(dtype x, size_t* c, VALUE* a, int nd, int md) {
-  int j;
-
-  a[0] = m_data_to_num(x);
-  for (j = 0; j <= nd; j++) {
-    a[j + 1] = SIZET2NUM(c[j]);
-  }
-  rb_yield(rb_ary_new4(md, a));
-}
-
-static void iter_dfloat_each_with_index(na_loop_t* const lp) {
-  size_t i, s1;
-  char* p1;
-  size_t* idx1;
-  dtype x;
-  VALUE* a;
-  size_t* c;
-  int nd, md;
-
-  c = (size_t*)(lp->opt_ptr);
-  nd = lp->ndim;
-  if (nd > 0) {
-    nd--;
-  }
-  md = nd + 2;
-  a = ALLOCA_N(VALUE, md);
-
-  INIT_COUNTER(lp, i);
-  INIT_PTR_IDX(lp, 0, p1, s1, idx1);
-  c[nd] = 0;
-  if (idx1) {
-    for (; i--;) {
-      GET_DATA_INDEX(p1, idx1, dtype, x);
-      yield_each_with_index(x, c, a, nd, md);
-      c[nd]++;
-    }
-  } else {
-    for (; i--;) {
-      GET_DATA_STRIDE(p1, s1, dtype, x);
-      yield_each_with_index(x, c, a, nd, md);
-      c[nd]++;
-    }
-  }
-}
-
-static VALUE dfloat_each_with_index(VALUE self) {
-  ndfunc_arg_in_t ain[1] = { { Qnil, 0 } };
-  ndfunc_t ndf = { iter_dfloat_each_with_index, FULL_LOOP_NIP, 1, 0, ain, 0 };
-
-  na_ndloop_with_index(&ndf, 1, self);
-  return self;
 }
 
 static inline dtype yield_map_with_index(dtype x, size_t* c, VALUE* a, int nd, int md) {
