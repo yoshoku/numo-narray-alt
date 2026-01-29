@@ -1,3 +1,8 @@
+## [[0.9.14](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.13...v0.9.14)] - 2026-01-29
+
+- fixed the `poly` method that intermittently failed due to unsigned integer underflow and uninitialized dim field: [c4755ac](https://github.com/yoshoku/numo-narray-alt/commit/c4755acabc6621f5e3302ebe1f535dceb0496938).
+- refactored multiple methods to use macro templates: abs, copysign, signbit, modf, kahan_sum, conj, im, real, imag, arg, set_imag, set_real, each, map, each_with_index, map_with_index, extract, aref, and poly.
+
 ## [[0.9.13](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.12...v0.9.13)] - 2026-01-23
 
 - fixed the `rand` method for `Numo::DComplex` to return the complex values when no arguments are given: [78423e5](https://github.com/yoshoku/numo-narray-alt/commit/78423e5e0c300374ea87affa1e5433d821862089)
