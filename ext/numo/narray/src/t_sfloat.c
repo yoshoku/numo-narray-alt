@@ -111,6 +111,7 @@ extern VALUE cRT;
 #include "mh/eye.h"
 #include "mh/rand.h"
 #include "mh/rand_norm.h"
+#include "mh/poly.h"
 #include "mh/math/sqrt.h"
 #include "mh/math/cbrt.h"
 #include "mh/math/log.h"
@@ -219,6 +220,7 @@ DEF_NARRAY_FLT_LOGSEQ_METHOD_FUNC(sfloat)
 DEF_NARRAY_EYE_METHOD_FUNC(sfloat)
 DEF_NARRAY_FLT_RAND_METHOD_FUNC(sfloat)
 DEF_NARRAY_FLT_RAND_NORM_METHOD_FUNC(sfloat)
+DEF_NARRAY_POLY_METHOD_FUNC(sfloat, numo_cSFloat)
 #ifdef __SSE2__
 DEF_NARRAY_FLT_SQRT_SSE2_SGL_METHOD_FUNC(sfloat, numo_cSFloat)
 #else
@@ -1341,45 +1343,6 @@ static VALUE sfloat_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-static void iter_sfloat_poly(na_loop_t* const lp) {
-  size_t i;
-  dtype x, y, a;
-
-  x = *(dtype*)(lp->args[0].ptr + lp->args[0].iter[0].pos);
-  i = lp->narg - 2;
-  y = *(dtype*)(lp->args[i].ptr + lp->args[i].iter[0].pos);
-  for (; --i;) {
-    y = m_mul(x, y);
-    a = *(dtype*)(lp->args[i].ptr + lp->args[i].iter[0].pos);
-    y = m_add(y, a);
-  }
-  i = lp->narg - 1;
-  *(dtype*)(lp->args[i].ptr + lp->args[i].iter[0].pos) = y;
-}
-
-static VALUE sfloat_poly(VALUE self, VALUE args) {
-  int argc, i;
-  VALUE* argv;
-  volatile VALUE v, a;
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_sfloat_poly, NO_LOOP, 0, 1, 0, aout };
-
-  argc = (int)RARRAY_LEN(args);
-  ndf.nin = argc + 1;
-  ndf.ain = ALLOCA_N(ndfunc_arg_in_t, argc + 1);
-  for (i = 0; i < argc + 1; i++) {
-    ndf.ain[i].type = cT;
-  }
-  argv = ALLOCA_N(VALUE, argc + 1);
-  argv[0] = self;
-  for (i = 0; i < argc; i++) {
-    argv[i + 1] = RARRAY_PTR(args)[i];
-  }
-  a = rb_ary_new4(argc + 1, argv);
-  v = na_ndloop2(&ndf, a);
-  return sfloat_extract(v);
 }
 
 /*

@@ -96,6 +96,7 @@ extern VALUE cRT;
 #include "mh/eye.h"
 #include "mh/rand.h"
 #include "mh/rand_norm.h"
+#include "mh/poly.h"
 #include "mh/math/sqrt.h"
 #include "mh/math/cbrt.h"
 #include "mh/math/log.h"
@@ -176,6 +177,7 @@ DEF_NARRAY_FLT_LOGSEQ_METHOD_FUNC(dcomplex)
 DEF_NARRAY_EYE_METHOD_FUNC(dcomplex)
 DEF_NARRAY_CMP_RAND_METHOD_FUNC(dcomplex)
 DEF_NARRAY_CMP_RAND_NORM_METHOD_FUNC(dcomplex, double)
+DEF_NARRAY_POLY_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_SQRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_CBRT_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_FLT_LOG_METHOD_FUNC(dcomplex, numo_cDComplex)
@@ -1436,52 +1438,6 @@ static VALUE dcomplex_aset(int argc, VALUE* argv, VALUE self) {
   return argv[argc];
 }
 
-static void iter_dcomplex_poly(na_loop_t* const lp) {
-  size_t i;
-  dtype x, y, a;
-
-  x = *(dtype*)(lp->args[0].ptr + lp->args[0].iter[0].pos);
-  i = lp->narg - 2;
-  y = *(dtype*)(lp->args[i].ptr + lp->args[i].iter[0].pos);
-  for (; --i;) {
-    y = m_mul(x, y);
-    a = *(dtype*)(lp->args[i].ptr + lp->args[i].iter[0].pos);
-    y = m_add(y, a);
-  }
-  i = lp->narg - 1;
-  *(dtype*)(lp->args[i].ptr + lp->args[i].iter[0].pos) = y;
-}
-
-/*
-  Calculate polynomial.
-    `x.poly(a0,a1,a2,...,an) = a0 + a1*x + a2*x**2 + ... + an*x**n`
-  @overload poly a0, a1, ..., an
-    @param [Numo::NArray,Numeric] a0,a1,...,an
-    @return [Numo::DComplex]
-*/
-static VALUE dcomplex_poly(VALUE self, VALUE args) {
-  int argc, i;
-  VALUE* argv;
-  volatile VALUE v, a;
-  ndfunc_arg_out_t aout[1] = { { cT, 0 } };
-  ndfunc_t ndf = { iter_dcomplex_poly, NO_LOOP, 0, 1, 0, aout };
-
-  argc = (int)RARRAY_LEN(args);
-  ndf.nin = argc + 1;
-  ndf.ain = ALLOCA_N(ndfunc_arg_in_t, argc + 1);
-  for (i = 0; i < argc + 1; i++) {
-    ndf.ain[i].type = cT;
-  }
-  argv = ALLOCA_N(VALUE, argc + 1);
-  argv[0] = self;
-  for (i = 0; i < argc; i++) {
-    argv[i + 1] = RARRAY_PTR(args)[i];
-  }
-  a = rb_ary_new4(argc + 1, argv);
-  v = na_ndloop2(&ndf, a);
-  return dcomplex_extract(v);
-}
-
 VALUE mTM;
 
 void Init_numo_dcomplex(void) {
@@ -2057,6 +2013,13 @@ void Init_numo_dcomplex(void) {
    *   #  [4.5528+7.11003i, 5.62117+6.69094i, 5.05443+5.35133i]]
    */
   rb_define_method(cT, "rand_norm", dcomplex_rand_norm, -1);
+  /**
+   * Calculate polynomial.
+   *   `x.poly(a0,a1,a2,...,an) = a0 + a1*x + a2*x**2 + ... + an*x**n`
+   * @overload poly a0, a1, ..., an
+   *   @param [Numo::NArray,Numeric] a0,a1,...,an
+   *   @return [Numo::DComplex]
+   */
   rb_define_method(cT, "poly", dcomplex_poly, -2);
   rb_define_singleton_method(cT, "[]", dcomplex_s_cast, -2);
 

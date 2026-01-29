@@ -734,6 +734,35 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_poly
+    TYPES.each do |dtype|
+      a = dtype[1, 2, 3]
+      # 0th degree: f(x) = 10
+      actual = a.poly(10)
+      assert_kind_of(dtype, actual)
+      assert_equal(dtype[10, 10, 10], actual)
+      # 1st degree: f(x) = 3x + 2
+      actual = a.poly(2, 3)
+      assert_kind_of(dtype, actual)
+      assert_equal(dtype[5, 8, 11], actual)
+      # 2nd degree: f(x) = x^2 + 1
+      actual = a.poly(1, 0, 1)
+      assert_kind_of(dtype, actual)
+      assert_equal(dtype[2, 5, 10], actual)
+      # 3rd degree: f(x) = x^3
+      actual = a.poly(0, 0, 0, 1)
+      assert_kind_of(dtype, actual)
+      assert_equal(dtype[1, 8, 27], actual)
+      # 2nd degree: f(x) = 2x^2 + 3x + 4
+      # f(1) = 2 + 3 + 4 = 9
+      # f(2) = 8 + 6 + 4 = 18
+      # f(3) = 18 + 9 + 4 = 31
+      actual = a.poly(4, 3, 2)
+      assert_kind_of(dtype, actual)
+      assert_equal(dtype[9, 18, 31], actual)
+    end
+  end
+
   def test_isnan
     [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |dtype|
       actual = dtype[1.0, Float::NAN, 2.0, Float::NAN, 3.0].isnan
