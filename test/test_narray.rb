@@ -1318,6 +1318,30 @@ class NArrayTest < NArrayTestBase
                  Numo::DFloat.cast(Numo::RObject[1, nil, 3]).format_to_a)
   end
 
+  def test_sort
+    rng = Random.new(42)
+    arr = Array.new(100) { rng.rand(-1.0...1.0) }
+    [Numo::DFloat, Numo::SFloat].each do |dtype|
+      a = dtype.asarray(arr)
+      sorted = a.sort
+      assert_equal(a.to_a.sort, sorted.to_a)
+    end
+
+    arr = Array.new(100) { rng.rand(-100...100) }
+    INTEGER_TYPES.each do |dtype|
+      a = dtype.asarray(arr)
+      sorted = a.sort
+      assert_equal(a.to_a.sort, sorted.to_a)
+    end
+
+    arr = Array.new(100) { rng.rand(0...100) }
+    UNSIGNED_INTEGER_TYPES.each do |dtype|
+      a = dtype.asarray(arr)
+      sorted = a.sort
+      assert_equal(a.to_a.sort, sorted.to_a)
+    end
+  end
+
   def test_sort_index
     rng = Random.new(42)
     arr = Array.new(100) { rng.rand(-1.0...1.0) }
