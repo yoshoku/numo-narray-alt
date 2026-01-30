@@ -170,6 +170,11 @@ DEF_NARRAY_POLY_METHOD_FUNC(int16, numo_cInt16)
 #undef qsort_cast
 #define qsort_cast *(int16*)
 DEF_NARRAY_INT_SORT_METHOD_FUNC(int16)
+#undef qsort_dtype
+#define qsort_dtype int16*
+#undef qsort_cast
+#define qsort_cast **(int16**)
+DEF_NARRAY_INT_SORT_INDEX_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_INT_MEAN_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_INT_VAR_METHOD_FUNC(int16, numo_cInt16)
 DEF_NARRAY_INT_STDDEV_METHOD_FUNC(int16, numo_cInt16)
@@ -1289,246 +1294,6 @@ static VALUE int16_aset(int argc, VALUE* argv, VALUE self) {
   return argv[argc];
 }
 
-/*
-  qsort.c
-  Ruby/Numo::NArray - Numerical Array class for Ruby
-    modified by Masahiro TANAKA
-*/
-
-/*
- *      qsort.c: standard quicksort algorithm
- *
- *      Modifications from vanilla NetBSD source:
- *        Add do ... while() macro fix
- *        Remove __inline, _DIAGASSERTs, __P
- *        Remove ill-considered "swap_cnt" switch to insertion sort,
- *        in favor of a simple check for presorted input.
- *
- *      CAUTION: if you change this file, see also qsort_arg.c
- *
- *      $PostgreSQL: pgsql/src/port/qsort.c,v 1.12 2006/10/19 20:56:22 tgl Exp $
- */
-
-/*      $NetBSD: qsort.c,v 1.13 2003/08/07 16:43:42 agc Exp $   */
-
-/*-
- * Copyright (c) 1992, 1993
- *      The Regents of the University of California.  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *        notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *        notice, this list of conditions and the following disclaimer in the
- *        documentation and/or other materials provided with the distribution.
- * 3. Neither the name of the University nor the names of its contributors
- *        may be used to endorse or promote products derived from this software
- *        without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.      IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- */
-
-#undef qsort_dtype
-#define qsort_dtype dtype*
-#undef qsort_cast
-#define qsort_cast **(dtype**)
-
-static void int16_index_qsort(void* a, size_t n, ssize_t es) {
-  char *pa, *pb, *pc, *pd, *pl, *pm, *pn;
-  int d, r, swaptype, presorted;
-
-loop:
-  SWAPINIT(a, es);
-  if (n < 7) {
-    for (pm = (char*)a + es; pm < (char*)a + n * es; pm += es)
-      for (pl = pm; pl > (char*)a && cmpgt(pl - es, pl); pl -= es) swap(pl, pl - es);
-    return;
-  }
-  presorted = 1;
-  for (pm = (char*)a + es; pm < (char*)a + n * es; pm += es) {
-    if (cmpgt(pm - es, pm)) {
-      presorted = 0;
-      break;
-    }
-  }
-  if (presorted) return;
-  pm = (char*)a + (n / 2) * es;
-  if (n > 7) {
-    pl = (char*)a;
-    pn = (char*)a + (n - 1) * es;
-    if (n > 40) {
-      d = (int)((n / 8) * es);
-      pl = med3(pl, pl + d, pl + 2 * d, cmp);
-      pm = med3(pm - d, pm, pm + d, cmp);
-      pn = med3(pn - 2 * d, pn - d, pn, cmp);
-    }
-    pm = med3(pl, pm, pn, cmp);
-  }
-  swap(a, pm);
-  for (pa = pb = (char*)a + es, pc = pd = (char*)a + (n - 1) * es; pb <= pc;
-       pb += es, pc -= es) {
-    while (pb <= pc && (r = cmp(pb, a)) <= 0) {
-      if (r == 0) {
-        swap(pa, pb);
-        pa += es;
-      }
-      pb += es;
-    }
-    while (pb <= pc && (r = cmp(pc, a)) >= 0) {
-      if (r == 0) {
-        swap(pc, pd);
-        pd -= es;
-      }
-      pc -= es;
-    }
-    if (pb > pc) break;
-    swap(pb, pc);
-  }
-  pn = (char*)a + n * es;
-  r = (int)Min(pa - (char*)a, pb - pa);
-  vecswap(a, pb - r, r);
-  r = (int)Min(pd - pc, pn - pd - es);
-  vecswap(pb, pn - r, r);
-  if ((r = (int)(pb - pa)) > es) int16_index_qsort(a, r / es, es);
-  if ((r = (int)(pd - pc)) > es) {
-    /* Iterate rather than recurse to save stack space */
-    a = pn - r;
-    n = r / es;
-    goto loop;
-  }
-  /*              qsort(pn - r, r / es, es, cmp);*/
-}
-
-#define idx_t int64_t
-static void int16_index64_qsort(na_loop_t* const lp) {
-  size_t i, n, idx;
-  char *d_ptr, *i_ptr, *o_ptr;
-  ssize_t d_step, i_step, o_step;
-  char** ptr;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, d_ptr, d_step);
-  INIT_PTR(lp, 1, i_ptr, i_step);
-  INIT_PTR(lp, 2, o_ptr, o_step);
-
-  ptr = (char**)(lp->opt_ptr);
-
-  // o_ptr=%lx,o_step=%ld)\n",(size_t)ptr,(size_t)d_ptr,(ssize_t)d_step,(size_t)i_ptr,(ssize_t)i_step,(size_t)o_ptr,(ssize_t)o_step);
-
-  if (n == 1) {
-    *(idx_t*)o_ptr = *(idx_t*)(i_ptr);
-    return;
-  }
-
-  for (i = 0; i < n; i++) {
-    ptr[i] = d_ptr + d_step * i;
-  }
-
-  int16_index_qsort(ptr, n, sizeof(dtype*));
-
-  // d_ptr = lp->args[0].ptr;
-
-  for (i = 0; i < n; i++) {
-    idx = (ptr[i] - d_ptr) / d_step;
-    *(idx_t*)o_ptr = *(idx_t*)(i_ptr + i_step * idx);
-    o_ptr += o_step;
-  }
-}
-#undef idx_t
-
-#define idx_t int32_t
-static void int16_index32_qsort(na_loop_t* const lp) {
-  size_t i, n, idx;
-  char *d_ptr, *i_ptr, *o_ptr;
-  ssize_t d_step, i_step, o_step;
-  char** ptr;
-
-  INIT_COUNTER(lp, n);
-  INIT_PTR(lp, 0, d_ptr, d_step);
-  INIT_PTR(lp, 1, i_ptr, i_step);
-  INIT_PTR(lp, 2, o_ptr, o_step);
-
-  ptr = (char**)(lp->opt_ptr);
-
-  // o_ptr=%lx,o_step=%ld)\n",(size_t)ptr,(size_t)d_ptr,(ssize_t)d_step,(size_t)i_ptr,(ssize_t)i_step,(size_t)o_ptr,(ssize_t)o_step);
-
-  if (n == 1) {
-    *(idx_t*)o_ptr = *(idx_t*)(i_ptr);
-    return;
-  }
-
-  for (i = 0; i < n; i++) {
-    ptr[i] = d_ptr + d_step * i;
-  }
-
-  int16_index_qsort(ptr, n, sizeof(dtype*));
-
-  // d_ptr = lp->args[0].ptr;
-
-  for (i = 0; i < n; i++) {
-    idx = (ptr[i] - d_ptr) / d_step;
-    *(idx_t*)o_ptr = *(idx_t*)(i_ptr + i_step * idx);
-    o_ptr += o_step;
-  }
-}
-#undef idx_t
-
-/*
-  sort_index. Returns an index array of sort result.
-  @overload sort_index(axis:nil)
-    @param [Numeric,Array,Range] axis  Performs sort_index along the axis.
-    @return [Integer,Numo::Int] returns result index of sort_index.
-  @example
-      Numo::NArray[3,4,1,2].sort_index #=> Numo::Int32[2,3,0,1]
-*/
-static VALUE int16_sort_index(int argc, VALUE* argv, VALUE self) {
-  size_t size;
-  narray_t* na;
-  VALUE idx, tmp, reduce, res;
-  char* buf;
-  ndfunc_arg_in_t ain[3] = { { cT, 0 }, { 0, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { 0, 0, 0 } };
-  ndfunc_t ndf = { 0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_CUM, 3, 1, ain, aout };
-
-  GetNArray(self, na);
-  if (na->ndim == 0) {
-    return INT2FIX(0);
-  }
-  if (na->size > (~(u_int32_t)0)) {
-    ain[1].type = aout[0].type = numo_cInt64;
-    idx = nary_new(numo_cInt64, na->ndim, na->shape);
-
-    ndf.func = int16_index64_qsort;
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
-
-  } else {
-    ain[1].type = aout[0].type = numo_cInt32;
-    idx = nary_new(numo_cInt32, na->ndim, na->shape);
-
-    ndf.func = int16_index32_qsort;
-    reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
-  }
-  rb_funcall(idx, rb_intern("seq"), 0);
-
-  size = na->size * sizeof(void*); // max capa
-  buf = rb_alloc_tmp_buffer(&tmp, size);
-  res = na_ndloop3(&ndf, buf, 3, self, idx, reduce);
-  rb_free_tmp_buffer(&tmp);
-  return res;
-}
-
 static void iter_int16_median(na_loop_t* const lp) {
   size_t n;
   char *p1, *p2;
@@ -2229,7 +1994,14 @@ void Init_numo_int16(void) {
    *     Numo::DFloat[3,4,1,2].sort #=> Numo::DFloat[1,2,3,4]
    */
   rb_define_method(cT, "sort", int16_sort, -1);
-
+  /**
+   * sort_index. Returns an index array of sort result.
+   * @overload sort_index(axis:nil)
+   *   @param [Numeric,Array,Range] axis  Performs sort_index along the axis.
+   *   @return [Integer,Numo::Int] returns result index of sort_index.
+   * @example
+   *     Numo::NArray[3,4,1,2].sort_index #=> Numo::Int32[2,3,0,1]
+   */
   rb_define_method(cT, "sort_index", int16_sort_index, -1);
   rb_define_method(cT, "median", int16_median, -1);
   rb_define_singleton_method(cT, "[]", int16_s_cast, -2);

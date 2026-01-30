@@ -141,9 +141,8 @@ static inline void swapfunc(char* a, char* b, size_t n, int swaptype) {
       pm = med3(pl, pm, pn, fCmpGt);                                                           \
     }                                                                                          \
     swap(a, pm);                                                                               \
-    pa = pb = (char*)a + es;                                                                   \
-    pc = pd = (char*)a + (n - 1) * es;                                                         \
-    for (;;) {                                                                                 \
+    for (pa = pb = (char*)a + es, pc = pd = (char*)a + (n - 1) * es; pb <= pc;                 \
+         pb += es, pc -= es) {                                                                 \
       while (pb <= pc && (r = fCmp(pb, a)) <= 0) {                                             \
         if (r == 0) {                                                                          \
           swap(pa, pb);                                                                        \
@@ -160,8 +159,6 @@ static inline void swapfunc(char* a, char* b, size_t n, int swaptype) {
       }                                                                                        \
       if (pb > pc) break;                                                                      \
       swap(pb, pc);                                                                            \
-      pb += es;                                                                                \
-      pc -= es;                                                                                \
     }                                                                                          \
     pn = (char*)a + n * es;                                                                    \
     r = (int)Min(pa - (char*)a, pb - pa);                                                      \
@@ -234,6 +231,254 @@ static inline void swapfunc(char* a, char* b, size_t n, int swaptype) {
       na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_##tDType##_sort_prnan);             \
     na_ndloop(&ndf, 2, self, reduce);                                                          \
     return self;                                                                               \
+  }
+
+#define DEF_NARRAY_INT_SORT_INDEX_METHOD_FUNC(tDType, tNAryClass)                              \
+  DEF_TYPED_QSORT_FUNC(tDType, index_qsort, cmp, cmpgt)                                        \
+                                                                                               \
+  static void tDType##_index64_qsort(na_loop_t* const lp) {                                    \
+    size_t n;                                                                                  \
+    char* d_ptr;                                                                               \
+    char* i_ptr;                                                                               \
+    char* o_ptr;                                                                               \
+    ssize_t d_step;                                                                            \
+    ssize_t i_step;                                                                            \
+    ssize_t o_step;                                                                            \
+    INIT_COUNTER(lp, n);                                                                       \
+    INIT_PTR(lp, 0, d_ptr, d_step);                                                            \
+    INIT_PTR(lp, 1, i_ptr, i_step);                                                            \
+    INIT_PTR(lp, 2, o_ptr, o_step);                                                            \
+    if (n == 1) {                                                                              \
+      *(int64_t*)o_ptr = *(int64_t*)(i_ptr);                                                   \
+      return;                                                                                  \
+    }                                                                                          \
+    char** ptr = (char**)(lp->opt_ptr);                                                        \
+    for (size_t i = 0; i < n; i++) {                                                           \
+      ptr[i] = d_ptr + d_step * i;                                                             \
+    }                                                                                          \
+    tDType##_index_qsort(ptr, n, sizeof(tDType*));                                             \
+    size_t idx;                                                                                \
+    for (size_t i = 0; i < n; i++) {                                                           \
+      idx = (ptr[i] - d_ptr) / d_step;                                                         \
+      *(int64_t*)o_ptr = *(int64_t*)(i_ptr + i_step * idx);                                    \
+      o_ptr += o_step;                                                                         \
+    }                                                                                          \
+  }                                                                                            \
+                                                                                               \
+  static void tDType##_index32_qsort(na_loop_t* const lp) {                                    \
+    size_t n;                                                                                  \
+    char* d_ptr;                                                                               \
+    char* i_ptr;                                                                               \
+    char* o_ptr;                                                                               \
+    ssize_t d_step;                                                                            \
+    ssize_t i_step;                                                                            \
+    ssize_t o_step;                                                                            \
+    INIT_COUNTER(lp, n);                                                                       \
+    INIT_PTR(lp, 0, d_ptr, d_step);                                                            \
+    INIT_PTR(lp, 1, i_ptr, i_step);                                                            \
+    INIT_PTR(lp, 2, o_ptr, o_step);                                                            \
+    if (n == 1) {                                                                              \
+      *(int32_t*)o_ptr = *(int32_t*)(i_ptr);                                                   \
+      return;                                                                                  \
+    }                                                                                          \
+    char** ptr = (char**)(lp->opt_ptr);                                                        \
+    for (size_t i = 0; i < n; i++) {                                                           \
+      ptr[i] = d_ptr + d_step * i;                                                             \
+    }                                                                                          \
+    tDType##_index_qsort(ptr, n, sizeof(tDType*));                                             \
+    size_t idx;                                                                                \
+    for (size_t i = 0; i < n; i++) {                                                           \
+      idx = (ptr[i] - d_ptr) / d_step;                                                         \
+      *(int32_t*)o_ptr = *(int32_t*)(i_ptr + i_step * idx);                                    \
+      o_ptr += o_step;                                                                         \
+    }                                                                                          \
+  }                                                                                            \
+                                                                                               \
+  static VALUE tDType##_sort_index(int argc, VALUE* argv, VALUE self) {                        \
+    narray_t* na;                                                                              \
+    GetNArray(self, na);                                                                       \
+    if (na->ndim == 0) {                                                                       \
+      return INT2FIX(0);                                                                       \
+    }                                                                                          \
+    ndfunc_arg_in_t ain[3] = { { tNAryClass, 0 }, { 0, 0 }, { sym_reduce, 0 } };               \
+    ndfunc_arg_out_t aout[1] = { { 0, 0, 0 } };                                                \
+    ndfunc_t ndf = { 0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_CUM, 3, 1, ain, aout };        \
+    VALUE idx;                                                                                 \
+    VALUE reduce;                                                                              \
+    if (na->size > (~(u_int32_t)0)) {                                                          \
+      ain[1].type = numo_cInt64;                                                               \
+      aout[0].type = numo_cInt64;                                                              \
+      idx = nary_new(numo_cInt64, na->ndim, na->shape);                                        \
+      ndf.func = tDType##_index64_qsort;                                                       \
+      reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);                             \
+    } else {                                                                                   \
+      ain[1].type = numo_cInt32;                                                               \
+      aout[0].type = numo_cInt32;                                                              \
+      idx = nary_new(numo_cInt32, na->ndim, na->shape);                                        \
+      ndf.func = tDType##_index32_qsort;                                                       \
+      reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);                             \
+    }                                                                                          \
+    rb_funcall(idx, rb_intern("seq"), 0);                                                      \
+    size_t size = na->size * sizeof(void*);                                                    \
+    VALUE tmp;                                                                                 \
+    char* buf = rb_alloc_tmp_buffer(&tmp, size);                                               \
+    VALUE res = na_ndloop3(&ndf, buf, 3, self, idx, reduce);                                   \
+    rb_free_tmp_buffer(&tmp);                                                                  \
+    return res;                                                                                \
+  }
+
+#define DEF_NARRAY_FLT_SORT_INDEX_METHOD_FUNC(tDType, tNAryClass)                              \
+  DEF_TYPED_QSORT_FUNC(tDType, index_qsort_ignan, cmp_ignan, cmpgt_ignan)                      \
+                                                                                               \
+  static void tDType##_index64_qsort_ignan(na_loop_t* const lp) {                              \
+    size_t n;                                                                                  \
+    char* d_ptr;                                                                               \
+    char* i_ptr;                                                                               \
+    char* o_ptr;                                                                               \
+    ssize_t d_step;                                                                            \
+    ssize_t i_step;                                                                            \
+    ssize_t o_step;                                                                            \
+    INIT_COUNTER(lp, n);                                                                       \
+    INIT_PTR(lp, 0, d_ptr, d_step);                                                            \
+    INIT_PTR(lp, 1, i_ptr, i_step);                                                            \
+    INIT_PTR(lp, 2, o_ptr, o_step);                                                            \
+    if (n == 1) {                                                                              \
+      *(int64_t*)o_ptr = *(int64_t*)(i_ptr);                                                   \
+      return;                                                                                  \
+    }                                                                                          \
+    char** ptr = (char**)(lp->opt_ptr);                                                        \
+    for (size_t i = 0; i < n; i++) {                                                           \
+      ptr[i] = d_ptr + d_step * i;                                                             \
+    }                                                                                          \
+    tDType##_index_qsort_ignan(ptr, n, sizeof(tDType*));                                       \
+    size_t idx;                                                                                \
+    for (size_t i = 0; i < n; i++) {                                                           \
+      idx = (ptr[i] - d_ptr) / d_step;                                                         \
+      *(int64_t*)o_ptr = *(int64_t*)(i_ptr + i_step * idx);                                    \
+      o_ptr += o_step;                                                                         \
+    }                                                                                          \
+  }                                                                                            \
+                                                                                               \
+  static void tDType##_index32_qsort_ignan(na_loop_t* const lp) {                              \
+    size_t n;                                                                                  \
+    char* d_ptr;                                                                               \
+    char* i_ptr;                                                                               \
+    char* o_ptr;                                                                               \
+    ssize_t d_step;                                                                            \
+    ssize_t i_step;                                                                            \
+    ssize_t o_step;                                                                            \
+    INIT_COUNTER(lp, n);                                                                       \
+    INIT_PTR(lp, 0, d_ptr, d_step);                                                            \
+    INIT_PTR(lp, 1, i_ptr, i_step);                                                            \
+    INIT_PTR(lp, 2, o_ptr, o_step);                                                            \
+    if (n == 1) {                                                                              \
+      *(int32_t*)o_ptr = *(int32_t*)(i_ptr);                                                   \
+      return;                                                                                  \
+    }                                                                                          \
+    char** ptr = (char**)(lp->opt_ptr);                                                        \
+    for (size_t i = 0; i < n; i++) {                                                           \
+      ptr[i] = d_ptr + d_step * i;                                                             \
+    }                                                                                          \
+    tDType##_index_qsort_ignan(ptr, n, sizeof(tDType*));                                       \
+    size_t idx;                                                                                \
+    for (size_t i = 0; i < n; i++) {                                                           \
+      idx = (ptr[i] - d_ptr) / d_step;                                                         \
+      *(int32_t*)o_ptr = *(int32_t*)(i_ptr + i_step * idx);                                    \
+      o_ptr += o_step;                                                                         \
+    }                                                                                          \
+  }                                                                                            \
+                                                                                               \
+  DEF_TYPED_QSORT_FUNC(tDType, index_qsort_prnan, cmp_prnan, cmpgt_prnan)                      \
+                                                                                               \
+  static void tDType##_index64_qsort_prnan(na_loop_t* const lp) {                              \
+    size_t n;                                                                                  \
+    char* d_ptr;                                                                               \
+    char* i_ptr;                                                                               \
+    char* o_ptr;                                                                               \
+    ssize_t d_step;                                                                            \
+    ssize_t i_step;                                                                            \
+    ssize_t o_step;                                                                            \
+    INIT_COUNTER(lp, n);                                                                       \
+    INIT_PTR(lp, 0, d_ptr, d_step);                                                            \
+    INIT_PTR(lp, 1, i_ptr, i_step);                                                            \
+    INIT_PTR(lp, 2, o_ptr, o_step);                                                            \
+    if (n == 1) {                                                                              \
+      *(int64_t*)o_ptr = *(int64_t*)(i_ptr);                                                   \
+      return;                                                                                  \
+    }                                                                                          \
+    char** ptr = (char**)(lp->opt_ptr);                                                        \
+    for (size_t i = 0; i < n; i++) {                                                           \
+      ptr[i] = d_ptr + d_step * i;                                                             \
+    }                                                                                          \
+    tDType##_index_qsort_prnan(ptr, n, sizeof(tDType*));                                       \
+    size_t idx;                                                                                \
+    for (size_t i = 0; i < n; i++) {                                                           \
+      idx = (ptr[i] - d_ptr) / d_step;                                                         \
+      *(int64_t*)o_ptr = *(int64_t*)(i_ptr + i_step * idx);                                    \
+      o_ptr += o_step;                                                                         \
+    }                                                                                          \
+  }                                                                                            \
+                                                                                               \
+  static void tDType##_index32_qsort_prnan(na_loop_t* const lp) {                              \
+    size_t n;                                                                                  \
+    char* d_ptr;                                                                               \
+    char* i_ptr;                                                                               \
+    char* o_ptr;                                                                               \
+    ssize_t d_step;                                                                            \
+    ssize_t i_step;                                                                            \
+    ssize_t o_step;                                                                            \
+    INIT_COUNTER(lp, n);                                                                       \
+    INIT_PTR(lp, 0, d_ptr, d_step);                                                            \
+    INIT_PTR(lp, 1, i_ptr, i_step);                                                            \
+    INIT_PTR(lp, 2, o_ptr, o_step);                                                            \
+    if (n == 1) {                                                                              \
+      *(int32_t*)o_ptr = *(int32_t*)(i_ptr);                                                   \
+      return;                                                                                  \
+    }                                                                                          \
+    char** ptr = (char**)(lp->opt_ptr);                                                        \
+    for (size_t i = 0; i < n; i++) {                                                           \
+      ptr[i] = d_ptr + d_step * i;                                                             \
+    }                                                                                          \
+    tDType##_index_qsort_prnan(ptr, n, sizeof(tDType*));                                       \
+    size_t idx;                                                                                \
+    for (size_t i = 0; i < n; i++) {                                                           \
+      idx = (ptr[i] - d_ptr) / d_step;                                                         \
+      *(int32_t*)o_ptr = *(int32_t*)(i_ptr + i_step * idx);                                    \
+      o_ptr += o_step;                                                                         \
+    }                                                                                          \
+  }                                                                                            \
+                                                                                               \
+  static VALUE tDType##_sort_index(int argc, VALUE* argv, VALUE self) {                        \
+    narray_t* na;                                                                              \
+    GetNArray(self, na);                                                                       \
+    if (na->ndim == 0) {                                                                       \
+      return INT2FIX(0);                                                                       \
+    }                                                                                          \
+    ndfunc_arg_in_t ain[3] = { { tNAryClass, 0 }, { 0, 0 }, { sym_reduce, 0 } };               \
+    ndfunc_arg_out_t aout[1] = { { 0, 0, 0 } };                                                \
+    ndfunc_t ndf = { 0, STRIDE_LOOP_NIP | NDF_FLAT_REDUCE | NDF_CUM, 3, 1, ain, aout };        \
+    VALUE idx;                                                                                 \
+    VALUE reduce;                                                                              \
+    if (na->size > (~(u_int32_t)0)) {                                                          \
+      ain[1].type = numo_cInt64;                                                               \
+      aout[0].type = numo_cInt64;                                                              \
+      idx = nary_new(numo_cInt64, na->ndim, na->shape);                                        \
+      ndf.func = tDType##_index64_qsort_ignan;                                                 \
+      reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, tDType##_index64_qsort_prnan);  \
+    } else {                                                                                   \
+      ain[1].type = numo_cInt32;                                                               \
+      aout[0].type = numo_cInt32;                                                              \
+      idx = nary_new(numo_cInt32, na->ndim, na->shape);                                        \
+      ndf.func = tDType##_index32_qsort_ignan;                                                 \
+      reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, tDType##_index32_qsort_prnan);  \
+    }                                                                                          \
+    rb_funcall(idx, rb_intern("seq"), 0);                                                      \
+    size_t size = na->size * sizeof(void*);                                                    \
+    VALUE tmp;                                                                                 \
+    char* buf = rb_alloc_tmp_buffer(&tmp, size);                                               \
+    VALUE res = na_ndloop3(&ndf, buf, 3, self, idx, reduce);                                   \
+    rb_free_tmp_buffer(&tmp);                                                                  \
+    return res;                                                                                \
   }
 
 #endif /* NUMO_NARRAY_MH_SORT_H */

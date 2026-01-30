@@ -1352,14 +1352,14 @@ class NArrayTest < NArrayTestBase
     end
 
     arr = Array.new(100) { rng.rand(-100...100) }
-    [Numo::Int64, Numo::Int32, Numo::Int16, Numo::Int8].each do |dtype|
+    INTEGER_TYPES.each do |dtype|
       a = dtype.asarray(arr)
       idx = a.sort_index
       assert_equal(a.to_a.sort, a[idx].to_a)
     end
 
     arr = Array.new(100) { rng.rand(0...100) }
-    [Numo::UInt64, Numo::UInt32, Numo::UInt16, Numo::UInt8].each do |dtype|
+    UNSIGNED_INTEGER_TYPES.each do |dtype|
       a = dtype.asarray(arr)
       idx = a.sort_index
       assert_equal(a.to_a.sort, a[idx].to_a)
