@@ -113,6 +113,7 @@ extern VALUE cRT;
 #include "mh/rand_norm.h"
 #include "mh/poly.h"
 #include "mh/sort.h"
+#include "mh/median.h"
 #include "mh/math/sqrt.h"
 #include "mh/math/cbrt.h"
 #include "mh/math/log.h"
@@ -232,6 +233,7 @@ DEF_NARRAY_FLT_SORT_METHOD_FUNC(sfloat)
 #undef qsort_cast
 #define qsort_cast **(sfloat**)
 DEF_NARRAY_FLT_SORT_INDEX_METHOD_FUNC(sfloat, numo_cSFloat)
+DEF_NARRAY_FLT_MEDIAN_METHOD_FUNC(sfloat)
 #ifdef __SSE2__
 DEF_NARRAY_FLT_SQRT_SSE2_SGL_METHOD_FUNC(sfloat, numo_cSFloat)
 #else
@@ -1354,70 +1356,6 @@ static VALUE sfloat_aset(int argc, VALUE* argv, VALUE self) {
     }
   }
   return argv[argc];
-}
-
-static void iter_sfloat_median_ignan(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  dtype* buf;
-
-  INIT_COUNTER(lp, n);
-  p1 = (lp->args[0]).ptr + (lp->args[0].iter[0]).pos;
-  p2 = (lp->args[1]).ptr + (lp->args[1].iter[0]).pos;
-  buf = (dtype*)p1;
-
-  sfloat_qsort_ignan(buf, n, sizeof(dtype));
-
-  for (; n; n--) {
-    if (!isnan(buf[n - 1])) break;
-  }
-
-  if (n == 0) {
-    *(dtype*)p2 = buf[0];
-  } else if (n % 2 == 0) {
-    *(dtype*)p2 = (buf[n / 2 - 1] + buf[n / 2]) / 2;
-  } else {
-    *(dtype*)p2 = buf[(n - 1) / 2];
-  }
-}
-static void iter_sfloat_median_prnan(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  dtype* buf;
-
-  INIT_COUNTER(lp, n);
-  p1 = (lp->args[0]).ptr + (lp->args[0].iter[0]).pos;
-  p2 = (lp->args[1]).ptr + (lp->args[1].iter[0]).pos;
-  buf = (dtype*)p1;
-
-  sfloat_qsort_prnan(buf, n, sizeof(dtype));
-
-  for (; n; n--) {
-    if (!isnan(buf[n - 1])) break;
-  }
-
-  if (n == 0) {
-    *(dtype*)p2 = buf[0];
-  } else if (n % 2 == 0) {
-    *(dtype*)p2 = (buf[n / 2 - 1] + buf[n / 2]) / 2;
-  } else {
-    *(dtype*)p2 = buf[(n - 1) / 2];
-  }
-}
-
-static VALUE sfloat_median(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { INT2FIX(0), 0 } };
-  ndfunc_t ndf = { 0, NDF_HAS_LOOP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-
-  self = na_copy(self); // as temporary buffer
-
-  ndf.func = iter_sfloat_median_ignan;
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, iter_sfloat_median_prnan);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-  return sfloat_extract(v);
 }
 
 VALUE mTM;

@@ -101,6 +101,7 @@ extern VALUE cRT;
 #include "mh/rand.h"
 #include "mh/poly.h"
 #include "mh/sort.h"
+#include "mh/median.h"
 #include "mh/mean.h"
 #include "mh/var.h"
 #include "mh/stddev.h"
@@ -175,6 +176,7 @@ DEF_NARRAY_INT_SORT_METHOD_FUNC(uint64)
 #undef qsort_cast
 #define qsort_cast **(uint64**)
 DEF_NARRAY_INT_SORT_INDEX_METHOD_FUNC(uint64, numo_cUInt64)
+DEF_NARRAY_INT_MEDIAN_METHOD_FUNC(uint64)
 DEF_NARRAY_INT_MEAN_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_INT_VAR_METHOD_FUNC(uint64, numo_cUInt64)
 DEF_NARRAY_INT_STDDEV_METHOD_FUNC(uint64, numo_cUInt64)
@@ -1294,51 +1296,6 @@ static VALUE uint64_aset(int argc, VALUE* argv, VALUE self) {
   return argv[argc];
 }
 
-static void iter_uint64_median(na_loop_t* const lp) {
-  size_t n;
-  char *p1, *p2;
-  dtype* buf;
-
-  INIT_COUNTER(lp, n);
-  p1 = (lp->args[0]).ptr + (lp->args[0].iter[0]).pos;
-  p2 = (lp->args[1]).ptr + (lp->args[1].iter[0]).pos;
-  buf = (dtype*)p1;
-
-  uint64_qsort(buf, n, sizeof(dtype));
-
-  if (n == 0) {
-    *(dtype*)p2 = buf[0];
-  } else if (n % 2 == 0) {
-    *(dtype*)p2 = (buf[n / 2 - 1] + buf[n / 2]) / 2;
-  } else {
-    *(dtype*)p2 = buf[(n - 1) / 2];
-  }
-}
-
-/*
-  median of self.
-  @overload median(axis:nil, keepdims:false)
-    @param [Numeric,Array,Range] axis  Finds median along the axis.
-    @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
-    dimensions with size one.
-    @return [Numo::UInt64] returns median of self.
-*/
-
-static VALUE uint64_median(int argc, VALUE* argv, VALUE self) {
-  VALUE v, reduce;
-  ndfunc_arg_in_t ain[2] = { { OVERWRITE, 0 }, { sym_reduce, 0 } };
-  ndfunc_arg_out_t aout[1] = { { INT2FIX(0), 0 } };
-  ndfunc_t ndf = { 0, NDF_HAS_LOOP | NDF_FLAT_REDUCE, 2, 1, ain, aout };
-
-  self = na_copy(self); // as temporary buffer
-
-  ndf.func = iter_uint64_median;
-  reduce = na_reduce_dimension(argc, argv, 1, &self, &ndf, 0);
-
-  v = na_ndloop(&ndf, 2, self, reduce);
-  return uint64_extract(v);
-}
-
 void Init_numo_uint64(void) {
   VALUE hCast, mNumo;
 
@@ -2003,6 +1960,14 @@ void Init_numo_uint64(void) {
    *     Numo::NArray[3,4,1,2].sort_index #=> Numo::Int32[2,3,0,1]
    */
   rb_define_method(cT, "sort_index", uint64_sort_index, -1);
+  /**
+   * median of self.
+   * @overload median(axis:nil, keepdims:false)
+   *   @param [Numeric,Array,Range] axis  Finds median along the axis.
+   *   @param [TrueClass] keepdims  If true, the reduced axes are left in the result array as
+   *   dimensions with size one.
+   *   @return [Numo::UInt64] returns median of self.
+   */
   rb_define_method(cT, "median", uint64_median, -1);
   rb_define_singleton_method(cT, "[]", uint64_s_cast, -2);
   /**

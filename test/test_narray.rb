@@ -1365,4 +1365,25 @@ class NArrayTest < NArrayTestBase
       assert_equal(a.to_a.sort, a[idx].to_a)
     end
   end
+
+  def test_median
+    rng = Random.new(42)
+    arr = Array.new(101) { rng.rand(-1.0..1.0) }
+    [Numo::DFloat, Numo::SFloat].each do |dtype|
+      a = dtype.asarray(arr)
+      assert_in_delta(a.to_a.sort[50], a.median, 1e-6)
+    end
+
+    arr = Array.new(101) { rng.rand(-100..100) }
+    INTEGER_TYPES.each do |dtype|
+      a = dtype.asarray(arr)
+      assert_equal(a.to_a.sort[50], a.median)
+    end
+
+    arr = Array.new(101) { rng.rand(0..100) }
+    UNSIGNED_INTEGER_TYPES.each do |dtype|
+      a = dtype.asarray(arr)
+      assert_equal(a.to_a.sort[50], a.median)
+    end
+  end
 end
