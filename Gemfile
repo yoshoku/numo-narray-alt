@@ -18,5 +18,5 @@ gem 'simplecov', '~> 0.22.0'
 gem 'yard', '~> 0.9.37'
 
 group :memcheck, optional: true do
-  gem 'ruby_memcheck', '~> 3.0' if RUBY_VERSION.split('.')[0].to_i >= 3
+  gem 'ruby_memcheck', '~> 3.0'
 end

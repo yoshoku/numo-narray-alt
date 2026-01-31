@@ -104,12 +104,10 @@ static int na_mdai_object_type(int type, VALUE v) {
   if (rb_obj_is_kind_of(v, rb_cRange)) {
     type = (int)na_object_type(type, rb_funcall(v, id_begin, 0));
     type = (int)na_object_type(type, rb_funcall(v, id_end, 0));
-#ifdef HAVE_RB_ARITHMETIC_SEQUENCE_EXTRACT
   } else if (rb_obj_is_kind_of(v, rb_cArithSeq)) {
     type = (int)na_object_type(type, rb_funcall(v, id_begin, 0));
     type = (int)na_object_type(type, rb_funcall(v, id_end, 0));
     type = (int)na_object_type(type, rb_funcall(v, id_step, 0));
-#endif
   } else {
     type = (int)na_object_type(type, v);
   }
@@ -181,13 +179,7 @@ static int na_mdai_investigate(na_mdai_t* mdai, int ndim) {
       if (na_mdai_investigate(mdai, ndim + 1)) {
         len--; /* Array is empty */
       }
-    } else if (rb_obj_is_kind_of(v, rb_cRange)
-#ifdef HAVE_RB_ARITHMETIC_SEQUENCE_EXTRACT
-               || rb_obj_is_kind_of(v, rb_cArithSeq)
-#else
-               || rb_obj_is_kind_of(v, rb_cEnumerator)
-#endif
-    ) {
+    } else if (rb_obj_is_kind_of(v, rb_cRange) || rb_obj_is_kind_of(v, rb_cArithSeq)) {
       nary_step_sequence(v, &length, &dbeg, &dstep);
       len += length - 1;
       mdai->type = na_mdai_object_type(mdai->type, v);

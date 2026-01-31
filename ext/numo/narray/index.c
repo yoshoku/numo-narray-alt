@@ -181,7 +181,6 @@ na_parse_range(VALUE range, ssize_t step, int orig_dim, ssize_t size, na_index_a
   ssize_t beg, end, beg_orig, end_orig;
   const char *dot = "..", *edot = "...";
 
-#ifdef HAVE_RB_ARITHMETIC_SEQUENCE_EXTRACT
   rb_arithmetic_sequence_components_t x;
   rb_arithmetic_sequence_extract(range, &x);
   step = NUM2SSIZET(x.step);
@@ -216,29 +215,6 @@ na_parse_range(VALUE range, ssize_t step, int orig_dim, ssize_t size, na_index_a
       );
     }
   }
-#else
-  VALUE excl_end;
-
-  beg = beg_orig = NUM2SSIZET(rb_funcall(range, id_beg, 0));
-  if (beg < 0) {
-    beg += size;
-  }
-  end = end_orig = NUM2SSIZET(rb_funcall(range, id_end, 0));
-  if (end < 0) {
-    end += size;
-  }
-  excl_end = rb_funcall(range, id_exclude_end, 0);
-  if (RTEST(excl_end)) {
-    end--;
-    dot = edot;
-  }
-  if (beg < 0 || beg >= size || end < 0 || end >= size) {
-    rb_raise(
-      rb_eRangeError, "%" SZF "d%s%" SZF "d is out of range for size=%" SZF "d", beg_orig, dot,
-      end_orig, size
-    );
-  }
-#endif
   n = (int)((end - beg) / step + 1);
   if (n < 0) n = 0;
   na_index_set_step(q, orig_dim, n, beg, step);
@@ -335,18 +311,12 @@ static void na_index_parse_each(volatile VALUE a, ssize_t size, int i, na_index_
   default:
     if (rb_obj_is_kind_of(a, rb_cRange)) {
       na_parse_range(a, 1, i, size, q);
-    }
-#ifdef HAVE_RB_ARITHMETIC_SEQUENCE_EXTRACT
-    else if (rb_obj_is_kind_of(a, rb_cArithSeq)) {
+    } else if (rb_obj_is_kind_of(a, rb_cArithSeq)) {
       // na_parse_arith_seq(a, i, size, q);
       na_parse_range(a, 1, i, size, q);
-    }
-#endif
-    else if (rb_obj_is_kind_of(a, rb_cEnumerator)) {
+    } else if (rb_obj_is_kind_of(a, rb_cEnumerator)) {
       na_parse_enumerator(a, i, size, q);
-    }
-    // NArray index
-    else if (NA_IsNArray(a)) {
+    } else if (NA_IsNArray(a)) { // NArray index
       na_parse_narray_index(a, i, size, q);
     } else {
       rb_raise(rb_eIndexError, "not allowed type");
@@ -414,13 +384,9 @@ na_at_parse_each(volatile VALUE a, ssize_t size, int i, VALUE* idx, ssize_t stri
     return;
   } else if (rb_obj_is_kind_of(a, rb_cRange)) {
     na_parse_range(a, 1, i, size, &q);
-  }
-#ifdef HAVE_RB_ARITHMETIC_SEQUENCE_EXTRACT
-  else if (rb_obj_is_kind_of(a, rb_cArithSeq)) {
+  } else if (rb_obj_is_kind_of(a, rb_cArithSeq)) {
     na_parse_range(a, 1, i, size, &q);
-  }
-#endif
-  else if (rb_obj_is_kind_of(a, rb_cEnumerator)) {
+  } else if (rb_obj_is_kind_of(a, rb_cEnumerator)) {
     na_parse_enumerator(a, i, size, &q);
   } else {
     rb_raise(rb_eIndexError, "not allowed type");

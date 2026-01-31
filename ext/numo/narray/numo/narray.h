@@ -174,9 +174,7 @@ extern VALUE numo_cRObject;
 #ifndef HAVE_RB_CCOMPLEX
 extern VALUE rb_cComplex;
 #endif
-#ifdef HAVE_RB_ARITHMETIC_SEQUENCE_EXTRACT
 extern VALUE rb_cArithSeq;
-#endif
 
 extern VALUE sym_reduce;
 extern VALUE sym_option;
@@ -455,11 +453,7 @@ typedef unsigned int BIT_DIGIT;
 #define ELEMENT_BYTE_SIZE "ELEMENT_BYTE_SIZE"
 #define CONTIGUOUS_STRIDE "CONTIGUOUS_STRIDE"
 
-#ifdef RUBY_INTEGER_UNIFICATION
 #define IS_INTEGER_CLASS(c) ((c) == rb_cInteger)
-#else
-#define IS_INTEGER_CLASS(c) ((c) == rb_cFixnum || (c) == rb_cBignum)
-#endif
 
 #include "numo/ndloop.h"
 #include "numo/intern.h"

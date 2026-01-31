@@ -24,8 +24,6 @@
 #define DBL_EPSILON 2.2204460492503131e-16
 #endif
 
-static ID id_beg, id_end, id_len, id_step;
-
 #define EXCL(r) RTEST(rb_funcall((r), rb_intern("exclude_end?"), 0))
 
 /*
@@ -44,36 +42,13 @@ void nary_step_array_index(
   VALUE vbeg, vend, vstep, vlen;
   ssize_t end = ary_size;
 
-#ifdef HAVE_RB_ARITHMETIC_SEQUENCE_EXTRACT
   rb_arithmetic_sequence_components_t x;
   rb_arithmetic_sequence_extract(obj, &x);
 
   vstep = x.step;
   vbeg = x.begin;
   vend = x.end;
-#else
-  struct enumerator* e;
-
-  if (rb_obj_is_kind_of(obj, rb_cRange)) {
-    vstep = rb_ivar_get(obj, id_step);
-  } else { // Enumerator
-    na_parse_enumerator_step(obj, &vstep);
-    e = RENUMERATOR_PTR(obj);
-    obj = e->obj; // Range
-  }
-
-  vbeg = rb_funcall(obj, id_beg, 0);
-  vend = rb_funcall(obj, id_end, 0);
-#endif
-  // Range does not have a length instance variable, which causes rb_ivar_get
-  // to output a warning when retrieving the length instance variable in Ruby 2.7.
-  // Since Range is not frozen in Ruby 2.7, we set the length instance variable.
-  if (RUBY_API_VERSION_MAJOR < 3) {
-    if (!RTEST(rb_ivar_defined(obj, id_len))) {
-      rb_ivar_set(obj, id_len, Qnil);
-    }
-  }
-  vlen = rb_ivar_get(obj, id_len);
+  vlen = rb_ivar_get(obj, rb_intern("length"));
 
   if (RTEST(vbeg)) {
     beg = NUM2SSIZET(vbeg);
@@ -195,36 +170,13 @@ void nary_step_sequence(VALUE obj, size_t* plen, double* pbeg, double* pstep) {
   double dbeg, dend, dstep = 1, dsize, err;
   size_t size, n;
 
-#ifdef HAVE_RB_ARITHMETIC_SEQUENCE_EXTRACT
   rb_arithmetic_sequence_components_t x;
   rb_arithmetic_sequence_extract(obj, &x);
 
   vstep = x.step;
   dbeg = NUM2DBL(x.begin);
   vend = x.end;
-#else
-  struct enumerator* e;
-
-  if (rb_obj_is_kind_of(obj, rb_cRange)) {
-    vstep = rb_ivar_get(obj, id_step);
-  } else { // Enumerator
-    na_parse_enumerator_step(obj, &vstep);
-    e = RENUMERATOR_PTR(obj);
-    obj = e->obj; // Range
-  }
-
-  dbeg = NUM2DBL(rb_funcall(obj, id_beg, 0));
-  vend = rb_funcall(obj, id_end, 0);
-#endif
-  // Range does not have a length instance variable, which causes rb_ivar_get
-  // to output a warning when retrieving the length instance variable in Ruby 2.7.
-  // Since Range is not frozen in Ruby 2.7, we set the length instance variable.
-  if (RUBY_API_VERSION_MAJOR < 3) {
-    if (!RTEST(rb_ivar_defined(obj, id_len))) {
-      rb_ivar_set(obj, id_len, Qnil);
-    }
-  }
-  vlen = rb_ivar_get(obj, id_len);
+  vlen = rb_ivar_get(obj, rb_intern("length"));
 
   if (RTEST(vlen)) {
     size = NUM2SIZET(vlen);
@@ -275,13 +227,4 @@ void nary_step_sequence(VALUE obj, size_t* plen, double* pbeg, double* pstep) {
   if (plen) *plen = size;
   if (pbeg) *pbeg = dbeg;
   if (pstep) *pstep = dstep;
-}
-
-void Init_nary_step(void) {
-  rb_define_alias(rb_cRange, "%", "step");
-
-  id_beg = rb_intern("begin");
-  id_end = rb_intern("end");
-  id_len = rb_intern("length");
-  id_step = rb_intern("step");
 }

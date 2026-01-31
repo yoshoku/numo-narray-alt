@@ -1061,13 +1061,7 @@ static void iter_dcomplex_store_array(na_loop_t* const lp) {
   if (idx1) {
     for (i = i1 = 0; i1 < n1 && i < n; i++, i1++) {
       x = ptr[i1];
-      if (rb_obj_is_kind_of(x, rb_cRange)
-#ifdef HAVE_RB_ARITHMETIC_SEQUENCE_EXTRACT
-          || rb_obj_is_kind_of(x, rb_cArithSeq)
-#else
-          || rb_obj_is_kind_of(x, rb_cEnumerator)
-#endif
-      ) {
+      if (rb_obj_is_kind_of(x, rb_cRange) || rb_obj_is_kind_of(x, rb_cArithSeq)) {
         nary_step_sequence(x, &len, &beg, &step);
         for (c = 0; c < len && i < n; c++, i++) {
           y = beg + step * c;
@@ -1082,13 +1076,7 @@ static void iter_dcomplex_store_array(na_loop_t* const lp) {
   } else {
     for (i = i1 = 0; i1 < n1 && i < n; i++, i1++) {
       x = ptr[i1];
-      if (rb_obj_is_kind_of(x, rb_cRange)
-#ifdef HAVE_RB_ARITHMETIC_SEQUENCE_EXTRACT
-          || rb_obj_is_kind_of(x, rb_cArithSeq)
-#else
-          || rb_obj_is_kind_of(x, rb_cEnumerator)
-#endif
-      ) {
+      if (rb_obj_is_kind_of(x, rb_cRange) || rb_obj_is_kind_of(x, rb_cArithSeq)) {
         nary_step_sequence(x, &len, &beg, &step);
         for (c = 0; c < len && i < n; c++, i++) {
           y = beg + step * c;
@@ -1471,12 +1459,7 @@ void Init_numo_dcomplex(void) {
   rb_define_const(cT, "UPCAST", hCast);
   rb_hash_aset(hCast, rb_cArray, cT);
 
-#ifdef RUBY_INTEGER_UNIFICATION
   rb_hash_aset(hCast, rb_cInteger, cT);
-#else
-  rb_hash_aset(hCast, rb_cFixnum, cT);
-  rb_hash_aset(hCast, rb_cBignum, cT);
-#endif
   rb_hash_aset(hCast, rb_cFloat, cT);
   rb_hash_aset(hCast, rb_cComplex, cT);
   rb_hash_aset(hCast, numo_cRObject, numo_cRObject);

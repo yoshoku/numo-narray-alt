@@ -27,7 +27,7 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.summary       = 'Numo::NArray Alternative is a project forked from Numo::NArray.'
   spec.homepage      = 'https://github.com/yoshoku/numo-narray-alt'
   spec.license       = 'BSD-3-Clause'
-  spec.required_ruby_version = '>= 2.2'
+  spec.required_ruby_version = '>= 3.2.0'
 
   spec.metadata['homepage_uri'] = spec.homepage
   spec.metadata['changelog_uri'] = "#{spec.homepage}/blob/main/CHANGELOG.md"
