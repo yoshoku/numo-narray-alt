@@ -269,6 +269,246 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_store # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/MethodLength, Metrics/PerceivedComplexity, Minitest/MultipleAssertions
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      a = dtype.zeros(3)
+      a.store(1 + 2i)
+      assert_equal(dtype[1 + 2i, 1 + 2i, 1 + 2i], a)
+      a.store([3 - 4i, 5 + 6i, -7 + 8i])
+      assert_equal(dtype[3 - 4i, 5 + 6i, -7 + 8i], a)
+      a.store([3 + 4i])
+      assert_equal(dtype[3 + 4i, 0 + 0i, 0 + 0i], a)
+      a.store([3 + 4i, 5 + 6i, 7 + 8i, 9 + 10i])
+      assert_equal(dtype[3 + 4i, 5 + 6i, 7 + 8i], a)
+      [Numo::DComplex, Numo::SComplex, Numo::RObject].each do |stype|
+        a.store(stype[1 + 2i])
+        assert_equal(dtype[1 + 2i, 1 + 2i, 1 + 2i], a)
+        a.store(stype[3 - 4i, 5 + 6i, -7 + 8i])
+        assert_equal(dtype[3 - 4i, 5 + 6i, -7 + 8i], a)
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1 + 2i, 3 + 4i]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i]) }
+      end
+      [Numo::DFloat, Numo::SFloat].each do |stype|
+        a.store(stype[1.2])
+        a.each { |v| assert_in_delta(1.2 + 0i, v, 1e-5) }
+        a.store(stype[1.2, -3.4, 5.6])
+        [1.2, -3.4, 5.6].each_with_index do |v, i| # rubocop:disable Performance/CollectionLiteralInLoop
+          assert_in_delta(v + 0i, a[i], 1e-5)
+        end
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1.2, -3.4]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1.2, -3.4, 5.6, 7.8]) }
+      end
+      INTEGER_TYPES.each do |stype|
+        a.store(stype[5])
+        a.each { |v| assert_in_delta(5 + 0i, v, 1e-5) }
+        a.store(stype[1, -2, 3])
+        [1, -2, 3].each_with_index do |v, i| # rubocop:disable Performance/CollectionLiteralInLoop
+          assert_in_delta(v + 0i, a[i], 1e-5)
+        end
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, -2]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, -2, 3, 4]) }
+      end
+      UNSIGNED_INTEGER_TYPES.each do |stype|
+        a.store(stype[5])
+        a.each { |v| assert_in_delta(5 + 0i, v, 1e-5) }
+        a.store(stype[1, 2, 3])
+        [1, 2, 3].each_with_index do |v, i| # rubocop:disable Performance/CollectionLiteralInLoop
+          assert_in_delta(v + 0i, a[i], 1e-5)
+        end
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, 2]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, 2, 3, 4]) }
+      end
+    end
+    [Numo::DFloat, Numo::SFloat].each do |dtype|
+      a = dtype.zeros(3)
+      a.store(1.2)
+      assert_equal(dtype[1.2, 1.2, 1.2], a)
+      a.store([3.4, 5.6, -7.8])
+      assert_equal(dtype[3.4, 5.6, -7.8], a)
+      a.store([3.4])
+      assert_equal(dtype[3.4, 0, 0], a)
+      a.store([3.4, 5.6, 7.8, 9.1])
+      assert_equal(dtype[3.4, 5.6, 7.8], a)
+      [Numo::DComplex, Numo::SComplex].each do |stype|
+        assert_raises(Numo::NArray::CastError) { a.store(stype[1 + 2i]) }
+        assert_raises(Numo::NArray::CastError) { a.store(stype[3 - 4i, 5 + 6i, -7 + 8i]) }
+        assert_raises(Numo::NArray::CastError) { a.store(stype[1 + 2i, 3 + 4i]) }
+        assert_raises(Numo::NArray::CastError) { a.store(stype[1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i]) }
+      end
+      [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |stype|
+        a.store(stype[1.2])
+        a.each { |v| assert_in_delta(1.2, v, 1e-5) }
+        a.store(stype[1.2, -3.4, 5.6])
+        [1.2, -3.4, 5.6].each_with_index do |v, i| # rubocop:disable Performance/CollectionLiteralInLoop
+          assert_in_delta(v, a[i], 1e-5)
+        end
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1.2, -3.4]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1.2, -3.4, 5.6, 7.8]) }
+      end
+      INTEGER_TYPES.each do |stype|
+        a.store(stype[5])
+        a.each { |v| assert_in_delta(5, v, 1e-5) }
+        a.store(stype[1, -2, 3])
+        [1, -2, 3].each_with_index do |v, i| # rubocop:disable Performance/CollectionLiteralInLoop
+          assert_in_delta(v, a[i], 1e-5)
+        end
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, -2]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, -2, 3, 4]) }
+      end
+      UNSIGNED_INTEGER_TYPES.each do |stype|
+        a.store(stype[5])
+        a.each { |v| assert_in_delta(5, v, 1e-5) }
+        a.store(stype[1, 2, 3])
+        [1, 2, 3].each_with_index do |v, i| # rubocop:disable Performance/CollectionLiteralInLoop
+          assert_in_delta(v, a[i], 1e-5)
+        end
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, 2]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, 2, 3, 4]) }
+      end
+    end
+    INTEGER_TYPES.each do |dtype|
+      a = dtype.zeros(3)
+      a.store(1)
+      assert_equal(dtype[1, 1, 1], a)
+      a.store([3, 5, -7])
+      assert_equal(dtype[3, 5, -7], a)
+      a.store([3])
+      assert_equal(dtype[3, 0, 0], a)
+      a.store([3, 5, 7, 9])
+      assert_equal(dtype[3, 5, 7], a)
+      [Numo::DComplex, Numo::SComplex].each do |stype|
+        assert_raises(Numo::NArray::CastError) { a.store(stype[1 + 2i]) }
+        assert_raises(Numo::NArray::CastError) { a.store(stype[3 - 4i, 5 + 6i, -7 + 8i]) }
+        assert_raises(Numo::NArray::CastError) { a.store(stype[1 + 2i, 3 + 4i]) }
+        assert_raises(Numo::NArray::CastError) { a.store(stype[1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i]) }
+      end
+      [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |stype|
+        a.store(stype[1.2])
+        assert_equal(dtype[1, 1, 1], a)
+        a.store(stype[1.2, -3.4, 5.6])
+        assert_equal(dtype[1, -3, 5], a)
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1.2, -3.4]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1.2, -3.4, 5.6, 7.8]) }
+      end
+      INTEGER_TYPES.each do |stype|
+        a.store(stype[5])
+        assert_equal(dtype[5, 5, 5], a)
+        a.store(stype[1, -2, 3])
+        assert_equal(dtype[1, -2, 3], a)
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, -2]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, -2, 3, 4]) }
+      end
+      UNSIGNED_INTEGER_TYPES.each do |stype|
+        a.store(stype[5])
+        assert_equal(dtype[5, 5, 5], a)
+        a.store(stype[1, 2, 3])
+        assert_equal(dtype[1, 2, 3], a)
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, 2]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, 2, 3, 4]) }
+      end
+    end
+    UNSIGNED_INTEGER_TYPES.each do |dtype|
+      a = dtype.zeros(3)
+      a.store(1)
+      assert_equal(dtype[1, 1, 1], a)
+      a.store([3, 5, 7])
+      assert_equal(dtype[3, 5, 7], a)
+      a.store([3])
+      assert_equal(dtype[3, 0, 0], a)
+      a.store([3, 5, 7, 9])
+      assert_equal(dtype[3, 5, 7], a)
+      [Numo::DComplex, Numo::SComplex].each do |stype|
+        assert_raises(Numo::NArray::CastError) { a.store(stype[1 + 2i]) }
+        assert_raises(Numo::NArray::CastError) { a.store(stype[3 - 4i, 5 + 6i, -7 + 8i]) }
+        assert_raises(Numo::NArray::CastError) { a.store(stype[1 + 2i, 3 + 4i]) }
+        assert_raises(Numo::NArray::CastError) { a.store(stype[1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i]) }
+      end
+      [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |stype|
+        a.store(stype[1.2])
+        assert_equal(dtype[1, 1, 1], a)
+        a.store(stype[1.2, 3.4, 5.6])
+        assert_equal(dtype[1, 3, 5], a)
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1.2, 3.4]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1.2, 3.4, 5.6, 7.8]) }
+      end
+      INTEGER_TYPES.each do |stype|
+        a.store(stype[5])
+        assert_equal(dtype[5, 5, 5], a)
+        a.store(stype[1, 2, 3])
+        assert_equal(dtype[1, 2, 3], a)
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, 2]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, 2, 3, 4]) }
+      end
+      UNSIGNED_INTEGER_TYPES.each do |stype|
+        a.store(stype[5])
+        assert_equal(dtype[5, 5, 5], a)
+        a.store(stype[1, 2, 3])
+        assert_equal(dtype[1, 2, 3], a)
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, 2]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, 2, 3, 4]) }
+      end
+    end
+    [Numo::RObject].each do |dtype|
+      a = dtype.zeros(3)
+      a.store('Ruby')
+      assert_equal(dtype['Ruby', 'Ruby', 'Ruby'], a)
+      a.store(1 + 2i)
+      assert_equal(dtype[1 + 2i, 1 + 2i, 1 + 2i], a)
+      a.store([3 - 4i, 5 + 6i, -7 + 8i])
+      assert_equal(dtype[3 - 4i, 5 + 6i, -7 + 8i], a)
+      a.store([3 + 4i])
+      assert_equal(dtype[3 + 4i, 0 + 0i, 0 + 0i], a)
+      a.store([3 + 4i, 5 + 6i, 7 + 8i, 9 + 10i])
+      assert_equal(dtype[3 + 4i, 5 + 6i, 7 + 8i], a)
+      [Numo::DComplex, Numo::SComplex].each do |stype|
+        a.store(stype[1 + 2i])
+        assert_equal(dtype[stype[1 + 2i], stype[1 + 2i], stype[1 + 2i]].flatten, a)
+        a.store(stype[3 - 4i, 5 + 6i, -7 + 8i])
+        assert_equal(stype[3 - 4i, 5 + 6i, -7 + 8i], a[0])
+        assert_equal(stype[3 - 4i, 5 + 6i, -7 + 8i], a[1])
+        assert_equal(stype[3 - 4i, 5 + 6i, -7 + 8i], a[2])
+        a.store(stype[1 + 2i, 3 + 4i])
+        assert_equal(stype[1 + 2i, 3 + 4i], a[0])
+        assert_equal(stype[1 + 2i, 3 + 4i], a[1])
+        assert_equal(stype[1 + 2i, 3 + 4i], a[2])
+        a.store(stype[1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i])
+        assert_equal(stype[1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i], a[0])
+        assert_equal(stype[1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i], a[1])
+        assert_equal(stype[1 + 2i, 3 + 4i, 5 + 6i, 7 + 8i], a[2])
+      end
+      [Numo::DFloat, Numo::SFloat, Numo::RObject].each do |stype|
+        a.store(stype[1.2])
+        a.each { |v| assert_in_delta(1.2 + 0i, v, 1e-5) }
+        a.store(stype[1.2, -3.4, 5.6])
+        [1.2, -3.4, 5.6].each_with_index do |v, i| # rubocop:disable Performance/CollectionLiteralInLoop
+          assert_in_delta(v + 0i, a[i], 1e-5)
+        end
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1.2, -3.4]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1.2, -3.4, 5.6, 7.8]) }
+      end
+      INTEGER_TYPES.each do |stype|
+        a.store(stype[5])
+        a.each { |v| assert_in_delta(5 + 0i, v, 1e-5) }
+        a.store(stype[1, -2, 3])
+        [1, -2, 3].each_with_index do |v, i| # rubocop:disable Performance/CollectionLiteralInLoop
+          assert_in_delta(v + 0i, a[i], 1e-5)
+        end
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, -2]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, -2, 3, 4]) }
+      end
+      UNSIGNED_INTEGER_TYPES.each do |stype|
+        a.store(stype[5])
+        a.each { |v| assert_in_delta(5 + 0i, v, 1e-5) }
+        a.store(stype[1, 2, 3])
+        [1, 2, 3].each_with_index do |v, i| # rubocop:disable Performance/CollectionLiteralInLoop
+          assert_in_delta(v + 0i, a[i], 1e-5)
+        end
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, 2]) }
+        assert_raises(Numo::NArray::ShapeError) { a.store(stype[1, 2, 3, 4]) }
+      end
+    end
+  end
+
   def test_extract
     TYPES.each do |dtype|
       a = dtype.cast(10.0)

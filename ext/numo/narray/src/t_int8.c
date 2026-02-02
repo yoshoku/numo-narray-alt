@@ -1006,11 +1006,6 @@ static VALUE int8_store(VALUE self, VALUE obj) {
 
   klass = rb_obj_class(obj);
 
-  if (klass == numo_cInt8) {
-    int8_store_int8(self, obj);
-    return self;
-  }
-
   if (IS_INTEGER_CLASS(klass) || klass == rb_cFloat || klass == rb_cComplex) {
     int8_store_numeric(self, obj);
     return self;
@@ -1043,6 +1038,11 @@ static VALUE int8_store(VALUE self, VALUE obj) {
 
   if (klass == numo_cInt16) {
     int8_store_int16(self, obj);
+    return self;
+  }
+
+  if (klass == numo_cInt8) {
+    int8_store_int8(self, obj);
     return self;
   }
 
