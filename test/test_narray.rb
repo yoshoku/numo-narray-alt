@@ -509,6 +509,28 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_aset
+    types_wo_complex = [Numo::RObject, Numo::DFloat, Numo::SFloat] + INTEGER_TYPES + UNSIGNED_INTEGER_TYPES
+    types_wo_complex.each do |dtype|
+      types_wo_complex.each do |stype|
+        a = dtype.zeros(6)
+        a[0] = 10
+        a[[1, 2]] = [20, 30]
+        a[3..5] = stype[40, 50, 60]
+        assert_equal(dtype[10, 20, 30, 40, 50, 60], a)
+      end
+    end
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      TYPES.each do |stype|
+        a = dtype.zeros(6)
+        a[0] = 10
+        a[[1, 2]] = [20, 30]
+        a[3..5] = stype[40, 50, 60]
+        assert_equal(dtype[10, 20, 30, 40, 50, 60], a)
+      end
+    end
+  end
+
   def test_extract
     TYPES.each do |dtype|
       a = dtype.cast(10.0)

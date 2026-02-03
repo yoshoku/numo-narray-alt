@@ -46,6 +46,7 @@ extern VALUE cRT;
 #include "mh/store.h"
 #include "mh/extract.h"
 #include "mh/aref.h"
+#include "mh/aset.h"
 #include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/fill.h"
@@ -113,6 +114,8 @@ typedef u_int32_t uint32; // Type aliases for shorter notation
 DEF_NARRAY_STORE_METHOD_FUNC(uint32, numo_cUInt32)
 DEF_NARRAY_EXTRACT_METHOD_FUNC(uint32)
 DEF_NARRAY_AREF_METHOD_FUNC(uint32)
+DEF_EXTRACT_DATA_FUNC(uint32, numo_cUInt32)
+DEF_NARRAY_ASET_METHOD_FUNC(uint32)
 DEF_NARRAY_COERCE_CAST_METHOD_FUNC(uint32)
 DEF_NARRAY_TO_A_METHOD_FUNC(uint32)
 DEF_NARRAY_FILL_METHOD_FUNC(uint32)
@@ -285,109 +288,6 @@ static VALUE uint32_allocate(VALUE self) {
   return self;
 }
 
-/*
-  Convert a data value of obj (with a single element) to dtype.
-*/
-static dtype uint32_extract_data(VALUE obj) {
-  narray_t* na;
-  dtype x;
-  char* ptr;
-  size_t pos;
-  VALUE r, klass;
-
-  if (IsNArray(obj)) {
-    GetNArray(obj, na);
-    if (na->size != 1) {
-      rb_raise(nary_eShapeError, "narray size should be 1");
-    }
-    klass = rb_obj_class(obj);
-    ptr = na_get_pointer_for_read(obj);
-    pos = na_get_offset(obj);
-
-    if (klass == numo_cUInt32) {
-      x = m_from_uint32(*(u_int32_t*)(ptr + pos));
-      return x;
-    }
-
-    if (klass == numo_cBit) {
-      {
-        BIT_DIGIT b;
-        LOAD_BIT(ptr, pos, b);
-        x = m_from_sint(b);
-      };
-      return x;
-    }
-
-    if (klass == numo_cDFloat) {
-      x = m_from_real(*(double*)(ptr + pos));
-      return x;
-    }
-
-    if (klass == numo_cSFloat) {
-      x = m_from_real(*(float*)(ptr + pos));
-      return x;
-    }
-
-    if (klass == numo_cInt64) {
-      x = (dtype)m_from_int64(*(int64_t*)(ptr + pos));
-      return x;
-    }
-
-    if (klass == numo_cInt32) {
-      x = m_from_int32(*(int32_t*)(ptr + pos));
-      return x;
-    }
-
-    if (klass == numo_cInt16) {
-      x = m_from_sint(*(int16_t*)(ptr + pos));
-      return x;
-    }
-
-    if (klass == numo_cInt8) {
-      x = m_from_sint(*(int8_t*)(ptr + pos));
-      return x;
-    }
-
-    if (klass == numo_cUInt64) {
-      x = (dtype)m_from_uint64(*(u_int64_t*)(ptr + pos));
-      return x;
-    }
-
-    if (klass == numo_cUInt16) {
-      x = m_from_sint(*(u_int16_t*)(ptr + pos));
-      return x;
-    }
-
-    if (klass == numo_cUInt8) {
-      x = m_from_sint(*(u_int8_t*)(ptr + pos));
-      return x;
-    }
-
-    if (klass == numo_cRObject) {
-      x = m_num_to_data(*(VALUE*)(ptr + pos));
-      return x;
-    }
-
-    // coerce
-    r = rb_funcall(obj, rb_intern("coerce_cast"), 1, cT);
-    if (rb_obj_class(r) == cT) {
-      return uint32_extract_data(r);
-    }
-
-    rb_raise(
-      nary_eCastError, "unknown conversion from %s to %s", rb_class2name(rb_obj_class(obj)),
-      rb_class2name(cT)
-    );
-  }
-  if (TYPE(obj) == T_ARRAY) {
-    if (RARRAY_LEN(obj) != 1) {
-      rb_raise(nary_eShapeError, "array size should be 1");
-    }
-    return m_num_to_data(RARRAY_AREF(obj, 0));
-  }
-  return m_num_to_data(obj);
-}
-
 static VALUE uint32_cast_array(VALUE rary) {
   VALUE nary;
   narray_t* na;
@@ -441,40 +341,6 @@ static VALUE uint32_s_cast(VALUE type, VALUE obj) {
 
   rb_raise(nary_eCastError, "cannot cast to %s", rb_class2name(type));
   return Qnil;
-}
-
-/*
-  Multi-dimensional element assignment.
-  @overload []=(dim0,...,dimL,val)
-    @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,Symbol]
-    dim0,...,dimL  multi-dimensional indices.
-    @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
-    @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
-  @see Numo::NArray#[]=
-  @see #[]
-*/
-static VALUE uint32_aset(int argc, VALUE* argv, VALUE self) {
-  int nd;
-  size_t pos;
-  char* ptr;
-  VALUE a;
-  dtype x;
-
-  argc--;
-  if (argc == 0) {
-    uint32_store(self, argv[argc]);
-  } else {
-    nd = na_get_result_dimension(self, argc, argv, sizeof(dtype), &pos);
-    if (nd) {
-      a = na_aref_main(argc, argv, self, 0, nd);
-      uint32_store(a, argv[argc]);
-    } else {
-      x = uint32_extract_data(argv[argc]);
-      ptr = na_get_pointer_for_read_write(self) + pos;
-      *(dtype*)ptr = x;
-    }
-  }
-  return argv[argc];
 }
 
 void Init_numo_uint32(void) {
@@ -567,6 +433,16 @@ void Init_numo_uint32(void) {
    * @see #[]=
    */
   rb_define_method(cT, "[]", uint32_aref, -1);
+  /**
+   * Multi-dimensional element assignment.
+   * @overload []=(dim0,...,dimL,val)
+   *   @param [Numeric,Range,Array,Numo::Int32,Numo::Int64,Numo::Bit,TrueClass,FalseClass,
+   *     Symbol] dim0,...,dimL  multi-dimensional indices.
+   *   @param [Numeric,Numo::NArray,Array] val  Value(s) to be set to self.
+   *   @return [Numeric,Numo::NArray,Array] returns `val` (last argument).
+   * @see Numo::NArray#[]=
+   * @see #[]
+   */
   rb_define_method(cT, "[]=", uint32_aset, -1);
   /**
    * return NArray with cast to the type of self.
