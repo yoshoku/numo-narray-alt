@@ -39,6 +39,7 @@ VALUE cT;
 extern VALUE cRT;
 
 #include "mh/store.h"
+#include "mh/s_cast.h"
 #include "mh/extract.h"
 #include "mh/aref.h"
 #include "mh/aset.h"
@@ -122,6 +123,7 @@ extern VALUE cRT;
 #include "mh/math/sinc.h"
 
 DEF_NARRAY_CMP_STORE_METHOD_FUNC(dcomplex, numo_cDComplex)
+DEF_NARRAY_S_CAST_METHOD_FUNC(dcomplex, numo_cDComplex)
 DEF_NARRAY_EXTRACT_METHOD_FUNC(dcomplex)
 DEF_NARRAY_AREF_METHOD_FUNC(dcomplex)
 DEF_CMP_EXTRACT_DATA_FUNC(dcomplex, numo_cDComplex)
@@ -306,61 +308,6 @@ static VALUE dcomplex_allocate(VALUE self) {
   return self;
 }
 
-static VALUE dcomplex_cast_array(VALUE rary) {
-  VALUE nary;
-  narray_t* na;
-
-  nary = na_s_new_like(cT, rary);
-  GetNArray(nary, na);
-  if (na->size > 0) {
-    dcomplex_store_array(nary, rary);
-  }
-  return nary;
-}
-
-/*
-  Cast object to Numo::DComplex.
-  @overload [](elements)
-  @overload cast(array)
-    @param [Numeric,Array] elements
-    @param [Array] array
-    @return [Numo::DComplex]
-*/
-static VALUE dcomplex_s_cast(VALUE type, VALUE obj) {
-  VALUE v;
-  narray_t* na;
-  dtype x;
-
-  if (rb_obj_class(obj) == cT) {
-    return obj;
-  }
-  if (RTEST(rb_obj_is_kind_of(obj, rb_cNumeric))) {
-    x = m_num_to_data(obj);
-    return dcomplex_new_dim0(x);
-  }
-  if (RTEST(rb_obj_is_kind_of(obj, rb_cArray))) {
-    return dcomplex_cast_array(obj);
-  }
-  if (IsNArray(obj)) {
-    GetNArray(obj, na);
-    v = nary_new(cT, NA_NDIM(na), NA_SHAPE(na));
-    if (NA_SIZE(na) > 0) {
-      dcomplex_store(v, obj);
-    }
-    return v;
-  }
-  if (rb_respond_to(obj, id_to_a)) {
-    obj = rb_funcall(obj, id_to_a, 0);
-    if (TYPE(obj) != T_ARRAY) {
-      rb_raise(rb_eTypeError, "`to_a' did not return Array");
-    }
-    return dcomplex_cast_array(obj);
-  }
-
-  rb_raise(nary_eCastError, "cannot cast to %s", rb_class2name(type));
-  return Qnil;
-}
-
 VALUE mTM;
 
 void Init_numo_dcomplex(void) {
@@ -441,7 +388,14 @@ void Init_numo_dcomplex(void) {
    *   @return [Numo::DComplex] self
    */
   rb_define_method(cT, "store", dcomplex_store, 1);
-
+  /**
+   * Cast object to Numo::DComplex.
+   * @overload [](elements)
+   * @overload cast(array)
+   *   @param [Numeric,Array] elements
+   *   @param [Array] array
+   *   @return [Numo::DComplex]
+   */
   rb_define_singleton_method(cT, "cast", dcomplex_s_cast, 1);
   /**
    * Multi-dimensional element reference.

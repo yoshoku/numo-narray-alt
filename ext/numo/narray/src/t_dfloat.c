@@ -43,6 +43,7 @@ VALUE cT;
 extern VALUE cRT;
 
 #include "mh/store.h"
+#include "mh/s_cast.h"
 #include "mh/extract.h"
 #include "mh/aref.h"
 #include "mh/aset.h"
@@ -150,6 +151,7 @@ extern VALUE cRT;
 typedef double dfloat; // Type aliases for shorter notation
                        // following the codebase naming convention.
 DEF_NARRAY_STORE_METHOD_FUNC(dfloat, numo_cDFloat)
+DEF_NARRAY_S_CAST_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_EXTRACT_METHOD_FUNC(dfloat)
 DEF_NARRAY_AREF_METHOD_FUNC(dfloat)
 DEF_EXTRACT_DATA_FUNC(dfloat, numo_cDFloat)
@@ -374,53 +376,6 @@ static VALUE dfloat_allocate(VALUE self) {
     rb_bug("invalid narray type : %d", NA_TYPE(na));
   }
   return self;
-}
-
-static VALUE dfloat_cast_array(VALUE rary) {
-  VALUE nary;
-  narray_t* na;
-
-  nary = na_s_new_like(cT, rary);
-  GetNArray(nary, na);
-  if (na->size > 0) {
-    dfloat_store_array(nary, rary);
-  }
-  return nary;
-}
-
-static VALUE dfloat_s_cast(VALUE type, VALUE obj) {
-  VALUE v;
-  narray_t* na;
-  dtype x;
-
-  if (rb_obj_class(obj) == cT) {
-    return obj;
-  }
-  if (RTEST(rb_obj_is_kind_of(obj, rb_cNumeric))) {
-    x = m_num_to_data(obj);
-    return dfloat_new_dim0(x);
-  }
-  if (RTEST(rb_obj_is_kind_of(obj, rb_cArray))) {
-    return dfloat_cast_array(obj);
-  }
-  if (IsNArray(obj)) {
-    GetNArray(obj, na);
-    v = nary_new(cT, NA_NDIM(na), NA_SHAPE(na));
-    if (NA_SIZE(na) > 0) {
-      dfloat_store(v, obj);
-    }
-    return v;
-  }
-  if (rb_respond_to(obj, id_to_a)) {
-    obj = rb_funcall(obj, id_to_a, 0);
-    if (TYPE(obj) != T_ARRAY) {
-      rb_raise(rb_eTypeError, "`to_a' did not return Array");
-    }
-    return dfloat_cast_array(obj);
-  }
-
-  rb_raise(nary_eCastError, "cannot cast to %s", rb_class2name(type));
-  return Qnil;
 }
 
 VALUE mTM;

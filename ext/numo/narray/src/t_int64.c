@@ -44,6 +44,7 @@ VALUE cT;
 extern VALUE cRT;
 
 #include "mh/store.h"
+#include "mh/s_cast.h"
 #include "mh/extract.h"
 #include "mh/aref.h"
 #include "mh/aset.h"
@@ -112,6 +113,7 @@ extern VALUE cRT;
 typedef int64_t int64; // Type aliases for shorter notation
                        // following the codebase naming convention.
 DEF_NARRAY_STORE_METHOD_FUNC(int64, numo_cInt64)
+DEF_NARRAY_S_CAST_METHOD_FUNC(int64, numo_cInt64)
 DEF_NARRAY_EXTRACT_METHOD_FUNC(int64)
 DEF_NARRAY_AREF_METHOD_FUNC(int64)
 DEF_EXTRACT_DATA_FUNC(int64, numo_cInt64)
@@ -288,61 +290,6 @@ static VALUE int64_allocate(VALUE self) {
   return self;
 }
 
-static VALUE int64_cast_array(VALUE rary) {
-  VALUE nary;
-  narray_t* na;
-
-  nary = na_s_new_like(cT, rary);
-  GetNArray(nary, na);
-  if (na->size > 0) {
-    int64_store_array(nary, rary);
-  }
-  return nary;
-}
-
-/*
-  Cast object to Numo::Int64.
-  @overload [](elements)
-  @overload cast(array)
-    @param [Numeric,Array] elements
-    @param [Array] array
-    @return [Numo::Int64]
-*/
-static VALUE int64_s_cast(VALUE type, VALUE obj) {
-  VALUE v;
-  narray_t* na;
-  dtype x;
-
-  if (rb_obj_class(obj) == cT) {
-    return obj;
-  }
-  if (RTEST(rb_obj_is_kind_of(obj, rb_cNumeric))) {
-    x = m_num_to_data(obj);
-    return int64_new_dim0(x);
-  }
-  if (RTEST(rb_obj_is_kind_of(obj, rb_cArray))) {
-    return int64_cast_array(obj);
-  }
-  if (IsNArray(obj)) {
-    GetNArray(obj, na);
-    v = nary_new(cT, NA_NDIM(na), NA_SHAPE(na));
-    if (NA_SIZE(na) > 0) {
-      int64_store(v, obj);
-    }
-    return v;
-  }
-  if (rb_respond_to(obj, id_to_a)) {
-    obj = rb_funcall(obj, id_to_a, 0);
-    if (TYPE(obj) != T_ARRAY) {
-      rb_raise(rb_eTypeError, "`to_a' did not return Array");
-    }
-    return int64_cast_array(obj);
-  }
-
-  rb_raise(nary_eCastError, "cannot cast to %s", rb_class2name(type));
-  return Qnil;
-}
-
 void Init_numo_int64(void) {
   VALUE hCast, mNumo;
 
@@ -421,7 +368,14 @@ void Init_numo_int64(void) {
    *   @return [Numo::Int64] self
    */
   rb_define_method(cT, "store", int64_store, 1);
-
+  /**
+   * Cast object to Numo::Int64.
+   * @overload [](elements)
+   * @overload cast(array)
+   *   @param [Numeric,Array] elements
+   *   @param [Array] array
+   *   @return [Numo::Int64]
+   */
   rb_define_singleton_method(cT, "cast", int64_s_cast, 1);
   /**
    * Multi-dimensional element reference.

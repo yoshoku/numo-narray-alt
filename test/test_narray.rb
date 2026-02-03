@@ -509,6 +509,56 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_cast
+    a = 10
+    TYPES.each do |stype|
+      b = stype.cast(a)
+      assert_kind_of(stype, b)
+      assert_equal(10, b)
+    end
+    a = [1, 2, 3]
+    TYPES.each do |stype|
+      b = stype.cast(a)
+      assert_kind_of(stype, b)
+      assert_equal(stype[1, 2, 3], b)
+    end
+    types_wo_complex_robj = [Numo::DFloat, Numo::SFloat] + INTEGER_TYPES + UNSIGNED_INTEGER_TYPES
+    types_wo_complex_robj.each do |dtype|
+      a = dtype[1, 2, 3, 5, 7, 11]
+      TYPES.each do |stype|
+        b = stype.cast(a)
+        assert_kind_of(stype, b)
+        assert_equal(stype[1, 2, 3, 5, 7, 11], b)
+      end
+    end
+    complex_types = [Numo::DComplex, Numo::SComplex]
+    complex_types.each do |dtype|
+      a = dtype[1 + 2i, 3 + 4i, 5 + 6i]
+      TYPES.each do |stype|
+        if types_wo_complex_robj.include?(stype)
+          assert_raises(Numo::NArray::CastError) { stype.cast(a) }
+        elsif complex_types.include?(stype)
+          b = stype.cast(a)
+          assert_kind_of(stype, b)
+          assert_equal(stype[1 + 2i, 3 + 4i, 5 + 6i], b)
+        else
+          b = stype.cast(a)
+          assert_kind_of(Numo::RObject, b)
+          b.each do |v|
+            assert_kind_of(dtype, v)
+            assert_equal(dtype[1 + 2i, 3 + 4i, 5 + 6i], v)
+          end
+        end
+      end
+    end
+    a = Numo::RObject[1, 2, 3]
+    TYPES.each do |stype|
+      b = stype.cast(a)
+      assert_kind_of(stype, b)
+      assert_equal(stype[1, 2, 3], b)
+    end
+  end
+
   def test_aset
     types_wo_complex = [Numo::RObject, Numo::DFloat, Numo::SFloat] + INTEGER_TYPES + UNSIGNED_INTEGER_TYPES
     types_wo_complex.each do |dtype|
