@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Install valgrind
-        run: sudo apt-get install valgrind
+        run: sudo apt-get update && sudo apt-get install valgrind
       - name: Set up Ruby 3.4
         uses: ruby/setup-ruby@v1
         with:
