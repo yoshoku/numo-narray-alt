@@ -7,6 +7,14 @@
 #include <assert.h>
 #include <ruby.h>
 
+#ifndef RBASIC_FLAGS
+#define RBASIC_FLAGS(obj) (RBASIC(obj)->flags)
+#endif
+
+#ifndef RBASIC_SET_FLAGS
+#define RBASIC_SET_FLAGS(obj, flags_to_set) (RBASIC(obj)->flags = (flags_to_set))
+#endif
+
 /* global variables within this module */
 VALUE numo_cNArray;
 VALUE rb_mNumo;
@@ -852,8 +860,10 @@ void na_copy_flags(VALUE src, VALUE dst) {
   na2->flag[0] = na1->flag[0];
   // na2->flag[1] = NA_FL1_INIT;
 
-  RBASIC(dst)->flags |= (RBASIC(src)->flags) & (FL_USER1 | FL_USER2 | FL_USER3 | FL_USER4 |
-                                                FL_USER5 | FL_USER6 | FL_USER7);
+  RBASIC_SET_FLAGS(
+    dst, RBASIC_FLAGS(dst) | (RBASIC_FLAGS(src) & (FL_USER1 | FL_USER2 | FL_USER3 | FL_USER4 |
+                                                   FL_USER5 | FL_USER6 | FL_USER7))
+  );
 }
 
 // fix name, ex, allow_stride_for_flatten_view
