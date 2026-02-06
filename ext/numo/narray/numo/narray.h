@@ -14,7 +14,11 @@ extern "C" {
 #endif
 
 #define NARRAY_VERSION "0.9.14"
-#define NARRAY_VERSION_CODE 9140
+#define NARRAY_VERSION_MAJOR 0
+#define NARRAY_VERSION_MINOR 9
+#define NARRAY_VERSION_PATCH 14
+#define NARRAY_VERSION_CODE                                                                    \
+  (NARRAY_VERSION_MAJOR * 10000 + NARRAY_VERSION_MINOR * 100 + NARRAY_VERSION_PATCH)
 
 #include <math.h>
 #include "numo/compat.h"
