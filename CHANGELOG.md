@@ -1,3 +1,15 @@
+## [[0.10.0](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.14...v0.10.0)] - 2026-02-06
+
+- refactored methods to use macro templates: sort, sort_index, median, store, aset, and cast.
+- supported compilation with TruffleRuby: [#8](https://github.com/yoshoku/numo-narray-alt/pull/8)
+
+**Breaking Changes**
+
+- bumped minimum required Ruby version to 3.2.
+- changed to compute `NARRAY_VERSION_CODE` from major, minor, and patch versions instead of hardcoding.
+  - The formula for NARRY_VERSION_CODE is the same as RUBY_API_VERSION_CODE: MAJOR * 10000 + MINOR * 100 + PATCH.
+    Note that this differs from the previous NARRAY_VERSION_CODE.
+
 ## [[0.9.14](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.13...v0.9.14)] - 2026-01-29
 
 - fixed the `poly` method that intermittently failed due to unsigned integer underflow and uninitialized dim field: [c4755ac](https://github.com/yoshoku/numo-narray-alt/commit/c4755acabc6621f5e3302ebe1f535dceb0496938).
