@@ -27,7 +27,7 @@
         return m_from_real(*(float*)(ptr + pos));                                              \
       }                                                                                        \
       if (klass == numo_cInt64) {                                                              \
-        return m_from_int64(*(int64_t*)(ptr + pos));                                           \
+        return (tDType)m_from_int64(*(int64_t*)(ptr + pos));                                   \
       }                                                                                        \
       if (klass == numo_cInt32) {                                                              \
         return m_from_int32(*(int32_t*)(ptr + pos));                                           \
@@ -39,7 +39,7 @@
         return m_from_sint(*(int8_t*)(ptr + pos));                                             \
       }                                                                                        \
       if (klass == numo_cUInt64) {                                                             \
-        return m_from_uint64(*(u_int64_t*)(ptr + pos));                                        \
+        return (tDType)m_from_uint64(*(u_int64_t*)(ptr + pos));                                \
       }                                                                                        \
       if (klass == numo_cUInt32) {                                                             \
         return m_from_uint32(*(u_int32_t*)(ptr + pos));                                        \
