@@ -292,6 +292,10 @@ void na_alloc_shape(narray_t* na, int ndim) {
     if (ndim > NA_MAX_DIMENSION) {
       rb_raise(nary_eDimensionError, "ndim=%d is too many", ndim);
     }
+    if (na->shape != NULL && na->shape != &(na->size)) {
+      xfree(na->shape);
+      na->shape = NULL;
+    }
     na->shape = ALLOC_N(size_t, ndim);
   }
 }
