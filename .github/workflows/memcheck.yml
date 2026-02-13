@@ -23,4 +23,4 @@ jobs:
           ruby-version: 3.4
           bundler-cache: true
       - name: Run test
-        run: bundle exec rake test
+        run: bundle exec rake test:valgrind
