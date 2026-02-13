@@ -92,11 +92,9 @@ static void bit_free(void* ptr) {
     }
     na->ptr = NULL;
   }
-  if (na->base.size > 0) {
-    if (na->base.shape != NULL && na->base.shape != &(na->base.size)) {
-      xfree(na->base.shape);
-      na->base.shape = NULL;
-    }
+  if (na->base.shape != NULL && na->base.shape != &(na->base.size)) {
+    xfree(na->base.shape);
+    na->base.shape = NULL;
   }
   xfree(na);
 }

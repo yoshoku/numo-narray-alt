@@ -202,11 +202,9 @@ static void na_view_free(void* ptr) {
     xfree(na->stridx);
     na->stridx = NULL;
   }
-  if (na->base.size > 0) {
-    if (na->base.shape != NULL && na->base.shape != &(na->base.size)) {
-      xfree(na->base.shape);
-      na->base.shape = NULL;
-    }
+  if (na->base.shape != NULL && na->base.shape != &(na->base.size)) {
+    xfree(na->base.shape);
+    na->base.shape = NULL;
   }
   xfree(na);
 }
