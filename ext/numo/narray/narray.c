@@ -278,6 +278,10 @@ void na_array_to_internal_shape(VALUE self, VALUE ary, size_t* shape) {
 void na_alloc_shape(narray_t* na, int ndim) {
   na->ndim = ndim;
   na->size = 0;
+  if (na->shape != NULL && na->shape != &(na->size)) {
+    xfree(na->shape);
+    na->shape = NULL;
+  }
   switch (ndim) {
   case 0:
   case 1:
@@ -289,10 +293,6 @@ void na_alloc_shape(narray_t* na, int ndim) {
     }
     if (ndim > NA_MAX_DIMENSION) {
       rb_raise(nary_eDimensionError, "ndim=%d is too many", ndim);
-    }
-    if (na->shape != NULL && na->shape != &(na->size)) {
-      xfree(na->shape);
-      na->shape = NULL;
     }
     na->shape = ALLOC_N(size_t, ndim);
   }
