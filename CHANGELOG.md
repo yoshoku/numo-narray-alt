@@ -1,3 +1,7 @@
+## [[0.10.1](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.0...v0.10.1)] - 2026-02-13
+
+- fixed memory leaks caused by not freeing allocated shape arrays: [#9](https://github.com/yoshoku/numo-narray-alt/issues/9), [c5b768d8](https://github.com/yoshoku/numo-narray-alt/commit/c5b768d8ccec0a39beebf07bb85ae01cf0731c7f), [4018e657](https://github.com/yoshoku/numo-narray-alt/commit/4018e657552d9a209059e06a3e63bddfd4f96939)
+
 ## [[0.10.0](https://github.com/yoshoku/numo-narray-alt/compare/v0.9.14...v0.10.0)] - 2026-02-06
 
 - refactored methods to use macro templates: sort, sort_index, median, store, aset, and cast.
