@@ -1,3 +1,8 @@
+## [[0.10.2](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.1...v0.10.2)] - 2026-02-14
+
+- fixed CI workflow to correctly run ruby_memcheck by adding the valgrind option to the test task: [92c586b](https://github.com/yoshoku/numo-narray-alt/commit/92c586b8a8f1c73e9283385bc3676eb2e5a4a3a5)
+- fixed memory leak in `na_alloc_shape` by moving shape deallocation before the switch statement to ensure it runs in all cases: [c87ab71](https://github.com/yoshoku/numo-narray-alt/commit/c87ab71afefc4448c639dbe3a0252953d492ee74)
+
 ## [[0.10.1](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.0...v0.10.1)] - 2026-02-13
 
 - fixed memory leaks caused by not freeing allocated shape arrays: [#9](https://github.com/yoshoku/numo-narray-alt/issues/9), [c5b768d8](https://github.com/yoshoku/numo-narray-alt/commit/c5b768d8ccec0a39beebf07bb85ae01cf0731c7f), [4018e657](https://github.com/yoshoku/numo-narray-alt/commit/4018e657552d9a209059e06a3e63bddfd4f96939)
