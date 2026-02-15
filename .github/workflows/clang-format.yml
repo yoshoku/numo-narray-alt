@@ -18,8 +18,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
+    - name: Install clang-format
+      run: |
+        wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+        echo "deb [signed-by=/etc/apt/trusted.gpg.d/apt.llvm.org.asc] https://apt.llvm.org/noble llvm-toolchain-noble-18 main" | sudo tee /etc/apt/sources.list.d/llvm-18.list > /dev/null
+        sudo apt-get update
+        sudo apt-get install -y clang-format-18
+        clang-format --version
+    - name: Install zsh
+      run: sudo apt-get install -y zsh
     - name: Run clang-format
-      uses: jidicula/clang-format-action@v4.16.0
-      with:
-        clang-format-version: '18'
-        check-path: 'ext'
+      shell: zsh {0}
+      run: clang-format --style=file --Werror --dry-run ext/**/*.h ext/**/*.c
