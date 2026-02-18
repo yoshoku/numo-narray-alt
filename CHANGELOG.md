@@ -1,3 +1,8 @@
+## [[0.10.3](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.2...v0.10.3)] - 2026-02-18
+
+- fixed out-of-bounds access to `na1->stridx` when `q[i].orig_dim` exceeds `na1->base.ndim` in dot operation of view:
+  [cd2f136](https://github.com/yoshoku/numo-narray-alt/commit/cd2f136a3d73ef4ba33229c0c416c4d21ad0631d)
+
 ## [[0.10.2](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.1...v0.10.2)] - 2026-02-14
 
 - fixed CI workflow to correctly run ruby_memcheck by adding the valgrind option to the test task: [92c586b](https://github.com/yoshoku/numo-narray-alt/commit/92c586b8a8f1c73e9283385bc3676eb2e5a4a3a5)
