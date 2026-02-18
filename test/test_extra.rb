@@ -575,6 +575,11 @@ class NArrayExtraTest < NArrayTestBase
     b = Numo::DFloat[[4], [5], [6]]
     assert_equal(Numo::DFloat[32], a.dot(b))
     assert_output(nil, '') { a.dot(b) }
+
+    # view
+    a = Numo::DFloat[[1, 2], [3, 4]]
+    b = a.transpose.dot(a)
+    assert_equal(Numo::DFloat[[10, 14], [14, 20]], b)
   end
 
   def test_inner
