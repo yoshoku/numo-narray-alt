@@ -519,27 +519,33 @@ static void na_index_aref_naview(
   ssize_t total = 1;
 
   for (i = j = 0; i < ndim; i++) {
-    stridx_t sdx1 = na1->stridx[q[i].orig_dim];
-    ssize_t size;
+    stridx_t sdx1;
+    sdx1.stride = 0;
+    sdx1.index = NULL;
+    const int qi_orig_dim = q[i].orig_dim;
+    if (qi_orig_dim < na1->base.ndim) {
+      sdx1 = na1->stridx[qi_orig_dim];
 
-    // numeric index -- trim dimension
-    if (!keep_dim && q[i].n == 1 && q[i].step == 0) {
-      if (SDX_IS_INDEX(sdx1)) {
-        na2->offset += SDX_GET_INDEX(sdx1)[q[i].beg];
-      } else {
-        na2->offset += SDX_GET_STRIDE(sdx1) * q[i].beg;
+      // numeric index -- trim dimension
+      if (!keep_dim && q[i].n == 1 && q[i].step == 0) {
+        if (SDX_IS_INDEX(sdx1)) {
+          na2->offset += SDX_GET_INDEX(sdx1)[q[i].beg];
+        } else {
+          na2->offset += SDX_GET_STRIDE(sdx1) * q[i].beg;
+        }
+        continue;
       }
-      continue;
     }
 
-    na2->base.shape[j] = size = q[i].n;
+    const ssize_t size = q[i].n;
+    na2->base.shape[j] = size;
 
     if (q[i].reduce != 0) {
       VALUE m = rb_funcall(INT2FIX(1), id_shift_left, 1, INT2FIX(j));
       na2->base.reduce = rb_funcall(m, '|', 1, na2->base.reduce);
     }
 
-    if (q[i].orig_dim >= na1->base.ndim) {
+    if (qi_orig_dim >= na1->base.ndim) {
       // new dimension
       SDX_SET_STRIDE(na2->stridx[j], elmsz);
     } else if (q[i].idx != NULL && SDX_IS_INDEX(sdx1)) {
