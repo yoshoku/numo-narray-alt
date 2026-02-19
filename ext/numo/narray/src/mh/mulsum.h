@@ -10,13 +10,28 @@
     ssize_t s1;                                                                                \
     ssize_t s2;                                                                                \
     ssize_t s3;                                                                                \
-                                                                                               \
     INIT_COUNTER(lp, n);                                                                       \
     INIT_PTR(lp, 0, p1, s1);                                                                   \
     INIT_PTR(lp, 1, p2, s2);                                                                   \
     INIT_PTR(lp, 2, p3, s3);                                                                   \
-                                                                                               \
     if (s3 == 0) {                                                                             \
+      if (is_aligned(p1, sizeof(tDType)) && is_aligned(p2, sizeof(tDType)) &&                  \
+          is_aligned(p3, sizeof(tDType))) {                                                    \
+        if (s1 == sizeof(tDType) && s2 == sizeof(tDType)) {                                    \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum(((tDType*)p1)[i], ((tDType*)p2)[i], *(tDType*)p3);                        \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+        if (is_aligned_step(s1, sizeof(tDType)) && is_aligned_step(s2, sizeof(tDType))) {      \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum(*(tDType*)p1, *(tDType*)p2, *(tDType*)p3);                                \
+            p1 += s1;                                                                          \
+            p2 += s2;                                                                          \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+      }                                                                                        \
       tDType z;                                                                                \
       GET_DATA(p3, tDType, z);                                                                 \
       for (size_t i = 0; i < n; i++) {                                                         \
@@ -28,6 +43,25 @@
       }                                                                                        \
       SET_DATA(p3, tDType, z);                                                                 \
     } else {                                                                                   \
+      if (is_aligned(p1, sizeof(tDType)) && is_aligned(p2, sizeof(tDType)) &&                  \
+          is_aligned(p3, sizeof(tDType))) {                                                    \
+        if (s1 == sizeof(tDType) && s2 == sizeof(tDType) && s3 == sizeof(tDType)) {            \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum(((tDType*)p1)[i], ((tDType*)p2)[i], ((tDType*)p3)[i]);                    \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+        if (is_aligned_step(s1, sizeof(tDType)) && is_aligned_step(s2, sizeof(tDType)) &&      \
+            is_aligned_step(s3, sizeof(tDType))) {                                             \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum(*(tDType*)p1, *(tDType*)p2, *(tDType*)p3);                                \
+            p1 += s1;                                                                          \
+            p2 += s2;                                                                          \
+            p3 += s3;                                                                          \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+      }                                                                                        \
       for (size_t i = 0; i < n; i++) {                                                         \
         tDType x;                                                                              \
         tDType y;                                                                              \
@@ -49,13 +83,28 @@
     ssize_t s1;                                                                                \
     ssize_t s2;                                                                                \
     ssize_t s3;                                                                                \
-                                                                                               \
     INIT_COUNTER(lp, n);                                                                       \
     INIT_PTR(lp, 0, p1, s1);                                                                   \
     INIT_PTR(lp, 1, p2, s2);                                                                   \
     INIT_PTR(lp, 2, p3, s3);                                                                   \
-                                                                                               \
     if (s3 == 0) {                                                                             \
+      if (is_aligned(p1, sizeof(tDType)) && is_aligned(p2, sizeof(tDType)) &&                  \
+          is_aligned(p3, sizeof(tDType))) {                                                    \
+        if (s1 == sizeof(tDType) && s2 == sizeof(tDType)) {                                    \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum_nan(((tDType*)p1)[i], ((tDType*)p2)[i], *(tDType*)p3);                    \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+        if (is_aligned_step(s1, sizeof(tDType)) && is_aligned_step(s2, sizeof(tDType))) {      \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum_nan(*(tDType*)p1, *(tDType*)p2, *(tDType*)p3);                            \
+            p1 += s1;                                                                          \
+            p2 += s2;                                                                          \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+      }                                                                                        \
       tDType z;                                                                                \
       GET_DATA(p3, tDType, z);                                                                 \
       for (size_t i = 0; i < n; i++) {                                                         \
@@ -67,6 +116,25 @@
       }                                                                                        \
       SET_DATA(p3, tDType, z);                                                                 \
     } else {                                                                                   \
+      if (is_aligned(p1, sizeof(tDType)) && is_aligned(p2, sizeof(tDType)) &&                  \
+          is_aligned(p3, sizeof(tDType))) {                                                    \
+        if (s1 == sizeof(tDType) && s2 == sizeof(tDType) && s3 == sizeof(tDType)) {            \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum_nan(((tDType*)p1)[i], ((tDType*)p2)[i], ((tDType*)p3)[i]);                \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+        if (is_aligned_step(s1, sizeof(tDType)) && is_aligned_step(s2, sizeof(tDType)) &&      \
+            is_aligned_step(s3, sizeof(tDType))) {                                             \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum_nan(*(tDType*)p1, *(tDType*)p2, *(tDType*)p3);                            \
+            p1 += s1;                                                                          \
+            p2 += s2;                                                                          \
+            p3 += s3;                                                                          \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+      }                                                                                        \
       for (size_t i = 0; i < n; i++) {                                                         \
         tDType x;                                                                              \
         tDType y;                                                                              \
@@ -122,13 +190,28 @@
     ssize_t s1;                                                                                \
     ssize_t s2;                                                                                \
     ssize_t s3;                                                                                \
-                                                                                               \
     INIT_COUNTER(lp, n);                                                                       \
     INIT_PTR(lp, 0, p1, s1);                                                                   \
     INIT_PTR(lp, 1, p2, s2);                                                                   \
     INIT_PTR(lp, 2, p3, s3);                                                                   \
-                                                                                               \
     if (s3 == 0) {                                                                             \
+      if (is_aligned(p1, sizeof(tDType)) && is_aligned(p2, sizeof(tDType)) &&                  \
+          is_aligned(p3, sizeof(tDType))) {                                                    \
+        if (s1 == sizeof(tDType) && s2 == sizeof(tDType)) {                                    \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum(((tDType*)p1)[i], ((tDType*)p2)[i], *(tDType*)p3);                        \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+        if (is_aligned_step(s1, sizeof(tDType)) && is_aligned_step(s2, sizeof(tDType))) {      \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum(*(tDType*)p1, *(tDType*)p2, *(tDType*)p3);                                \
+            p1 += s1;                                                                          \
+            p2 += s2;                                                                          \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+      }                                                                                        \
       tDType z;                                                                                \
       GET_DATA(p3, tDType, z);                                                                 \
       for (size_t i = 0; i < n; i++) {                                                         \
@@ -139,6 +222,25 @@
       }                                                                                        \
       SET_DATA(p3, tDType, z);                                                                 \
     } else {                                                                                   \
+      if (is_aligned(p1, sizeof(tDType)) && is_aligned(p2, sizeof(tDType)) &&                  \
+          is_aligned(p3, sizeof(tDType))) {                                                    \
+        if (s1 == sizeof(tDType) && s2 == sizeof(tDType) && s3 == sizeof(tDType)) {            \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum(((tDType*)p1)[i], ((tDType*)p2)[i], ((tDType*)p3)[i]);                    \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+        if (is_aligned_step(s1, sizeof(tDType)) && is_aligned_step(s2, sizeof(tDType)) &&      \
+            is_aligned_step(s3, sizeof(tDType))) {                                             \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum(*(tDType*)p1, *(tDType*)p2, *(tDType*)p3);                                \
+            p1 += s1;                                                                          \
+            p2 += s2;                                                                          \
+            p3 += s3;                                                                          \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+      }                                                                                        \
       for (size_t i = 0; i < n; i++) {                                                         \
         tDType x, y, z;                                                                        \
         GET_DATA_STRIDE(p1, s1, tDType, x);                                                    \
