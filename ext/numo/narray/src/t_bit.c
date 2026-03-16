@@ -31,7 +31,6 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
-#include "mh/extract.h"
 #include "mh/aref.h"
 #include "mh/coerce_cast.h"
 #include "mh/to_a.h"
@@ -46,7 +45,22 @@ extern VALUE cRT;
 #include "mh/stddev.h"
 #include "mh/rms.h"
 
-DEF_NARRAY_BIT_EXTRACT_METHOD_FUNC()
+static VALUE bit_extract(VALUE self) {
+  BIT_DIGIT* ptr;
+  BIT_DIGIT val;
+  size_t pos;
+  narray_t* na;
+  GetNArray(self, na);
+  if (na->ndim == 0) {
+    pos = na_get_offset(self);
+    ptr = (BIT_DIGIT*)na_get_pointer_for_read(self);
+    val = ((*((ptr) + (pos) / NB)) >> ((pos) % NB)) & 1u;
+    na_release_lock(self);
+    return INT2FIX(val);
+  }
+  return self;
+}
+
 DEF_NARRAY_BIT_AREF_METHOD_FUNC()
 DEF_NARRAY_COERCE_CAST_METHOD_FUNC(bit)
 DEF_NARRAY_BIT_TO_A_METHOD_FUNC()
