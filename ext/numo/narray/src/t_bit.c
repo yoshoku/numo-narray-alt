@@ -31,7 +31,6 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
-#include "mh/aref.h"
 #include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/fill.h"
@@ -61,7 +60,18 @@ static VALUE bit_extract(VALUE self) {
   return self;
 }
 
-DEF_NARRAY_BIT_AREF_METHOD_FUNC()
+static VALUE bit_aref(int argc, VALUE* argv, VALUE self) {
+  size_t pos;
+  int nd = na_get_result_dimension(self, argc, argv, 1, &pos);
+  if (nd) {
+    return na_aref_main(argc, argv, self, 0, nd);
+  }
+  char* ptr = na_get_pointer_for_read(self);
+  BIT_DIGIT x;
+  LOAD_BIT(ptr, pos, x);
+  return m_data_to_num(x);
+}
+
 DEF_NARRAY_COERCE_CAST_METHOD_FUNC(bit)
 DEF_NARRAY_BIT_TO_A_METHOD_FUNC()
 DEF_NARRAY_BIT_FILL_METHOD_FUNC()
