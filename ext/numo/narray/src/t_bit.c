@@ -31,7 +31,6 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
-#include "mh/coerce_cast.h"
 #include "mh/to_a.h"
 #include "mh/fill.h"
 #include "mh/format.h"
@@ -72,7 +71,10 @@ static VALUE bit_aref(int argc, VALUE* argv, VALUE self) {
   return m_data_to_num(x);
 }
 
-DEF_NARRAY_COERCE_CAST_METHOD_FUNC(bit)
+static VALUE bit_coerce_cast(VALUE self, VALUE type) {
+  return Qnil;
+}
+
 DEF_NARRAY_BIT_TO_A_METHOD_FUNC()
 DEF_NARRAY_BIT_FILL_METHOD_FUNC()
 DEF_NARRAY_BIT_FORMAT_METHOD_FUNC()
