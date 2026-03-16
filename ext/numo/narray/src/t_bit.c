@@ -31,7 +31,6 @@ static ID id_to_a;
 VALUE cT;
 extern VALUE cRT;
 
-#include "mh/inspect.h"
 #include "mh/each.h"
 #include "mh/each_with_index.h"
 #include "mh/mean.h"
@@ -261,7 +260,16 @@ static VALUE bit_format_to_a(int argc, VALUE* argv, VALUE self) {
   return na_ndloop_cast_narray_to_rarray(&ndf, self, fmt);
 }
 
-DEF_NARRAY_BIT_INSPECT_METHOD_FUNC()
+static VALUE iter_bit_inspect(char* ptr, size_t pos, VALUE fmt) {
+  BIT_DIGIT x;
+  LOAD_BIT(ptr, pos, x);
+  return format_bit(fmt, x);
+}
+
+static VALUE bit_inspect(VALUE ary) {
+  return na_ndloop_inspect(ary, iter_bit_inspect, Qnil);
+}
+
 DEF_NARRAY_BIT_EACH_METHOD_FUNC()
 DEF_NARRAY_BIT_EACH_WITH_INDEX_METHOD_FUNC()
 DEF_NARRAY_BIT_MEAN_METHOD_FUNC()
