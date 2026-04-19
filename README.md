@@ -74,6 +74,9 @@ Numo::NArray Alternative is used in the following projects:
 - [numo-linalg-randsvd](https://github.com/yoshoku/numo-linalg-randsvd): Randomized SVD library for numo-linalg-alt.
 - [rumale](https://github.com/yoshoku/rumale): Machine learning library.
 
+For a full list of gems using numo-narray-alt, see
+[reverse dependencies on RubyGems.org](https://rubygems.org/gems/numo-narray-alt/reverse_dependencies).
+
 ## Development
 
 preparation:
