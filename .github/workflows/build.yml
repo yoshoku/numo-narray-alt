@@ -45,6 +45,28 @@ jobs:
       - name: Tests
         run: rake test
 
+  build-c23:
+    runs-on: ubuntu-latest
+    name: Ruby 4.0 (C23)
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install gcc-16
+        uses: egor-tensin/setup-gcc@v2
+        with:
+          version: 16
+      - name: Verify gcc version
+        run: |
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-16 100 --slave /usr/bin/g++ g++ /usr/bin/g++-16
+          gcc --version
+      - name: Set up Ruby 4.0
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 4.0
+          bundler-cache: true
+      - name: Build and test
+        run: bundle exec rake -- --with-cflags="-std=c23"
+
   build-rocky:
     runs-on: ubuntu-latest
     name: Ruby 3.3 (Rocky)
@@ -60,8 +82,7 @@ jobs:
           bundle config silence_root_warning true
           bundle install
       - name: Build and test
-        run: |
-          bundle exec rake
+        run: bundle exec rake
 
   build-win:
     runs-on: windows-latest
