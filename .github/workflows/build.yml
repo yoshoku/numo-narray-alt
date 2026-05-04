@@ -86,27 +86,27 @@ jobs:
 
   build-win:
     runs-on: windows-latest
-    name: Ruby 3.4 (Windows)
+    name: Ruby 4.0 (Windows)
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
-      - name: Set up Ruby 3.4
+      - name: Set up Ruby 4.0
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.4
+          ruby-version: 4.0
           bundler-cache: true
       - name: Build and test
         run: bundle exec rake
 
   build-mac:
     runs-on: macos-latest
-    name: Ruby 3.4 (macOS)
+    name: Ruby 4.0 (macOS)
     steps:
       - uses: actions/checkout@v6
-      - name: Set up Ruby 3.4
+      - name: Set up Ruby 4.0
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.4
+          ruby-version: 4.0
           bundler-cache: true
       - name: Build and test
         run: bundle exec rake
