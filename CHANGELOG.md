@@ -1,3 +1,8 @@
+## [[0.10.4](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.3...v0.10.4)] - 2026-05-05
+
+- removed define macro templates from `Numo::Bit` implementation.
+  - `Numo::Bit` shares no commonality with other numeric types such as `Numo::Int32` or `Numo::SFloat`, so using macro templates provided no reusability benefit.
+
 ## [[0.10.3](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.2...v0.10.3)] - 2026-02-18
 
 - fixed out-of-bounds access to `na1->stridx` when `q[i].orig_dim` exceeds `na1->base.ndim` in dot operation of view:
