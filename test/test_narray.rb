@@ -1485,6 +1485,11 @@ class NArrayTest < NArrayTestBase
         assert_equal(Numo::SFloat[2, 3, 4], Numo::NMath.sqrt(a))
         assert_equal(Numo::SFloat[2, 3, 4], Numo::NMath.sqrt(a.inplace))
       end
+      # test 'no simd mulsum' do
+      a = dtype[4..6]
+      b = dtype[1..3]
+      assert_equal(32, a.mulsum(b))
+      assert_equal(32, a.inplace.mulsum(b))
 
       # test 'simd add' do
       a = dtype[11..19]
@@ -1512,6 +1517,11 @@ class NArrayTest < NArrayTestBase
         assert_equal(Numo::SFloat[2, 3, 4, 5, 6, 7, 8, 9, 10], Numo::NMath.sqrt(a))
         assert_equal(Numo::SFloat[2, 3, 4, 5, 6, 7, 8, 9, 10], Numo::NMath.sqrt(a.inplace))
       end
+      # test 'simd mulsum' do
+      a = dtype[1..18].reshape(2, 9)
+      b = dtype.ones(9)
+      assert_equal(dtype[45, 126], a.mulsum(b, axis: 1))
+      assert_equal(dtype[45, 126], a.inplace.mulsum(b, axis: 1))
 
       # test 'simd broadcast scalar add' do
       a = dtype[1..9]
