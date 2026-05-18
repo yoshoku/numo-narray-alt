@@ -75,4 +75,14 @@
   DEF_BINARY_SELF_FUNC(add, dfloat, numo_cDFloat)                                              \
   DEF_BINARY_FUNC(add, '+', dfloat, numo_cDFloat)
 
+#define DEF_NARRAY_SFLT_ADD_AVX_METHOD_FUNC()                                                  \
+  DEF_BINARY_SFLT_AVX_ITER_FUNC(add, _mm256_add_ps)                                            \
+  DEF_BINARY_SELF_FUNC(add, sfloat, numo_cSFloat)                                              \
+  DEF_BINARY_FUNC(add, '+', sfloat, numo_cSFloat)
+
+#define DEF_NARRAY_DFLT_ADD_AVX_METHOD_FUNC()                                                  \
+  DEF_BINARY_DFLT_AVX_ITER_FUNC(add, _mm256_add_pd)                                            \
+  DEF_BINARY_SELF_FUNC(add, dfloat, numo_cDFloat)                                              \
+  DEF_BINARY_FUNC(add, '+', dfloat, numo_cDFloat)
+
 #endif /* NUMO_NARRAY_MH_OP_ADD_H */

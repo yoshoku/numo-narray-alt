@@ -115,4 +115,14 @@
   DEF_BINARY_SELF_FUNC(div, dfloat, numo_cDFloat)                                              \
   DEF_BINARY_FUNC(div, '/', dfloat, numo_cDFloat)
 
+#define DEF_NARRAY_SFLT_DIV_AVX_METHOD_FUNC()                                                  \
+  DEF_BINARY_SFLT_AVX_ITER_FUNC(div, _mm256_div_ps)                                            \
+  DEF_BINARY_SELF_FUNC(div, sfloat, numo_cSFloat)                                              \
+  DEF_BINARY_FUNC(div, '/', sfloat, numo_cSFloat)
+
+#define DEF_NARRAY_DFLT_DIV_AVX_METHOD_FUNC()                                                  \
+  DEF_BINARY_DFLT_AVX_ITER_FUNC(div, _mm256_div_pd)                                            \
+  DEF_BINARY_SELF_FUNC(div, dfloat, numo_cDFloat)                                              \
+  DEF_BINARY_FUNC(div, '/', dfloat, numo_cDFloat)
+
 #endif /* NUMO_NARRAY_MH_OP_DIV_H */

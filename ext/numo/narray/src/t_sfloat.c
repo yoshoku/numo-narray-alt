@@ -19,6 +19,11 @@
 #define SIMD_ALIGNMENT_SIZE 16
 #endif
 
+#ifdef __AVX__
+#include <immintrin.h>
+#define AVX_ALIGNMENT_SIZE 32
+#endif
+
 static ID id_pow;
 static ID id_cast;
 static ID id_copysign;
@@ -166,7 +171,12 @@ DEF_NARRAY_MAP_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_EACH_WITH_INDEX_METHOD_FUNC(sfloat)
 DEF_NARRAY_MAP_WITH_INDEX_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_ABS_METHOD_FUNC(sfloat, numo_cSFloat, sfloat, numo_cSFloat)
-#ifdef __SSE2__
+#if defined(__AVX__)
+DEF_NARRAY_SFLT_ADD_AVX_METHOD_FUNC()
+DEF_NARRAY_SFLT_SUB_AVX_METHOD_FUNC()
+DEF_NARRAY_SFLT_MUL_AVX_METHOD_FUNC()
+DEF_NARRAY_SFLT_DIV_AVX_METHOD_FUNC()
+#elif defined(__SSE2__)
 DEF_NARRAY_SFLT_ADD_SSE2_METHOD_FUNC()
 DEF_NARRAY_SFLT_SUB_SSE2_METHOD_FUNC()
 DEF_NARRAY_SFLT_MUL_SSE2_METHOD_FUNC()
@@ -223,7 +233,9 @@ DEF_NARRAY_FLT_MINIMUM_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_MINMAX_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_CUMSUM_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_CUMPROD_METHOD_FUNC(sfloat, numo_cSFloat)
-#ifdef __SSE2__
+#if defined(__AVX__)
+DEF_NARRAY_SFLT_MULSUM_AVX_METHOD_FUNC()
+#elif defined(__SSE2__)
 DEF_NARRAY_SFLT_MULSUM_SSE2_METHOD_FUNC()
 #else
 DEF_NARRAY_FLT_MULSUM_METHOD_FUNC(sfloat, numo_cSFloat)
@@ -245,7 +257,9 @@ DEF_NARRAY_FLT_SORT_METHOD_FUNC(sfloat)
 #define qsort_cast **(sfloat**)
 DEF_NARRAY_FLT_SORT_INDEX_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_MEDIAN_METHOD_FUNC(sfloat)
-#ifdef __SSE2__
+#if defined(__AVX__)
+DEF_NARRAY_FLT_SQRT_AVX_SGL_METHOD_FUNC(sfloat, numo_cSFloat)
+#elif defined(__SSE2__)
 DEF_NARRAY_FLT_SQRT_SSE2_SGL_METHOD_FUNC(sfloat, numo_cSFloat)
 #else
 DEF_NARRAY_FLT_SQRT_METHOD_FUNC(sfloat, numo_cSFloat)
