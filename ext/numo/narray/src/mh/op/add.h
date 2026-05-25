@@ -85,4 +85,14 @@
   DEF_BINARY_SELF_FUNC(add, dfloat, numo_cDFloat)                                              \
   DEF_BINARY_FUNC(add, '+', dfloat, numo_cDFloat)
 
+#define DEF_NARRAY_SFLT_ADD_NEON_METHOD_FUNC()                                                 \
+  DEF_BINARY_SFLT_NEON_ITER_FUNC(add, vaddq_f32)                                               \
+  DEF_BINARY_SELF_FUNC(add, sfloat, numo_cSFloat)                                              \
+  DEF_BINARY_FUNC(add, '+', sfloat, numo_cSFloat)
+
+#define DEF_NARRAY_DFLT_ADD_NEON_METHOD_FUNC()                                                 \
+  DEF_BINARY_DFLT_NEON_ITER_FUNC(add, vaddq_f64)                                               \
+  DEF_BINARY_SELF_FUNC(add, dfloat, numo_cDFloat)                                              \
+  DEF_BINARY_FUNC(add, '+', dfloat, numo_cDFloat)
+
 #endif /* NUMO_NARRAY_MH_OP_ADD_H */

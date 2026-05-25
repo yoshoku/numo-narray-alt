@@ -784,4 +784,242 @@
   DEF_FLT_MULSUM_NAN_ITER_FUNC(dfloat)                                                         \
   DEF_FLT_MULSUM_RUBY_FUNCS(dfloat, numo_cDFloat)
 
+#define DEF_MULSUM_SFLT_NEON_ITER_FUNC()                                                       \
+  static void iter_sfloat_mulsum(na_loop_t* const lp) {                                        \
+    size_t i = 0;                                                                              \
+    size_t n;                                                                                  \
+    char* p1;                                                                                  \
+    char* p2;                                                                                  \
+    char* p3;                                                                                  \
+    ssize_t s1;                                                                                \
+    ssize_t s2;                                                                                \
+    ssize_t s3;                                                                                \
+    INIT_COUNTER(lp, n);                                                                       \
+    INIT_PTR(lp, 0, p1, s1);                                                                   \
+    INIT_PTR(lp, 1, p2, s2);                                                                   \
+    INIT_PTR(lp, 2, p3, s3);                                                                   \
+    const size_t num_pack = NEON_ALIGNMENT_SIZE / sizeof(sfloat);                              \
+    if (s3 == 0) {                                                                             \
+      if (is_aligned(p1, sizeof(sfloat)) && is_aligned(p2, sizeof(sfloat)) &&                  \
+          is_aligned(p3, sizeof(sfloat))) {                                                    \
+        if (s1 == sizeof(sfloat) && s2 == sizeof(sfloat)) {                                    \
+          sfloat z;                                                                            \
+          GET_DATA(p3, sfloat, z);                                                             \
+          if (n >= num_pack &&                                                                 \
+              is_same_aligned2(&((sfloat*)p1)[i], &((sfloat*)p2)[i], NEON_ALIGNMENT_SIZE)) {   \
+            size_t cnt = (size_t)get_count_of_elements_not_aligned_to_simd_size(               \
+              &((sfloat*)p1)[i], NEON_ALIGNMENT_SIZE, sizeof(sfloat)                           \
+            );                                                                                 \
+            for (; i < cnt; i++) {                                                             \
+              m_mulsum(((sfloat*)p1)[i], ((sfloat*)p2)[i], z);                                 \
+            }                                                                                  \
+            size_t cnt_simd_loop = (n - i) % num_pack;                                         \
+            float32x4_t acc = vdupq_n_f32(0.0f);                                               \
+            for (; i < n - cnt_simd_loop; i += num_pack) {                                     \
+              float32x4_t a = vld1q_f32(&((sfloat*)p1)[i]);                                    \
+              float32x4_t b = vld1q_f32(&((sfloat*)p2)[i]);                                    \
+              acc = vaddq_f32(acc, vmulq_f32(a, b));                                           \
+            }                                                                                  \
+            z += vaddvq_f32(acc);                                                              \
+          }                                                                                    \
+          for (; i < n; i++) {                                                                 \
+            m_mulsum(((sfloat*)p1)[i], ((sfloat*)p2)[i], z);                                   \
+          }                                                                                    \
+          SET_DATA(p3, sfloat, z);                                                             \
+          return;                                                                              \
+        }                                                                                      \
+        if (is_aligned_step(s1, sizeof(sfloat)) && is_aligned_step(s2, sizeof(sfloat))) {      \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum(*(sfloat*)p1, *(sfloat*)p2, *(sfloat*)p3);                                \
+            p1 += s1;                                                                          \
+            p2 += s2;                                                                          \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+      }                                                                                        \
+      sfloat z;                                                                                \
+      GET_DATA(p3, sfloat, z);                                                                 \
+      for (size_t i = 0; i < n; i++) {                                                         \
+        sfloat x;                                                                              \
+        sfloat y;                                                                              \
+        GET_DATA_STRIDE(p1, s1, sfloat, x);                                                    \
+        GET_DATA_STRIDE(p2, s2, sfloat, y);                                                    \
+        m_mulsum(x, y, z);                                                                     \
+      }                                                                                        \
+      SET_DATA(p3, sfloat, z);                                                                 \
+    } else {                                                                                   \
+      if (is_aligned(p1, sizeof(sfloat)) && is_aligned(p2, sizeof(sfloat)) &&                  \
+          is_aligned(p3, sizeof(sfloat))) {                                                    \
+        if (s1 == sizeof(sfloat) && s2 == sizeof(sfloat) && s3 == sizeof(sfloat)) {            \
+          if (n >= num_pack &&                                                                 \
+              is_same_aligned3(                                                                \
+                &((sfloat*)p1)[i], &((sfloat*)p2)[i], &((sfloat*)p3)[i], NEON_ALIGNMENT_SIZE   \
+              )) {                                                                             \
+            size_t cnt = (size_t)get_count_of_elements_not_aligned_to_simd_size(               \
+              &((sfloat*)p1)[i], NEON_ALIGNMENT_SIZE, sizeof(sfloat)                           \
+            );                                                                                 \
+            for (; i < cnt; i++) {                                                             \
+              m_mulsum(((sfloat*)p1)[i], ((sfloat*)p2)[i], ((sfloat*)p3)[i]);                  \
+            }                                                                                  \
+            size_t cnt_simd_loop = (n - i) % num_pack;                                         \
+            for (; i < n - cnt_simd_loop; i += num_pack) {                                     \
+              float32x4_t a = vld1q_f32(&((sfloat*)p1)[i]);                                    \
+              float32x4_t b = vld1q_f32(&((sfloat*)p2)[i]);                                    \
+              float32x4_t c = vld1q_f32(&((sfloat*)p3)[i]);                                    \
+              vst1q_f32(&((sfloat*)p3)[i], vaddq_f32(vmulq_f32(a, b), c));                     \
+            }                                                                                  \
+          }                                                                                    \
+          for (; i < n; i++) {                                                                 \
+            m_mulsum(((sfloat*)p1)[i], ((sfloat*)p2)[i], ((sfloat*)p3)[i]);                    \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+        if (is_aligned_step(s1, sizeof(sfloat)) && is_aligned_step(s2, sizeof(sfloat)) &&      \
+            is_aligned_step(s3, sizeof(sfloat))) {                                             \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum(*(sfloat*)p1, *(sfloat*)p2, *(sfloat*)p3);                                \
+            p1 += s1;                                                                          \
+            p2 += s2;                                                                          \
+            p3 += s3;                                                                          \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+      }                                                                                        \
+      for (size_t i = 0; i < n; i++) {                                                         \
+        sfloat x;                                                                              \
+        sfloat y;                                                                              \
+        sfloat z;                                                                              \
+        GET_DATA_STRIDE(p1, s1, sfloat, x);                                                    \
+        GET_DATA_STRIDE(p2, s2, sfloat, y);                                                    \
+        GET_DATA(p3, sfloat, z);                                                               \
+        m_mulsum(x, y, z);                                                                     \
+        SET_DATA_STRIDE(p3, s3, sfloat, z);                                                    \
+      }                                                                                        \
+    }                                                                                          \
+  }
+
+#define DEF_MULSUM_DFLT_NEON_ITER_FUNC()                                                       \
+  static void iter_dfloat_mulsum(na_loop_t* const lp) {                                        \
+    size_t i = 0;                                                                              \
+    size_t n;                                                                                  \
+    char* p1;                                                                                  \
+    char* p2;                                                                                  \
+    char* p3;                                                                                  \
+    ssize_t s1;                                                                                \
+    ssize_t s2;                                                                                \
+    ssize_t s3;                                                                                \
+    INIT_COUNTER(lp, n);                                                                       \
+    INIT_PTR(lp, 0, p1, s1);                                                                   \
+    INIT_PTR(lp, 1, p2, s2);                                                                   \
+    INIT_PTR(lp, 2, p3, s3);                                                                   \
+    const size_t num_pack = NEON_ALIGNMENT_SIZE / sizeof(dfloat);                              \
+    if (s3 == 0) {                                                                             \
+      if (is_aligned(p1, sizeof(dfloat)) && is_aligned(p2, sizeof(dfloat)) &&                  \
+          is_aligned(p3, sizeof(dfloat))) {                                                    \
+        if (s1 == sizeof(dfloat) && s2 == sizeof(dfloat)) {                                    \
+          dfloat z;                                                                            \
+          GET_DATA(p3, dfloat, z);                                                             \
+          if (n >= num_pack &&                                                                 \
+              is_same_aligned2(&((dfloat*)p1)[i], &((dfloat*)p2)[i], NEON_ALIGNMENT_SIZE)) {   \
+            size_t cnt = (size_t)get_count_of_elements_not_aligned_to_simd_size(               \
+              &((dfloat*)p1)[i], NEON_ALIGNMENT_SIZE, sizeof(dfloat)                           \
+            );                                                                                 \
+            for (; i < cnt; i++) {                                                             \
+              m_mulsum(((dfloat*)p1)[i], ((dfloat*)p2)[i], z);                                 \
+            }                                                                                  \
+            size_t cnt_simd_loop = (n - i) % num_pack;                                         \
+            float64x2_t acc = vdupq_n_f64(0.0);                                                \
+            for (; i < n - cnt_simd_loop; i += num_pack) {                                     \
+              float64x2_t a = vld1q_f64(&((dfloat*)p1)[i]);                                    \
+              float64x2_t b = vld1q_f64(&((dfloat*)p2)[i]);                                    \
+              acc = vaddq_f64(acc, vmulq_f64(a, b));                                           \
+            }                                                                                  \
+            z += vaddvq_f64(acc);                                                              \
+          }                                                                                    \
+          for (; i < n; i++) {                                                                 \
+            m_mulsum(((dfloat*)p1)[i], ((dfloat*)p2)[i], z);                                   \
+          }                                                                                    \
+          SET_DATA(p3, dfloat, z);                                                             \
+          return;                                                                              \
+        }                                                                                      \
+        if (is_aligned_step(s1, sizeof(dfloat)) && is_aligned_step(s2, sizeof(dfloat))) {      \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum(*(dfloat*)p1, *(dfloat*)p2, *(dfloat*)p3);                                \
+            p1 += s1;                                                                          \
+            p2 += s2;                                                                          \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+      }                                                                                        \
+      dfloat z;                                                                                \
+      GET_DATA(p3, dfloat, z);                                                                 \
+      for (size_t i = 0; i < n; i++) {                                                         \
+        dfloat x;                                                                              \
+        dfloat y;                                                                              \
+        GET_DATA_STRIDE(p1, s1, dfloat, x);                                                    \
+        GET_DATA_STRIDE(p2, s2, dfloat, y);                                                    \
+        m_mulsum(x, y, z);                                                                     \
+      }                                                                                        \
+      SET_DATA(p3, dfloat, z);                                                                 \
+    } else {                                                                                   \
+      if (is_aligned(p1, sizeof(dfloat)) && is_aligned(p2, sizeof(dfloat)) &&                  \
+          is_aligned(p3, sizeof(dfloat))) {                                                    \
+        if (s1 == sizeof(dfloat) && s2 == sizeof(dfloat) && s3 == sizeof(dfloat)) {            \
+          if (n >= num_pack &&                                                                 \
+              is_same_aligned3(                                                                \
+                &((dfloat*)p1)[i], &((dfloat*)p2)[i], &((dfloat*)p3)[i], NEON_ALIGNMENT_SIZE   \
+              )) {                                                                             \
+            size_t cnt = (size_t)get_count_of_elements_not_aligned_to_simd_size(               \
+              &((dfloat*)p1)[i], NEON_ALIGNMENT_SIZE, sizeof(dfloat)                           \
+            );                                                                                 \
+            for (; i < cnt; i++) {                                                             \
+              m_mulsum(((dfloat*)p1)[i], ((dfloat*)p2)[i], ((dfloat*)p3)[i]);                  \
+            }                                                                                  \
+            size_t cnt_simd_loop = (n - i) % num_pack;                                         \
+            for (; i < n - cnt_simd_loop; i += num_pack) {                                     \
+              float64x2_t a = vld1q_f64(&((dfloat*)p1)[i]);                                    \
+              float64x2_t b = vld1q_f64(&((dfloat*)p2)[i]);                                    \
+              float64x2_t c = vld1q_f64(&((dfloat*)p3)[i]);                                    \
+              vst1q_f64(&((dfloat*)p3)[i], vaddq_f64(vmulq_f64(a, b), c));                     \
+            }                                                                                  \
+          }                                                                                    \
+          for (; i < n; i++) {                                                                 \
+            m_mulsum(((dfloat*)p1)[i], ((dfloat*)p2)[i], ((dfloat*)p3)[i]);                    \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+        if (is_aligned_step(s1, sizeof(dfloat)) && is_aligned_step(s2, sizeof(dfloat)) &&      \
+            is_aligned_step(s3, sizeof(dfloat))) {                                             \
+          for (size_t i = 0; i < n; i++) {                                                     \
+            m_mulsum(*(dfloat*)p1, *(dfloat*)p2, *(dfloat*)p3);                                \
+            p1 += s1;                                                                          \
+            p2 += s2;                                                                          \
+            p3 += s3;                                                                          \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+      }                                                                                        \
+      for (size_t i = 0; i < n; i++) {                                                         \
+        dfloat x;                                                                              \
+        dfloat y;                                                                              \
+        dfloat z;                                                                              \
+        GET_DATA_STRIDE(p1, s1, dfloat, x);                                                    \
+        GET_DATA_STRIDE(p2, s2, dfloat, y);                                                    \
+        GET_DATA(p3, dfloat, z);                                                               \
+        m_mulsum(x, y, z);                                                                     \
+        SET_DATA_STRIDE(p3, s3, dfloat, z);                                                    \
+      }                                                                                        \
+    }                                                                                          \
+  }
+
+#define DEF_NARRAY_SFLT_MULSUM_NEON_METHOD_FUNC()                                              \
+  DEF_MULSUM_SFLT_NEON_ITER_FUNC()                                                             \
+  DEF_FLT_MULSUM_NAN_ITER_FUNC(sfloat)                                                         \
+  DEF_FLT_MULSUM_RUBY_FUNCS(sfloat, numo_cSFloat)
+
+#define DEF_NARRAY_DFLT_MULSUM_NEON_METHOD_FUNC()                                              \
+  DEF_MULSUM_DFLT_NEON_ITER_FUNC()                                                             \
+  DEF_FLT_MULSUM_NAN_ITER_FUNC(dfloat)                                                         \
+  DEF_FLT_MULSUM_RUBY_FUNCS(dfloat, numo_cDFloat)
+
 #endif /* NUMO_NARRAY_MH_MULSUM_H */

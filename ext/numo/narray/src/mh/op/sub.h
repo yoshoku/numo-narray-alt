@@ -85,4 +85,14 @@
   DEF_BINARY_SELF_FUNC(sub, dfloat, numo_cDFloat)                                              \
   DEF_BINARY_FUNC(sub, '-', dfloat, numo_cDFloat)
 
+#define DEF_NARRAY_SFLT_SUB_NEON_METHOD_FUNC()                                                 \
+  DEF_BINARY_SFLT_NEON_ITER_FUNC(sub, vsubq_f32)                                               \
+  DEF_BINARY_SELF_FUNC(sub, sfloat, numo_cSFloat)                                              \
+  DEF_BINARY_FUNC(sub, '-', sfloat, numo_cSFloat)
+
+#define DEF_NARRAY_DFLT_SUB_NEON_METHOD_FUNC()                                                 \
+  DEF_BINARY_DFLT_NEON_ITER_FUNC(sub, vsubq_f64)                                               \
+  DEF_BINARY_SELF_FUNC(sub, dfloat, numo_cDFloat)                                              \
+  DEF_BINARY_FUNC(sub, '-', dfloat, numo_cDFloat)
+
 #endif /* NUMO_NARRAY_MH_OP_SUB_H */

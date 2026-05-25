@@ -24,6 +24,11 @@
 #define AVX_ALIGNMENT_SIZE 32
 #endif
 
+#if defined(__ARM_NEON) && defined(__aarch64__)
+#include <arm_neon.h>
+#define NEON_ALIGNMENT_SIZE 16
+#endif
+
 static ID id_pow;
 static ID id_cast;
 static ID id_copysign;
@@ -182,6 +187,11 @@ DEF_NARRAY_DFLT_ADD_SSE2_METHOD_FUNC()
 DEF_NARRAY_DFLT_SUB_SSE2_METHOD_FUNC()
 DEF_NARRAY_DFLT_MUL_SSE2_METHOD_FUNC()
 DEF_NARRAY_DFLT_DIV_SSE2_METHOD_FUNC()
+#elif defined(__ARM_NEON) && defined(__aarch64__)
+DEF_NARRAY_DFLT_ADD_NEON_METHOD_FUNC()
+DEF_NARRAY_DFLT_SUB_NEON_METHOD_FUNC()
+DEF_NARRAY_DFLT_MUL_NEON_METHOD_FUNC()
+DEF_NARRAY_DFLT_DIV_NEON_METHOD_FUNC()
 #else
 DEF_NARRAY_ADD_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_SUB_METHOD_FUNC(dfloat, numo_cDFloat)
@@ -239,6 +249,8 @@ DEF_NARRAY_FLT_CUMPROD_METHOD_FUNC(dfloat, numo_cDFloat)
 DEF_NARRAY_DFLT_MULSUM_AVX_METHOD_FUNC()
 #elif defined(__SSE2__)
 DEF_NARRAY_DFLT_MULSUM_SSE2_METHOD_FUNC()
+#elif defined(__ARM_NEON) && defined(__aarch64__)
+DEF_NARRAY_DFLT_MULSUM_NEON_METHOD_FUNC()
 #else
 DEF_NARRAY_FLT_MULSUM_METHOD_FUNC(dfloat, numo_cDFloat)
 #endif
@@ -263,6 +275,8 @@ DEF_NARRAY_FLT_MEDIAN_METHOD_FUNC(dfloat)
 DEF_NARRAY_FLT_SQRT_AVX_DBL_METHOD_FUNC(dfloat, numo_cDFloat)
 #elif defined(__SSE2__)
 DEF_NARRAY_FLT_SQRT_SSE2_DBL_METHOD_FUNC(dfloat, numo_cDFloat)
+#elif defined(__ARM_NEON) && defined(__aarch64__)
+DEF_NARRAY_FLT_SQRT_NEON_DBL_METHOD_FUNC(dfloat, numo_cDFloat)
 #else
 DEF_NARRAY_FLT_SQRT_METHOD_FUNC(dfloat, numo_cDFloat)
 #endif
