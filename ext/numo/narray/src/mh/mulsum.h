@@ -338,6 +338,48 @@
           SET_DATA(p3, sfloat, z);                                                             \
           return;                                                                              \
         }                                                                                      \
+        if ((s1 == sizeof(sfloat) || s2 == sizeof(sfloat)) &&                                  \
+            is_aligned_step(s1, sizeof(sfloat)) && is_aligned_step(s2, sizeof(sfloat))) {      \
+          const sfloat* q_contig;                                                              \
+          const char* q_strided;                                                               \
+          ssize_t stride;                                                                      \
+          if (s1 == sizeof(sfloat)) {                                                          \
+            q_contig = (const sfloat*)p1;                                                      \
+            q_strided = p2;                                                                    \
+            stride = s2;                                                                       \
+          } else {                                                                             \
+            q_contig = (const sfloat*)p2;                                                      \
+            q_strided = p1;                                                                    \
+            stride = s1;                                                                       \
+          }                                                                                    \
+          sfloat z;                                                                            \
+          GET_DATA(p3, sfloat, z);                                                             \
+          size_t j = 0;                                                                        \
+          if (n >= num_pack) {                                                                 \
+            size_t cnt_simd_loop = n % num_pack;                                               \
+            __m128 acc = _mm_setzero_ps();                                                     \
+            for (; j < n - cnt_simd_loop; j += num_pack) {                                     \
+              __m128 a = _mm_loadu_ps(&q_contig[j]);                                           \
+              __m128 b = _mm_set_ps(                                                           \
+                *(const sfloat*)(q_strided + (ssize_t)(j + 3) * stride),                       \
+                *(const sfloat*)(q_strided + (ssize_t)(j + 2) * stride),                       \
+                *(const sfloat*)(q_strided + (ssize_t)(j + 1) * stride),                       \
+                *(const sfloat*)(q_strided + (ssize_t)(j + 0) * stride)                        \
+              );                                                                               \
+              acc = _mm_add_ps(acc, _mm_mul_ps(a, b));                                         \
+            }                                                                                  \
+            __m128 shuf = _mm_shuffle_ps(acc, acc, _MM_SHUFFLE(2, 3, 0, 1));                   \
+            acc = _mm_add_ps(acc, shuf);                                                       \
+            shuf = _mm_shuffle_ps(acc, acc, _MM_SHUFFLE(0, 1, 2, 3));                          \
+            acc = _mm_add_ps(acc, shuf);                                                       \
+            z += _mm_cvtss_f32(acc);                                                           \
+          }                                                                                    \
+          for (; j < n; j++) {                                                                 \
+            m_mulsum(q_contig[j], *(const sfloat*)(q_strided + (ssize_t)j * stride), z);       \
+          }                                                                                    \
+          SET_DATA(p3, sfloat, z);                                                             \
+          return;                                                                              \
+        }                                                                                      \
         if (is_aligned_step(s1, sizeof(sfloat)) && is_aligned_step(s2, sizeof(sfloat))) {      \
           for (size_t i = 0; i < n; i++) {                                                     \
             m_mulsum(*(sfloat*)p1, *(sfloat*)p2, *(sfloat*)p3);                                \
@@ -381,6 +423,33 @@
           }                                                                                    \
           for (; i < n; i++) {                                                                 \
             m_mulsum(((sfloat*)p1)[i], ((sfloat*)p2)[i], ((sfloat*)p3)[i]);                    \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+        if (((s1 == 0 && s2 == sizeof(sfloat)) || (s1 == sizeof(sfloat) && s2 == 0)) &&        \
+            s3 == sizeof(sfloat)) {                                                            \
+          const sfloat* q_vec;                                                                 \
+          sfloat scalar;                                                                       \
+          if (s1 == 0) {                                                                       \
+            scalar = *(const sfloat*)p1;                                                       \
+            q_vec = (const sfloat*)p2;                                                         \
+          } else {                                                                             \
+            scalar = *(const sfloat*)p2;                                                       \
+            q_vec = (const sfloat*)p1;                                                         \
+          }                                                                                    \
+          sfloat* q_out = (sfloat*)p3;                                                         \
+          size_t j = 0;                                                                        \
+          if (n >= num_pack) {                                                                 \
+            size_t cnt_simd_loop = n % num_pack;                                               \
+            __m128 va = _mm_set1_ps(scalar);                                                   \
+            for (; j < n - cnt_simd_loop; j += num_pack) {                                     \
+              __m128 vb = _mm_loadu_ps(&q_vec[j]);                                             \
+              __m128 vc = _mm_loadu_ps(&q_out[j]);                                             \
+              _mm_storeu_ps(&q_out[j], _mm_add_ps(_mm_mul_ps(va, vb), vc));                    \
+            }                                                                                  \
+          }                                                                                    \
+          for (; j < n; j++) {                                                                 \
+            m_mulsum(scalar, q_vec[j], q_out[j]);                                              \
           }                                                                                    \
           return;                                                                              \
         }                                                                                      \
@@ -454,6 +523,44 @@
           SET_DATA(p3, dfloat, z);                                                             \
           return;                                                                              \
         }                                                                                      \
+        if ((s1 == sizeof(dfloat) || s2 == sizeof(dfloat)) &&                                  \
+            is_aligned_step(s1, sizeof(dfloat)) && is_aligned_step(s2, sizeof(dfloat))) {      \
+          const dfloat* q_contig;                                                              \
+          const char* q_strided;                                                               \
+          ssize_t stride;                                                                      \
+          if (s1 == sizeof(dfloat)) {                                                          \
+            q_contig = (const dfloat*)p1;                                                      \
+            q_strided = p2;                                                                    \
+            stride = s2;                                                                       \
+          } else {                                                                             \
+            q_contig = (const dfloat*)p2;                                                      \
+            q_strided = p1;                                                                    \
+            stride = s1;                                                                       \
+          }                                                                                    \
+          dfloat z;                                                                            \
+          GET_DATA(p3, dfloat, z);                                                             \
+          size_t j = 0;                                                                        \
+          if (n >= num_pack) {                                                                 \
+            size_t cnt_simd_loop = n % num_pack;                                               \
+            __m128d acc = _mm_setzero_pd();                                                    \
+            for (; j < n - cnt_simd_loop; j += num_pack) {                                     \
+              __m128d a = _mm_loadu_pd(&q_contig[j]);                                          \
+              __m128d b = _mm_set_pd(                                                          \
+                *(const dfloat*)(q_strided + (ssize_t)(j + 1) * stride),                       \
+                *(const dfloat*)(q_strided + (ssize_t)(j + 0) * stride)                        \
+              );                                                                               \
+              acc = _mm_add_pd(acc, _mm_mul_pd(a, b));                                         \
+            }                                                                                  \
+            __m128d shuf = _mm_shuffle_pd(acc, acc, 1);                                        \
+            acc = _mm_add_pd(acc, shuf);                                                       \
+            z += _mm_cvtsd_f64(acc);                                                           \
+          }                                                                                    \
+          for (; j < n; j++) {                                                                 \
+            m_mulsum(q_contig[j], *(const dfloat*)(q_strided + (ssize_t)j * stride), z);       \
+          }                                                                                    \
+          SET_DATA(p3, dfloat, z);                                                             \
+          return;                                                                              \
+        }                                                                                      \
         if (is_aligned_step(s1, sizeof(dfloat)) && is_aligned_step(s2, sizeof(dfloat))) {      \
           for (size_t i = 0; i < n; i++) {                                                     \
             m_mulsum(*(dfloat*)p1, *(dfloat*)p2, *(dfloat*)p3);                                \
@@ -497,6 +604,33 @@
           }                                                                                    \
           for (; i < n; i++) {                                                                 \
             m_mulsum(((dfloat*)p1)[i], ((dfloat*)p2)[i], ((dfloat*)p3)[i]);                    \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+        if (((s1 == 0 && s2 == sizeof(dfloat)) || (s1 == sizeof(dfloat) && s2 == 0)) &&        \
+            s3 == sizeof(dfloat)) {                                                            \
+          const dfloat* q_vec;                                                                 \
+          dfloat scalar;                                                                       \
+          if (s1 == 0) {                                                                       \
+            scalar = *(const dfloat*)p1;                                                       \
+            q_vec = (const dfloat*)p2;                                                         \
+          } else {                                                                             \
+            scalar = *(const dfloat*)p2;                                                       \
+            q_vec = (const dfloat*)p1;                                                         \
+          }                                                                                    \
+          dfloat* q_out = (dfloat*)p3;                                                         \
+          size_t j = 0;                                                                        \
+          if (n >= num_pack) {                                                                 \
+            size_t cnt_simd_loop = n % num_pack;                                               \
+            __m128d va = _mm_set1_pd(scalar);                                                  \
+            for (; j < n - cnt_simd_loop; j += num_pack) {                                     \
+              __m128d vb = _mm_loadu_pd(&q_vec[j]);                                            \
+              __m128d vc = _mm_loadu_pd(&q_out[j]);                                            \
+              _mm_storeu_pd(&q_out[j], _mm_add_pd(_mm_mul_pd(va, vb), vc));                    \
+            }                                                                                  \
+          }                                                                                    \
+          for (; j < n; j++) {                                                                 \
+            m_mulsum(scalar, q_vec[j], q_out[j]);                                              \
           }                                                                                    \
           return;                                                                              \
         }                                                                                      \
@@ -585,6 +719,55 @@
           SET_DATA(p3, sfloat, z);                                                             \
           return;                                                                              \
         }                                                                                      \
+        if ((s1 == sizeof(sfloat) || s2 == sizeof(sfloat)) &&                                  \
+            is_aligned_step(s1, sizeof(sfloat)) && is_aligned_step(s2, sizeof(sfloat))) {      \
+          const sfloat* q_contig;                                                              \
+          const char* q_strided;                                                               \
+          ssize_t stride;                                                                      \
+          if (s1 == sizeof(sfloat)) {                                                          \
+            q_contig = (const sfloat*)p1;                                                      \
+            q_strided = p2;                                                                    \
+            stride = s2;                                                                       \
+          } else {                                                                             \
+            q_contig = (const sfloat*)p2;                                                      \
+            q_strided = p1;                                                                    \
+            stride = s1;                                                                       \
+          }                                                                                    \
+          sfloat z;                                                                            \
+          GET_DATA(p3, sfloat, z);                                                             \
+          size_t j = 0;                                                                        \
+          if (n >= num_pack) {                                                                 \
+            size_t cnt_simd_loop = n % num_pack;                                               \
+            __m256 acc = _mm256_setzero_ps();                                                  \
+            for (; j < n - cnt_simd_loop; j += num_pack) {                                     \
+              __m256 a = _mm256_loadu_ps(&q_contig[j]);                                        \
+              __m256 b = _mm256_set_ps(                                                        \
+                *(const sfloat*)(q_strided + (ssize_t)(j + 7) * stride),                       \
+                *(const sfloat*)(q_strided + (ssize_t)(j + 6) * stride),                       \
+                *(const sfloat*)(q_strided + (ssize_t)(j + 5) * stride),                       \
+                *(const sfloat*)(q_strided + (ssize_t)(j + 4) * stride),                       \
+                *(const sfloat*)(q_strided + (ssize_t)(j + 3) * stride),                       \
+                *(const sfloat*)(q_strided + (ssize_t)(j + 2) * stride),                       \
+                *(const sfloat*)(q_strided + (ssize_t)(j + 1) * stride),                       \
+                *(const sfloat*)(q_strided + (ssize_t)(j + 0) * stride)                        \
+              );                                                                               \
+              acc = _mm256_add_ps(acc, _mm256_mul_ps(a, b));                                   \
+            }                                                                                  \
+            __m128 lo = _mm256_castps256_ps128(acc);                                           \
+            __m128 hi = _mm256_extractf128_ps(acc, 1);                                         \
+            __m128 sum128 = _mm_add_ps(lo, hi);                                                \
+            __m128 shuf = _mm_shuffle_ps(sum128, sum128, _MM_SHUFFLE(2, 3, 0, 1));             \
+            sum128 = _mm_add_ps(sum128, shuf);                                                 \
+            shuf = _mm_shuffle_ps(sum128, sum128, _MM_SHUFFLE(0, 1, 2, 3));                    \
+            sum128 = _mm_add_ps(sum128, shuf);                                                 \
+            z += _mm_cvtss_f32(sum128);                                                        \
+          }                                                                                    \
+          for (; j < n; j++) {                                                                 \
+            m_mulsum(q_contig[j], *(const sfloat*)(q_strided + (ssize_t)j * stride), z);       \
+          }                                                                                    \
+          SET_DATA(p3, sfloat, z);                                                             \
+          return;                                                                              \
+        }                                                                                      \
         if (is_aligned_step(s1, sizeof(sfloat)) && is_aligned_step(s2, sizeof(sfloat))) {      \
           for (size_t i = 0; i < n; i++) {                                                     \
             m_mulsum(*(sfloat*)p1, *(sfloat*)p2, *(sfloat*)p3);                                \
@@ -628,6 +811,33 @@
           }                                                                                    \
           for (; i < n; i++) {                                                                 \
             m_mulsum(((sfloat*)p1)[i], ((sfloat*)p2)[i], ((sfloat*)p3)[i]);                    \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+        if (((s1 == 0 && s2 == sizeof(sfloat)) || (s1 == sizeof(sfloat) && s2 == 0)) &&        \
+            s3 == sizeof(sfloat)) {                                                            \
+          const sfloat* q_vec;                                                                 \
+          sfloat scalar;                                                                       \
+          if (s1 == 0) {                                                                       \
+            scalar = *(const sfloat*)p1;                                                       \
+            q_vec = (const sfloat*)p2;                                                         \
+          } else {                                                                             \
+            scalar = *(const sfloat*)p2;                                                       \
+            q_vec = (const sfloat*)p1;                                                         \
+          }                                                                                    \
+          sfloat* q_out = (sfloat*)p3;                                                         \
+          size_t j = 0;                                                                        \
+          if (n >= num_pack) {                                                                 \
+            size_t cnt_simd_loop = n % num_pack;                                               \
+            __m256 va = _mm256_set1_ps(scalar);                                                \
+            for (; j < n - cnt_simd_loop; j += num_pack) {                                     \
+              __m256 vb = _mm256_loadu_ps(&q_vec[j]);                                          \
+              __m256 vc = _mm256_loadu_ps(&q_out[j]);                                          \
+              _mm256_storeu_ps(&q_out[j], _mm256_add_ps(_mm256_mul_ps(va, vb), vc));           \
+            }                                                                                  \
+          }                                                                                    \
+          for (; j < n; j++) {                                                                 \
+            m_mulsum(scalar, q_vec[j], q_out[j]);                                              \
           }                                                                                    \
           return;                                                                              \
         }                                                                                      \
@@ -704,6 +914,49 @@
           SET_DATA(p3, dfloat, z);                                                             \
           return;                                                                              \
         }                                                                                      \
+        if ((s1 == sizeof(dfloat) || s2 == sizeof(dfloat)) &&                                  \
+            is_aligned_step(s1, sizeof(dfloat)) && is_aligned_step(s2, sizeof(dfloat))) {      \
+          const dfloat* q_contig;                                                              \
+          const char* q_strided;                                                               \
+          ssize_t stride;                                                                      \
+          if (s1 == sizeof(dfloat)) {                                                          \
+            q_contig = (const dfloat*)p1;                                                      \
+            q_strided = p2;                                                                    \
+            stride = s2;                                                                       \
+          } else {                                                                             \
+            q_contig = (const dfloat*)p2;                                                      \
+            q_strided = p1;                                                                    \
+            stride = s1;                                                                       \
+          }                                                                                    \
+          dfloat z;                                                                            \
+          GET_DATA(p3, dfloat, z);                                                             \
+          size_t j = 0;                                                                        \
+          if (n >= num_pack) {                                                                 \
+            size_t cnt_simd_loop = n % num_pack;                                               \
+            __m256d acc = _mm256_setzero_pd();                                                 \
+            for (; j < n - cnt_simd_loop; j += num_pack) {                                     \
+              __m256d a = _mm256_loadu_pd(&q_contig[j]);                                       \
+              __m256d b = _mm256_set_pd(                                                       \
+                *(const dfloat*)(q_strided + (ssize_t)(j + 3) * stride),                       \
+                *(const dfloat*)(q_strided + (ssize_t)(j + 2) * stride),                       \
+                *(const dfloat*)(q_strided + (ssize_t)(j + 1) * stride),                       \
+                *(const dfloat*)(q_strided + (ssize_t)(j + 0) * stride)                        \
+              );                                                                               \
+              acc = _mm256_add_pd(acc, _mm256_mul_pd(a, b));                                   \
+            }                                                                                  \
+            __m128d lo = _mm256_castpd256_pd128(acc);                                          \
+            __m128d hi = _mm256_extractf128_pd(acc, 1);                                        \
+            __m128d sum128 = _mm_add_pd(lo, hi);                                               \
+            __m128d shuf = _mm_shuffle_pd(sum128, sum128, 1);                                  \
+            sum128 = _mm_add_pd(sum128, shuf);                                                 \
+            z += _mm_cvtsd_f64(sum128);                                                        \
+          }                                                                                    \
+          for (; j < n; j++) {                                                                 \
+            m_mulsum(q_contig[j], *(const dfloat*)(q_strided + (ssize_t)j * stride), z);       \
+          }                                                                                    \
+          SET_DATA(p3, dfloat, z);                                                             \
+          return;                                                                              \
+        }                                                                                      \
         if (is_aligned_step(s1, sizeof(dfloat)) && is_aligned_step(s2, sizeof(dfloat))) {      \
           for (size_t i = 0; i < n; i++) {                                                     \
             m_mulsum(*(dfloat*)p1, *(dfloat*)p2, *(dfloat*)p3);                                \
@@ -747,6 +1000,33 @@
           }                                                                                    \
           for (; i < n; i++) {                                                                 \
             m_mulsum(((dfloat*)p1)[i], ((dfloat*)p2)[i], ((dfloat*)p3)[i]);                    \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+        if (((s1 == 0 && s2 == sizeof(dfloat)) || (s1 == sizeof(dfloat) && s2 == 0)) &&        \
+            s3 == sizeof(dfloat)) {                                                            \
+          const dfloat* q_vec;                                                                 \
+          dfloat scalar;                                                                       \
+          if (s1 == 0) {                                                                       \
+            scalar = *(const dfloat*)p1;                                                       \
+            q_vec = (const dfloat*)p2;                                                         \
+          } else {                                                                             \
+            scalar = *(const dfloat*)p2;                                                       \
+            q_vec = (const dfloat*)p1;                                                         \
+          }                                                                                    \
+          dfloat* q_out = (dfloat*)p3;                                                         \
+          size_t j = 0;                                                                        \
+          if (n >= num_pack) {                                                                 \
+            size_t cnt_simd_loop = n % num_pack;                                               \
+            __m256d va = _mm256_set1_pd(scalar);                                               \
+            for (; j < n - cnt_simd_loop; j += num_pack) {                                     \
+              __m256d vb = _mm256_loadu_pd(&q_vec[j]);                                         \
+              __m256d vc = _mm256_loadu_pd(&q_out[j]);                                         \
+              _mm256_storeu_pd(&q_out[j], _mm256_add_pd(_mm256_mul_pd(va, vb), vc));           \
+            }                                                                                  \
+          }                                                                                    \
+          for (; j < n; j++) {                                                                 \
+            m_mulsum(scalar, q_vec[j], q_out[j]);                                              \
           }                                                                                    \
           return;                                                                              \
         }                                                                                      \
@@ -828,12 +1108,45 @@
           SET_DATA(p3, sfloat, z);                                                             \
           return;                                                                              \
         }                                                                                      \
-        if (is_aligned_step(s1, sizeof(sfloat)) && is_aligned_step(s2, sizeof(sfloat))) {      \
-          for (size_t i = 0; i < n; i++) {                                                     \
-            m_mulsum(*(sfloat*)p1, *(sfloat*)p2, *(sfloat*)p3);                                \
-            p1 += s1;                                                                          \
-            p2 += s2;                                                                          \
+        if ((s1 == sizeof(sfloat) || s2 == sizeof(sfloat)) &&                                  \
+            is_aligned_step(s1, sizeof(sfloat)) && is_aligned_step(s2, sizeof(sfloat))) {      \
+          const sfloat* q_contig;                                                              \
+          const char* q_strided;                                                               \
+          ssize_t stride;                                                                      \
+          if (s1 == sizeof(sfloat)) {                                                          \
+            q_contig = (const sfloat*)p1;                                                      \
+            q_strided = p2;                                                                    \
+            stride = s2;                                                                       \
+          } else {                                                                             \
+            q_contig = (const sfloat*)p2;                                                      \
+            q_strided = p1;                                                                    \
+            stride = s1;                                                                       \
           }                                                                                    \
+          sfloat z;                                                                            \
+          GET_DATA(p3, sfloat, z);                                                             \
+          size_t j = 0;                                                                        \
+          if (n >= num_pack) {                                                                 \
+            size_t cnt_simd_loop = n % num_pack;                                               \
+            float32x4_t acc = vdupq_n_f32(0.0f);                                               \
+            for (; j < n - cnt_simd_loop; j += num_pack) {                                     \
+              float32x4_t a = vld1q_f32(&q_contig[j]);                                         \
+              float32x4_t b = vdupq_n_f32(0.0f);                                               \
+              b =                                                                              \
+                vsetq_lane_f32(*(const sfloat*)(q_strided + (ssize_t)(j + 0) * stride), b, 0); \
+              b =                                                                              \
+                vsetq_lane_f32(*(const sfloat*)(q_strided + (ssize_t)(j + 1) * stride), b, 1); \
+              b =                                                                              \
+                vsetq_lane_f32(*(const sfloat*)(q_strided + (ssize_t)(j + 2) * stride), b, 2); \
+              b =                                                                              \
+                vsetq_lane_f32(*(const sfloat*)(q_strided + (ssize_t)(j + 3) * stride), b, 3); \
+              acc = vaddq_f32(acc, vmulq_f32(a, b));                                           \
+            }                                                                                  \
+            z += vaddvq_f32(acc);                                                              \
+          }                                                                                    \
+          for (; j < n; j++) {                                                                 \
+            m_mulsum(q_contig[j], *(const sfloat*)(q_strided + (ssize_t)j * stride), z);       \
+          }                                                                                    \
+          SET_DATA(p3, sfloat, z);                                                             \
           return;                                                                              \
         }                                                                                      \
       }                                                                                        \
@@ -871,6 +1184,33 @@
           }                                                                                    \
           for (; i < n; i++) {                                                                 \
             m_mulsum(((sfloat*)p1)[i], ((sfloat*)p2)[i], ((sfloat*)p3)[i]);                    \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+        if (((s1 == 0 && s2 == sizeof(sfloat)) || (s1 == sizeof(sfloat) && s2 == 0)) &&        \
+            s3 == sizeof(sfloat)) {                                                            \
+          const sfloat* q_vec;                                                                 \
+          sfloat scalar;                                                                       \
+          if (s1 == 0) {                                                                       \
+            scalar = *(const sfloat*)p1;                                                       \
+            q_vec = (const sfloat*)p2;                                                         \
+          } else {                                                                             \
+            scalar = *(const sfloat*)p2;                                                       \
+            q_vec = (const sfloat*)p1;                                                         \
+          }                                                                                    \
+          sfloat* q_out = (sfloat*)p3;                                                         \
+          size_t j = 0;                                                                        \
+          if (n >= num_pack) {                                                                 \
+            size_t cnt_simd_loop = n % num_pack;                                               \
+            float32x4_t va = vdupq_n_f32(scalar);                                              \
+            for (; j < n - cnt_simd_loop; j += num_pack) {                                     \
+              float32x4_t vb = vld1q_f32(&q_vec[j]);                                           \
+              float32x4_t vc = vld1q_f32(&q_out[j]);                                           \
+              vst1q_f32(&q_out[j], vaddq_f32(vmulq_f32(va, vb), vc));                          \
+            }                                                                                  \
+          }                                                                                    \
+          for (; j < n; j++) {                                                                 \
+            m_mulsum(scalar, q_vec[j], q_out[j]);                                              \
           }                                                                                    \
           return;                                                                              \
         }                                                                                      \
@@ -942,12 +1282,41 @@
           SET_DATA(p3, dfloat, z);                                                             \
           return;                                                                              \
         }                                                                                      \
-        if (is_aligned_step(s1, sizeof(dfloat)) && is_aligned_step(s2, sizeof(dfloat))) {      \
-          for (size_t i = 0; i < n; i++) {                                                     \
-            m_mulsum(*(dfloat*)p1, *(dfloat*)p2, *(dfloat*)p3);                                \
-            p1 += s1;                                                                          \
-            p2 += s2;                                                                          \
+        if ((s1 == sizeof(dfloat) || s2 == sizeof(dfloat)) &&                                  \
+            is_aligned_step(s1, sizeof(dfloat)) && is_aligned_step(s2, sizeof(dfloat))) {      \
+          const dfloat* q_contig;                                                              \
+          const char* q_strided;                                                               \
+          ssize_t stride;                                                                      \
+          if (s1 == sizeof(dfloat)) {                                                          \
+            q_contig = (const dfloat*)p1;                                                      \
+            q_strided = p2;                                                                    \
+            stride = s2;                                                                       \
+          } else {                                                                             \
+            q_contig = (const dfloat*)p2;                                                      \
+            q_strided = p1;                                                                    \
+            stride = s1;                                                                       \
           }                                                                                    \
+          dfloat z;                                                                            \
+          GET_DATA(p3, dfloat, z);                                                             \
+          size_t j = 0;                                                                        \
+          if (n >= num_pack) {                                                                 \
+            size_t cnt_simd_loop = n % num_pack;                                               \
+            float64x2_t acc = vdupq_n_f64(0.0);                                                \
+            for (; j < n - cnt_simd_loop; j += num_pack) {                                     \
+              float64x2_t a = vld1q_f64(&q_contig[j]);                                         \
+              float64x2_t b = vdupq_n_f64(0.0);                                                \
+              b =                                                                              \
+                vsetq_lane_f64(*(const dfloat*)(q_strided + (ssize_t)(j + 0) * stride), b, 0); \
+              b =                                                                              \
+                vsetq_lane_f64(*(const dfloat*)(q_strided + (ssize_t)(j + 1) * stride), b, 1); \
+              acc = vaddq_f64(acc, vmulq_f64(a, b));                                           \
+            }                                                                                  \
+            z += vaddvq_f64(acc);                                                              \
+          }                                                                                    \
+          for (; j < n; j++) {                                                                 \
+            m_mulsum(q_contig[j], *(const dfloat*)(q_strided + (ssize_t)j * stride), z);       \
+          }                                                                                    \
+          SET_DATA(p3, dfloat, z);                                                             \
           return;                                                                              \
         }                                                                                      \
       }                                                                                        \
@@ -985,6 +1354,33 @@
           }                                                                                    \
           for (; i < n; i++) {                                                                 \
             m_mulsum(((dfloat*)p1)[i], ((dfloat*)p2)[i], ((dfloat*)p3)[i]);                    \
+          }                                                                                    \
+          return;                                                                              \
+        }                                                                                      \
+        if (((s1 == 0 && s2 == sizeof(dfloat)) || (s1 == sizeof(dfloat) && s2 == 0)) &&        \
+            s3 == sizeof(dfloat)) {                                                            \
+          const dfloat* q_vec;                                                                 \
+          dfloat scalar;                                                                       \
+          if (s1 == 0) {                                                                       \
+            scalar = *(const dfloat*)p1;                                                       \
+            q_vec = (const dfloat*)p2;                                                         \
+          } else {                                                                             \
+            scalar = *(const dfloat*)p2;                                                       \
+            q_vec = (const dfloat*)p1;                                                         \
+          }                                                                                    \
+          dfloat* q_out = (dfloat*)p3;                                                         \
+          size_t j = 0;                                                                        \
+          if (n >= num_pack) {                                                                 \
+            size_t cnt_simd_loop = n % num_pack;                                               \
+            float64x2_t va = vdupq_n_f64(scalar);                                              \
+            for (; j < n - cnt_simd_loop; j += num_pack) {                                     \
+              float64x2_t vb = vld1q_f64(&q_vec[j]);                                           \
+              float64x2_t vc = vld1q_f64(&q_out[j]);                                           \
+              vst1q_f64(&q_out[j], vaddq_f64(vmulq_f64(va, vb), vc));                          \
+            }                                                                                  \
+          }                                                                                    \
+          for (; j < n; j++) {                                                                 \
+            m_mulsum(scalar, q_vec[j], q_out[j]);                                              \
           }                                                                                    \
           return;                                                                              \
         }                                                                                      \
