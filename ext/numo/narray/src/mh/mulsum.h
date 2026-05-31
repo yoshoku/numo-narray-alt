@@ -1,6 +1,53 @@
 #ifndef NUMO_NARRAY_MH_MULSUM_H
 #define NUMO_NARRAY_MH_MULSUM_H 1
 
+// Check whether every reduce axis has contig stride (== element size) in both
+// operands. When true, making the reduce axis the inner-most loop turns mulsum
+// into the all-contig + s3==0 SIMD path, which matters for patterns such as
+// x.dot(x.transpose) where the default (last-axis-as-inner) picks a gather
+// stride on the transposed operand.
+static inline bool nary_mulsum_reduce_axes_contig(VALUE reduce, VALUE va, VALUE vb) {
+  narray_t *na, *nb;
+  GetNArray(va, na);
+  GetNArray(vb, nb);
+  if (NA_TYPE(na) != NARRAY_DATA_T && NA_TYPE(na) != NARRAY_VIEW_T) return false;
+  if (NA_TYPE(nb) != NARRAY_DATA_T && NA_TYPE(nb) != NARRAY_VIEW_T) return false;
+  if (TEST_COLUMN_MAJOR(va) || TEST_COLUMN_MAJOR(vb)) return false;
+  ssize_t a_elmsz = nary_element_stride(va);
+  ssize_t b_elmsz = nary_element_stride(vb);
+  int max_ndim = na->ndim > nb->ndim ? na->ndim : nb->ndim;
+  for (int i = 0; i < max_ndim; i++) {
+    if (!na_test_reduce(reduce, i)) continue;
+    int da = i - (max_ndim - na->ndim);
+    int db = i - (max_ndim - nb->ndim);
+    if (da >= 0 && na->shape[da] > 1) {
+      ssize_t s;
+      if (NA_TYPE(na) == NARRAY_VIEW_T) {
+        stridx_t sdx = NA_VIEW_STRIDX(na)[da];
+        if (SDX_IS_INDEX(sdx)) return false;
+        s = SDX_GET_STRIDE(sdx);
+      } else {
+        s = a_elmsz;
+        for (int k = na->ndim - 1; k > da; k--) s *= na->shape[k];
+      }
+      if (s != a_elmsz) return false;
+    }
+    if (db >= 0 && nb->shape[db] > 1) {
+      ssize_t s;
+      if (NA_TYPE(nb) == NARRAY_VIEW_T) {
+        stridx_t sdx = NA_VIEW_STRIDX(nb)[db];
+        if (SDX_IS_INDEX(sdx)) return false;
+        s = SDX_GET_STRIDE(sdx);
+      } else {
+        s = b_elmsz;
+        for (int k = nb->ndim - 1; k > db; k--) s *= nb->shape[k];
+      }
+      if (s != b_elmsz) return false;
+    }
+  }
+  return true;
+}
+
 #define DEF_FLT_MULSUM_NAN_ITER_FUNC(tDType)                                                   \
   static void iter_##tDType##_mulsum_nan(na_loop_t* const lp) {                                \
     size_t n;                                                                                  \
@@ -89,6 +136,9 @@
     VALUE naryv[2] = { self, argv[0] };                                                        \
     VALUE reduce =                                                                             \
       na_reduce_dimension(argc - 1, argv + 1, 2, naryv, &ndf, iter_##tDType##_mulsum_nan);     \
+    if (nary_mulsum_reduce_axes_contig(reduce, self, argv[0])) {                               \
+      ndf.flag |= NDF_FLAT_REDUCE;                                                             \
+    }                                                                                          \
     VALUE v = na_ndloop(&ndf, 4, self, argv[0], reduce, m_mulsum_init);                        \
                                                                                                \
     return rb_funcall(v, rb_intern("extract"), 0);                                             \
