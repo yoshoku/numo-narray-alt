@@ -608,12 +608,16 @@ class NArrayTest < NArrayTestBase
   def test_map
     TYPES.each do |dtype|
       a = dtype[1, 2, 3, 5, 7, 11]
-      actual = a.map { |e| e * 2 }
+      calls = 0
+      actual = a.map { |e| calls += 1 ; e * 2 }
       assert_kind_of(dtype, actual)
       assert_equal(dtype[2, 4, 6, 10, 14, 22], actual)
-      actual = a[[0, 3, 5]].map { |e| e + 1 }
+      assert_equal(6, calls)
+      calls = 0
+      actual = a[[0, 3, 5]].map { |e| calls += 1 ; e + 1 }
       assert_kind_of(dtype, actual)
       assert_equal(dtype[2, 6, 12], actual)
+      assert_equal(3, calls)
     end
   end
 
@@ -632,12 +636,16 @@ class NArrayTest < NArrayTestBase
   def test_map_with_index
     TYPES.each do |dtype|
       a = dtype[1, 2, 3, 5, 7, 11]
-      actual = a.map_with_index { |e, i| e + i }
+      calls = 0
+      actual = a.map_with_index { |e, i| calls += 1 ; e + i }
       assert_kind_of(dtype, actual)
       assert_equal(dtype[1, 3, 5, 8, 11, 16], actual)
-      actual = a[[0, 3, 5]].map_with_index { |e, i| e * i }
+      assert_equal(6, calls)
+      calls = 0
+      actual = a[[0, 3, 5]].map_with_index { |e, i| calls += 1 ; e * i }
       assert_kind_of(dtype, actual)
       assert_equal(dtype[0, 5, 22], actual)
+      assert_equal(3, calls)
     end
   end
 
