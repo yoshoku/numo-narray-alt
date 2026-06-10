@@ -1,3 +1,7 @@
+## [[0.10.5](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.4...v0.10.5)] - 2026-06-10
+
+- fixed double macro argument reference causing double yield in the map methods of SFloat and DFloat: [#11](https://github.com/yoshoku/numo-narray-alt/pull/11)
+
 ## [[0.10.4](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.3...v0.10.4)] - 2026-05-05
 
 - removed define macro templates from `Numo::Bit` implementation.
