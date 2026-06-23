@@ -1728,4 +1728,270 @@ class NArrayTest < NArrayTestBase
       assert_equal(a.to_a.sort[50], a.median)
     end
   end
+
+  def test_comparison_gt
+    a = Numo::DFloat[1, 2, 3, 4, 5]
+    result = a.gt(3)
+    assert_kind_of(Numo::Bit, result)
+    assert_equal(Numo::Bit[0, 0, 0, 1, 1], result)
+
+    result = a.gt(Numo::DFloat[3, 3, 3, 3, 3])
+    assert_kind_of(Numo::Bit, result)
+    assert_equal(Numo::Bit[0, 0, 0, 1, 1], result)
+
+    a = Numo::Int32[-2, -1, 0, 1, 2]
+    assert_equal(Numo::Bit[0, 0, 0, 1, 1], a.gt(0))
+    assert_equal(Numo::Bit[0, 0, 1, 1, 1], a.gt(-1))
+
+    a = Numo::UInt8[0, 1, 2, 3, 4]
+    assert_equal(Numo::Bit[0, 0, 0, 1, 1], a.gt(2))
+  end
+
+  def test_comparison_ge
+    a = Numo::DFloat[1, 2, 3, 4, 5]
+    result = a.ge(3)
+    assert_kind_of(Numo::Bit, result)
+    assert_equal(Numo::Bit[0, 0, 1, 1, 1], result)
+
+    result = a.ge(Numo::DFloat[3, 3, 3, 3, 3])
+    assert_kind_of(Numo::Bit, result)
+    assert_equal(Numo::Bit[0, 0, 1, 1, 1], result)
+
+    a = Numo::Int32[-2, -1, 0, 1, 2]
+    assert_equal(Numo::Bit[0, 0, 1, 1, 1], a.ge(0))
+    assert_equal(Numo::Bit[0, 1, 1, 1, 1], a.ge(-1))
+
+    a = Numo::UInt8[0, 1, 2, 3, 4]
+    assert_equal(Numo::Bit[0, 0, 1, 1, 1], a.ge(2))
+  end
+
+  def test_comparison_lt
+    a = Numo::DFloat[1, 2, 3, 4, 5]
+    result = a.lt(3)
+    assert_kind_of(Numo::Bit, result)
+    assert_equal(Numo::Bit[1, 1, 0, 0, 0], result)
+
+    result = a.lt(Numo::DFloat[3, 3, 3, 3, 3])
+    assert_kind_of(Numo::Bit, result)
+    assert_equal(Numo::Bit[1, 1, 0, 0, 0], result)
+
+    a = Numo::Int32[-2, -1, 0, 1, 2]
+    assert_equal(Numo::Bit[1, 1, 0, 0, 0], a.lt(0))
+    assert_equal(Numo::Bit[1, 0, 0, 0, 0], a.lt(-1))
+
+    a = Numo::UInt8[0, 1, 2, 3, 4]
+    assert_equal(Numo::Bit[1, 1, 0, 0, 0], a.lt(2))
+  end
+
+  def test_comparison_le
+    a = Numo::DFloat[1, 2, 3, 4, 5]
+    result = a.le(3)
+    assert_kind_of(Numo::Bit, result)
+    assert_equal(Numo::Bit[1, 1, 1, 0, 0], result)
+
+    result = a.le(Numo::DFloat[3, 3, 3, 3, 3])
+    assert_kind_of(Numo::Bit, result)
+    assert_equal(Numo::Bit[1, 1, 1, 0, 0], result)
+
+    a = Numo::Int32[-2, -1, 0, 1, 2]
+    assert_equal(Numo::Bit[1, 1, 1, 0, 0], a.le(0))
+    assert_equal(Numo::Bit[1, 1, 0, 0, 0], a.le(-1))
+
+    a = Numo::UInt8[0, 1, 2, 3, 4]
+    assert_equal(Numo::Bit[1, 1, 1, 0, 0], a.le(2))
+  end
+
+  def test_empty?
+    TYPES.each do |dtype|
+      assert_predicate(dtype[], :empty?)
+      refute_predicate(dtype[1, 2, 3], :empty?)
+    end
+  end
+
+  def test_contiguous
+    TYPES.each do |dtype|
+      a = dtype[1, 2, 3, 4, 5]
+      assert_predicate(a, :contiguous?)
+      assert_predicate(a, :row_major?)
+      refute_predicate(a, :column_major?)
+    end
+  end
+
+  def test_fortran_contiguous
+    TYPES.each do |dtype|
+      a = dtype[1, 2, 3, 4, 5]
+      refute_predicate(a, :fortran_contiguous?)
+    end
+  end
+
+  def test_inplace
+    a = Numo::DFloat[1, 2, 3]
+    refute_predicate(a, :inplace?)
+    view = a.inplace
+    assert_kind_of(Numo::DFloat, view)
+    assert_equal(a, view)
+  end
+
+  def test_inplace_bang
+    a = Numo::DFloat[1, 2, 3]
+    refute_predicate(a, :inplace?)
+    a.inplace!
+    assert_predicate(a, :inplace?)
+    a.out_of_place!
+    refute_predicate(a, :inplace?)
+  end
+
+  def test_byte_size
+    assert_equal(24, Numo::DFloat[1, 2, 3].byte_size)
+    assert_equal(12, Numo::SFloat[1, 2, 3].byte_size)
+    assert_equal(12, Numo::Int32[1, 2, 3].byte_size)
+    assert_equal(6, Numo::Int16[1, 2, 3].byte_size)
+    assert_equal(3, Numo::Int8[1, 2, 3].byte_size)
+  end
+
+  def test_upcast
+    assert_equal(Numo::DFloat, Numo::DFloat.upcast(Numo::SFloat))
+    assert_equal(Numo::DComplex, Numo::DComplex.upcast(Numo::DFloat))
+    assert_equal(Numo::DFloat, Numo::DFloat.upcast(Numo::Int32))
+    assert_equal(Numo::SFloat, Numo::SFloat.upcast(Numo::Int16))
+  end
+
+  def test_equality
+    TYPES.each do |dtype|
+      a = dtype[1, 2, 3]
+      b = dtype[1, 2, 3]
+      c = dtype[1, 2, 4]
+      assert_equal(a, b)
+      refute_equal(a, c)
+    end
+  end
+
+  def test_marshal_dump_load
+    TYPES.each do |dtype|
+      original = dtype[1, 2, 3, 4, 5]
+      dump_data = original.marshal_dump
+      restored = dtype.new(0)
+      restored.marshal_load(dump_data)
+      assert_equal(original, restored)
+    end
+  end
+
+  def test_store_binary_to_binary
+    (TYPES - [Numo::RObject]).each do |dtype|
+      a = dtype[1, 2, 3, 4, 5]
+      binary = a.to_binary
+      assert_kind_of(String, binary)
+      b = dtype.from_binary(binary, a.shape)
+      assert_equal(a, b)
+    end
+  end
+
+  def test_diagonal
+    a = Numo::DFloat[[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    assert_equal(Numo::DFloat[1, 5, 9], a.diagonal)
+    a = Numo::Int32[[1, 2, 3, 4], [5, 6, 7, 8]]
+    assert_equal(Numo::Int32[1, 6], a.diagonal)
+  end
+
+  def test_linspace
+    a = Numo::DFloat.linspace(0, 1, 5)
+    assert_equal(5, a.size)
+    assert_in_delta(0.0, a[0], 1e-10)
+    assert_in_delta(1.0, a[-1], 1e-10)
+    assert_in_delta(0.25, a[1], 1e-10)
+  end
+
+  def test_logspace
+    a = Numo::DFloat.logspace(0, 3, 4)
+    assert_equal(4, a.size)
+    assert_in_delta(1.0, a[0], 1e-10)
+    assert_in_delta(1000.0, a[-1], 1e-10)
+    assert_in_delta(10.0, a[1], 1e-10)
+  end
+
+  def test_reshape_bang
+    a = Numo::DFloat[1, 2, 3, 4, 5, 6]
+    a.reshape!(2, 3)
+    assert_equal([2, 3], a.shape)
+    assert_equal(6, a.size)
+    assert_equal(Numo::DFloat[[1, 2, 3], [4, 5, 6]], a)
+  end
+
+  def test_operation_error_dtype_mismatch
+    a = Numo::DFloat[1, 2, 3]
+    b = Numo::Int32[4, 5, 6]
+    result = a + b
+    assert_kind_of(Numo::DFloat, result)
+    assert_equal(Numo::DFloat[5, 7, 9], result)
+  end
+
+  def test_shape_error_on_binary_operations
+    a = Numo::DFloat[1, 2, 3]
+    b = Numo::DFloat[1, 2]
+    assert_raises(Numo::NArray::ShapeError) { a + b }
+    assert_raises(Numo::NArray::ShapeError) { a - b }
+    assert_raises(Numo::NArray::ShapeError) { a * b }
+    assert_raises(Numo::NArray::ShapeError) { a / b }
+  end
+
+  def test_shape_error_on_comparison
+    a = Numo::DFloat[1, 2, 3]
+    b = Numo::DFloat[1, 2]
+    assert_raises(Numo::NArray::ShapeError) { a.eq(b) }
+    assert_raises(Numo::NArray::ShapeError) { a.ne(b) }
+    assert_raises(Numo::NArray::ShapeError) { a.gt(b) }
+    assert_raises(Numo::NArray::ShapeError) { a.ge(b) }
+    assert_raises(Numo::NArray::ShapeError) { a.lt(b) }
+    assert_raises(Numo::NArray::ShapeError) { a.le(b) }
+  end
+
+  def test_shape_error_on_2d_binary_operations
+    a = Numo::DFloat[[1, 2], [3, 4]]
+    b = Numo::DFloat[[1, 2, 3], [4, 5, 6]]
+    assert_raises(Numo::NArray::ShapeError) { a + b }
+    assert_raises(Numo::NArray::ShapeError) { a * b }
+  end
+
+  def test_zero_division_error_in_operations
+    INTEGER_TYPES.each do |dtype|
+      a = dtype[1, 2, 3]
+      assert_raises(ZeroDivisionError) { a / dtype[0, 1, 1] }
+      assert_raises(ZeroDivisionError) { a % dtype[1, 0, 1] }
+    end
+    UNSIGNED_INTEGER_TYPES.each do |dtype|
+      a = dtype[1, 2, 3]
+      assert_raises(ZeroDivisionError) { a / dtype[0, 1, 1] }
+      assert_raises(ZeroDivisionError) { a % dtype[1, 0, 1] }
+    end
+  end
+
+  def test_cast_error_on_invalid_conversion
+    a = Numo::DFloat[1.5, 2.5, 3.5]
+    assert_raises(Numo::NArray::CastError) { a.store(Numo::DComplex[1 + 2i, 3 + 4i, 5 + 6i]) }
+  end
+
+  def test_empty_array_operations
+    TYPES.each do |dtype|
+      a = dtype[]
+      b = dtype[]
+      assert_equal(dtype[], a + b)
+      assert_equal(dtype[], a - b)
+      assert_equal(dtype[], a * b)
+    end
+  end
+
+  def test_empty_array_aggregation
+    (TYPES - [Numo::SComplex, Numo::DComplex, Numo::RObject]).each do |dtype|
+      a = dtype[]
+      assert_raises(Numo::NArray::ShapeError) { a.sum }
+      assert_raises(Numo::NArray::ShapeError) { a.prod }
+      assert_raises(Numo::NArray::ShapeError) { a.min }
+      assert_raises(Numo::NArray::ShapeError) { a.max }
+      assert_raises(Numo::NArray::ShapeError) { a.mean }
+    end
+  end
+
+  def test_argument_error_for_invalid_shape
+    assert_raises(ArgumentError) { Numo::DFloat.new(1, 2, -3) }
+  end
 end
