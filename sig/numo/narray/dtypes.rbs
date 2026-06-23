@@ -1,0 +1,145 @@
+# Concrete dtype classes. They all inherit from Numo::NArray and share its
+# API; only per-type constants and a few specializations are declared here.
+module Numo
+  # 1-bit boolean array.
+  class Bit < NArray
+    UPCAST: Hash[Class, Class]
+    ELEMENT_BIT_SIZE: Integer
+    ELEMENT_BYTE_SIZE: Integer
+    CONTIGUOUS_STRIDE: Integer
+  end
+
+  class Int8 < NArray
+    UPCAST: Hash[Class, Class]
+    ELEMENT_BIT_SIZE: Integer
+    ELEMENT_BYTE_SIZE: Integer
+    CONTIGUOUS_STRIDE: Integer
+    MAX: Integer
+    MIN: Integer
+  end
+
+  class Int16 < NArray
+    UPCAST: Hash[Class, Class]
+    ELEMENT_BIT_SIZE: Integer
+    ELEMENT_BYTE_SIZE: Integer
+    CONTIGUOUS_STRIDE: Integer
+    MAX: Integer
+    MIN: Integer
+  end
+
+  class Int32 < NArray
+    UPCAST: Hash[Class, Class]
+    ELEMENT_BIT_SIZE: Integer
+    ELEMENT_BYTE_SIZE: Integer
+    CONTIGUOUS_STRIDE: Integer
+    MAX: Integer
+    MIN: Integer
+  end
+
+  class Int64 < NArray
+    UPCAST: Hash[Class, Class]
+    ELEMENT_BIT_SIZE: Integer
+    ELEMENT_BYTE_SIZE: Integer
+    CONTIGUOUS_STRIDE: Integer
+    MAX: Integer
+    MIN: Integer
+  end
+
+  class UInt8 < NArray
+    UPCAST: Hash[Class, Class]
+    ELEMENT_BIT_SIZE: Integer
+    ELEMENT_BYTE_SIZE: Integer
+    CONTIGUOUS_STRIDE: Integer
+    MAX: Integer
+    MIN: Integer
+  end
+
+  class UInt16 < NArray
+    UPCAST: Hash[Class, Class]
+    ELEMENT_BIT_SIZE: Integer
+    ELEMENT_BYTE_SIZE: Integer
+    CONTIGUOUS_STRIDE: Integer
+    MAX: Integer
+    MIN: Integer
+  end
+
+  class UInt32 < NArray
+    UPCAST: Hash[Class, Class]
+    ELEMENT_BIT_SIZE: Integer
+    ELEMENT_BYTE_SIZE: Integer
+    CONTIGUOUS_STRIDE: Integer
+    MAX: Integer
+    MIN: Integer
+  end
+
+  class UInt64 < NArray
+    UPCAST: Hash[Class, Class]
+    ELEMENT_BIT_SIZE: Integer
+    ELEMENT_BYTE_SIZE: Integer
+    CONTIGUOUS_STRIDE: Integer
+    MAX: Integer
+    MIN: Integer
+  end
+
+  # Single-precision (32-bit) floating point array.
+  class SFloat < NArray
+    UPCAST: Hash[Class, Class]
+    ELEMENT_BIT_SIZE: Integer
+    ELEMENT_BYTE_SIZE: Integer
+    CONTIGUOUS_STRIDE: Integer
+    MAX: Float
+    MIN: Float
+    EPSILON: Float
+  end
+
+  # Double-precision (64-bit) floating point array.
+  class DFloat < NArray
+    UPCAST: Hash[Class, Class]
+    ELEMENT_BIT_SIZE: Integer
+    ELEMENT_BYTE_SIZE: Integer
+    CONTIGUOUS_STRIDE: Integer
+    MAX: Float
+    MIN: Float
+    EPSILON: Float
+  end
+
+  # Single-precision complex array.
+  class SComplex < NArray
+    UPCAST: Hash[Class, Class]
+    ELEMENT_BIT_SIZE: Integer
+    ELEMENT_BYTE_SIZE: Integer
+    CONTIGUOUS_STRIDE: Integer
+
+    # On complex types the real/imaginary parts are SFloat arrays.
+    def real: () -> SFloat
+    def imag: () -> SFloat
+    def conj: () -> SComplex
+  end
+
+  # Double-precision complex array.
+  class DComplex < NArray
+    UPCAST: Hash[Class, Class]
+    ELEMENT_BIT_SIZE: Integer
+    ELEMENT_BYTE_SIZE: Integer
+    CONTIGUOUS_STRIDE: Integer
+
+    # On complex types the real/imaginary parts are DFloat arrays.
+    def real: () -> DFloat
+    def imag: () -> DFloat
+    def conj: () -> DComplex
+  end
+
+  # Array of arbitrary Ruby objects.
+  class RObject < NArray
+    UPCAST: Hash[Class, Class]
+    ELEMENT_BIT_SIZE: Integer
+    ELEMENT_BYTE_SIZE: Integer
+    CONTIGUOUS_STRIDE: Integer
+  end
+
+  # Record (struct) array base class.
+  class Struct < NArray
+    class Member
+    end
+  end
+end

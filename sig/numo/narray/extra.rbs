@@ -1,0 +1,101 @@
+# Pure-Ruby additions on top of Numo::NArray (lib/numo/narray/extra.rb).
+#
+# These are reopened onto the class declared in narray.rbs; methods already
+# defined by the C extension (e.g. `cast`, `dot`) are intentionally not
+# redeclared here to avoid duplicate definitions.
+module Numo
+  class NArray
+    # --- like-constructors ---------------------------------------------------
+
+    def new_narray: () -> NArray
+    def new_zeros: () -> NArray
+    def new_ones: () -> NArray
+    def new_fill: (untyped value) -> NArray
+
+    # --- conversion ----------------------------------------------------------
+
+    def to_i: () -> Numo::Int64
+    def to_f: () -> Numo::DFloat
+    def to_c: () -> Numo::DComplex
+
+    # --- angle helpers -------------------------------------------------------
+
+    def rad2deg: () -> NArray
+    def deg2rad: () -> NArray
+
+    # --- flips / rotation ----------------------------------------------------
+
+    def fliplr: () -> NArray
+    def flipud: () -> NArray
+    def rot90: (?Integer k, ?Array[Integer] axes) -> NArray
+
+    # --- class helpers -------------------------------------------------------
+
+    def self.asarray: (untyped a) -> NArray
+    def self.parse: (String str, ?split1d: Regexp, ?split2d: Regexp, ?split3d: Regexp) -> NArray
+
+    # --- iteration -----------------------------------------------------------
+
+    def each_over_axis: (?Integer axis) { (NArray) -> void } -> NArray
+                       | (?Integer axis) -> Enumerator[NArray, NArray]
+
+    # --- insert / append / delete --------------------------------------------
+
+    def append: (untyped other, ?axis: Integer?) -> NArray
+    def delete: (untyped indice, ?Integer? axis) -> NArray
+    def insert: (untyped indice, untyped values, ?axis: Integer?) -> NArray
+
+    # --- stacking (class methods) --------------------------------------------
+
+    def self.concatenate: (untyped arrays, ?axis: Integer) -> NArray
+    def self.vstack: (untyped arrays) -> NArray
+    def self.hstack: (untyped arrays) -> NArray
+    def self.dstack: (untyped arrays) -> NArray
+    def self.column_stack: (untyped arrays) -> NArray
+
+    # --- concatenate / split (instance) --------------------------------------
+
+    def concatenate: (*untyped arrays, ?axis: Integer) -> NArray
+    def split: (untyped indices_or_sections, ?axis: Integer) -> Array[NArray]
+    def vsplit: (untyped indices_or_sections) -> Array[NArray]
+    def hsplit: (untyped indices_or_sections) -> Array[NArray]
+    def dsplit: (untyped indices_or_sections) -> Array[NArray]
+
+    # --- tiling / repeating --------------------------------------------------
+
+    def tile: (*untyped arg) -> NArray
+    def repeat: (untyped arg, ?axis: Integer?) -> NArray
+    def diff: (?Integer n, ?axis: Integer) -> NArray
+
+    # --- triangular / diagonal -----------------------------------------------
+
+    def triu: (?Integer k) -> NArray
+    def triu!: (?Integer k) -> self
+    def triu_indices: (?Integer k) -> [ NArray, NArray ]
+    def self.triu_indices: (Integer m, Integer n, ?Integer k) -> [ NArray, NArray ]
+    def tril: (?Integer k) -> NArray
+    def tril!: (?Integer k) -> self
+    def tril_indices: (?Integer k) -> [ NArray, NArray ]
+    def self.tril_indices: (Integer m, Integer n, ?Integer k) -> [ NArray, NArray ]
+    def diag_indices: (?Integer k) -> [ NArray, NArray ]
+    def self.diag_indices: (Integer m, Integer n, ?Integer k) -> [ NArray, NArray ]
+    def diag: (?Integer k) -> NArray
+
+    # --- sorting / reduction extras ------------------------------------------
+
+    def argsort: (?untyped axis_, ?axis: Integer) -> NArray
+    def trace: (?Integer? offset, ?Integer? axis, ?nan: bool) -> untyped
+    def percentile: (untyped q, ?axis: Integer?) -> untyped
+
+    # --- linear algebra extras -----------------------------------------------
+
+    def inner: (untyped b, ?axis: Integer) -> NArray
+    def outer: (untyped b, ?axis: Integer?) -> NArray
+    def kron: (untyped b) -> NArray
+    def cov: (?untyped? y, ?ddof: Integer, ?fweights: untyped?, ?aweights: untyped?) -> NArray
+
+    private
+
+    def check_axis: (untyped axis) -> Integer
+  end
+end

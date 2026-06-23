@@ -1,0 +1,44 @@
+# Element-wise math functions for NArray.
+#
+# The concrete per-dtype implementations are dispatched at runtime via
+# `method_missing`, so these are declared as singleton methods returning an
+# NArray. Each accepts an NArray (or NArray-like value) and returns a new
+# NArray of the appropriate floating/complex dtype.
+module Numo
+  module NMath
+    DISPATCH: Hash[untyped, untyped]
+
+    def self.sqrt: (untyped x) -> Numo::NArray
+    def self.cbrt: (untyped x) -> Numo::NArray
+    def self.exp: (untyped x) -> Numo::NArray
+    def self.exp2: (untyped x) -> Numo::NArray
+    def self.exp10: (untyped x) -> Numo::NArray
+    def self.expm1: (untyped x) -> Numo::NArray
+    def self.log: (untyped x) -> Numo::NArray
+    def self.log2: (untyped x) -> Numo::NArray
+    def self.log10: (untyped x) -> Numo::NArray
+    def self.log1p: (untyped x) -> Numo::NArray
+    def self.sin: (untyped x) -> Numo::NArray
+    def self.cos: (untyped x) -> Numo::NArray
+    def self.tan: (untyped x) -> Numo::NArray
+    def self.asin: (untyped x) -> Numo::NArray
+    def self.acos: (untyped x) -> Numo::NArray
+    def self.atan: (untyped x) -> Numo::NArray
+    def self.atan2: (untyped y, untyped x) -> Numo::NArray
+    def self.sinh: (untyped x) -> Numo::NArray
+    def self.cosh: (untyped x) -> Numo::NArray
+    def self.tanh: (untyped x) -> Numo::NArray
+    def self.asinh: (untyped x) -> Numo::NArray
+    def self.acosh: (untyped x) -> Numo::NArray
+    def self.atanh: (untyped x) -> Numo::NArray
+    def self.sinc: (untyped x) -> Numo::NArray
+    def self.hypot: (untyped x, untyped y) -> Numo::NArray
+    def self.erf: (untyped x) -> Numo::NArray
+    def self.erfc: (untyped x) -> Numo::NArray
+    def self.frexp: (untyped x) -> [ Numo::NArray, Numo::NArray ]
+    def self.ldexp: (untyped x, untyped exp) -> Numo::NArray
+
+    # Fallback dispatcher for functions resolved per dtype at runtime.
+    def self.method_missing: (Symbol name, *untyped args) -> untyped
+  end
+end

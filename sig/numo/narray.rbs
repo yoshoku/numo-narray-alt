@@ -1,0 +1,291 @@
+# Type definitions for numo-narray-alt.
+#
+# numo-narray-alt is a drop-in replacement for Numo::NArray that keeps the
+# original module/class/method names. These signatures favor practical
+# usability over strictness: arguments and return values that can take many
+# concrete forms are typed loosely (often `untyped`).
+module Numo
+  # Convenience constructors such as `Numo::DFloat[...]` are provided by each
+  # dtype class. They are declared on the individual classes below.
+
+  # The N-dimensional numerical array base class.
+  #
+  # All concrete dtype classes (DFloat, Int32, DComplex, Bit, ...) inherit from
+  # NArray and share the bulk of the API declared here.
+  class NArray
+    include Enumerable[untyped]
+
+    # Values broadly accepted where an NArray-like operand is expected.
+    type array_like = NArray | Numeric | Array[untyped] | Range[untyped]
+    # Shape arguments: a list of dimension sizes.
+    type shape_arg = Integer | Array[Integer]
+
+    VERSION: String
+
+    # Marker constant that distinguishes numo-narray-alt from upstream numo-narray.
+    ALTERNATIVE: bool
+
+    # Returns true if this is numo-narray-alt.
+    def self.alternative?: () -> bool
+
+    # --- construction (class methods) ---------------------------------------
+
+    def self.zeros: (*untyped shape) -> instance
+    def self.ones: (*untyped shape) -> instance
+    def self.new_like: (NArray other) -> instance
+    def self.eye: (*untyped args) -> instance
+    def self.linspace: (untyped low, untyped high, ?Integer num) -> instance
+    def self.logspace: (untyped low, untyped high, ?Integer num, ?Numeric base) -> instance
+    def self.from_binary: (String data, ?shape_arg shape) -> instance
+    def self.cast: (untyped obj) -> instance
+    def self.[]: (*untyped elements) -> instance
+    def self.upcast: (untyped other) -> Class
+    def self.byte_size: () -> Integer
+    def self.array_shape: (untyped obj) -> Array[Integer]
+    def self.array_type: (untyped obj) -> Class
+    def self.srand: (?Integer? seed) -> Integer
+    def self.profile: () -> untyped
+    def self.profile=: (untyped value) -> untyped
+    def self.debug=: (untyped value) -> untyped
+    def self.inspect_rows: () -> Integer?
+    def self.inspect_rows=: (Integer? value) -> Integer?
+    def self.inspect_cols: () -> Integer?
+    def self.inspect_cols=: (Integer? value) -> Integer?
+
+    # --- initialization -----------------------------------------------------
+
+    def initialize: (*untyped shape) -> void
+    def initialize_copy: (NArray other) -> self
+
+    # --- shape / structure --------------------------------------------------
+
+    def shape: () -> Array[Integer]
+    def ndim: () -> Integer
+    alias rank ndim
+    def size: () -> Integer
+    alias length size
+    alias total size
+    def empty?: () -> bool
+    def reshape: (*untyped shape) -> NArray
+    def reshape!: (*untyped shape) -> self
+    alias shape= reshape!
+    def flatten: () -> NArray
+    def transpose: (*Integer axes) -> NArray
+    def swapaxes: (Integer axis1, Integer axis2) -> NArray
+    def reverse: (*untyped axes) -> NArray
+    def expand_dims: (Integer axis) -> NArray
+    def diagonal: (*untyped args) -> NArray
+    def view: () -> NArray
+    def slice: (*untyped args) -> NArray
+
+    # --- element access -----------------------------------------------------
+
+    def []: (*untyped indices) -> untyped
+    def []=: (*untyped args) -> untyped
+    def at: (*untyped indices) -> untyped
+
+    # --- copy / storage / conversion ----------------------------------------
+
+    def copy: () -> self
+    def dup: () -> self
+    def clone: () -> self
+    def store: (untyped src) -> self
+    def fill: (untyped value) -> self
+    def to_a: () -> Array[untyped]
+    def to_binary: () -> String
+    alias to_string to_binary
+    def store_binary: (String data, ?Integer offset) -> Integer
+    def to_host: () -> self
+    def to_network: () -> self
+    def to_swapped: () -> self
+    def to_vacs: () -> self
+    def swap_byte: () -> self
+    alias hton swap_byte
+    def cast_to: (Class type) -> NArray
+    def coerce: (untyped other) -> Array[untyped]
+
+    # --- byte order / memory layout -----------------------------------------
+
+    def byte_size: () -> Integer
+    def byte_swapped?: () -> bool
+    alias network_order? byte_swapped?
+    def host_order?: () -> bool
+    alias little_endian? host_order?
+    alias vacs_order? host_order?
+    def contiguous?: () -> bool
+    def fortran_contiguous?: () -> bool
+    def row_major?: () -> bool
+    def column_major?: () -> bool
+    def free: () -> self
+
+    # --- in-place flags -----------------------------------------------------
+
+    def inplace: () -> self
+    def inplace!: () -> self
+    def inplace?: () -> bool
+    def out_of_place!: () -> self
+    alias not_inplace! out_of_place!
+
+    # --- iteration ----------------------------------------------------------
+
+    def each: () { (untyped) -> void } -> self
+             | () -> Enumerator[untyped, self]
+    def each_with_index: () { (*untyped) -> void } -> self
+                        | () -> Enumerator[untyped, self]
+    def map: () { (untyped) -> untyped } -> NArray
+    def map_with_index: () { (*untyped) -> untyped } -> NArray
+
+    # --- arithmetic operators -----------------------------------------------
+
+    def +: (array_like other) -> NArray
+    def -: (array_like other) -> NArray
+    def *: (array_like other) -> NArray
+    def /: (array_like other) -> NArray
+    def %: (array_like other) -> NArray
+    def **: (array_like other) -> NArray
+    alias pow **
+    def -@: () -> NArray
+    def +@: () -> self
+    def &: (array_like other) -> NArray
+    def |: (array_like other) -> NArray
+    def ^: (array_like other) -> NArray
+    def ~: () -> NArray
+    def <<: (array_like other) -> NArray
+    def >>: (array_like other) -> NArray
+
+    # --- comparison operators -----------------------------------------------
+
+    def ==: (untyped other) -> bool
+    def eq: (array_like other) -> NArray
+    def ne: (array_like other) -> NArray
+    def ge: (array_like other) -> NArray
+    alias >= ge
+    def gt: (array_like other) -> NArray
+    alias > gt
+    def le: (array_like other) -> NArray
+    alias <= le
+    def lt: (array_like other) -> NArray
+    alias < lt
+    def nearly_eq: (array_like other) -> NArray
+    alias close_to nearly_eq
+
+    # --- math / element-wise ------------------------------------------------
+
+    def abs: () -> NArray
+    def sign: () -> NArray
+    def signbit: () -> NArray
+    def square: () -> NArray
+    def reciprocal: () -> NArray
+    def ceil: () -> NArray
+    def floor: () -> NArray
+    def round: () -> NArray
+    def trunc: () -> NArray
+    def rint: () -> NArray
+    def clip: (untyped min, untyped max) -> NArray
+    def copysign: (array_like other) -> NArray
+    def modf: () -> [ NArray, NArray ]
+    def divmod: (array_like other) -> [ NArray, NArray ]
+    def isnan: () -> NArray
+    def isinf: () -> NArray
+    def isposinf: () -> NArray
+    def isneginf: () -> NArray
+    def isfinite: () -> NArray
+
+    # --- reduction / statistics ---------------------------------------------
+
+    def sum: (*untyped axes, ?axis: untyped, ?keepdims: bool, ?nan: bool) -> untyped
+    def prod: (*untyped axes, ?axis: untyped, ?keepdims: bool, ?nan: bool) -> untyped
+    def mean: (*untyped axes, ?axis: untyped, ?keepdims: bool, ?nan: bool) -> untyped
+    def stddev: (*untyped axes, ?axis: untyped, ?keepdims: bool, ?nan: bool) -> untyped
+    def var: (*untyped axes, ?axis: untyped, ?keepdims: bool, ?nan: bool) -> untyped
+    def rms: (*untyped axes, ?axis: untyped, ?keepdims: bool, ?nan: bool) -> untyped
+    def median: (*untyped axes, ?axis: untyped, ?keepdims: bool, ?nan: bool) -> untyped
+    def min: (*untyped axes, ?axis: untyped, ?keepdims: bool, ?nan: bool) -> untyped
+    def max: (*untyped axes, ?axis: untyped, ?keepdims: bool, ?nan: bool) -> untyped
+    def ptp: (*untyped axes, ?axis: untyped, ?keepdims: bool, ?nan: bool) -> untyped
+    def minmax: (*untyped axes, ?axis: untyped, ?keepdims: bool, ?nan: bool) -> [ untyped, untyped ]
+    def min_index: (*untyped axes, ?axis: untyped, ?nan: bool) -> untyped
+    def max_index: (*untyped axes, ?axis: untyped, ?nan: bool) -> untyped
+    def argmin: (?axis: untyped) -> untyped
+    def argmax: (?axis: untyped) -> untyped
+    def cumsum: (?axis: untyped) -> NArray
+    def cumprod: (?axis: untyped) -> NArray
+    def kahan_sum: (*untyped axes, ?axis: untyped) -> untyped
+    def mulsum: (array_like other, *untyped axes, ?axis: untyped, ?keepdims: bool, ?nan: bool) -> untyped
+    def sort: (?axis: untyped) -> NArray
+    def sort_index: (?axis: untyped) -> NArray
+    def bincount: (?untyped weights, ?minlength: Integer) -> NArray
+    def poly: (*untyped coefficients) -> NArray
+
+    # --- boolean / search ---------------------------------------------------
+
+    def all?: () -> bool
+    def any?: () -> bool
+    def none?: () -> bool
+    def count_true: () -> Integer
+    alias count_1 count_true
+    alias count count_true
+    def count_false: () -> Integer
+    alias count_0 count_false
+    def where: () -> NArray
+    def where2: () -> Array[NArray]
+    def mask: (untyped mask) -> NArray
+
+    # --- complex accessors (no-ops / views on real types) -------------------
+
+    def real: () -> NArray
+    def imag: () -> NArray
+    alias im imag
+    def conj: () -> NArray
+    alias conjugate conj
+    def arg: () -> NArray
+    alias angle arg
+    def set_real: (untyped value) -> self
+    alias real= set_real
+    def set_imag: (untyped value) -> self
+    alias imag= set_imag
+
+    # --- generators (instance) ----------------------------------------------
+
+    def seq: (*untyped args) -> self
+    alias indgen seq
+    def logseq: (untyped first, untyped step, ?Numeric base) -> self
+    def rand: (*untyped args) -> self
+    def rand_norm: (*untyped args) -> self
+    def eye: (*untyped args) -> self
+    def extract: () -> untyped
+
+    # --- linear algebra -----------------------------------------------------
+
+    def dot: (array_like other) -> NArray
+
+    # --- formatting / inspection --------------------------------------------
+
+    def inspect: () -> String
+    def format: (?String format) -> NArray
+    def format_to_a: (?String format) -> Array[untyped]
+    def debug_info: () -> String
+
+    # --- marshalling --------------------------------------------------------
+
+    def marshal_dump: () -> untyped
+    def marshal_load: (untyped data) -> void
+
+    # --- errors -------------------------------------------------------------
+
+    class CastError < StandardError
+    end
+
+    class ShapeError < StandardError
+    end
+
+    class OperationError < StandardError
+    end
+
+    class DimensionError < StandardError
+    end
+
+    class ValueError < StandardError
+    end
+  end
+end
