@@ -321,9 +321,9 @@ static inline void swapfunc(char* a, char* b, size_t n, int swaptype) {
     rb_funcall(idx, rb_intern("seq"), 0);                                                      \
     size_t size = na->size * sizeof(void*);                                                    \
     VALUE tmp;                                                                                 \
-    char* buf = rb_alloc_tmp_buffer(&tmp, size);                                               \
+    char* buf = RB_ALLOCV(tmp, size);                                                          \
     VALUE res = na_ndloop3(&ndf, buf, 3, self, idx, reduce);                                   \
-    rb_free_tmp_buffer(&tmp);                                                                  \
+    RB_ALLOCV_END(tmp);                                                                        \
     return res;                                                                                \
   }
 
@@ -475,9 +475,9 @@ static inline void swapfunc(char* a, char* b, size_t n, int swaptype) {
     rb_funcall(idx, rb_intern("seq"), 0);                                                      \
     size_t size = na->size * sizeof(void*);                                                    \
     VALUE tmp;                                                                                 \
-    char* buf = rb_alloc_tmp_buffer(&tmp, size);                                               \
+    char* buf = RB_ALLOCV(tmp, size);                                                          \
     VALUE res = na_ndloop3(&ndf, buf, 3, self, idx, reduce);                                   \
-    rb_free_tmp_buffer(&tmp);                                                                  \
+    RB_ALLOCV_END(tmp);                                                                        \
     return res;                                                                                \
   }
 
