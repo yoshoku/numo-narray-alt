@@ -18,7 +18,7 @@ jobs:
       matrix:
         ruby: ['3.2', '3.3', '3.4', '4.0']
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Set up Ruby ${{ matrix.ruby }}
         uses: ruby/setup-ruby@v1
         with:
@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Set up Ruby head debug
         uses: ruby/setup-ruby@v1
         with:
@@ -50,7 +50,7 @@ jobs:
     name: Ruby 4.0 (C23)
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Install gcc-16
         uses: egor-tensin/setup-gcc@v2
         with:
@@ -72,7 +72,7 @@ jobs:
     name: Ruby 3.3 (Rocky)
     container: rockylinux/rockylinux:9
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Set up Ruby
         run: |
           dnf update -y
@@ -89,7 +89,7 @@ jobs:
     name: Ruby 4.0 (Windows)
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Set up Ruby 4.0
         uses: ruby/setup-ruby@v1
         with:
@@ -102,7 +102,7 @@ jobs:
     runs-on: macos-latest
     name: Ruby 4.0 (macOS)
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Set up Ruby 4.0
         uses: ruby/setup-ruby@v1
         with:
