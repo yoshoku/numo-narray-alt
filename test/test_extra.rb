@@ -854,4 +854,174 @@ class NArrayExtraTest < NArrayTestBase
     a = Numo::NArray.cast(Set[1, 2, 3])
     assert_equal(Numo::Int32[1, 2, 3], a)
   end
+
+  def test_triu_indices
+    TYPES.each do |dtype|
+      a = dtype.new(3, 3).seq + 1
+      idx = a.triu_indices
+      assert_equal(Numo::Int32[0, 1, 2, 4, 5, 8], idx)
+
+      idx = a.triu_indices(1)
+      assert_equal(Numo::Int32[1, 2, 5], idx)
+
+      idx = a.triu_indices(-1)
+      assert_equal(Numo::Int32[0, 1, 2, 3, 4, 5, 7, 8], idx)
+    end
+  end
+
+  def test_triu_indices_class_method
+    idx = Numo::NArray.triu_indices(3, 3)
+    assert_equal(Numo::Int32[0, 1, 2, 4, 5, 8], idx)
+
+    idx = Numo::NArray.triu_indices(3, 3, 1)
+    assert_equal(Numo::Int32[1, 2, 5], idx)
+
+    idx = Numo::NArray.triu_indices(2, 4)
+    assert_equal(Numo::Int32[0, 1, 2, 3, 5, 6, 7], idx)
+
+    idx = Numo::NArray.triu_indices(4, 2)
+    assert_equal(Numo::Int32[0, 1, 3], idx)
+  end
+
+  def test_tril_indices
+    TYPES.each do |dtype|
+      a = dtype.new(3, 3).seq + 1
+      idx = a.tril_indices
+      assert_equal(Numo::Int32[0, 3, 4, 6, 7, 8], idx)
+
+      idx = a.tril_indices(1)
+      assert_equal(Numo::Int32[0, 1, 3, 4, 5, 6, 7, 8], idx)
+
+      idx = a.tril_indices(-1)
+      assert_equal(Numo::Int32[3, 6, 7], idx)
+    end
+  end
+
+  def test_tril_indices_class_method
+    idx = Numo::NArray.tril_indices(3, 3)
+    assert_equal(Numo::Int32[0, 3, 4, 6, 7, 8], idx)
+
+    idx = Numo::NArray.tril_indices(3, 3, 1)
+    assert_equal(Numo::Int32[0, 1, 3, 4, 5, 6, 7, 8], idx)
+
+    idx = Numo::NArray.tril_indices(2, 4)
+    assert_equal(Numo::Int32[0, 4, 5], idx)
+
+    idx = Numo::NArray.tril_indices(4, 2)
+    assert_equal(Numo::Int32[0, 2, 3, 4, 5, 6, 7], idx)
+  end
+
+  def test_triu_indices_error
+    a = Numo::DFloat[1, 2, 3]
+    assert_raises(Numo::NArray::ShapeError) { a.triu_indices }
+  end
+
+  def test_tril_indices_error
+    a = Numo::DFloat[1, 2, 3]
+    assert_raises(Numo::NArray::ShapeError) { a.tril_indices }
+  end
+
+  def test_triu_bang_with_k
+    TYPES.each do |dtype|
+      a = dtype.new(3, 3).seq + 1
+      a.triu!(1)
+      assert_equal(dtype[[0, 2, 3], [0, 0, 6], [0, 0, 0]], a)
+
+      a = dtype.new(3, 3).seq + 1
+      a.triu!(-1)
+      assert_equal(dtype[[1, 2, 3], [4, 5, 6], [0, 8, 9]], a)
+    end
+  end
+
+  def test_tril_bang_with_k
+    TYPES.each do |dtype|
+      a = dtype.new(3, 3).seq + 1
+      a.tril!(1)
+      assert_equal(dtype[[1, 2, 0], [4, 5, 6], [7, 8, 9]], a)
+
+      a = dtype.new(3, 3).seq + 1
+      a.tril!(-1)
+      assert_equal(dtype[[0, 0, 0], [4, 0, 0], [7, 8, 0]], a)
+    end
+  end
+
+  def test_triu_bang_on_noncontiguous
+    TYPES.each do |dtype|
+      a = dtype.new(4, 4).seq + 1
+      view = a[1..2, 1..2]
+      refute_predicate(view, :contiguous?)
+      view.triu!
+      assert_equal(dtype[[6, 7], [0, 11]], view)
+    end
+  end
+
+  def test_tril_bang_on_noncontiguous
+    TYPES.each do |dtype|
+      a = dtype.new(4, 4).seq + 1
+      view = a[1..2, 1..2]
+      refute_predicate(view, :contiguous?)
+      view.tril!
+      assert_equal(dtype[[6, 0], [10, 11]], view)
+    end
+  end
+
+  def test_triu_error_on_1d
+    TYPES.each do |dtype|
+      a = dtype[1, 2, 3]
+      assert_raises(Numo::NArray::ShapeError) { a.triu! }
+    end
+  end
+
+  def test_tril_error_on_1d
+    TYPES.each do |dtype|
+      a = dtype[1, 2, 3]
+      assert_raises(Numo::NArray::ShapeError) { a.tril! }
+    end
+  end
+
+  def test_reshape_bang
+    TYPES.each do |dtype|
+      a = dtype.new(6).seq
+      a.reshape!(2, 3)
+      assert_equal([2, 3], a.shape)
+      assert_equal(6, a.size)
+      assert_equal(dtype[[0, 1, 2], [3, 4, 5]], a)
+    end
+  end
+
+  def test_reshape_bang_3d
+    TYPES.each do |dtype|
+      a = dtype.new(24).seq
+      a.reshape!(2, 3, 4)
+      assert_equal([2, 3, 4], a.shape)
+      assert_equal(24, a.size)
+    end
+  end
+
+  def test_reshape_bang_preserves_data
+    TYPES.each do |dtype|
+      a = dtype.new(6).seq
+      original_data = a.to_a
+      a.reshape!(3, 2)
+      assert_equal(original_data.flatten, a.to_a.flatten)
+    end
+  end
+
+  def test_check_axis_valid
+    a = Numo::DFloat.new(2, 3, 4).seq
+    assert_equal(0, a.send(:check_axis, 0))
+    assert_equal(1, a.send(:check_axis, 1))
+    assert_equal(2, a.send(:check_axis, 2))
+    assert_equal(0, a.send(:check_axis, -3))
+    assert_equal(1, a.send(:check_axis, -2))
+    assert_equal(2, a.send(:check_axis, -1))
+  end
+
+  def test_check_axis_invalid
+    a = Numo::DFloat.new(2, 3, 4).seq
+    assert_raises(ArgumentError) { a.send(:check_axis, 3) }
+    assert_raises(ArgumentError) { a.send(:check_axis, -4) }
+    assert_raises(ArgumentError) { a.send(:check_axis, '0') }
+    assert_raises(ArgumentError) { a.send(:check_axis, 0.5) }
+  end
 end
