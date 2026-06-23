@@ -1994,4 +1994,140 @@ class NArrayTest < NArrayTestBase
   def test_argument_error_for_invalid_shape
     assert_raises(ArgumentError) { Numo::DFloat.new(1, 2, -3) }
   end
+
+  def test_complex_conj
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      a = dtype[1 + 2i, 3 - 4i, 0 + 0i, -5 + 6i]
+      conj_a = a.conj
+      assert_kind_of(dtype, conj_a)
+      assert_equal(dtype[1 - 2i, 3 + 4i, 0 - 0i, -5 - 6i], conj_a)
+      assert_equal(a, a.conj.conj)
+    end
+  end
+
+  def test_complex_real
+    a = Numo::DComplex[1 + 2i, 3 - 4i, 0 + 0i, -5 + 6i]
+    real_a = a.real
+    assert_kind_of(Numo::DFloat, real_a)
+    assert_equal(Numo::DFloat[1, 3, 0, -5], real_a)
+
+    a = Numo::SComplex[1 + 2i, 3 - 4i, 0 + 0i, -5 + 6i]
+    real_a = a.real
+    assert_kind_of(Numo::SFloat, real_a)
+    assert_equal(Numo::SFloat[1, 3, 0, -5], real_a)
+  end
+
+  def test_complex_imag
+    a = Numo::DComplex[1 + 2i, 3 - 4i, 0 + 0i, -5 + 6i]
+    imag_a = a.imag
+    assert_kind_of(Numo::DFloat, imag_a)
+    assert_equal(Numo::DFloat[2, -4, 0, 6], imag_a)
+
+    a = Numo::SComplex[1 + 2i, 3 - 4i, 0 + 0i, -5 + 6i]
+    imag_a = a.imag
+    assert_kind_of(Numo::SFloat, imag_a)
+    assert_equal(Numo::SFloat[2, -4, 0, 6], imag_a)
+  end
+
+  def test_complex_real_setter
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      a = dtype[1 + 2i, 3 + 4i]
+      a.real = 10
+      assert_equal(dtype[10 + 2i, 10 + 4i], a)
+
+      a = dtype[1 + 2i, 3 + 4i]
+      a.real = [10, 20]
+      assert_equal(dtype[10 + 2i, 20 + 4i], a)
+    end
+  end
+
+  def test_complex_imag_setter
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      a = dtype[1 + 2i, 3 + 4i]
+      a.imag = 10
+      assert_equal(dtype[1 + 10i, 3 + 10i], a)
+
+      a = dtype[1 + 2i, 3 + 4i]
+      a.imag = [10, 20]
+      assert_equal(dtype[1 + 10i, 3 + 20i], a)
+    end
+  end
+
+  def test_complex_im
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      a = dtype[1 + 2i, 3 - 4i]
+      result = a.im
+      assert_kind_of(dtype, result)
+      assert_equal(dtype[-2 + 1i, 4 + 3i], result)
+    end
+  end
+
+  def test_complex_angle
+    a = Numo::DComplex[1 + 0i, 0 + 1i, -1 + 0i, 0 - 1i]
+    angle = a.angle
+    assert_kind_of(Numo::DFloat, angle)
+    assert_in_delta(0.0, angle[0], 1e-10)
+    assert_in_delta(Math::PI / 2, angle[1], 1e-10)
+    assert_in_delta(Math::PI, angle[2], 1e-10)
+    assert_in_delta(-Math::PI / 2, angle[3], 1e-10)
+
+    a = Numo::SComplex[1 + 0i, 0 + 1i, -1 + 0i, 0 - 1i]
+    angle = a.angle
+    assert_kind_of(Numo::SFloat, angle)
+    assert_in_delta(0.0, angle[0], 1e-6)
+    assert_in_delta(Math::PI / 2, angle[1], 1e-6)
+  end
+
+  def test_complex_conj_of_purely_real
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      a = dtype[1 + 0i, 2 + 0i, 3 + 0i]
+      assert_equal(a, a.conj)
+    end
+  end
+
+  def test_complex_conj_of_purely_imaginary
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      a = dtype[0 + 1i, 0 + 2i, 0 + 3i]
+      conj_a = a.conj
+      assert_equal(dtype[0 - 1i, 0 - 2i, 0 - 3i], conj_a)
+      assert_equal(-a, conj_a)
+    end
+  end
+
+  def test_complex_conj_preserves_operations
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      a = dtype[1 + 2i, 3 + 4i]
+      b = dtype[5 + 6i, 7 + 8i]
+      assert_equal((a + b).conj, a.conj + b.conj)
+      assert_equal((a * b).conj, a.conj * b.conj)
+    end
+  end
+
+  def test_complex_2d_real_imag
+    a = Numo::DComplex[[1 + 2i, 3 + 4i], [5 + 6i, 7 + 8i]]
+    assert_equal(Numo::DFloat[[1, 3], [5, 7]], a.real)
+    assert_equal(Numo::DFloat[[2, 4], [6, 8]], a.imag)
+    assert_equal(Numo::DComplex[[1 - 2i, 3 - 4i], [5 - 6i, 7 - 8i]], a.conj)
+  end
+
+  def test_complex_real_imag_of_zero
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      a = dtype[0 + 0i, 0 + 0i]
+      assert_equal(0, a.real.sum)
+      assert_equal(0, a.imag.sum)
+    end
+  end
+
+  def test_complex_abs_angle_roundtrip
+    [Numo::DComplex, Numo::SComplex].each do |dtype|
+      a = dtype[1 + 2i, 3 - 4i, -5 + 6i]
+      mag = a.abs
+      angle = a.angle
+      reconstructed = mag * (Numo::NMath.cos(angle) + (Numo::NMath.sin(angle) * 1i))
+      a.each_with_index do |expected, i|
+        assert_in_delta(expected.real, reconstructed[i].real, 1e-6)
+        assert_in_delta(expected.imag, reconstructed[i].imag, 1e-6)
+      end
+    end
+  end
 end
