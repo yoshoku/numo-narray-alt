@@ -66,6 +66,8 @@ have_func('RTYPEDDATA_GET_DATA')
 
 have_var('rb_cComplex')
 
+$defs << '-DNUMO_NO_SIMD' if with_config('no-simd', false)
+
 $objs = srcs.collect { |i| "#{i}.o" }
 
 create_header d('numo/extconf.h')

@@ -14,17 +14,17 @@
 
 #define m_map(x) m_num_to_data(rb_yield(m_data_to_num(x)))
 
-#ifdef __SSE2__
+#if !defined(NUMO_NO_SIMD) && defined(__SSE2__)
 #include <emmintrin.h>
 #define SIMD_ALIGNMENT_SIZE 16
 #endif
 
-#ifdef __AVX__
+#if !defined(NUMO_NO_SIMD) && defined(__AVX__)
 #include <immintrin.h>
 #define AVX_ALIGNMENT_SIZE 32
 #endif
 
-#if defined(__ARM_NEON) && defined(__aarch64__)
+#if !defined(NUMO_NO_SIMD) && defined(__ARM_NEON) && defined(__aarch64__)
 #include <arm_neon.h>
 #define NEON_ALIGNMENT_SIZE 16
 #endif
@@ -176,17 +176,17 @@ DEF_NARRAY_MAP_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_EACH_WITH_INDEX_METHOD_FUNC(sfloat)
 DEF_NARRAY_MAP_WITH_INDEX_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_ABS_METHOD_FUNC(sfloat, numo_cSFloat, sfloat, numo_cSFloat)
-#if defined(__AVX__)
+#if !defined(NUMO_NO_SIMD) && defined(__AVX__)
 DEF_NARRAY_SFLT_ADD_AVX_METHOD_FUNC()
 DEF_NARRAY_SFLT_SUB_AVX_METHOD_FUNC()
 DEF_NARRAY_SFLT_MUL_AVX_METHOD_FUNC()
 DEF_NARRAY_SFLT_DIV_AVX_METHOD_FUNC()
-#elif defined(__SSE2__)
+#elif !defined(NUMO_NO_SIMD) && defined(__SSE2__)
 DEF_NARRAY_SFLT_ADD_SSE2_METHOD_FUNC()
 DEF_NARRAY_SFLT_SUB_SSE2_METHOD_FUNC()
 DEF_NARRAY_SFLT_MUL_SSE2_METHOD_FUNC()
 DEF_NARRAY_SFLT_DIV_SSE2_METHOD_FUNC()
-#elif defined(__ARM_NEON) && defined(__aarch64__)
+#elif !defined(NUMO_NO_SIMD) && defined(__ARM_NEON) && defined(__aarch64__)
 DEF_NARRAY_SFLT_ADD_NEON_METHOD_FUNC()
 DEF_NARRAY_SFLT_SUB_NEON_METHOD_FUNC()
 DEF_NARRAY_SFLT_MUL_NEON_METHOD_FUNC()
@@ -243,11 +243,11 @@ DEF_NARRAY_FLT_MINIMUM_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_MINMAX_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_CUMSUM_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_CUMPROD_METHOD_FUNC(sfloat, numo_cSFloat)
-#if defined(__AVX__)
+#if !defined(NUMO_NO_SIMD) && defined(__AVX__)
 DEF_NARRAY_SFLT_MULSUM_AVX_METHOD_FUNC()
-#elif defined(__SSE2__)
+#elif !defined(NUMO_NO_SIMD) && defined(__SSE2__)
 DEF_NARRAY_SFLT_MULSUM_SSE2_METHOD_FUNC()
-#elif defined(__ARM_NEON) && defined(__aarch64__)
+#elif !defined(NUMO_NO_SIMD) && defined(__ARM_NEON) && defined(__aarch64__)
 DEF_NARRAY_SFLT_MULSUM_NEON_METHOD_FUNC()
 #else
 DEF_NARRAY_FLT_MULSUM_METHOD_FUNC(sfloat, numo_cSFloat)
@@ -269,11 +269,11 @@ DEF_NARRAY_FLT_SORT_METHOD_FUNC(sfloat)
 #define qsort_cast **(sfloat**)
 DEF_NARRAY_FLT_SORT_INDEX_METHOD_FUNC(sfloat, numo_cSFloat)
 DEF_NARRAY_FLT_MEDIAN_METHOD_FUNC(sfloat)
-#if defined(__AVX__)
+#if !defined(NUMO_NO_SIMD) && defined(__AVX__)
 DEF_NARRAY_FLT_SQRT_AVX_SGL_METHOD_FUNC(sfloat, numo_cSFloat)
-#elif defined(__SSE2__)
+#elif !defined(NUMO_NO_SIMD) && defined(__SSE2__)
 DEF_NARRAY_FLT_SQRT_SSE2_SGL_METHOD_FUNC(sfloat, numo_cSFloat)
-#elif defined(__ARM_NEON) && defined(__aarch64__)
+#elif !defined(NUMO_NO_SIMD) && defined(__ARM_NEON) && defined(__aarch64__)
 DEF_NARRAY_FLT_SQRT_NEON_SGL_METHOD_FUNC(sfloat, numo_cSFloat)
 #else
 DEF_NARRAY_FLT_SQRT_METHOD_FUNC(sfloat, numo_cSFloat)

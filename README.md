@@ -24,6 +24,15 @@ This project is in no way intended to adversely affect the development of the or
 $ gem install numo-narray-alt
 ```
 
+### Build options
+
+By default, the floating-point classes (`Numo::SFloat` / `Numo::DFloat`) use SIMD instructions
+(SSE2 / AVX / NEON) when the target CPU supports them. To build without SIMD, pass `--with-no-simd`:
+
+```shell
+$ gem install numo-narray-alt -- --with-no-simd
+```
+
 ## Usage
 
 The usage is exactly the same as Numo::NArray.
