@@ -1,3 +1,10 @@
+## [[0.11.0](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.5...v0.11.0)] - 2026-07-05
+
+- add SSE2 support for matmul methods in Numo::SFloat and Numo::DFloat.
+- add AVX and NEON support for +, -, *, /, matmul, and sqrt methods in Numo::SFloat and Numo::DFloat.
+- add --with-no-simd option for disabling SIMD (SSE2, AVX, and NEON) implementations in Numo::SFloat and Numo::DFloat.
+- use RB_ALLOCV and RB_ALLOCV_END macros instead of rb_alloc_tmp_buffer and rb_free_tmp_buffer functions.
+
 ## [[0.10.5](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.4...v0.10.5)] - 2026-06-10
 
 - fixed double macro argument reference causing double yield in the map methods of SFloat and DFloat: [#11](https://github.com/yoshoku/numo-narray-alt/pull/11)

@@ -13,10 +13,10 @@ extern "C" {
 #endif
 #endif
 
-#define NARRAY_VERSION "0.10.4"
+#define NARRAY_VERSION "0.11.0"
 #define NARRAY_VERSION_MAJOR 0
-#define NARRAY_VERSION_MINOR 10
-#define NARRAY_VERSION_PATCH 4
+#define NARRAY_VERSION_MINOR 11
+#define NARRAY_VERSION_PATCH 0
 #define NARRAY_VERSION_CODE                                                                    \
   (NARRAY_VERSION_MAJOR * 10000 + NARRAY_VERSION_MINOR * 100 + NARRAY_VERSION_PATCH)
 
