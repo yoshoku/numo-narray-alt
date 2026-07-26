@@ -1,6 +1,67 @@
 #ifndef NUMO_NARRAY_MH_OP_BINARY_FUNC_H
 #define NUMO_NARRAY_MH_OP_BINARY_FUNC_H 1
 
+#include <stdlib.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#include <process.h>
+#else
+#include <pthread.h>
+#include <unistd.h>
+#endif
+
+#define NUMO_PARALLEL_THRESHOLD 10000
+#define NUMO_MAX_THREADS 64
+
+#if defined(__GNUC__) || defined(__clang__)
+#define NUMO_UNUSED __attribute__((unused))
+#else
+#define NUMO_UNUSED
+#endif
+
+#ifdef _WIN32
+typedef HANDLE numo_thread_t;
+#define NUMO_THREAD_CREATE(thread, func, arg)                                                  \
+  (*(thread) = (HANDLE)_beginthreadex(NULL, 0, func, arg, 0, NULL))
+#define NUMO_THREAD_JOIN(thread)                                                               \
+  WaitForSingleObject(thread, INFINITE);                                                       \
+  CloseHandle(thread)
+#define NUMO_THREAD_FUNC_SIGNATURE unsigned __stdcall
+#define NUMO_THREAD_RETURN_NULL return 0
+#else
+typedef pthread_t numo_thread_t;
+#define NUMO_THREAD_CREATE(thread, func, arg) pthread_create(thread, NULL, func, arg)
+#define NUMO_THREAD_JOIN(thread) pthread_join(thread, NULL)
+#define NUMO_THREAD_FUNC_SIGNATURE void*
+#define NUMO_THREAD_RETURN_NULL return NULL
+#endif
+
+static NUMO_UNUSED int numo_get_num_threads(void) {
+  static int cached = 0;
+  if (cached > 0) return cached;
+
+  char* env = getenv("NUMO_NARRAY_NUM_THREADS");
+  if (env) {
+    int val = atoi(env);
+    if (val > 0 && val <= NUMO_MAX_THREADS) {
+      cached = val;
+      return cached;
+    }
+  }
+
+#ifdef _WIN32
+  SYSTEM_INFO sysinfo;
+  GetSystemInfo(&sysinfo);
+  cached = (int)sysinfo.dwNumberOfProcessors;
+#else
+  cached = (int)sysconf(_SC_NPROCESSORS_ONLN);
+#endif
+  if (cached > NUMO_MAX_THREADS) cached = NUMO_MAX_THREADS;
+  if (cached < 1) cached = 1;
+  return cached;
+}
+
 #define ITER_BINARY_INIT_VARS()                                                                \
   size_t n;                                                                                    \
   char* p1;                                                                                    \
@@ -133,6 +194,38 @@
   }
 
 #define DEF_BINARY_SFLT_SSE2_ITER_FUNC(fOpFunc, fSimdOp)                                       \
+  typedef struct {                                                                             \
+    sfloat* p1;                                                                                \
+    sfloat* p2;                                                                                \
+    sfloat* p3;                                                                                \
+    size_t start;                                                                              \
+    size_t end;                                                                                \
+    int is_inplace;                                                                            \
+  } sflt_##fOpFunc##_parallel_ctx_t;                                                           \
+                                                                                               \
+  static NUMO_THREAD_FUNC_SIGNATURE sflt_##fOpFunc##_parallel_worker(void* arg) {              \
+    sflt_##fOpFunc##_parallel_ctx_t* ctx = (sflt_##fOpFunc##_parallel_ctx_t*)arg;              \
+    size_t num_pack = SIMD_ALIGNMENT_SIZE / sizeof(sfloat);                                    \
+    size_t i;                                                                                  \
+    __m128 a, b;                                                                               \
+    if (ctx->is_inplace) {                                                                     \
+      for (i = ctx->start; i < ctx->end; i += num_pack) {                                      \
+        a = _mm_load_ps(&ctx->p1[i]);                                                          \
+        b = _mm_load_ps(&ctx->p2[i]);                                                          \
+        a = fSimdOp(a, b);                                                                     \
+        _mm_store_ps(&ctx->p1[i], a);                                                          \
+      }                                                                                        \
+    } else {                                                                                   \
+      for (i = ctx->start; i < ctx->end; i += num_pack) {                                      \
+        a = _mm_load_ps(&ctx->p1[i]);                                                          \
+        b = _mm_load_ps(&ctx->p2[i]);                                                          \
+        a = fSimdOp(a, b);                                                                     \
+        _mm_stream_ps(&ctx->p3[i], a);                                                         \
+      }                                                                                        \
+    }                                                                                          \
+    NUMO_THREAD_RETURN_NULL;                                                                   \
+  }                                                                                            \
+                                                                                               \
   static void iter_sfloat_##fOpFunc(na_loop_t* const lp) {                                     \
     size_t i = 0;                                                                              \
     ITER_BINARY_INIT_VARS()                                                                    \
@@ -164,19 +257,51 @@
             }                                                                                  \
           }                                                                                    \
           cnt_simd_loop = (n - i) % num_pack;                                                  \
-          if (p1 == p3) {                                                                      \
-            for (; i < n - cnt_simd_loop; i += num_pack) {                                     \
-              a = _mm_load_ps(&((sfloat*)p1)[i]);                                              \
-              b = _mm_load_ps(&((sfloat*)p2)[i]);                                              \
-              a = fSimdOp(a, b);                                                               \
-              _mm_store_ps(&((sfloat*)p1)[i], a);                                              \
+          size_t simd_end = n - cnt_simd_loop;                                                 \
+          if (n >= NUMO_PARALLEL_THRESHOLD && (simd_end - i) >= num_pack * 2) {                \
+            int num_threads = numo_get_num_threads();                                          \
+            size_t total_simd_elems = (simd_end - i) / num_pack;                               \
+            size_t elems_per_thread = total_simd_elems / num_threads;                          \
+            if (elems_per_thread < num_pack) elems_per_thread = num_pack;                      \
+            numo_thread_t threads[NUMO_MAX_THREADS];                                           \
+            sflt_##fOpFunc##_parallel_ctx_t ctx[NUMO_MAX_THREADS];                             \
+            size_t current = i;                                                                \
+            int actual_threads = 0;                                                            \
+            for (int t = 0; t < num_threads && current < simd_end; t++) {                      \
+              size_t chunk_elems = elems_per_thread;                                           \
+              if (current + chunk_elems * num_pack > simd_end) {                               \
+                chunk_elems = (simd_end - current) / num_pack;                                 \
+              }                                                                                \
+              if (chunk_elems == 0) break;                                                     \
+              ctx[t].p1 = (sfloat*)p1;                                                         \
+              ctx[t].p2 = (sfloat*)p2;                                                         \
+              ctx[t].p3 = (sfloat*)p3;                                                         \
+              ctx[t].start = current;                                                          \
+              ctx[t].end = current + chunk_elems * num_pack;                                   \
+              ctx[t].is_inplace = (p1 == p3);                                                  \
+              NUMO_THREAD_CREATE(&threads[t], sflt_##fOpFunc##_parallel_worker, &ctx[t]);      \
+              current = ctx[t].end;                                                            \
+              actual_threads++;                                                                \
             }                                                                                  \
+            for (int t = 0; t < actual_threads; t++) {                                         \
+              NUMO_THREAD_JOIN(threads[t]);                                                    \
+            }                                                                                  \
+            i = simd_end;                                                                      \
           } else {                                                                             \
-            for (; i < n - cnt_simd_loop; i += num_pack) {                                     \
-              a = _mm_load_ps(&((sfloat*)p1)[i]);                                              \
-              b = _mm_load_ps(&((sfloat*)p2)[i]);                                              \
-              a = fSimdOp(a, b);                                                               \
-              _mm_stream_ps(&((sfloat*)p3)[i], a);                                             \
+            if (p1 == p3) {                                                                    \
+              for (; i < simd_end; i += num_pack) {                                            \
+                a = _mm_load_ps(&((sfloat*)p1)[i]);                                            \
+                b = _mm_load_ps(&((sfloat*)p2)[i]);                                            \
+                a = fSimdOp(a, b);                                                             \
+                _mm_store_ps(&((sfloat*)p1)[i], a);                                            \
+              }                                                                                \
+            } else {                                                                           \
+              for (; i < simd_end; i += num_pack) {                                            \
+                a = _mm_load_ps(&((sfloat*)p1)[i]);                                            \
+                b = _mm_load_ps(&((sfloat*)p2)[i]);                                            \
+                a = fSimdOp(a, b);                                                             \
+                _mm_stream_ps(&((sfloat*)p3)[i], a);                                           \
+              }                                                                                \
             }                                                                                  \
           }                                                                                    \
         }                                                                                      \
@@ -277,6 +402,38 @@
   }
 
 #define DEF_BINARY_DFLT_SSE2_ITER_FUNC(fOpFunc, fSimdOp)                                       \
+  typedef struct {                                                                             \
+    dfloat* p1;                                                                                \
+    dfloat* p2;                                                                                \
+    dfloat* p3;                                                                                \
+    size_t start;                                                                              \
+    size_t end;                                                                                \
+    int is_inplace;                                                                            \
+  } dflt_##fOpFunc##_parallel_ctx_t;                                                           \
+                                                                                               \
+  static NUMO_THREAD_FUNC_SIGNATURE dflt_##fOpFunc##_parallel_worker(void* arg) {              \
+    dflt_##fOpFunc##_parallel_ctx_t* ctx = (dflt_##fOpFunc##_parallel_ctx_t*)arg;              \
+    size_t num_pack = SIMD_ALIGNMENT_SIZE / sizeof(dfloat);                                    \
+    size_t i;                                                                                  \
+    __m128d a, b;                                                                              \
+    if (ctx->is_inplace) {                                                                     \
+      for (i = ctx->start; i < ctx->end; i += num_pack) {                                      \
+        a = _mm_load_pd(&ctx->p1[i]);                                                          \
+        b = _mm_load_pd(&ctx->p2[i]);                                                          \
+        a = fSimdOp(a, b);                                                                     \
+        _mm_store_pd(&ctx->p1[i], a);                                                          \
+      }                                                                                        \
+    } else {                                                                                   \
+      for (i = ctx->start; i < ctx->end; i += num_pack) {                                      \
+        a = _mm_load_pd(&ctx->p1[i]);                                                          \
+        b = _mm_load_pd(&ctx->p2[i]);                                                          \
+        a = fSimdOp(a, b);                                                                     \
+        _mm_stream_pd(&ctx->p3[i], a);                                                         \
+      }                                                                                        \
+    }                                                                                          \
+    NUMO_THREAD_RETURN_NULL;                                                                   \
+  }                                                                                            \
+                                                                                               \
   static void iter_dfloat_##fOpFunc(na_loop_t* const lp) {                                     \
     size_t i = 0;                                                                              \
     ITER_BINARY_INIT_VARS()                                                                    \
@@ -308,19 +465,51 @@
             }                                                                                  \
           }                                                                                    \
           cnt_simd_loop = (n - i) % num_pack;                                                  \
-          if (p1 == p3) {                                                                      \
-            for (; i < n - cnt_simd_loop; i += num_pack) {                                     \
-              a = _mm_load_pd(&((dfloat*)p1)[i]);                                              \
-              b = _mm_load_pd(&((dfloat*)p2)[i]);                                              \
-              a = fSimdOp(a, b);                                                               \
-              _mm_store_pd(&((dfloat*)p1)[i], a);                                              \
+          size_t simd_end = n - cnt_simd_loop;                                                 \
+          if (n >= NUMO_PARALLEL_THRESHOLD && (simd_end - i) >= num_pack * 2) {                \
+            int num_threads = numo_get_num_threads();                                          \
+            size_t total_simd_elems = (simd_end - i) / num_pack;                               \
+            size_t elems_per_thread = total_simd_elems / num_threads;                          \
+            if (elems_per_thread < num_pack) elems_per_thread = num_pack;                      \
+            numo_thread_t threads[NUMO_MAX_THREADS];                                           \
+            dflt_##fOpFunc##_parallel_ctx_t ctx[NUMO_MAX_THREADS];                             \
+            size_t current = i;                                                                \
+            int actual_threads = 0;                                                            \
+            for (int t = 0; t < num_threads && current < simd_end; t++) {                      \
+              size_t chunk_elems = elems_per_thread;                                           \
+              if (current + chunk_elems * num_pack > simd_end) {                               \
+                chunk_elems = (simd_end - current) / num_pack;                                 \
+              }                                                                                \
+              if (chunk_elems == 0) break;                                                     \
+              ctx[t].p1 = (dfloat*)p1;                                                         \
+              ctx[t].p2 = (dfloat*)p2;                                                         \
+              ctx[t].p3 = (dfloat*)p3;                                                         \
+              ctx[t].start = current;                                                          \
+              ctx[t].end = current + chunk_elems * num_pack;                                   \
+              ctx[t].is_inplace = (p1 == p3);                                                  \
+              NUMO_THREAD_CREATE(&threads[t], dflt_##fOpFunc##_parallel_worker, &ctx[t]);      \
+              current = ctx[t].end;                                                            \
+              actual_threads++;                                                                \
             }                                                                                  \
+            for (int t = 0; t < actual_threads; t++) {                                         \
+              NUMO_THREAD_JOIN(threads[t]);                                                    \
+            }                                                                                  \
+            i = simd_end;                                                                      \
           } else {                                                                             \
-            for (; i < n - cnt_simd_loop; i += num_pack) {                                     \
-              a = _mm_load_pd(&((dfloat*)p1)[i]);                                              \
-              b = _mm_load_pd(&((dfloat*)p2)[i]);                                              \
-              a = fSimdOp(a, b);                                                               \
-              _mm_stream_pd(&((dfloat*)p3)[i], a);                                             \
+            if (p1 == p3) {                                                                    \
+              for (; i < simd_end; i += num_pack) {                                            \
+                a = _mm_load_pd(&((dfloat*)p1)[i]);                                            \
+                b = _mm_load_pd(&((dfloat*)p2)[i]);                                            \
+                a = fSimdOp(a, b);                                                             \
+                _mm_store_pd(&((dfloat*)p1)[i], a);                                            \
+              }                                                                                \
+            } else {                                                                           \
+              for (; i < simd_end; i += num_pack) {                                            \
+                a = _mm_load_pd(&((dfloat*)p1)[i]);                                            \
+                b = _mm_load_pd(&((dfloat*)p2)[i]);                                            \
+                a = fSimdOp(a, b);                                                             \
+                _mm_stream_pd(&((dfloat*)p3)[i], a);                                           \
+              }                                                                                \
             }                                                                                  \
           }                                                                                    \
         }                                                                                      \
@@ -421,6 +610,38 @@
   }
 
 #define DEF_BINARY_SFLT_AVX_ITER_FUNC(fOpFunc, fSimdOp)                                        \
+  typedef struct {                                                                             \
+    sfloat* p1;                                                                                \
+    sfloat* p2;                                                                                \
+    sfloat* p3;                                                                                \
+    size_t start;                                                                              \
+    size_t end;                                                                                \
+    int is_inplace;                                                                            \
+  } sflt_avx_##fOpFunc##_parallel_ctx_t;                                                       \
+                                                                                               \
+  static NUMO_THREAD_FUNC_SIGNATURE sflt_avx_##fOpFunc##_parallel_worker(void* arg) {          \
+    sflt_avx_##fOpFunc##_parallel_ctx_t* ctx = (sflt_avx_##fOpFunc##_parallel_ctx_t*)arg;      \
+    size_t num_pack = AVX_ALIGNMENT_SIZE / sizeof(sfloat);                                     \
+    size_t i;                                                                                  \
+    __m256 a, b;                                                                               \
+    if (ctx->is_inplace) {                                                                     \
+      for (i = ctx->start; i < ctx->end; i += num_pack) {                                      \
+        a = _mm256_load_ps(&ctx->p1[i]);                                                       \
+        b = _mm256_load_ps(&ctx->p2[i]);                                                       \
+        a = fSimdOp(a, b);                                                                     \
+        _mm256_store_ps(&ctx->p1[i], a);                                                       \
+      }                                                                                        \
+    } else {                                                                                   \
+      for (i = ctx->start; i < ctx->end; i += num_pack) {                                      \
+        a = _mm256_load_ps(&ctx->p1[i]);                                                       \
+        b = _mm256_load_ps(&ctx->p2[i]);                                                       \
+        a = fSimdOp(a, b);                                                                     \
+        _mm256_stream_ps(&ctx->p3[i], a);                                                      \
+      }                                                                                        \
+    }                                                                                          \
+    NUMO_THREAD_RETURN_NULL;                                                                   \
+  }                                                                                            \
+                                                                                               \
   static void iter_sfloat_##fOpFunc(na_loop_t* const lp) {                                     \
     size_t i = 0;                                                                              \
     ITER_BINARY_INIT_VARS()                                                                    \
@@ -452,19 +673,51 @@
             }                                                                                  \
           }                                                                                    \
           cnt_simd_loop = (n - i) % num_pack;                                                  \
-          if (p1 == p3) {                                                                      \
-            for (; i < n - cnt_simd_loop; i += num_pack) {                                     \
-              a = _mm256_load_ps(&((sfloat*)p1)[i]);                                           \
-              b = _mm256_load_ps(&((sfloat*)p2)[i]);                                           \
-              a = fSimdOp(a, b);                                                               \
-              _mm256_store_ps(&((sfloat*)p1)[i], a);                                           \
+          size_t simd_end = n - cnt_simd_loop;                                                 \
+          if (n >= NUMO_PARALLEL_THRESHOLD && (simd_end - i) >= num_pack * 2) {                \
+            int num_threads = numo_get_num_threads();                                          \
+            size_t total_simd_elems = (simd_end - i) / num_pack;                               \
+            size_t elems_per_thread = total_simd_elems / num_threads;                          \
+            if (elems_per_thread < num_pack) elems_per_thread = num_pack;                      \
+            numo_thread_t threads[NUMO_MAX_THREADS];                                           \
+            sflt_avx_##fOpFunc##_parallel_ctx_t ctx[NUMO_MAX_THREADS];                         \
+            size_t current = i;                                                                \
+            int actual_threads = 0;                                                            \
+            for (int t = 0; t < num_threads && current < simd_end; t++) {                      \
+              size_t chunk_elems = elems_per_thread;                                           \
+              if (current + chunk_elems * num_pack > simd_end) {                               \
+                chunk_elems = (simd_end - current) / num_pack;                                 \
+              }                                                                                \
+              if (chunk_elems == 0) break;                                                     \
+              ctx[t].p1 = (sfloat*)p1;                                                         \
+              ctx[t].p2 = (sfloat*)p2;                                                         \
+              ctx[t].p3 = (sfloat*)p3;                                                         \
+              ctx[t].start = current;                                                          \
+              ctx[t].end = current + chunk_elems * num_pack;                                   \
+              ctx[t].is_inplace = (p1 == p3);                                                  \
+              NUMO_THREAD_CREATE(&threads[t], sflt_avx_##fOpFunc##_parallel_worker, &ctx[t]);  \
+              current = ctx[t].end;                                                            \
+              actual_threads++;                                                                \
             }                                                                                  \
+            for (int t = 0; t < actual_threads; t++) {                                         \
+              NUMO_THREAD_JOIN(threads[t]);                                                    \
+            }                                                                                  \
+            i = simd_end;                                                                      \
           } else {                                                                             \
-            for (; i < n - cnt_simd_loop; i += num_pack) {                                     \
-              a = _mm256_load_ps(&((sfloat*)p1)[i]);                                           \
-              b = _mm256_load_ps(&((sfloat*)p2)[i]);                                           \
-              a = fSimdOp(a, b);                                                               \
-              _mm256_stream_ps(&((sfloat*)p3)[i], a);                                          \
+            if (p1 == p3) {                                                                    \
+              for (; i < simd_end; i += num_pack) {                                            \
+                a = _mm256_load_ps(&((sfloat*)p1)[i]);                                         \
+                b = _mm256_load_ps(&((sfloat*)p2)[i]);                                         \
+                a = fSimdOp(a, b);                                                             \
+                _mm256_store_ps(&((sfloat*)p1)[i], a);                                         \
+              }                                                                                \
+            } else {                                                                           \
+              for (; i < simd_end; i += num_pack) {                                            \
+                a = _mm256_load_ps(&((sfloat*)p1)[i]);                                         \
+                b = _mm256_load_ps(&((sfloat*)p2)[i]);                                         \
+                a = fSimdOp(a, b);                                                             \
+                _mm256_stream_ps(&((sfloat*)p3)[i], a);                                        \
+              }                                                                                \
             }                                                                                  \
           }                                                                                    \
         }                                                                                      \
@@ -565,6 +818,38 @@
   }
 
 #define DEF_BINARY_DFLT_AVX_ITER_FUNC(fOpFunc, fSimdOp)                                        \
+  typedef struct {                                                                             \
+    dfloat* p1;                                                                                \
+    dfloat* p2;                                                                                \
+    dfloat* p3;                                                                                \
+    size_t start;                                                                              \
+    size_t end;                                                                                \
+    int is_inplace;                                                                            \
+  } dflt_avx_##fOpFunc##_parallel_ctx_t;                                                       \
+                                                                                               \
+  static NUMO_THREAD_FUNC_SIGNATURE dflt_avx_##fOpFunc##_parallel_worker(void* arg) {          \
+    dflt_avx_##fOpFunc##_parallel_ctx_t* ctx = (dflt_avx_##fOpFunc##_parallel_ctx_t*)arg;      \
+    size_t num_pack = AVX_ALIGNMENT_SIZE / sizeof(dfloat);                                     \
+    size_t i;                                                                                  \
+    __m256d a, b;                                                                              \
+    if (ctx->is_inplace) {                                                                     \
+      for (i = ctx->start; i < ctx->end; i += num_pack) {                                      \
+        a = _mm256_load_pd(&ctx->p1[i]);                                                       \
+        b = _mm256_load_pd(&ctx->p2[i]);                                                       \
+        a = fSimdOp(a, b);                                                                     \
+        _mm256_store_pd(&ctx->p1[i], a);                                                       \
+      }                                                                                        \
+    } else {                                                                                   \
+      for (i = ctx->start; i < ctx->end; i += num_pack) {                                      \
+        a = _mm256_load_pd(&ctx->p1[i]);                                                       \
+        b = _mm256_load_pd(&ctx->p2[i]);                                                       \
+        a = fSimdOp(a, b);                                                                     \
+        _mm256_stream_pd(&ctx->p3[i], a);                                                      \
+      }                                                                                        \
+    }                                                                                          \
+    NUMO_THREAD_RETURN_NULL;                                                                   \
+  }                                                                                            \
+                                                                                               \
   static void iter_dfloat_##fOpFunc(na_loop_t* const lp) {                                     \
     size_t i = 0;                                                                              \
     ITER_BINARY_INIT_VARS()                                                                    \
@@ -596,19 +881,51 @@
             }                                                                                  \
           }                                                                                    \
           cnt_simd_loop = (n - i) % num_pack;                                                  \
-          if (p1 == p3) {                                                                      \
-            for (; i < n - cnt_simd_loop; i += num_pack) {                                     \
-              a = _mm256_load_pd(&((dfloat*)p1)[i]);                                           \
-              b = _mm256_load_pd(&((dfloat*)p2)[i]);                                           \
-              a = fSimdOp(a, b);                                                               \
-              _mm256_store_pd(&((dfloat*)p1)[i], a);                                           \
+          size_t simd_end = n - cnt_simd_loop;                                                 \
+          if (n >= NUMO_PARALLEL_THRESHOLD && (simd_end - i) >= num_pack * 2) {                \
+            int num_threads = numo_get_num_threads();                                          \
+            size_t total_simd_elems = (simd_end - i) / num_pack;                               \
+            size_t elems_per_thread = total_simd_elems / num_threads;                          \
+            if (elems_per_thread < num_pack) elems_per_thread = num_pack;                      \
+            numo_thread_t threads[NUMO_MAX_THREADS];                                           \
+            dflt_avx_##fOpFunc##_parallel_ctx_t ctx[NUMO_MAX_THREADS];                         \
+            size_t current = i;                                                                \
+            int actual_threads = 0;                                                            \
+            for (int t = 0; t < num_threads && current < simd_end; t++) {                      \
+              size_t chunk_elems = elems_per_thread;                                           \
+              if (current + chunk_elems * num_pack > simd_end) {                               \
+                chunk_elems = (simd_end - current) / num_pack;                                 \
+              }                                                                                \
+              if (chunk_elems == 0) break;                                                     \
+              ctx[t].p1 = (dfloat*)p1;                                                         \
+              ctx[t].p2 = (dfloat*)p2;                                                         \
+              ctx[t].p3 = (dfloat*)p3;                                                         \
+              ctx[t].start = current;                                                          \
+              ctx[t].end = current + chunk_elems * num_pack;                                   \
+              ctx[t].is_inplace = (p1 == p3);                                                  \
+              NUMO_THREAD_CREATE(&threads[t], dflt_avx_##fOpFunc##_parallel_worker, &ctx[t]);  \
+              current = ctx[t].end;                                                            \
+              actual_threads++;                                                                \
             }                                                                                  \
+            for (int t = 0; t < actual_threads; t++) {                                         \
+              NUMO_THREAD_JOIN(threads[t]);                                                    \
+            }                                                                                  \
+            i = simd_end;                                                                      \
           } else {                                                                             \
-            for (; i < n - cnt_simd_loop; i += num_pack) {                                     \
-              a = _mm256_load_pd(&((dfloat*)p1)[i]);                                           \
-              b = _mm256_load_pd(&((dfloat*)p2)[i]);                                           \
-              a = fSimdOp(a, b);                                                               \
-              _mm256_stream_pd(&((dfloat*)p3)[i], a);                                          \
+            if (p1 == p3) {                                                                    \
+              for (; i < simd_end; i += num_pack) {                                            \
+                a = _mm256_load_pd(&((dfloat*)p1)[i]);                                         \
+                b = _mm256_load_pd(&((dfloat*)p2)[i]);                                         \
+                a = fSimdOp(a, b);                                                             \
+                _mm256_store_pd(&((dfloat*)p1)[i], a);                                         \
+              }                                                                                \
+            } else {                                                                           \
+              for (; i < simd_end; i += num_pack) {                                            \
+                a = _mm256_load_pd(&((dfloat*)p1)[i]);                                         \
+                b = _mm256_load_pd(&((dfloat*)p2)[i]);                                         \
+                a = fSimdOp(a, b);                                                             \
+                _mm256_stream_pd(&((dfloat*)p3)[i], a);                                        \
+              }                                                                                \
             }                                                                                  \
           }                                                                                    \
         }                                                                                      \
