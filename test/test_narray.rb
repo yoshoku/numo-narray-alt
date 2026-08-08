@@ -739,6 +739,14 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_indexing_rejects_non_integer_step
+    a = Numo::DFloat.new(10).seq
+    assert_raises(ArgumentError) { a[(0..9).step(0.5)] }
+    assert_raises(ArgumentError) { a[(0..9).step(1.5)] }
+    assert_raises(ArgumentError) { a[(0..9) % 0.5] }
+    assert_raises(ArgumentError) { a.at((0..9).step(0.5)) }
+  end
+
   def test_nearly_eq # rubocop:disable Metrics/AbcSize
     a = Numo::SFloat[1.0, 1.0, 1.0, 1.0]
     b = Numo::SFloat[1.0 + 1e-7, 1.0 - 1e-7, 1.0 + 1e-6, 1.0 - 1e-6]
