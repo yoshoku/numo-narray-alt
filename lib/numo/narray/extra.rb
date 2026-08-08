@@ -151,7 +151,8 @@ module Numo
 
           c = []
           line.split(split1d).each do |item|
-            c << eval(item.strip) unless item.empty? # rubocop:disable Security/Eval
+            item = item.strip
+            c << parse_numeric(item) unless item.empty?
           end
           b << c unless c.empty?
         end
@@ -163,6 +164,34 @@ module Numo
         cast(a)
       end
     end
+
+    # Convert one token of {parse} input into a number.
+    #
+    # Only integer, float and complex literals are accepted. Anything else --
+    # an expression, a method call, a bare word -- raises ArgumentError, so
+    # text handed to {parse} is never executed as Ruby code.
+    #
+    # @param item [String] one whitespace-delimited token, already stripped
+    # @return [Integer, Float, Complex] the parsed number
+    # @raise [ArgumentError] if the token is not a numeric literal
+    def self.parse_numeric(item)
+      v = Integer(item, exception: false)
+      return v if v
+
+      v = Float(item, exception: false)
+      return v if v
+
+      if item.end_with?('i')
+        begin
+          return Complex(item)
+        rescue ArgumentError, TypeError
+          nil
+        end
+      end
+
+      raise ArgumentError, "invalid numeric literal: #{item.inspect}"
+    end
+    private_class_method :parse_numeric
 
     # Iterate over an axis
     # @example
