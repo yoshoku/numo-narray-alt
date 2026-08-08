@@ -1886,6 +1886,23 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_store_binary_rejects_non_string
+    a = Numo::DFloat.new(2)
+    [nil, 123, 1.5, :sym, {}, [0x7fffffff, 0x1234].freeze].each do |bad|
+      assert_raises(TypeError) { a.store_binary(bad) }
+    end
+  end
+
+  def test_store_binary_accepts_string
+    a = Numo::DFloat.new(2)
+    assert_equal(16, a.store_binary([1.5, 2.5].pack('d2')))
+    assert_equal(Numo::DFloat[1.5, 2.5], a)
+
+    b = Numo::DFloat.new(1)
+    b.store_binary([9.0, 4.25].pack('d2'), 8)
+    assert_equal(Numo::DFloat[4.25], b)
+  end
+
   def test_diagonal
     a = Numo::DFloat[[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     assert_equal(Numo::DFloat[1, 5, 9], a.diagonal)
