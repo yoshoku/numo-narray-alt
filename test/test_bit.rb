@@ -112,6 +112,14 @@ class NArrayBitTest < NArrayTestBase
     assert_equal([1, nil, 3], x.to_a)
   end
 
+  def test_index_by_bit_view
+    a = Numo::DFloat.new(3, 3).seq
+    bit = Numo::Bit[1, 0, 1]
+    assert_equal([0.0, 6.0], a[bit, 0].to_a)
+    assert_equal([0.0, 6.0], a[bit[0..2], 0].to_a)
+    assert_equal([0.0, 6.0], a[bit[true], 0].to_a)
+  end
+
   def test_flipud
     m = Numo::Bit.zeros(7, 7)
     m = m.flipud
