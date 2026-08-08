@@ -126,7 +126,7 @@ static void na_parse_narray_index(VALUE a, int orig_dim, ssize_t size, na_index_
     GetNArray(idx, nidx);
     n = NA_SIZE(nidx);
     q->idx = ALLOC_N(size_t, n);
-    if (na->type != NARRAY_DATA_T) {
+    if (nidx->type != NARRAY_DATA_T) {
       rb_bug("NArray#where returned wrong type of NArray");
     }
     if (rb_obj_class(idx) == numo_cInt32) {
