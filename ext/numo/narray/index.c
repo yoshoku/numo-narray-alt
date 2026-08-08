@@ -475,13 +475,17 @@ static void na_index_aref_nadata(
   na_get_strides_nadata(na1, strides_na1, elmsz);
 
   for (i = j = 0; i < ndim; i++) {
-    stride1 = strides_na1[q[i].orig_dim];
+    const int qi_orig_dim = q[i].orig_dim;
+    stride1 = 0;
+    if (qi_orig_dim < na1->base.ndim) {
+      stride1 = strides_na1[qi_orig_dim];
 
-    // numeric index -- trim dimension
-    if (!keep_dim && q[i].n == 1 && q[i].step == 0) {
-      beg = q[i].beg;
-      na2->offset += stride1 * beg;
-      continue;
+      // numeric index -- trim dimension
+      if (!keep_dim && q[i].n == 1 && q[i].step == 0) {
+        beg = q[i].beg;
+        na2->offset += stride1 * beg;
+        continue;
+      }
     }
 
     na2->base.shape[j] = size = q[i].n;
@@ -491,8 +495,11 @@ static void na_index_aref_nadata(
       na2->base.reduce = rb_funcall(m, '|', 1, na2->base.reduce);
     }
 
-    // array index
-    if (q[i].idx != NULL) {
+    if (qi_orig_dim >= na1->base.ndim) {
+      // new dimension
+      SDX_SET_STRIDE(na2->stridx[j], elmsz);
+    } else if (q[i].idx != NULL) {
+      // array index
       index = q[i].idx;
       SDX_SET_INDEX(na2->stridx[j], index);
       q[i].idx = NULL;
