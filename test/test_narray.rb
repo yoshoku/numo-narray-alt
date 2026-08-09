@@ -1934,6 +1934,32 @@ class NArrayTest < NArrayTestBase
     assert_equal(Numo::DFloat[[1, 2, 3], [4, 5, 6]], a)
   end
 
+  def test_reshape_rejects_negative_size
+    a = Numo::DFloat.new(6).seq
+    assert_raises(ArgumentError) { a.reshape(-2, -3) }
+    assert_raises(ArgumentError) { a.reshape(2, -3) }
+    assert_raises(ArgumentError) { a.reshape(-6) }
+    assert_raises(ArgumentError) { Numo::DFloat.new(1).seq.reshape(-1, -1) }
+    assert_raises(ArgumentError) { Numo::DFloat.new(6).seq.reshape!(-2, -3) }
+  end
+
+  def test_reshape_rejects_zero_total_with_unfixed_dimension
+    assert_raises(ArgumentError) { Numo::Int32[1, 2, 3].reshape(0, nil) }
+    assert_raises(ArgumentError) { Numo::DFloat.new(6).seq.reshape(0, true) }
+  end
+
+  def test_reshape_rejects_overflowing_total
+    assert_raises(ArgumentError) { Numo::DFloat.new(6).seq.reshape(2**30, 2**30, 16, nil) }
+  end
+
+  def test_reshape_unfixed_dimension
+    a = Numo::DFloat.new(6).seq
+    assert_equal([2, 3], a.reshape(2, nil).shape)
+    assert_equal([2, 3], a.reshape(nil, 3).shape)
+    assert_raises(ArgumentError) { a.reshape(4, nil) }
+    assert_raises(ArgumentError) { a.reshape(nil, nil) }
+  end
+
   def test_operation_error_dtype_mismatch
     a = Numo::DFloat[1, 2, 3]
     b = Numo::Int32[4, 5, 6]
