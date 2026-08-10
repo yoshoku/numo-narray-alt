@@ -126,7 +126,7 @@ static void na_parse_narray_index(VALUE a, int orig_dim, ssize_t size, na_index_
     GetNArray(idx, nidx);
     n = NA_SIZE(nidx);
     q->idx = ALLOC_N(size_t, n);
-    if (na->type != NARRAY_DATA_T) {
+    if (nidx->type != NARRAY_DATA_T) {
       rb_bug("NArray#where returned wrong type of NArray");
     }
     if (rb_obj_class(idx) == numo_cInt32) {
@@ -183,7 +183,13 @@ na_parse_range(VALUE range, ssize_t step, int orig_dim, ssize_t size, na_index_a
 
   rb_arithmetic_sequence_components_t x;
   rb_arithmetic_sequence_extract(range, &x);
+  if (!RB_INTEGER_TYPE_P(x.step)) {
+    rb_raise(rb_eArgError, "step must be an Integer");
+  }
   step = NUM2SSIZET(x.step);
+  if (step == 0) {
+    rb_raise(rb_eArgError, "step must not be zero");
+  }
 
   beg = beg_orig = NUM2SSIZET(x.begin);
   if (beg < 0) {
@@ -475,13 +481,17 @@ static void na_index_aref_nadata(
   na_get_strides_nadata(na1, strides_na1, elmsz);
 
   for (i = j = 0; i < ndim; i++) {
-    stride1 = strides_na1[q[i].orig_dim];
+    const int qi_orig_dim = q[i].orig_dim;
+    stride1 = 0;
+    if (qi_orig_dim < na1->base.ndim) {
+      stride1 = strides_na1[qi_orig_dim];
 
-    // numeric index -- trim dimension
-    if (!keep_dim && q[i].n == 1 && q[i].step == 0) {
-      beg = q[i].beg;
-      na2->offset += stride1 * beg;
-      continue;
+      // numeric index -- trim dimension
+      if (!keep_dim && q[i].n == 1 && q[i].step == 0) {
+        beg = q[i].beg;
+        na2->offset += stride1 * beg;
+        continue;
+      }
     }
 
     na2->base.shape[j] = size = q[i].n;
@@ -491,8 +501,11 @@ static void na_index_aref_nadata(
       na2->base.reduce = rb_funcall(m, '|', 1, na2->base.reduce);
     }
 
-    // array index
-    if (q[i].idx != NULL) {
+    if (qi_orig_dim >= na1->base.ndim) {
+      // new dimension
+      SDX_SET_STRIDE(na2->stridx[j], elmsz);
+    } else if (q[i].idx != NULL) {
+      // array index
       index = q[i].idx;
       SDX_SET_INDEX(na2->stridx[j], index);
       q[i].idx = NULL;

@@ -739,6 +739,32 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_indexing_rejects_non_integer_step
+    a = Numo::DFloat.new(10).seq
+    assert_raises(ArgumentError) { a[(0..9).step(0.5)] }
+    assert_raises(ArgumentError) { a[(0..9).step(1.5)] }
+    assert_raises(ArgumentError) { a[(0..9) % 0.5] }
+    assert_raises(ArgumentError) { a.at((0..9).step(0.5)) }
+  end
+
+  def test_new_axis_on_data_array
+    a = Numo::DFloat.new(4).seq
+    assert_equal([4, 1], a[true, :new].shape)
+    assert_equal([[0.0], [1.0], [2.0], [3.0]], a[true, :new].to_a)
+    assert_equal([1, 4], a[:new, true].shape)
+    assert_equal([[0.0, 1.0, 2.0, 3.0]], a[:new, true].to_a)
+
+    b = Numo::DFloat.new(2, 3).seq
+    assert_equal([2, 3, 1], b[true, true, :new].shape)
+    assert_equal(b.to_a.map(&:zip), b[true, true, :new].to_a)
+  end
+
+  def test_new_axis_on_view
+    a = Numo::DFloat.new(6).seq[0..3]
+    assert_equal([4, 1], a[true, :new].shape)
+    assert_equal([[0.0], [1.0], [2.0], [3.0]], a[true, :new].to_a)
+  end
+
   def test_nearly_eq # rubocop:disable Metrics/AbcSize
     a = Numo::SFloat[1.0, 1.0, 1.0, 1.0]
     b = Numo::SFloat[1.0 + 1e-7, 1.0 - 1e-7, 1.0 + 1e-6, 1.0 - 1e-6]
