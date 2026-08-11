@@ -779,6 +779,55 @@ class NArrayExtraTest < NArrayTestBase
     end
   end
 
+  def test_parse_rejects_non_literal_token
+    ['system("id")', '`id`', 'Kernel.exit', '$stdout', 'self', 'x', 'TRUE', 'True', '[1, 2]'].each do |src|
+      assert_raises(ArgumentError) { Numo::DFloat.parse(src) }
+    end
+  end
+
+  def test_parse_rejects_expression
+    ['1+1', '2*3', '3/4', '3r', '1/3r'].each do |src|
+      assert_raises(ArgumentError) { Numo::DFloat.parse(src) }
+    end
+  end
+
+  def test_parse_error_names_the_token
+    error = assert_raises(ArgumentError) { Numo::DFloat.parse('1 2 oops 4') }
+    assert_includes(error.message, 'oops')
+  end
+
+  def test_parse_integer_literals
+    actual = Numo::Int64.parse('1 -3 +4 1_000')
+    assert_kind_of(Numo::Int64, actual)
+    assert_equal(Numo::Int64[[1, -3, 4, 1000]], actual)
+
+    actual = Numo::Int64.parse('0x1f -0x1f 0b101 0o17 017')
+    assert_kind_of(Numo::Int64, actual)
+    assert_equal(Numo::Int64[[31, -31, 5, 15, 15]], actual)
+  end
+
+  def test_parse_float_literals
+    actual = Numo::DFloat.parse('1.5 -2.5 1e5 1.2e-3')
+    assert_kind_of(Numo::DFloat, actual)
+    assert_equal(Numo::DFloat[[1.5, -2.5, 100_000.0, 0.0012]], actual)
+  end
+
+  def test_parse_complex_literals
+    actual = Numo::DComplex.parse('2i 2+3i -2i 1.5i')
+    assert_kind_of(Numo::DComplex, actual)
+    assert_equal(Numo::DComplex[[Complex(0, 2), Complex(2, 3), Complex(0, -2), Complex(0, 1.5)]], actual)
+  end
+
+  def test_parse_boolean_literals
+    actual = Numo::NArray.parse('true false nil')
+    assert_kind_of(Numo::Bit, actual)
+    assert_equal(Numo::Bit[[1, 0, 0]], actual)
+
+    actual = Numo::NArray.parse("true false\nfalse true")
+    assert_kind_of(Numo::Bit, actual)
+    assert_equal(Numo::Bit[[1, 0], [0, 1]], actual)
+  end
+
   def test_class_method_concatenate
     TYPES.each do |dtype|
       a = dtype[[1, 2], [3, 4]]
