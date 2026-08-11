@@ -1,7 +1,7 @@
 #ifndef NUMO_NARRAY_MH_FORMAT_H
 #define NUMO_NARRAY_MH_FORMAT_H 1
 
-#define DEF_NARRAY_FORMAT_METHOD_FUNC(tDType)                                                  \
+#define DEF_NARRAY_FORMAT_ELEMENT_FUNC(tDType)                                                 \
   static VALUE format_##tDType(VALUE fmt, tDType* x) {                                         \
     if (NIL_P(fmt)) {                                                                          \
       char s[48];                                                                              \
@@ -9,8 +9,22 @@
       return rb_str_new(s, n);                                                                 \
     }                                                                                          \
     return rb_funcall(fmt, '%', 1, m_data_to_num(*x));                                         \
-  }                                                                                            \
-                                                                                               \
+  }
+
+/* robject formats its element without the fixed buffer above: the element is an
+   arbitrary Ruby object, so the length of its to_s is not bounded by anything
+   this side controls. */
+#define DEF_NARRAY_ROBJ_FORMAT_ELEMENT_FUNC()                                                  \
+  static VALUE format_robject(VALUE fmt, robject* x) {                                         \
+    if (NIL_P(fmt)) {                                                                          \
+      VALUE v = rb_funcall(*x, id_to_s, 0);                                                    \
+      StringValue(v);                                                                          \
+      return rb_str_new(RSTRING_PTR(v), RSTRING_LEN(v));                                       \
+    }                                                                                          \
+    return rb_funcall(fmt, '%', 1, m_data_to_num(*x));                                         \
+  }
+
+#define DEF_NARRAY_FORMAT_LOOP_METHOD_FUNC(tDType)                                             \
   static void iter_##tDType##_format(na_loop_t* const lp) {                                    \
     size_t n;                                                                                  \
     char* p1;                                                                                  \
@@ -51,5 +65,13 @@
     rb_scan_args(argc, argv, "01", &fmt);                                                      \
     return na_ndloop(&ndf, 2, self, fmt);                                                      \
   }
+
+#define DEF_NARRAY_FORMAT_METHOD_FUNC(tDType)                                                  \
+  DEF_NARRAY_FORMAT_ELEMENT_FUNC(tDType)                                                       \
+  DEF_NARRAY_FORMAT_LOOP_METHOD_FUNC(tDType)
+
+#define DEF_NARRAY_ROBJ_FORMAT_METHOD_FUNC()                                                   \
+  DEF_NARRAY_ROBJ_FORMAT_ELEMENT_FUNC()                                                        \
+  DEF_NARRAY_FORMAT_LOOP_METHOD_FUNC(robject)
 
 #endif /* NUMO_NARRAY_MH_FORMAT_H */
