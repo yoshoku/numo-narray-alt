@@ -1,3 +1,21 @@
+## [[0.10.6](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.5...v0.10.6)] - 2026-08-11
+
+This is a maintenance release for the 0.10 series that backports the fixes in
+[v0.11.1](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.0...v0.11.1).
+
+- fixed `store_binary` to reject a non-String argument, which allowed the narray data pointer to be
+  replaced via `RSTRING_PTR` on an arbitrary object: [#14](https://github.com/yoshoku/numo-narray-alt/pull/14)
+- fixed `reshape` to reject negative dimension arguments and a zero-size product,
+  which caused out-of-bounds access with e.g. `reshape(-2, -3)` and SIGFPE with `reshape(0, nil)`:
+  [#15](https://github.com/yoshoku/numo-narray-alt/pull/15)
+- fixed bounds checking and argument validation on the indexing path: [#17](https://github.com/yoshoku/numo-narray-alt/pull/17)
+  - rejected a non-Integer or zero step in range indexing, which caused SIGFPE with e.g. `arr[(0..9).step(0.5)]`
+    and silently truncated a fractional step.
+  - checked the type of the array returned by `where` instead of the Bit index itself,
+    which called `rb_bug` when a Bit view was passed as an index.
+  - bound-checked `q[i].orig_dim` on the data-array indexing path, where an out-of-bounds read was reachable
+    by a trailing `:new` axis such as `arr[true, :new]`.
+
 ## [[0.10.5](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.4...v0.10.5)] - 2026-06-10
 
 - fixed double macro argument reference causing double yield in the map methods of SFloat and DFloat: [#11](https://github.com/yoshoku/numo-narray-alt/pull/11)
