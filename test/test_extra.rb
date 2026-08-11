@@ -797,22 +797,35 @@ class NArrayExtraTest < NArrayTestBase
   end
 
   def test_parse_integer_literals
-    assert_equal(Numo::Int64[[1, -3, 4, 1000]], Numo::Int64.parse('1 -3 +4 1_000'))
-    assert_equal(Numo::Int64[[31, -31, 5, 15, 15]], Numo::Int64.parse('0x1f -0x1f 0b101 0o17 017'))
+    actual = Numo::Int64.parse('1 -3 +4 1_000')
+    assert_kind_of(Numo::Int64, actual)
+    assert_equal(Numo::Int64[[1, -3, 4, 1000]], actual)
+
+    actual = Numo::Int64.parse('0x1f -0x1f 0b101 0o17 017')
+    assert_kind_of(Numo::Int64, actual)
+    assert_equal(Numo::Int64[[31, -31, 5, 15, 15]], actual)
   end
 
   def test_parse_float_literals
-    assert_equal(Numo::DFloat[[1.5, -2.5, 100_000.0, 0.0012]], Numo::DFloat.parse('1.5 -2.5 1e5 1.2e-3'))
+    actual = Numo::DFloat.parse('1.5 -2.5 1e5 1.2e-3')
+    assert_kind_of(Numo::DFloat, actual)
+    assert_equal(Numo::DFloat[[1.5, -2.5, 100_000.0, 0.0012]], actual)
   end
 
   def test_parse_complex_literals
-    expected = Numo::DComplex[[Complex(0, 2), Complex(2, 3), Complex(0, -2), Complex(0, 1.5)]]
-    assert_equal(expected, Numo::DComplex.parse('2i 2+3i -2i 1.5i'))
+    actual = Numo::DComplex.parse('2i 2+3i -2i 1.5i')
+    assert_kind_of(Numo::DComplex, actual)
+    assert_equal(Numo::DComplex[[Complex(0, 2), Complex(2, 3), Complex(0, -2), Complex(0, 1.5)]], actual)
   end
 
   def test_parse_boolean_literals
-    assert_equal(Numo::Bit[[1, 0, 0]], Numo::NArray.parse('true false nil'))
-    assert_equal(Numo::Bit[[1, 0], [0, 1]], Numo::NArray.parse("true false\nfalse true"))
+    actual = Numo::NArray.parse('true false nil')
+    assert_kind_of(Numo::Bit, actual)
+    assert_equal(Numo::Bit[[1, 0, 0]], actual)
+
+    actual = Numo::NArray.parse("true false\nfalse true")
+    assert_kind_of(Numo::Bit, actual)
+    assert_equal(Numo::Bit[[1, 0], [0, 1]], actual)
   end
 
   def test_class_method_concatenate
