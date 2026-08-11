@@ -1671,6 +1671,20 @@ class NArrayTest < NArrayTestBase
     assert_equal(6, Numo::RObject.cast([1.0, 2.0, 3.0]).sum)
   end
 
+  def test_robject_format_long_element
+    ['A' * 47, 'A' * 48, 'A' * 4096].each do |src|
+      a = Numo::RObject[src]
+
+      formatted = a.format
+      assert_kind_of(Numo::RObject, formatted)
+      assert_equal(src, formatted[0])
+
+      formatted = a.format_to_a
+      assert_kind_of(Array, formatted)
+      assert_equal([src], formatted)
+    end
+  end
+
   def test_dfloat_cast_robject
     assert_equal(Numo::DFloat[1, Float::NAN, 3].format_to_a,
                  Numo::DFloat.cast(Numo::RObject[1, nil, 3]).format_to_a)

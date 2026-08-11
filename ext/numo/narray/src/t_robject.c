@@ -50,6 +50,7 @@ static ID id_reciprocal;
 static ID id_round;
 static ID id_square;
 static ID id_to_a;
+static ID id_to_s;
 static ID id_truncate;
 
 #include <numo/types/robject.h>
@@ -146,7 +147,7 @@ DEF_NARRAY_ASET_METHOD_FUNC(robject)
 DEF_NARRAY_COERCE_CAST_METHOD_FUNC(robject)
 DEF_NARRAY_TO_A_METHOD_FUNC(robject)
 DEF_NARRAY_FILL_METHOD_FUNC(robject)
-DEF_NARRAY_FORMAT_METHOD_FUNC(robject)
+DEF_NARRAY_ROBJ_FORMAT_METHOD_FUNC()
 DEF_NARRAY_FORMAT_TO_A_METHOD_FUNC(robject)
 DEF_NARRAY_ROBJ_INSPECT_METHOD_FUNC()
 DEF_NARRAY_EACH_METHOD_FUNC(robject)
@@ -370,6 +371,7 @@ void Init_numo_robject(void) {
   id_round = rb_intern("round");
   id_square = rb_intern("square");
   id_to_a = rb_intern("to_a");
+  id_to_s = rb_intern("to_s");
   id_truncate = rb_intern("truncate");
 
   /**
