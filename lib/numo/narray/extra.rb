@@ -137,6 +137,10 @@ module Numo
     #   # [[2, -3, 5],
     #   #  [4, 9, 7],
     #   #  [2, -1, 6]]
+    # @example
+    #   a = Numo::NArray.parse('true false nil')
+    #   # => Numo::Bit#shape=[1,3]
+    #   # [[1, 0, 0]]
 
     def self.parse(str, split1d: /\s+/, split2d: /;?$|;/,
                    split3d: /\s*\n(\s*\n)+/m)
@@ -152,7 +156,7 @@ module Numo
           c = []
           line.split(split1d).each do |item|
             item = item.strip
-            c << parse_numeric(item) unless item.empty?
+            c << parse_token(item) unless item.empty?
           end
           b << c unless c.empty?
         end
@@ -165,16 +169,24 @@ module Numo
       end
     end
 
-    # Convert one token of {parse} input into a number.
+    # Convert one token of {parse} input into a value.
     #
-    # Only integer, float and complex literals are accepted. Anything else --
-    # an expression, a method call, a bare word -- raises ArgumentError, so
-    # text handed to {parse} is never executed as Ruby code.
+    # Only the literals that describe an element are accepted: integer, float
+    # and complex numbers, and +true+, +false+ and +nil+, which {cast} turns
+    # into a {Numo::Bit}. Anything else -- an expression, a method call, a bare
+    # word -- raises ArgumentError, so text handed to {parse} is never executed
+    # as Ruby code.
     #
     # @param item [String] one whitespace-delimited token, already stripped
-    # @return [Integer, Float, Complex] the parsed number
-    # @raise [ArgumentError] if the token is not a numeric literal
-    def self.parse_numeric(item)
+    # @return [Integer, Float, Complex, true, false, nil] the parsed value
+    # @raise [ArgumentError] if the token is not one of those literals
+    def self.parse_token(item)
+      case item
+      when 'true' then return true
+      when 'false' then return false
+      when 'nil' then return nil
+      end
+
       v = Integer(item, exception: false)
       return v if v
 
@@ -189,9 +201,9 @@ module Numo
         end
       end
 
-      raise ArgumentError, "invalid numeric literal: #{item.inspect}"
+      raise ArgumentError, "invalid literal: #{item.inspect}"
     end
-    private_class_method :parse_numeric
+    private_class_method :parse_token
 
     # Iterate over an axis
     # @example

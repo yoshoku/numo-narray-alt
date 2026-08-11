@@ -779,8 +779,8 @@ class NArrayExtraTest < NArrayTestBase
     end
   end
 
-  def test_parse_rejects_non_numeric_token
-    ['system("id")', '`id`', 'Kernel.exit', '$stdout', 'self', 'x', 'nil', 'true', '[1, 2]'].each do |src|
+  def test_parse_rejects_non_literal_token
+    ['system("id")', '`id`', 'Kernel.exit', '$stdout', 'self', 'x', 'TRUE', 'True', '[1, 2]'].each do |src|
       assert_raises(ArgumentError) { Numo::DFloat.parse(src) }
     end
   end
@@ -808,6 +808,11 @@ class NArrayExtraTest < NArrayTestBase
   def test_parse_complex_literals
     expected = Numo::DComplex[[Complex(0, 2), Complex(2, 3), Complex(0, -2), Complex(0, 1.5)]]
     assert_equal(expected, Numo::DComplex.parse('2i 2+3i -2i 1.5i'))
+  end
+
+  def test_parse_boolean_literals
+    assert_equal(Numo::Bit[[1, 0, 0]], Numo::NArray.parse('true false nil'))
+    assert_equal(Numo::Bit[[1, 0], [0, 1]], Numo::NArray.parse("true false\nfalse true"))
   end
 
   def test_class_method_concatenate
