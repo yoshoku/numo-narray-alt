@@ -20,6 +20,11 @@
 - add --with-no-simd option for disabling SIMD (SSE2, AVX, and NEON) implementations in Numo::SFloat and Numo::DFloat.
 - use RB_ALLOCV and RB_ALLOCV_END macros instead of rb_alloc_tmp_buffer and rb_free_tmp_buffer functions.
 
+## [[0.10.6](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.5...v0.10.6)] - 2026-08-11
+
+This is a maintenance release for the 0.10 series that backports the fixes in
+[v0.11.1](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.0...v0.11.1).
+
 ## [[0.10.5](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.4...v0.10.5)] - 2026-06-10
 
 - fixed double macro argument reference causing double yield in the map methods of SFloat and DFloat: [#11](https://github.com/yoshoku/numo-narray-alt/pull/11)
