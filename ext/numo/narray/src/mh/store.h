@@ -186,7 +186,7 @@ static inline bool na_store_rary_fetch(VALUE ary, size_t i, VALUE* x) {
       n1 = 1;                                                                                  \
     }                                                                                          \
     if (idx1) {                                                                                \
-      for (i = i1 = 0; i1 < n1 && i < n; i++, i1++) {                                          \
+      for (i = i1 = 0; i1 < n1 && i < n; i1++) {                                               \
         if (!na_store_rary_fetch(v1, i1, &x)) break;                                           \
         if (rb_obj_is_kind_of(x, rb_cRange) || rb_obj_is_kind_of(x, rb_cArithSeq)) {           \
           nary_step_sequence(x, &len, &beg, &step);                                            \
@@ -198,10 +198,11 @@ static inline bool na_store_rary_fetch(VALUE ary, size_t i, VALUE* x) {
         } else if (TYPE(x) != T_ARRAY) {                                                       \
           z = m_num_to_data(x);                                                                \
           SET_DATA_INDEX(p1, idx1, tDType, z);                                                 \
+          i++;                                                                                 \
         }                                                                                      \
       }                                                                                        \
     } else {                                                                                   \
-      for (i = i1 = 0; i1 < n1 && i < n; i++, i1++) {                                          \
+      for (i = i1 = 0; i1 < n1 && i < n; i1++) {                                               \
         if (!na_store_rary_fetch(v1, i1, &x)) break;                                           \
         if (rb_obj_is_kind_of(x, rb_cRange) || rb_obj_is_kind_of(x, rb_cArithSeq)) {           \
           nary_step_sequence(x, &len, &beg, &step);                                            \
@@ -213,6 +214,7 @@ static inline bool na_store_rary_fetch(VALUE ary, size_t i, VALUE* x) {
         } else if (TYPE(x) != T_ARRAY) {                                                       \
           z = m_num_to_data(x);                                                                \
           SET_DATA_STRIDE(p1, s1, tDType, z);                                                  \
+          i++;                                                                                 \
         }                                                                                      \
       }                                                                                        \
     }                                                                                          \

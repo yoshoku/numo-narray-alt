@@ -1293,7 +1293,7 @@ static void iter_bit_store_array(na_loop_t* const lp) {
   }
 
   if (idx1) {
-    for (i = i1 = 0; i1 < n1 && i < n; i++, i1++) {
+    for (i = i1 = 0; i1 < n1 && i < n; i1++) {
       if (!na_store_rary_fetch(v1, i1, &x)) break;
       if (rb_obj_is_kind_of(x, rb_cRange) || rb_obj_is_kind_of(x, rb_cArithSeq)) {
         nary_step_sequence(x, &len, &beg, &step);
@@ -1308,10 +1308,11 @@ static void iter_bit_store_array(na_loop_t* const lp) {
         z = m_num_to_data(x);
         STORE_BIT(a1, p1 + *idx1, z);
         idx1++;
+        i++;
       }
     }
   } else {
-    for (i = i1 = 0; i1 < n1 && i < n; i++, i1++) {
+    for (i = i1 = 0; i1 < n1 && i < n; i1++) {
       if (!na_store_rary_fetch(v1, i1, &x)) break;
       if (rb_obj_is_kind_of(x, rb_cRange) || rb_obj_is_kind_of(x, rb_cArithSeq)) {
         nary_step_sequence(x, &len, &beg, &step);
@@ -1325,6 +1326,7 @@ static void iter_bit_store_array(na_loop_t* const lp) {
         z = m_num_to_data(x);
         STORE_BIT(a1, p1, z);
         p1 += s1;
+        i++;
       }
     }
   }
