@@ -1303,8 +1303,7 @@ static void iter_bit_store_array(na_loop_t* const lp) {
           STORE_BIT(a1, p1 + *idx1, z);
           idx1++;
         }
-      }
-      if (TYPE(x) != T_ARRAY) {
+      } else if (TYPE(x) != T_ARRAY) {
         if (x == Qnil) x = INT2FIX(0);
         z = m_num_to_data(x);
         STORE_BIT(a1, p1 + *idx1, z);
@@ -1322,8 +1321,7 @@ static void iter_bit_store_array(na_loop_t* const lp) {
           STORE_BIT(a1, p1, z);
           p1 += s1;
         }
-      }
-      if (TYPE(x) != T_ARRAY) {
+      } else if (TYPE(x) != T_ARRAY) {
         z = m_num_to_data(x);
         STORE_BIT(a1, p1, z);
         p1 += s1;
