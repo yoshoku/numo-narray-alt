@@ -1,3 +1,18 @@
+## [[0.11.2](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.1...v0.11.2)] - 2026-08-12
+
+- fixed `Numo::NArray.parse` to stop evaluating its input as Ruby code:
+  [#16](https://github.com/yoshoku/numo-narray-alt/pull/16)
+  - every whitespace-delimited token was passed to `eval`, so parsing text from a file, an upload or
+    a request parameter ran arbitrary Ruby in the host process.
+  - each token is now parsed as a numeric literal (`Integer()`, `Float()`, then `Complex()` for a
+    trailing imaginary unit), plus the `true`, `false` and `nil` literals; anything else raises
+    `ArgumentError` naming the offending token.
+- fixed `Numo::RObject#format` and `#format_to_a` to build the element string without a fixed stack
+  buffer: [#18](https://github.com/yoshoku/numo-narray-alt/pull/18)
+  - an element whose `to_s` exceeded 47 bytes overflowed the `char s[48]` buffer with attacker-chosen
+    bytes, e.g. `Numo::RObject.cast(['A' * 4096]).format`.
+  - an element containing a NUL byte now formats in full instead of being truncated at the NUL.
+
 ## [[0.11.1](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.0...v0.11.1)] - 2026-08-10
 
 - fixed `store_binary` to reject a non-String argument, which allowed the narray data pointer to be
