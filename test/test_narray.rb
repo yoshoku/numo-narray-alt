@@ -1747,6 +1747,14 @@ class NArrayTest < NArrayTestBase
     assert_equal([1, 0, 105, 0, 106, 0, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0], a.to_a)
   end
 
+  def test_store_array_fills_every_slot_after_a_range
+    assert_equal([9.0, 0.0, 1.0, 5.0], Numo::DFloat.cast([9, (0...2), 5]).to_a)
+    assert_equal([0, 1, 2, 5], Numo::Int64.cast([(0...3), 5]).to_a)
+    assert_equal([1.0, 2.0, 5.0, 7.0], Numo::DFloat.cast([1.step(2, 1), 5, 7]).to_a)
+    assert_equal([0.0, 1.0, 5.0, 0.0], Numo::DFloat.ones(4).store([(0...2), 5]).to_a)
+    assert_equal([1.0, 4.0, 0.0, 0.0], Numo::DFloat.ones(4).store([1, [2, 3], 4]).to_a)
+  end
+
   def test_dfloat_cast_robject
     assert_equal(Numo::DFloat[1, Float::NAN, 3].format_to_a,
                  Numo::DFloat.cast(Numo::RObject[1, nil, 3]).format_to_a)
