@@ -106,6 +106,21 @@ class NArrayBitTest < NArrayTestBase
     assert_empty(y[true, true, 1].where)
   end
 
+  def test_store_array_emptied_by_conversion
+    emptier = Class.new do
+      def initialize(ary) = @ary = ary
+
+      def ==(_other)
+        @ary.replace([])
+        false
+      end
+    end
+    ary = Array.new(8, 1)
+    ary[0] = emptier.new(ary)
+
+    assert_equal([1, 0, 0, 0, 0, 0, 0, 0], Numo::Bit.ones(8).store(ary).to_a)
+  end
+
   def test_assign_nil
     x = Numo::RObject.cast([1, 2, 3])
     x[Numo::Bit.cast([0, 1, 0])] = nil

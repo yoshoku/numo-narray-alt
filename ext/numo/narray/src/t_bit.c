@@ -9,6 +9,7 @@
 #include <ruby.h>
 
 #include "SFMT.h"
+#include "mh/store.h"
 #include "numo/narray.h"
 #include "numo/template.h"
 
@@ -1252,7 +1253,7 @@ static VALUE bit_store_robject(VALUE self, VALUE obj) {
 static void iter_bit_store_array(na_loop_t* const lp) {
   size_t i, n;
   size_t i1, n1;
-  VALUE v1, *ptr;
+  VALUE v1;
   BIT_DIGIT* a1;
   size_t p1;
   size_t s1, *idx1;
@@ -1280,12 +1281,9 @@ static void iter_bit_store_array(na_loop_t* const lp) {
     goto loop_end;
   }
 
-  ptr = &v1;
-
   switch (TYPE(v1)) {
   case T_ARRAY:
     n1 = RARRAY_LEN(v1);
-    ptr = RARRAY_PTR(v1);
     break;
   case T_NIL:
     n1 = 0;
@@ -1296,7 +1294,7 @@ static void iter_bit_store_array(na_loop_t* const lp) {
 
   if (idx1) {
     for (i = i1 = 0; i1 < n1 && i < n; i++, i1++) {
-      x = ptr[i1];
+      if (!na_store_rary_fetch(v1, i1, &x)) break;
       if (rb_obj_is_kind_of(x, rb_cRange) || rb_obj_is_kind_of(x, rb_cArithSeq)) {
         nary_step_sequence(x, &len, &beg, &step);
         for (c = 0; c < len && i < n; c++, i++) {
@@ -1315,7 +1313,7 @@ static void iter_bit_store_array(na_loop_t* const lp) {
     }
   } else {
     for (i = i1 = 0; i1 < n1 && i < n; i++, i1++) {
-      x = ptr[i1];
+      if (!na_store_rary_fetch(v1, i1, &x)) break;
       if (rb_obj_is_kind_of(x, rb_cRange) || rb_obj_is_kind_of(x, rb_cArithSeq)) {
         nary_step_sequence(x, &len, &beg, &step);
         for (c = 0; c < len && i < n; c++, i++) {
