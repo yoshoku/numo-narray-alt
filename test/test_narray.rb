@@ -1214,6 +1214,38 @@ class NArrayTest < NArrayTestBase
     assert_raises(RangeError) { Numo::UInt64[(2**64) - 1, (2**62) + 1000].bincount(minlength: 8) }
   end
 
+  def test_bincount_scans_after_converting_its_arguments
+    setter = Class.new do
+      def initialize(array, value)
+        @array = array
+        @value = value
+      end
+
+      def to_int
+        @array[0] = @value
+        3
+      end
+
+      def to_f
+        @array[0] = @value
+        1.0
+      end
+    end
+
+    a = Numo::Int32[0, 1, 2]
+    actual = a.bincount(minlength: setter.new(a, 100_000))
+    assert_equal(100_001, actual.size)
+    assert_equal([1, 1, 1, 3], [actual[100_000], actual[1], actual[2], actual.sum])
+
+    a = Numo::Int32[0, 1, 2]
+    actual = a.bincount([setter.new(a, 100_000), 2.0, 3.0])
+    assert_equal(100_001, actual.size)
+    assert_equal([1.0, 2.0, 3.0], [actual[100_000], actual[1], actual[2]])
+
+    a = Numo::Int32[0, 1, 2]
+    assert_raises(ArgumentError) { a.bincount(minlength: setter.new(a, -1)) }
+  end
+
   def test_2d_narray # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity, Minitest/MultipleAssertions
     TYPES.each do |dtype|
       [[proc { |tp, src| tp[*src] }, ''],
