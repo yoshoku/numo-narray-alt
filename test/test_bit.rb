@@ -121,6 +121,11 @@ class NArrayBitTest < NArrayTestBase
     assert_equal([1, 0, 0, 0, 0, 0, 0, 0], Numo::Bit.ones(8).store(ary).to_a)
   end
 
+  def test_store_array_range_element_is_stored_once
+    assert_equal([0, 1, 0, 0], Numo::Bit.zeros(4).store([(0...2)]).to_a)
+    assert_equal([0] + ([1] * 63), Numo::Bit.cast([(0...64)]).to_a)
+  end
+
   def test_assign_nil
     x = Numo::RObject.cast([1, 2, 3])
     x[Numo::Bit.cast([0, 1, 0])] = nil
