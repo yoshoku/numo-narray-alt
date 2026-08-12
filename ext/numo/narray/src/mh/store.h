@@ -1,6 +1,20 @@
 #ifndef NUMO_NARRAY_MH_STORE_H
 #define NUMO_NARRAY_MH_STORE_H 1
 
+/* The store loops below run Ruby code for every element, which can reallocate or
+   shrink the array being read: its buffer and length do not survive one. */
+static inline bool na_store_rary_fetch(VALUE ary, size_t i, VALUE* x) {
+  if (!RB_TYPE_P(ary, T_ARRAY)) {
+    *x = ary;
+    return true;
+  }
+  if (i >= (size_t)RARRAY_LEN(ary)) {
+    return false;
+  }
+  *x = RARRAY_AREF(ary, (long)i);
+  return true;
+}
+
 #define DEF_STORE_NUMERIC_FUNC(tDType, tNAryClass)                                             \
   static VALUE tDType##_store(VALUE, VALUE);                                                   \
                                                                                                \
@@ -134,7 +148,6 @@
     size_t i1;                                                                                 \
     size_t n1;                                                                                 \
     VALUE v1;                                                                                  \
-    VALUE* ptr;                                                                                \
     VALUE x;                                                                                   \
     double y;                                                                                  \
     tDType z;                                                                                  \
@@ -162,11 +175,9 @@
       }                                                                                        \
       goto loop_end;                                                                           \
     }                                                                                          \
-    ptr = &v1;                                                                                 \
     switch (TYPE(v1)) {                                                                        \
     case T_ARRAY:                                                                              \
       n1 = RARRAY_LEN(v1);                                                                     \
-      ptr = RARRAY_PTR(v1);                                                                    \
       break;                                                                                   \
     case T_NIL:                                                                                \
       n1 = 0;                                                                                  \
@@ -176,7 +187,7 @@
     }                                                                                          \
     if (idx1) {                                                                                \
       for (i = i1 = 0; i1 < n1 && i < n; i++, i1++) {                                          \
-        x = ptr[i1];                                                                           \
+        if (!na_store_rary_fetch(v1, i1, &x)) break;                                           \
         if (rb_obj_is_kind_of(x, rb_cRange) || rb_obj_is_kind_of(x, rb_cArithSeq)) {           \
           nary_step_sequence(x, &len, &beg, &step);                                            \
           for (c = 0; c < len && i < n; c++, i++) {                                            \
@@ -191,7 +202,7 @@
       }                                                                                        \
     } else {                                                                                   \
       for (i = i1 = 0; i1 < n1 && i < n; i++, i1++) {                                          \
-        x = ptr[i1];                                                                           \
+        if (!na_store_rary_fetch(v1, i1, &x)) break;                                           \
         if (rb_obj_is_kind_of(x, rb_cRange) || rb_obj_is_kind_of(x, rb_cArithSeq)) {           \
           nary_step_sequence(x, &len, &beg, &step);                                            \
           for (c = 0; c < len && i < n; c++, i++) {                                            \
