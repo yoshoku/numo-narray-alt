@@ -1209,6 +1209,11 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_bincount_rejects_an_item_that_overflows_the_output_length
+    assert_raises(RangeError) { Numo::UInt64[(2**64) - 1].bincount }
+    assert_raises(RangeError) { Numo::UInt64[(2**64) - 1, (2**62) + 1000].bincount(minlength: 8) }
+  end
+
   def test_2d_narray # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/PerceivedComplexity, Minitest/MultipleAssertions
     TYPES.each do |dtype|
       [[proc { |tp, src| tp[*src] }, ''],

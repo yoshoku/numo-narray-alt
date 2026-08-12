@@ -209,7 +209,11 @@
                                                                                                \
     VALUE v = tDType##_max(0, 0, self);                                                        \
                                                                                                \
-    size_t length = NUM2SIZET(v) + 1;                                                          \
+    const size_t max = NUM2SIZET(v);                                                           \
+    if (max == SIZE_MAX) {                                                                     \
+      rb_raise(rb_eRangeError, "maximum item %" SZF "u is too large to size the output", max); \
+    }                                                                                          \
+    size_t length = max + 1;                                                                   \
     if (opts[0] != Qundef) {                                                                   \
       const size_t minlength = NUM2SIZET(opts[0]);                                             \
       if (minlength > length) {                                                                \
