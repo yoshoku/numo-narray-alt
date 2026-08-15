@@ -879,6 +879,9 @@ na_check_ladder(VALUE self, int start_dim) {
   narray_t* na;
   GetNArray(self, na);
 
+  if (na->ndim == 0) {
+    return Qtrue;
+  }
   if (start_dim < -na->ndim || start_dim >= na->ndim) {
     rb_bug("start_dim (%d) out of range", start_dim);
   }
