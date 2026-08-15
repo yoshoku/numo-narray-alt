@@ -2040,6 +2040,18 @@ class NArrayTest < NArrayTestBase
     assert_equal(Numo::DFloat[4.25], b)
   end
 
+  def test_from_binary_rejects_a_size_whose_byte_count_overflows
+    assert_raises(ArgumentError) { Numo::DFloat.from_binary(+'12345678', 2**61) }
+    assert_raises(ArgumentError) { Numo::DFloat.from_binary('12345678', [2**61]) }
+    assert_raises(ArgumentError) { Numo::DFloat.from_binary('12345678', [2**60, 4]) }
+    assert_raises(ArgumentError) { Numo::Int16.from_binary('12345678', (2**63) + 1) }
+  end
+
+  def test_store_binary_rejects_a_size_whose_byte_count_overflows
+    assert_raises(ArgumentError) { Numo::DFloat.new(2**61).store_binary(('A' * 4096).freeze) }
+    assert_raises(ArgumentError) { Numo::DComplex.new(2**60).store_binary(('A' * 4096).freeze) }
+  end
+
   def test_diagonal
     a = Numo::DFloat[[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     assert_equal(Numo::DFloat[1, 5, 9], a.diagonal)
