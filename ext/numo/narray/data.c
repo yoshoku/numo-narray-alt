@@ -359,6 +359,10 @@ static void na_check_reshape(int argc, VALUE* argv, VALUE self, size_t* shape) {
   } else if (total != NA_SIZE(na)) {
     rb_raise(rb_eArgError, "Total size must be same");
   }
+
+  if (argc > NA_MAX_DIMENSION) {
+    rb_raise(nary_eDimensionError, "ndim=%d is too many", argc);
+  }
 }
 
 /*

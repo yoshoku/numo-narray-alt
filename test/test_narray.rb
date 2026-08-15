@@ -2160,13 +2160,24 @@ class NArrayTest < NArrayTestBase
   end
 
   def test_reshape_bang_leaves_the_array_untouched_when_it_raises
-    a = Numo::DFloat.new(1).seq
+    max_dimension = ([0].pack('J').bytesize * 8) - 2
+    ones = [1] * (max_dimension + 1)
+    padded = [2, 3] + ones.first(max_dimension - 1)
 
-    assert_raises(Numo::NArray::DimensionError) { a.reshape!(*([1] * 63)) }
-    assert_equal([1], a.shape)
-    assert_equal([0.0], a.to_a)
+    [Numo::DFloat.new(1).seq, Numo::DFloat.new(3).seq[1..1]].each do |a|
+      assert_raises(Numo::NArray::DimensionError) { a.reshape!(*ones) }
+      assert_equal([1], a.shape)
+      assert_equal([a[0]], a.to_a)
+    end
 
-    assert_equal([1] * 62, a.reshape!(*([1] * 62)).shape)
+    [Numo::DFloat.new(6).seq, Numo::DFloat.new(6).seq[0..5]].each do |a|
+      assert_raises(Numo::NArray::DimensionError) { a.reshape!(*padded) }
+      assert_equal([6], a.shape)
+      assert_equal([0.0, 1.0, 2.0, 3.0, 4.0, 5.0], a.to_a)
+    end
+
+    fits = [1] * max_dimension
+    assert_equal(fits, Numo::DFloat.new(1).seq.reshape!(*fits).shape)
   end
 
   def test_setup_shape_leaves_the_array_untouched_when_the_element_count_overflows
