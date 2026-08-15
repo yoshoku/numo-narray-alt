@@ -2015,6 +2015,16 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_marshal_dump_of_a_robject_view_with_an_offset
+    a = Numo::RObject.cast(%i[a b c d e f g h])
+
+    (0..5).each do |i|
+      v = a[i..(i + 2)]
+      assert_equal([1, [3], 0, v.to_a], v.marshal_dump)
+      assert_equal(v.to_a, Marshal.load(Marshal.dump(v)).to_a)
+    end
+  end
+
   def test_to_binary_of_a_bit_view_with_an_offset
     bits = Array.new(200) { |i| (i * 7 % 5).zero? ? 1 : 0 }
 
