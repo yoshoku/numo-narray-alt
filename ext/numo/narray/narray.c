@@ -275,13 +275,17 @@ void na_array_to_internal_shape(VALUE self, VALUE ary, size_t* shape) {
   }
 }
 
-void na_alloc_shape(narray_t* na, int ndim) {
+static void na_check_ndim(int ndim) {
   if (ndim < 0) {
     rb_raise(nary_eDimensionError, "ndim=%d is negative", ndim);
   }
   if (ndim > NA_MAX_DIMENSION) {
     rb_raise(nary_eDimensionError, "ndim=%d is too many", ndim);
   }
+}
+
+void na_alloc_shape(narray_t* na, int ndim) {
+  na_check_ndim(ndim);
 
   na->ndim = ndim;
   na->size = 0;
@@ -303,22 +307,23 @@ void na_setup_shape(narray_t* na, int ndim, size_t* shape) {
   int i;
   size_t size;
 
+  na_check_ndim(ndim);
+
+  for (i = 0, size = 1; i < ndim; i++) {
+    if (shape[i] != 0 && size > SIZE_MAX / shape[i]) {
+      rb_raise(rb_eRangeError, "total number of elements is too large");
+    }
+    size *= shape[i];
+  }
+
   na_alloc_shape(na, ndim);
 
-  if (ndim == 0) {
-    na->size = 1;
-  } else if (ndim == 1) {
-    na->size = shape[0];
-  } else {
-    for (i = 0, size = 1; i < ndim; i++) {
+  if (ndim > 1) {
+    for (i = 0; i < ndim; i++) {
       na->shape[i] = shape[i];
-      if (shape[i] != 0 && size > SIZE_MAX / shape[i]) {
-        rb_raise(rb_eRangeError, "total number of elements is too large");
-      }
-      size *= shape[i];
     }
-    na->size = size;
   }
+  na->size = (ndim == 0) ? 1 : size;
 }
 
 static void na_setup(VALUE self, int ndim, size_t* shape) {
