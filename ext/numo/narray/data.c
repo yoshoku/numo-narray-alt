@@ -377,6 +377,9 @@ static VALUE na_reshape_bang(int argc, VALUE* argv, VALUE self) {
   stridx_t* stridx;
   int i;
 
+  if (OBJ_FROZEN(self)) {
+    rb_raise(rb_eRuntimeError, "cannot write to frozen NArray.");
+  }
   if (na_check_contiguous(self) == Qfalse) {
     rb_raise(rb_eStandardError, "cannot change shape of non-contiguous NArray");
   }

@@ -2169,6 +2169,17 @@ class NArrayTest < NArrayTestBase
     assert_equal([1] * 62, a.reshape!(*([1] * 62)).shape)
   end
 
+  def test_reshape_bang_rejects_a_frozen_narray
+    views = [Numo::DFloat.new(2, 3).seq.freeze, Numo::DFloat.new(6).seq.reshape(2, 3)[0..1, 0..2].freeze]
+
+    views.each do |a|
+      err = assert_raises(RuntimeError) { a.reshape!(6) }
+      assert_match(/frozen/, err.message)
+      assert_equal([2, 3], a.shape)
+      assert_equal([[0.0, 1.0, 2.0], [3.0, 4.0, 5.0]], a.to_a)
+    end
+  end
+
   def test_reshape_unfixed_dimension
     a = Numo::DFloat.new(6).seq
     assert_equal([2, 3], a.reshape(2, nil).shape)
