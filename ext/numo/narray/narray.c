@@ -1451,6 +1451,9 @@ static VALUE nary_marshal_load(VALUE self, VALUE a) {
       NUM2INT(RARRAY_AREF(a, 0))
     );
   }
+  if (TYPE(RARRAY_AREF(a, 1)) != T_ARRAY) {
+    rb_raise(rb_eArgError, "marshal shape should be array");
+  }
   na_initialize(self, RARRAY_AREF(a, 1));
   NA_FL0_SET(self, FIX2INT(RARRAY_AREF(a, 2)));
   v = RARRAY_AREF(a, 3);
@@ -1467,6 +1470,7 @@ static VALUE nary_marshal_load(VALUE self, VALUE a) {
     ptr = na_get_pointer_for_write(self);
     memcpy(ptr, RARRAY_PTR(v), NA_SIZE(na) * sizeof(VALUE));
   } else {
+    Check_Type(v, T_STRING);
     rb_str_freeze(v);
     nary_store_binary(1, &v, self);
     if (TEST_BYTE_SWAPPED(self)) {
