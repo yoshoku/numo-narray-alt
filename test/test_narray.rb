@@ -2175,6 +2175,16 @@ class NArrayTest < NArrayTestBase
     assert_raises(ArgumentError) { Numo::DFloat.new(1, 2, -3) }
   end
 
+  def test_new_rejects_shape_whose_element_count_overflows
+    assert_raises(RangeError) { Numo::Int8.new((2**62) + 1, 4) }
+    assert_raises(RangeError) { Numo::DFloat.new(2**32, 2**32) }
+    assert_raises(RangeError) { Numo::Bit.new((2**62) + 1, 4) }
+    assert_raises(RangeError) { Numo::DFloat.zeros(2**40, 2**40, 2**40) }
+
+    assert_equal(0, Numo::DFloat.new(0, 2**62).size)
+    assert_equal([3, 4], Numo::DFloat.zeros(3, 4).shape)
+  end
+
   def test_complex_conj
     [Numo::DComplex, Numo::SComplex].each do |dtype|
       a = dtype[1 + 2i, 3 - 4i, 0 + 0i, -5 + 6i]

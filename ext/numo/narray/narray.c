@@ -311,6 +311,9 @@ void na_setup_shape(narray_t* na, int ndim, size_t* shape) {
   } else {
     for (i = 0, size = 1; i < ndim; i++) {
       na->shape[i] = shape[i];
+      if (shape[i] != 0 && size > SIZE_MAX / shape[i]) {
+        rb_raise(rb_eRangeError, "total number of elements is too large");
+      }
       size *= shape[i];
     }
     na->size = size;
