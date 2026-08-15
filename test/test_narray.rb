@@ -2040,6 +2040,18 @@ class NArrayTest < NArrayTestBase
     assert_equal(Numo::DFloat[4.25], b)
   end
 
+  def test_from_binary_rejects_a_size_whose_byte_count_overflows
+    assert_raises(ArgumentError) { Numo::DFloat.from_binary(+'12345678', 2**61) }
+    assert_raises(ArgumentError) { Numo::DFloat.from_binary('12345678', [2**61]) }
+    assert_raises(ArgumentError) { Numo::DFloat.from_binary('12345678', [2**60, 4]) }
+    assert_raises(ArgumentError) { Numo::Int16.from_binary('12345678', (2**63) + 1) }
+  end
+
+  def test_store_binary_rejects_a_size_whose_byte_count_overflows
+    assert_raises(ArgumentError) { Numo::DFloat.new(2**61).store_binary(('A' * 4096).freeze) }
+    assert_raises(ArgumentError) { Numo::DComplex.new(2**60).store_binary(('A' * 4096).freeze) }
+  end
+
   def test_diagonal
     a = Numo::DFloat[[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     assert_equal(Numo::DFloat[1, 5, 9], a.diagonal)
@@ -2173,6 +2185,23 @@ class NArrayTest < NArrayTestBase
 
   def test_argument_error_for_invalid_shape
     assert_raises(ArgumentError) { Numo::DFloat.new(1, 2, -3) }
+  end
+
+  def test_new_rejects_shape_whose_element_count_overflows
+    assert_raises(RangeError) { Numo::Int8.new((2**62) + 1, 4) }
+    assert_raises(RangeError) { Numo::DFloat.new(2**32, 2**32) }
+    assert_raises(RangeError) { Numo::Bit.new((2**62) + 1, 4) }
+    assert_raises(RangeError) { Numo::DFloat.zeros(2**40, 2**40, 2**40) }
+
+    assert_equal(0, Numo::DFloat.new(0, 2**62).size)
+    assert_equal([3, 4], Numo::DFloat.zeros(3, 4).shape)
+  end
+
+  def test_allocate_rejects_a_size_whose_byte_count_overflows
+    assert_raises(ArgumentError) { Numo::DFloat.new((2**61) + 4).allocate }
+    assert_raises(ArgumentError) { Numo::DComplex.new((2**60) + 4).allocate }
+    assert_raises(ArgumentError) { Numo::RObject.new((2**61) + 4).allocate }
+    assert_raises(ArgumentError) { Numo::Int32.new((2**62) + 4).seq }
   end
 
   def test_complex_conj

@@ -304,7 +304,7 @@ static VALUE robject_allocate(VALUE self) {
   case NARRAY_DATA_T:
     ptr = NA_DATA_PTR(na);
     if (na->size > 0 && ptr == NULL) {
-      ptr = xmalloc(sizeof(dtype) * na->size);
+      ptr = xmalloc2(na->size, sizeof(dtype));
 
       {
         size_t i;
