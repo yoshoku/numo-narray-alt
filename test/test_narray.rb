@@ -2180,6 +2180,14 @@ class NArrayTest < NArrayTestBase
     assert_equal(fits, Numo::DFloat.new(1).seq.reshape!(*fits).shape)
   end
 
+  def test_reshape_bang_with_a_large_argument_list
+    a = Numo::DFloat.new(1).seq
+
+    assert_raises(Numo::NArray::DimensionError) { a.reshape!(*([1] * 1_000)) }
+    assert_equal([1], a.shape)
+    assert_equal([0.0], a.to_a)
+  end
+
   def test_setup_shape_leaves_the_array_untouched_when_the_element_count_overflows
     a = Numo::DFloat.new(2).seq
 
