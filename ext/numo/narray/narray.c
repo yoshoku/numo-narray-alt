@@ -1384,10 +1384,12 @@ static VALUE nary_to_binary(VALUE self) {
   char* ptr;
   VALUE str;
   narray_t* na;
+  int offset_in_bits;
 
   GetNArray(self, na);
   if (na->type == NARRAY_VIEW_T) {
-    if (na_check_contiguous(self) == Qtrue) {
+    offset_in_bits = RTEST(rb_obj_is_kind_of(self, numo_cBit)) && NA_VIEW_OFFSET(na) != 0;
+    if (!offset_in_bits && na_check_contiguous(self) == Qtrue) {
       offset = NA_VIEW_OFFSET(na);
     } else {
       self = rb_funcall(self, id_dup, 0);
@@ -1419,7 +1421,7 @@ static VALUE nary_marshal_dump(VALUE self) {
     GetNArray(self, na);
     if (na->type == NARRAY_VIEW_T) {
       if (na_check_contiguous(self) == Qtrue) {
-        offset = NA_VIEW_OFFSET(na);
+        offset = NA_VIEW_OFFSET(na) / sizeof(VALUE);
       } else {
         self = rb_funcall(self, id_dup, 0);
       }
