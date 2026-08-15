@@ -2185,6 +2185,13 @@ class NArrayTest < NArrayTestBase
     assert_equal([3, 4], Numo::DFloat.zeros(3, 4).shape)
   end
 
+  def test_allocate_rejects_a_size_whose_byte_count_overflows
+    assert_raises(ArgumentError) { Numo::DFloat.new((2**61) + 4).allocate }
+    assert_raises(ArgumentError) { Numo::DComplex.new((2**60) + 4).allocate }
+    assert_raises(ArgumentError) { Numo::RObject.new((2**61) + 4).allocate }
+    assert_raises(ArgumentError) { Numo::Int32.new((2**62) + 4).seq }
+  end
+
   def test_complex_conj
     [Numo::DComplex, Numo::SComplex].each do |dtype|
       a = dtype[1 + 2i, 3 - 4i, 0 + 0i, -5 + 6i]
