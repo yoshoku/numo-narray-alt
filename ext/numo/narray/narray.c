@@ -1415,7 +1415,7 @@ static VALUE nary_marshal_dump(VALUE self) {
     GetNArray(self, na);
     if (na->type == NARRAY_VIEW_T) {
       if (na_check_contiguous(self) == Qtrue) {
-        offset = NA_VIEW_OFFSET(na);
+        offset = NA_VIEW_OFFSET(na) / sizeof(VALUE);
       } else {
         self = rb_funcall(self, id_dup, 0);
       }
