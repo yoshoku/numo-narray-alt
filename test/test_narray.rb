@@ -2159,6 +2159,16 @@ class NArrayTest < NArrayTestBase
     assert_raises(ArgumentError) { Numo::DFloat.new(6).seq.reshape(2**30, 2**30, 16, nil) }
   end
 
+  def test_reshape_bang_leaves_the_array_untouched_when_it_raises
+    a = Numo::DFloat.new(1).seq
+
+    assert_raises(Numo::NArray::DimensionError) { a.reshape!(*([1] * 63)) }
+    assert_equal([1], a.shape)
+    assert_equal([0.0], a.to_a)
+
+    assert_equal([1] * 62, a.reshape!(*([1] * 62)).shape)
+  end
+
   def test_reshape_unfixed_dimension
     a = Numo::DFloat.new(6).seq
     assert_equal([2, 3], a.reshape(2, nil).shape)
