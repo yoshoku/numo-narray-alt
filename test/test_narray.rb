@@ -2044,7 +2044,7 @@ class NArrayTest < NArrayTestBase
     assert_raises(ArgumentError) { Numo::DFloat.from_binary(+'12345678', 2**61) }
     assert_raises(ArgumentError) { Numo::DFloat.from_binary('12345678', [2**61]) }
     assert_raises(ArgumentError) { Numo::DFloat.from_binary('12345678', [2**60, 4]) }
-    assert_raises(ArgumentError) { Numo::Int16.from_binary('12345678', (2**63) + 1) }
+    assert_raises(ArgumentError) { Numo::Int16.from_binary('12345678', [(2**63) + 1]) }
   end
 
   def test_store_binary_rejects_a_size_whose_byte_count_overflows
