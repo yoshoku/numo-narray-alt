@@ -1275,7 +1275,11 @@ static VALUE nary_s_from_binary(int argc, VALUE* argv, VALUE type) {
       rb_raise(rb_eArgError, "second argument must be size or shape");
     }
     if (FIXNUM_P(velmsz)) {
-      byte_size = len * NUM2SIZET(velmsz);
+      size_t elmsz = NUM2SIZET(velmsz);
+      if (elmsz != 0 && len > SIZE_MAX / elmsz) {
+        rb_raise(rb_eArgError, "specified size is too large");
+      }
+      byte_size = len * elmsz;
     } else {
       byte_size = ceil(len * NUM2DBL(velmsz));
     }
@@ -1341,7 +1345,11 @@ static VALUE nary_store_binary(int argc, VALUE* argv, VALUE self) {
   size = NA_SIZE(na);
   velmsz = rb_const_get(rb_obj_class(self), id_element_byte_size);
   if (FIXNUM_P(velmsz)) {
-    byte_size = size * NUM2SIZET(velmsz);
+    size_t elmsz = NUM2SIZET(velmsz);
+    if (elmsz != 0 && size > SIZE_MAX / elmsz) {
+      rb_raise(rb_eArgError, "string is too short to store");
+    }
+    byte_size = size * elmsz;
   } else {
     byte_size = ceil(size * NUM2DBL(velmsz));
   }
