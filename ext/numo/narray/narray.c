@@ -1451,6 +1451,9 @@ static VALUE na_inplace(VALUE self);
 static VALUE nary_marshal_load(VALUE self, VALUE a) {
   VALUE v;
 
+  if (OBJ_FROZEN(self)) {
+    rb_raise(rb_eRuntimeError, "cannot write to frozen NArray.");
+  }
   if (TYPE(a) != T_ARRAY) {
     rb_raise(rb_eArgError, "marshal argument should be array");
   }
