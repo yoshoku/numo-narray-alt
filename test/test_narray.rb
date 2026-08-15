@@ -1695,6 +1695,66 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_store_array_grown_by_conversion
+    grower = Class.new do
+      def initialize(ary) = @ary = ary
+
+      def to_int
+        200.times { @ary << 0 }
+        1
+      end
+    end
+    ary = Array.new(8) { |i| i + 100 }
+    ary[0] = grower.new(ary)
+
+    assert_equal([1, 101, 102, 103, 104, 105, 106, 107], Numo::Int32.cast(ary).to_a)
+  end
+
+  def test_store_array_emptied_by_conversion
+    emptier = Class.new do
+      def initialize(ary) = @ary = ary
+
+      def to_f
+        @ary.replace([])
+        9.0
+      end
+    end
+    ary = Array.new(8) { |i| i + 100.0 }
+    ary[0] = emptier.new(ary)
+
+    assert_equal([9.0, 0, 0, 0, 0, 0, 0, 0], Numo::DFloat.ones(8).store(ary).to_a)
+  end
+
+  def test_store_array_shifted_by_conversion
+    shifter = Class.new do
+      def initialize(ary) = @ary = ary
+
+      def to_int
+        4.times { @ary.shift }
+        1
+      end
+    end
+    ary = Array.new(8) { |i| i + 100 }
+    ary[0] = shifter.new(ary)
+
+    assert_equal([1, 105, 106, 107, 0, 0, 0, 0], Numo::Int64.ones(8).store(ary).to_a)
+
+    ary = Array.new(8) { |i| i + 100 }
+    ary[0] = shifter.new(ary)
+    a = Numo::Int64.zeros(16)
+    a[[0, 2, 4, 6, 8, 10, 12, 14]] = ary
+
+    assert_equal([1, 0, 105, 0, 106, 0, 107, 0, 0, 0, 0, 0, 0, 0, 0, 0], a.to_a)
+  end
+
+  def test_store_array_fills_every_slot_after_a_range
+    assert_equal([9.0, 0.0, 1.0, 5.0], Numo::DFloat.cast([9, (0...2), 5]).to_a)
+    assert_equal([0, 1, 2, 5], Numo::Int64.cast([(0...3), 5]).to_a)
+    assert_equal([1.0, 2.0, 5.0, 7.0], Numo::DFloat.cast([1.step(2, 1), 5, 7]).to_a)
+    assert_equal([0.0, 1.0, 5.0, 0.0], Numo::DFloat.ones(4).store([(0...2), 5]).to_a)
+    assert_equal([1.0, 4.0, 0.0, 0.0], Numo::DFloat.ones(4).store([1, [2, 3], 4]).to_a)
+  end
+
   def test_dfloat_cast_robject
     assert_equal(Numo::DFloat[1, Float::NAN, 3].format_to_a,
                  Numo::DFloat.cast(Numo::RObject[1, nil, 3]).format_to_a)
