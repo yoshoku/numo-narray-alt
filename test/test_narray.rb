@@ -2200,6 +2200,17 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_marshal_load_rejects_a_frozen_narray
+    a = Numo::DFloat.new(2).seq.freeze
+    data = Numo::DFloat.new(4, 5).seq.marshal_dump
+
+    err = assert_raises(RuntimeError) { a.marshal_load(data) }
+    assert_match(/frozen/, err.message)
+    assert_equal([2], a.shape)
+    assert_equal(2, a.size)
+    assert_equal([0.0, 1.0], a.to_a)
+  end
+
   def test_reshape_unfixed_dimension
     a = Numo::DFloat.new(6).seq
     assert_equal([2, 3], a.reshape(2, nil).shape)
