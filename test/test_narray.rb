@@ -2227,6 +2227,27 @@ class NArrayTest < NArrayTestBase
     assert_raises(ArgumentError) { Numo::Int32.new((2**62) + 4).seq }
   end
 
+  def test_zero_dimensional_view_is_contiguous
+    a = Numo::DFloat.cast(3.5)
+    bin = [3.5].pack('d')
+
+    assert_predicate(a.view, :contiguous?)
+    assert_equal(bin, a.view.to_binary)
+    assert_equal(bin, a.transpose.to_binary)
+    assert_equal(bin, a.flatten.to_binary)
+    assert_equal([1, [], 0, bin], a.view.marshal_dump)
+    assert_equal(a, Marshal.load(Marshal.dump(a.view)))
+
+    assert_equal([1, [], 0, [:sym]], Numo::RObject.cast(:sym).view.marshal_dump)
+  end
+
+  def test_reshape_bang_on_a_zero_dimensional_view
+    a = Numo::DFloat.cast(3.5)
+
+    assert_equal([3.5], a.view.reshape!(1).to_a)
+    assert_equal([[3.5]], a.view.reshape!(1, 1).to_a)
+  end
+
   def test_complex_conj
     [Numo::DComplex, Numo::SComplex].each do |dtype|
       a = dtype[1 + 2i, 3 - 4i, 0 + 0i, -5 + 6i]

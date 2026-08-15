@@ -391,7 +391,11 @@ static VALUE na_reshape_bang(int argc, VALUE* argv, VALUE self) {
     } else {
       stridx = na2->stridx;
     }
-    stride = SDX_GET_STRIDE(na2->stridx[na->ndim - 1]);
+    if (na->ndim == 0) {
+      stride = nary_element_stride(self);
+    } else {
+      stride = SDX_GET_STRIDE(na2->stridx[na->ndim - 1]);
+    }
     for (i = argc; i--;) {
       SDX_SET_STRIDE(stridx[i], stride);
       stride *= shape[i];
