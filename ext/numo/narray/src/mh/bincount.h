@@ -1,6 +1,16 @@
 #ifndef NUMO_NARRAY_MH_BINCOUNT_H
 #define NUMO_NARRAY_MH_BINCOUNT_H 1
 
+/* The items below index the output, whose size was fixed by an earlier scan of
+   the same array. Ruby code can run in between, so the bound is rechecked. */
+static inline void na_bincount_check_item(size_t x, size_t n) {
+  if (x >= n) {
+    rb_raise(
+      rb_eIndexError, "item %" SZF "u is out of range of the output(size:%" SZF "u)", x, n
+    );
+  }
+}
+
 #define DEF_BINCOUNT_FUNCS(tDType, tNAryClass)                                                 \
   static void iter_##tDType##_bincount_32(na_loop_t* const lp) {                               \
     char* p1;                                                                                  \
@@ -21,11 +31,13 @@
     if (idx1) {                                                                                \
       for (size_t i = 0; i < m; i++) {                                                         \
         GET_DATA_INDEX(p1, idx1, tDType, x);                                                   \
+        na_bincount_check_item(x, n);                                                          \
         (*(u_int32_t*)(p2 + s2 * x))++;                                                        \
       }                                                                                        \
     } else {                                                                                   \
       for (size_t i = 0; i < m; i++) {                                                         \
         GET_DATA_STRIDE(p1, s1, tDType, x);                                                    \
+        na_bincount_check_item(x, n);                                                          \
         (*(u_int32_t*)(p2 + s2 * x))++;                                                        \
       }                                                                                        \
     }                                                                                          \
@@ -60,11 +72,13 @@
     if (idx1) {                                                                                \
       for (size_t i = 0; i < m; i++) {                                                         \
         GET_DATA_INDEX(p1, idx1, tDType, x);                                                   \
+        na_bincount_check_item(x, n);                                                          \
         (*(u_int64_t*)(p2 + s2 * x))++;                                                        \
       }                                                                                        \
     } else {                                                                                   \
       for (size_t i = 0; i < m; i++) {                                                         \
         GET_DATA_STRIDE(p1, s1, tDType, x);                                                    \
+        na_bincount_check_item(x, n);                                                          \
         (*(u_int64_t*)(p2 + s2 * x))++;                                                        \
       }                                                                                        \
     }                                                                                          \
@@ -106,6 +120,7 @@
     for (size_t i = 0; i < l; i++) {                                                           \
       GET_DATA_STRIDE(p1, s1, tDType, x);                                                      \
       GET_DATA_STRIDE(p2, s2, float, w);                                                       \
+      na_bincount_check_item(x, n);                                                            \
       (*(float*)(p3 + s3 * x)) += w;                                                           \
     }                                                                                          \
   }                                                                                            \
@@ -146,6 +161,7 @@
     for (size_t i = 0; i < l; i++) {                                                           \
       GET_DATA_STRIDE(p1, s1, tDType, x);                                                      \
       GET_DATA_STRIDE(p2, s2, double, w);                                                      \
+      na_bincount_check_item(x, n);                                                            \
       (*(double*)(p3 + s3 * x)) += w;                                                          \
     }                                                                                          \
   }                                                                                            \
@@ -170,6 +186,14 @@
     rb_scan_args(argc, argv, "01:", &weight, &kw);                                             \
     rb_get_kwargs(kw, table, 0, 1, opts);                                                      \
                                                                                                \
+    size_t minlength = 0;                                                                      \
+    if (opts[0] != Qundef) {                                                                   \
+      minlength = NUM2SIZET(opts[0]);                                                          \
+    }                                                                                          \
+    if (!NIL_P(weight) && rb_obj_class(weight) != numo_cSFloat) {                              \
+      weight = rb_funcall(numo_cDFloat, id_cast, 1, weight);                                   \
+    }                                                                                          \
+                                                                                               \
     VALUE v = tDType##_minmax(0, 0, self);                                                     \
     if (m_num_to_data(RARRAY_AREF(v, 0)) < 0) {                                                \
       rb_raise(rb_eArgError, "array items must be non-netagive");                              \
@@ -177,11 +201,8 @@
     v = RARRAY_AREF(v, 1);                                                                     \
                                                                                                \
     size_t length = NUM2SIZET(v) + 1;                                                          \
-    if (opts[0] != Qundef) {                                                                   \
-      const size_t minlength = NUM2SIZET(opts[0]);                                             \
-      if (minlength > length) {                                                                \
-        length = minlength;                                                                    \
-      }                                                                                        \
+    if (minlength > length) {                                                                  \
+      length = minlength;                                                                      \
     }                                                                                          \
                                                                                                \
     if (NIL_P(weight)) {                                                                       \
@@ -207,14 +228,23 @@
     rb_scan_args(argc, argv, "01:", &weight, &kw);                                             \
     rb_get_kwargs(kw, table, 0, 1, opts);                                                      \
                                                                                                \
+    size_t minlength = 0;                                                                      \
+    if (opts[0] != Qundef) {                                                                   \
+      minlength = NUM2SIZET(opts[0]);                                                          \
+    }                                                                                          \
+    if (!NIL_P(weight) && rb_obj_class(weight) != numo_cSFloat) {                              \
+      weight = rb_funcall(numo_cDFloat, id_cast, 1, weight);                                   \
+    }                                                                                          \
+                                                                                               \
     VALUE v = tDType##_max(0, 0, self);                                                        \
                                                                                                \
-    size_t length = NUM2SIZET(v) + 1;                                                          \
-    if (opts[0] != Qundef) {                                                                   \
-      const size_t minlength = NUM2SIZET(opts[0]);                                             \
-      if (minlength > length) {                                                                \
-        length = minlength;                                                                    \
-      }                                                                                        \
+    const size_t max = NUM2SIZET(v);                                                           \
+    if (max == SIZE_MAX) {                                                                     \
+      rb_raise(rb_eRangeError, "maximum item %" SZF "u is too large to size the output", max); \
+    }                                                                                          \
+    size_t length = max + 1;                                                                   \
+    if (minlength > length) {                                                                  \
+      length = minlength;                                                                      \
     }                                                                                          \
                                                                                                \
     if (NIL_P(weight)) {                                                                       \
