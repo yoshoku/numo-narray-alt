@@ -923,6 +923,9 @@ na_check_contiguous(VALUE self) {
     if (NA_VIEW_STRIDX(na) == 0) {
       return Qtrue;
     }
+    if (NA_NDIM(na) == 0) {
+      return Qtrue;
+    }
     if (na_check_ladder(self, 0) == Qtrue) {
       elmsz = nary_element_stride(self);
       if (elmsz == NA_STRIDE_AT(na, NA_NDIM(na) - 1)) {
