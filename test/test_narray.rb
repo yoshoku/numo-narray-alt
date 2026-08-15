@@ -2013,6 +2013,29 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_marshal_load_rejects_a_non_array_shape
+    [42, 'AAAAAAAAAAAAAAAA', nil, {}, 1.5, :abc, true, Object.new].each do |bad|
+      assert_raises(ArgumentError) { Numo::DFloat.allocate.marshal_load([1, bad, 0, +'']) }
+      assert_raises(ArgumentError) { Numo::RObject.allocate.marshal_load([1, bad, 0, []]) }
+    end
+  end
+
+  def test_marshal_load_rejects_non_string_content
+    [[1, 2], {}, Object.new, 12_345, nil, :abc].each do |bad|
+      assert_raises(TypeError) { Numo::DFloat.allocate.marshal_load([1, [2], 0, bad]) }
+    end
+  end
+
+  def test_marshal_load_rejects_a_malformed_stream
+    body = Marshal.dump([1, 42, 0, '']).byteslice(2..)
+    name = 'Numo::DFloat'
+    stream = "\x04\x08U:#{(name.bytesize + 5).chr}#{name}#{body}".b
+    assert_raises(ArgumentError) { Marshal.load(stream) } # rubocop:disable Security/MarshalLoad
+
+    a = Numo::DFloat[1.5, 2.5]
+    assert_equal(a, Marshal.load(Marshal.dump(a)))
+  end
+
   def test_store_binary_to_binary
     (TYPES - [Numo::RObject]).each do |dtype|
       a = dtype[1, 2, 3, 4, 5]
