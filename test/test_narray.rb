@@ -2169,6 +2169,15 @@ class NArrayTest < NArrayTestBase
     assert_equal([1] * 62, a.reshape!(*([1] * 62)).shape)
   end
 
+  def test_setup_shape_leaves_the_array_untouched_when_the_element_count_overflows
+    a = Numo::DFloat.new(2).seq
+
+    assert_raises(RangeError) { a.marshal_load([1, [2**40, 2**40, 8], 0, +'']) }
+    assert_equal([2], a.shape)
+    assert_equal(2, a.size)
+    assert_equal([0.0, 1.0], a.to_a)
+  end
+
   def test_reshape_bang_rejects_a_frozen_narray
     views = [Numo::DFloat.new(2, 3).seq.freeze, Numo::DFloat.new(6).seq.reshape(2, 3)[0..1, 0..2].freeze]
 
