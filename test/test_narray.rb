@@ -2159,6 +2159,66 @@ class NArrayTest < NArrayTestBase
     assert_raises(ArgumentError) { Numo::DFloat.new(6).seq.reshape(2**30, 2**30, 16, nil) }
   end
 
+  def test_reshape_bang_leaves_the_array_untouched_when_it_raises
+    max_dimension = ([0].pack('J').bytesize * 8) - 2
+    ones = [1] * (max_dimension + 1)
+    padded = [2, 3] + ones.first(max_dimension - 1)
+
+    [Numo::DFloat.new(1).seq, Numo::DFloat.new(3).seq[1..1]].each do |a|
+      assert_raises(Numo::NArray::DimensionError) { a.reshape!(*ones) }
+      assert_equal([1], a.shape)
+      assert_equal([a[0]], a.to_a)
+    end
+
+    [Numo::DFloat.new(6).seq, Numo::DFloat.new(6).seq[0..5]].each do |a|
+      assert_raises(Numo::NArray::DimensionError) { a.reshape!(*padded) }
+      assert_equal([6], a.shape)
+      assert_equal([0.0, 1.0, 2.0, 3.0, 4.0, 5.0], a.to_a)
+    end
+
+    fits = [1] * max_dimension
+    assert_equal(fits, Numo::DFloat.new(1).seq.reshape!(*fits).shape)
+  end
+
+  def test_reshape_bang_with_a_large_argument_list
+    a = Numo::DFloat.new(1).seq
+
+    assert_raises(Numo::NArray::DimensionError) { a.reshape!(*([1] * 1_000)) }
+    assert_equal([1], a.shape)
+    assert_equal([0.0], a.to_a)
+  end
+
+  def test_setup_shape_leaves_the_array_untouched_when_the_element_count_overflows
+    a = Numo::DFloat.new(2).seq
+
+    assert_raises(RangeError) { a.marshal_load([1, [2**40, 2**40, 8], 0, +'']) }
+    assert_equal([2], a.shape)
+    assert_equal(2, a.size)
+    assert_equal([0.0, 1.0], a.to_a)
+  end
+
+  def test_reshape_bang_rejects_a_frozen_narray
+    views = [Numo::DFloat.new(2, 3).seq.freeze, Numo::DFloat.new(6).seq.reshape(2, 3)[0..1, 0..2].freeze]
+
+    views.each do |a|
+      err = assert_raises(RuntimeError) { a.reshape!(6) }
+      assert_match(/frozen/, err.message)
+      assert_equal([2, 3], a.shape)
+      assert_equal([[0.0, 1.0, 2.0], [3.0, 4.0, 5.0]], a.to_a)
+    end
+  end
+
+  def test_marshal_load_rejects_a_frozen_narray
+    a = Numo::DFloat.new(2).seq.freeze
+    data = Numo::DFloat.new(4, 5).seq.marshal_dump
+
+    err = assert_raises(RuntimeError) { a.marshal_load(data) }
+    assert_match(/frozen/, err.message)
+    assert_equal([2], a.shape)
+    assert_equal(2, a.size)
+    assert_equal([0.0, 1.0], a.to_a)
+  end
+
   def test_reshape_unfixed_dimension
     a = Numo::DFloat.new(6).seq
     assert_equal([2, 3], a.reshape(2, nil).shape)

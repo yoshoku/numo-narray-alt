@@ -359,6 +359,10 @@ static void na_check_reshape(int argc, VALUE* argv, VALUE self, size_t* shape) {
   } else if (total != NA_SIZE(na)) {
     rb_raise(rb_eArgError, "Total size must be same");
   }
+
+  if (argc > NA_MAX_DIMENSION) {
+    rb_raise(nary_eDimensionError, "ndim=%d is too many", argc);
+  }
 }
 
 /*
@@ -376,11 +380,15 @@ static VALUE na_reshape_bang(int argc, VALUE* argv, VALUE self) {
   ssize_t stride;
   stridx_t* stridx;
   int i;
+  VALUE tmp;
 
+  if (OBJ_FROZEN(self)) {
+    rb_raise(rb_eRuntimeError, "cannot write to frozen NArray.");
+  }
   if (na_check_contiguous(self) == Qfalse) {
     rb_raise(rb_eStandardError, "cannot change shape of non-contiguous NArray");
   }
-  shape = ALLOCA_N(size_t, argc);
+  shape = RB_ALLOCV_N(size_t, tmp, argc);
   na_check_reshape(argc, argv, self, shape);
 
   GetNArray(self, na);
@@ -406,6 +414,7 @@ static VALUE na_reshape_bang(int argc, VALUE* argv, VALUE self) {
     }
   }
   na_setup_shape(na, argc, shape);
+  RB_ALLOCV_END(tmp);
   return self;
 }
 
@@ -420,14 +429,15 @@ static VALUE na_reshape_bang(int argc, VALUE* argv, VALUE self) {
 static VALUE na_reshape(int argc, VALUE* argv, VALUE self) {
   size_t* shape;
   narray_t* na;
-  VALUE copy;
+  VALUE copy, tmp;
 
-  shape = ALLOCA_N(size_t, argc);
+  shape = RB_ALLOCV_N(size_t, tmp, argc);
   na_check_reshape(argc, argv, self, shape);
 
   copy = rb_funcall(self, rb_intern("dup"), 0);
   GetNArray(copy, na);
   na_setup_shape(na, argc, shape);
+  RB_ALLOCV_END(tmp);
   return copy;
 }
 
