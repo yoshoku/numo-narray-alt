@@ -1868,6 +1868,17 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_median_excludes_nan
+    nan = Float::NAN
+    [Numo::DFloat, Numo::SFloat].each do |dtype|
+      assert_in_delta(2.0, dtype[3, nan, 1, nan, 2].median, 1e-6)
+      assert_in_delta(3.0, dtype[4, 3, nan, 1].median, 1e-6)
+      assert_in_delta(2.0, dtype[3, 1, 2].median, 1e-6)
+      assert_predicate(dtype[nan, nan, nan].median, :nan?)
+      assert_equal([2.0, 3.5], dtype[[3, nan, 1], [nan, 2, 5]].median(axis: 1).to_a)
+    end
+  end
+
   def test_comparison_gt
     a = Numo::DFloat[1, 2, 3, 4, 5]
     result = a.gt(3)
