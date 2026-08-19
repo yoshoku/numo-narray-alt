@@ -511,10 +511,29 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_store_keeps_the_offset_of_each_sub_narray
+    TYPES.each do |dtype|
+      src = dtype.new(2, 8).seq
+      rows = [src[1, true], src[0, true]]
+      want = [rows[0].to_a, rows[1].to_a]
+      assert_equal(want, dtype.zeros(2, 8).store(rows).to_a)
+      assert_equal(want, dtype.cast(rows).to_a)
+      assert_equal(want, dtype[*rows].to_a)
+    end
+
+    bits = Numo::Int32.new(2, 8).seq.gt(3)
+    brows = [bits[1, true], bits[0, true]]
+    assert_equal([brows[0].to_a, brows[1].to_a], Numo::Bit.cast(brows).to_a)
+  end
+
   def test_store_does_not_reuse_the_index_of_a_previous_sub_narray
     src = Numo::Int32.new(1000).seq
     rows = [src[[999, 998, 997, 996, 995, 994, 993, 992]], Numo::Int32.new(8).seq]
     assert_equal([rows[0].to_a, rows[1].to_a], Numo::Int32.zeros(2, 8).store(rows).to_a)
+
+    bits = Numo::Int32.new(2, 8).seq.gt(3)
+    brows = [bits[0, [7, 6, 5, 4, 3, 2, 1, 0]], bits[1, true]]
+    assert_equal([brows[0].to_a, brows[1].to_a], Numo::Bit.new(2, 8).store(brows).to_a)
   end
 
   def test_cast
