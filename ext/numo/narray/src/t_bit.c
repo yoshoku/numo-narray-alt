@@ -130,6 +130,8 @@ static void iter_bit_fill(na_loop_t* const lp) {
       p3 += s3;
     }
   } else {
+    a3 += p3 / NB;
+    p3 %= NB;
     if (p3 > 0 || n < NB) {
       len = (int)(NB - p3);
       if ((int)n < len) {
