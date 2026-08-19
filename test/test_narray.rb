@@ -536,6 +536,22 @@ class NArrayTest < NArrayTestBase
     assert_equal([brows[0].to_a, brows[1].to_a], Numo::Bit.new(2, 8).store(brows).to_a)
   end
 
+  def test_store_of_a_sub_narray_shorter_than_the_row
+    want = [[1, 2, 3, 0, 0, 0, 0, 0], [4, 5, 6, 0, 0, 0, 0, 0]]
+    a = Numo::Int32.new(2, 8).fill(9)
+    a.store([Numo::Int32[1, 2, 3], Numo::Int32[4, 5, 6]])
+    assert_equal(want, a.to_a)
+    assert_equal(want, Numo::Int32.new(2, 8).fill(9).store([[1, 2, 3], [4, 5, 6]]).to_a)
+
+    src = Numo::Int32.new(4, 300).seq.gt(100)
+    rows = [src[0, 0...64], src[1, [3, 1, 2, 0]], src[2, true]]
+    b = Numo::Bit.new(3, 300).fill(1)
+    b.store(rows)
+    assert_equal(rows[0].to_a + ([0] * 236), b[0, true].to_a)
+    assert_equal(rows[1].to_a + ([0] * 296), b[1, true].to_a)
+    assert_equal(rows[2].to_a, b[2, true].to_a)
+  end
+
   def test_cast
     a = 10
     TYPES.each do |stype|

@@ -1270,8 +1270,13 @@ static void iter_bit_store_array(na_loop_t* const lp) {
 
   if (lp->args[1].ptr) {
     if (v1 == Qtrue) {
-      iter_bit_store_bit(lp);
       i = lp->args[1].shape[0];
+      if (i > n) {
+        i = n;
+      }
+      NDL_CNT(lp) = i;
+      iter_bit_store_bit(lp);
+      NDL_CNT(lp) = n;
       if (idx1) {
         idx1 += i;
       } else {
