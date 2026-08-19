@@ -218,4 +218,27 @@ class NArrayBitTest < NArrayTestBase
     assert_in_delta(0.7071068, m_rms[0])
     assert_in_delta(0.7071068, m_rms[1])
   end
+
+  def test_fill_of_a_view_past_the_first_word
+    a = Numo::Bit.new(4, 11).fill(0)
+    a[[0, 3], true].fill(1)
+    assert_equal(22, a.count_true)
+    assert_equal([1, 0, 0, 1], a[true, 0].to_a)
+
+    b = Numo::Bit.new(8, 9).fill(0)
+    b[[3, 0, 5], true].fill(1)
+    assert_equal(27, b.count_true)
+    assert_equal([1, 0, 0, 1, 0, 1, 0, 0], b[true, 0].to_a)
+
+    [0, 31, 32, 33, 64, 65, 100].each do |offset|
+      c = Numo::Bit.new(200).fill(0)
+      c[offset...(offset + 8)].fill(1)
+      assert_equal((offset...(offset + 8)).to_a, c.where.to_a)
+    end
+
+    d = Numo::Bit.new(4, 11).fill(1)
+    d[[1, 2], true].fill(0)
+    assert_equal(22, d.count_true)
+    assert_equal([1, 0, 0, 1], d[true, 0].to_a)
+  end
 end
