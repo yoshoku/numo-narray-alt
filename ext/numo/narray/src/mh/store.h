@@ -165,8 +165,13 @@ static inline bool na_store_rary_fetch(VALUE ary, size_t i, VALUE* x) {
     i = 0;                                                                                     \
     if (lp->args[1].ptr) {                                                                     \
       if (v1 == Qtrue) {                                                                       \
-        iter_##tDType##_store_##tDType(lp);                                                    \
         i = lp->args[1].shape[0];                                                              \
+        if (i > n) {                                                                           \
+          i = n;                                                                               \
+        }                                                                                      \
+        NDL_CNT(lp) = i;                                                                       \
+        iter_##tDType##_store_##tDType(lp);                                                    \
+        NDL_CNT(lp) = n;                                                                       \
         if (idx1) {                                                                            \
           idx1 += i;                                                                           \
         } else {                                                                               \

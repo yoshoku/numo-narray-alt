@@ -520,7 +520,7 @@ static void ndloop_set_stepidx(na_md_loop_t* lp, int j, VALUE vna, int* dim_map,
       if (n > 1 || nd > 0) {
         i = dim_map[k];
         LITER(lp, i, j).step = s;
-        // LITER(lp,i,j).idx = NULL;
+        LITER(lp, i, j).idx = NULL;
       }
       s *= n;
       nd--;
@@ -539,7 +539,7 @@ static void ndloop_set_stepidx(na_md_loop_t* lp, int j, VALUE vna, int* dim_map,
           LITER(lp, i, j).idx = SDX_GET_INDEX(sdx);
         } else {
           LITER(lp, i, j).step = SDX_GET_STRIDE(sdx);
-          // LITER(lp,i,j).idx = NULL;
+          LITER(lp, i, j).idx = NULL;
         }
       } else if (n == 1) {
         if (SDX_IS_INDEX(sdx)) {
@@ -1540,6 +1540,7 @@ static void loop_store_subnarray(ndfunc_t* nf, na_md_loop_t* lp, int i0, size_t*
     dim_map[i] = lp->trans_map[i + i0];
   }
   ndloop_set_stepidx(lp, 1, a, dim_map, NDL_READ);
+  LITER(lp, i0, 1).pos = LITER(lp, 0, 1).pos;
   LARG(lp, 1).shape = &(na->shape[na->ndim - 1]);
 
   // loop body
