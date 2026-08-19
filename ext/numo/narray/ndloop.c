@@ -1540,6 +1540,7 @@ static void loop_store_subnarray(ndfunc_t* nf, na_md_loop_t* lp, int i0, size_t*
     dim_map[i] = lp->trans_map[i + i0];
   }
   ndloop_set_stepidx(lp, 1, a, dim_map, NDL_READ);
+  LITER(lp, i0, 1).pos = LITER(lp, 0, 1).pos;
   LARG(lp, 1).shape = &(na->shape[na->ndim - 1]);
 
   // loop body
