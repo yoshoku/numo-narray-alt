@@ -2071,6 +2071,35 @@ class NArrayTest < NArrayTestBase
     assert_equal(a, Marshal.load(Marshal.dump(a)))
   end
 
+  def test_store_binary_to_a_view_uses_the_view_offset
+    a = Numo::DFloat.new(2, 3).seq
+    a[1, true].store_binary([9.0, 8.0, 7.0].pack('d3'))
+
+    assert_equal([[0.0, 1.0, 2.0], [9.0, 8.0, 7.0]], a.to_a)
+
+    b = Numo::DFloat.new(4).seq
+    b[1..2].store_binary([9.0, 8.0].pack('d2').freeze)
+
+    assert_equal([0.0, 9.0, 8.0, 3.0], b.to_a)
+    assert_equal(32, b.byte_size)
+    assert_equal(32, b.to_binary.bytesize)
+
+    c = Numo::Bit.new(64).fill(0)
+
+    assert_equal(4, c[0...32].store_binary("\xFF".b * 4))
+    assert_equal(32, c.count_true)
+    assert_equal(32, c[0...32].count_true)
+  end
+
+  def test_store_binary_rejects_a_view_it_cannot_place
+    a = Numo::DFloat.new(1).seq
+
+    assert_raises(StandardError) { a[[0] * 100_000].store_binary("\xAA".b * (100_000 * 8)) }
+    assert_raises(StandardError) { Numo::DFloat.new(4).seq.reverse.store_binary(([1.0] * 4).pack('d4')) }
+    assert_raises(StandardError) { Numo::DFloat.new(4).seq[[0, 2]].store_binary(([1.0] * 2).pack('d2')) }
+    assert_raises(StandardError) { Numo::Bit.new(64).fill(0)[8...40].store_binary("\xFF".b * 4) }
+  end
+
   def test_store_binary_to_binary
     (TYPES - [Numo::RObject]).each do |dtype|
       a = dtype[1, 2, 3, 4, 5]
