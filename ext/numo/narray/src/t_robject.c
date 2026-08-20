@@ -405,7 +405,10 @@ void Init_numo_robject(void) {
   /* Stride size of contiguous RObject array. */
   rb_define_const(cT, "CONTIGUOUS_STRIDE", INT2FIX(sizeof(dtype)));
   rb_undef_method(rb_singleton_class(cT), "from_binary");
+  rb_undef_method(rb_singleton_class(cT), "from_string");
+  rb_undef_method(cT, "store_binary");
   rb_undef_method(cT, "to_binary");
+  rb_undef_method(cT, "to_string");
   rb_undef_method(cT, "swap_byte");
   rb_undef_method(cT, "to_network");
   rb_undef_method(cT, "to_vacs");

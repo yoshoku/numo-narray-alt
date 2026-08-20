@@ -2057,6 +2057,25 @@ class NArrayTest < NArrayTestBase
     assert_equal(%w[hello world], Marshal.load(Marshal.dump(a)).to_a)
   end
 
+  def test_robject_rejects_binary_io
+    a = Numo::RObject[1, 2, 3]
+    bytes = "\x00" * 24
+
+    assert_raises(NoMethodError) { a.store_binary(bytes) }
+    assert_raises(NoMethodError) { a.to_binary }
+    assert_raises(NoMethodError) { a.to_string }
+    assert_raises(NoMethodError) { RObjectSubclass.new(3).allocate.store_binary(bytes) }
+    assert_raises(NoMethodError) { Numo::RObject.from_binary(bytes) }
+    assert_raises(NoMethodError) { Numo::RObject.from_string(bytes) }
+    assert_raises(NoMethodError) { RObjectSubclass.from_binary(bytes) }
+
+    assert_raises(TypeError) { Numo::NArray.instance_method(:store_binary).bind_call(a, bytes) }
+    assert_raises(TypeError) { Numo::NArray.instance_method(:to_binary).bind_call(a) }
+    assert_raises(TypeError) do
+      Numo::NArray.singleton_class.instance_method(:from_binary).bind_call(RObjectSubclass, bytes)
+    end
+  end
+
   def test_marshal_load_rejects_a_non_array_shape
     [42, 'AAAAAAAAAAAAAAAA', nil, {}, 1.5, :abc, true, Object.new].each do |bad|
       assert_raises(ArgumentError) { Numo::DFloat.allocate.marshal_load([1, bad, 0, +'']) }
