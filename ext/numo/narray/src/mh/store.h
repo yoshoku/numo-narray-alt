@@ -487,7 +487,7 @@ static inline bool na_store_rary_fetch(VALUE ary, size_t i, VALUE* x) {
       robject_store_uint8(self, obj);                                                          \
       return self;                                                                             \
     }                                                                                          \
-    if (klass == numo_cRObject) {                                                              \
+    if (RTEST(rb_obj_is_kind_of(obj, numo_cRObject))) {                                        \
       robject_store_robject(self, obj);                                                        \
       return self;                                                                             \
     }                                                                                          \

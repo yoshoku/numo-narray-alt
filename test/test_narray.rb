@@ -2235,6 +2235,24 @@ class NArrayTest < NArrayTestBase
     assert_equal(Numo::DFloat[5, 7, 9], result)
   end
 
+  def test_store_of_an_robject_subclass_is_element_wise
+    subclass = Class.new(Numo::RObject)
+    a = subclass.new(6).allocate.store([1, 2, 3, 4, 5, 6])
+
+    assert_equal([1, 2, 3, 4, 5, 6], a.dup.to_a)
+    assert_equal(subclass, a.dup.class)
+    assert_equal([[1, 2, 3], [4, 5, 6]], a.reshape(2, 3).to_a)
+    assert_equal([[1, 4], [2, 5], [3, 6]], a.reshape(2, 3).transpose.to_a)
+    assert_equal([2, 3, 4, 5, 6, 7], (a + 1).to_a)
+    assert_equal(21, a.sum)
+    assert_equal([0, 0, 1, 0, 0, 0], a.eq(3).to_a)
+    assert_equal([1, 2, 3, 4, 5, 6], Numo::RObject.cast(a).to_a)
+
+    assert_equal([0.0, 1.0, 2.0], Numo::RObject.new(3).store(Numo::DFloat[0, 1, 2]).to_a)
+    assert_equal(%w[x x x], Numo::RObject.new(3).store(+'x').to_a)
+    assert_equal([1, 2, 3], Numo::RObject.new(3).store([1, 2, 3]).to_a)
+  end
+
   def test_shape_error_on_binary_operations
     a = Numo::DFloat[1, 2, 3]
     b = Numo::DFloat[1, 2]
