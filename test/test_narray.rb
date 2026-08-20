@@ -2305,6 +2305,19 @@ class NArrayTest < NArrayTestBase
     assert_raises(ArgumentError) { Numo::DFloat.new(1, 2, -3) }
   end
 
+  def test_expand_dims_rejects_exceeding_the_maximum_dimension
+    a = Numo::DFloat.new(*([1] * 62)).seq
+
+    assert_equal(62, a.ndim)
+    assert_raises(Numo::NArray::DimensionError) { a.expand_dims(0) }
+    assert_raises(Numo::NArray::DimensionError) { a.expand_dims(-1) }
+    assert_equal(62, a.ndim)
+
+    b = Numo::DFloat.new(*([1] * 61)).seq
+
+    assert_equal(62, b.expand_dims(0).ndim)
+  end
+
   def test_new_rejects_shape_whose_element_count_overflows
     assert_raises(RangeError) { Numo::Int8.new((2**62) + 1, 4) }
     assert_raises(RangeError) { Numo::DFloat.new(2**32, 2**32) }
