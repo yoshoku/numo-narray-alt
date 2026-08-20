@@ -1420,7 +1420,7 @@ static VALUE nary_marshal_dump(VALUE self) {
   rb_ary_push(a, INT2FIX(1)); // version
   rb_ary_push(a, na_shape(self));
   rb_ary_push(a, INT2FIX(NA_FLAG0(self)));
-  if (rb_obj_class(self) == numo_cRObject) {
+  if (RTEST(rb_obj_is_kind_of(self, numo_cRObject))) {
     narray_t* na;
     VALUE* ptr;
     size_t offset = 0;
@@ -1474,7 +1474,7 @@ static VALUE nary_marshal_load(VALUE self, VALUE a) {
   na_initialize(self, RARRAY_AREF(a, 1));
   NA_FL0_SET(self, FIX2INT(RARRAY_AREF(a, 2)));
   v = RARRAY_AREF(a, 3);
-  if (rb_obj_class(self) == numo_cRObject) {
+  if (RTEST(rb_obj_is_kind_of(self, numo_cRObject))) {
     narray_t* na;
     char* ptr;
     if (TYPE(v) != T_ARRAY) {

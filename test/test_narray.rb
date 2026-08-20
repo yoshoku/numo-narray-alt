@@ -4,6 +4,7 @@ require_relative 'test_helper'
 
 class NArrayTest < NArrayTestBase
   class BitSubclass < Numo::Bit; end
+  class RObjectSubclass < Numo::RObject; end
 
   def test_inheritance_relationship
     TYPES.each do |dtype|
@@ -2046,6 +2047,14 @@ class NArrayTest < NArrayTestBase
     assert_equal(bits.join, a.to_binary.unpack1('b*'))
     assert_equal(bits[8, 8], a[8..15].to_a)
     assert_raises(Numo::NArray::CastError) { a[8..15].to_binary }
+  end
+
+  def test_marshal_of_an_robject_subclass_does_not_expose_raw_values
+    a = RObjectSubclass.new(2).allocate.store([+'hello', +'world'])
+    dumped = a.marshal_dump
+
+    assert_equal([1, [2], 0, %w[hello world]], dumped)
+    assert_equal(%w[hello world], Marshal.load(Marshal.dump(a)).to_a)
   end
 
   def test_marshal_load_rejects_a_non_array_shape
