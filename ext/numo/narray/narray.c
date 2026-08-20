@@ -1334,7 +1334,7 @@ static VALUE nary_s_from_binary(int argc, VALUE* argv, VALUE type) {
     @return [Integer] stored length.
  */
 static VALUE nary_store_binary(int argc, VALUE* argv, VALUE self) {
-  size_t size, str_len, byte_size, offset;
+  size_t size, str_len, byte_size, offset, view_offset = 0;
   int narg;
   VALUE vstr, voffset;
   VALUE velmsz;
@@ -1369,12 +1369,34 @@ static VALUE nary_store_binary(int argc, VALUE* argv, VALUE self) {
     rb_raise(rb_eArgError, "string is too short to store");
   }
 
-  if (OBJ_FROZEN(vstr)) {
+  if (na->type == NARRAY_VIEW_T) {
+    narray_t* nab;
+    size_t data_byte_size;
+
+    if (na_check_contiguous(self) == Qfalse) {
+      rb_raise(rb_eStandardError, "cannot store binary data to non-contiguous NArray");
+    }
+    view_offset = NA_VIEW_OFFSET(na);
+    if (!FIXNUM_P(velmsz) && view_offset != 0) {
+      rb_raise(rb_eStandardError, "cannot store binary data to NArray view offset in bits");
+    }
+    GetNArray(NA_VIEW_DATA(na), nab);
+    if (FIXNUM_P(velmsz)) {
+      data_byte_size = NA_SIZE(nab) * NUM2SIZET(velmsz);
+    } else {
+      data_byte_size = ceil(NA_SIZE(nab) * NUM2DBL(velmsz));
+    }
+    if (view_offset > data_byte_size || byte_size > data_byte_size - view_offset) {
+      rb_raise(rb_eArgError, "string is too long to store");
+    }
+  }
+
+  if (OBJ_FROZEN(vstr) && na->type != NARRAY_VIEW_T) {
     na_set_pointer(self, RSTRING_PTR(vstr) + offset, byte_size);
     rb_ivar_set(self, id_source, vstr);
   } else {
-    void* ptr = na_get_pointer_for_write(self);
-    memcpy(ptr, RSTRING_PTR(vstr) + offset, byte_size);
+    char* ptr = na_get_pointer_for_write(self);
+    memcpy(ptr + view_offset, RSTRING_PTR(vstr) + offset, byte_size);
   }
 
   return SIZET2NUM(byte_size);
