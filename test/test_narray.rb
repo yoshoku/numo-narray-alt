@@ -4,6 +4,7 @@ require_relative 'test_helper'
 
 class NArrayTest < NArrayTestBase
   class BitSubclass < Numo::Bit; end
+  class RObjectSubclass < Numo::RObject; end
 
   def test_inheritance_relationship
     TYPES.each do |dtype|
@@ -2046,6 +2047,33 @@ class NArrayTest < NArrayTestBase
     assert_equal(bits.join, a.to_binary.unpack1('b*'))
     assert_equal(bits[8, 8], a[8..15].to_a)
     assert_raises(Numo::NArray::CastError) { a[8..15].to_binary }
+  end
+
+  def test_marshal_of_an_robject_subclass_does_not_expose_raw_values
+    a = RObjectSubclass.new(2).allocate.store([+'hello', +'world'])
+    dumped = a.marshal_dump
+
+    assert_equal([1, [2], 0, %w[hello world]], dumped)
+    assert_equal(%w[hello world], Marshal.load(Marshal.dump(a)).to_a)
+  end
+
+  def test_robject_rejects_binary_io
+    a = Numo::RObject[1, 2, 3]
+    bytes = "\x00" * 24
+
+    assert_raises(NoMethodError) { a.store_binary(bytes) }
+    assert_raises(NoMethodError) { a.to_binary }
+    assert_raises(NoMethodError) { a.to_string }
+    assert_raises(NoMethodError) { RObjectSubclass.new(3).allocate.store_binary(bytes) }
+    assert_raises(NoMethodError) { Numo::RObject.from_binary(bytes) }
+    assert_raises(NoMethodError) { Numo::RObject.from_string(bytes) }
+    assert_raises(NoMethodError) { RObjectSubclass.from_binary(bytes) }
+
+    assert_raises(TypeError) { Numo::NArray.instance_method(:store_binary).bind_call(a, bytes) }
+    assert_raises(TypeError) { Numo::NArray.instance_method(:to_binary).bind_call(a) }
+    assert_raises(TypeError) do
+      Numo::NArray.singleton_class.instance_method(:from_binary).bind_call(RObjectSubclass, bytes)
+    end
   end
 
   def test_marshal_load_rejects_a_non_array_shape
