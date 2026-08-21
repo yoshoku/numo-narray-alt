@@ -1477,6 +1477,16 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_pow_with_a_negative_exponent_is_zero
+    (INTEGER_TYPES + UNSIGNED_INTEGER_TYPES).each do |dtype|
+      a = dtype[1, 2, 3, 4]
+
+      assert_equal(dtype[1, 1, 1, 1], a**0)
+      assert_equal(dtype[0, 0, 0, 0], a**-1)
+      assert_equal(dtype[0, 0, 0, 0], a**-2)
+    end
+  end
+
   def test_eye
     TYPES.each do |dtype|
       assert_equal(dtype[[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype.new(3, 3).eye)
