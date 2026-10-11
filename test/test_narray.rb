@@ -2436,6 +2436,25 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_flatten_of_an_empty_view
+    a = Numo::Int64.new(4, 3).seq
+    rows = a[true, 0].gt(100).where
+
+    assert_equal([0], a[rows, true].flatten.shape)
+    assert_equal([0], a[true, rows].flatten.shape)
+    assert_equal([0], a[2..1, :reverse].flatten.shape)
+    assert_equal([0], a[2...2, (0..2).step(2)].flatten.shape)
+    assert_equal([0], a[rows, true].flatten.flatten.shape)
+    assert_equal([0], a.gt(4)[[], true].flatten.shape)
+    assert_equal([0], Numo::RObject.cast(a)[[], true].flatten.shape)
+    assert_equal(Numo::Int64[9, 10, 11, 3, 4, 5], a[[3, 1], true].flatten)
+
+    b = Numo::Int64.new(2, 4096).seq
+
+    assert_equal([0], b[[], true].flatten.shape)
+    assert_equal([0], b[1..0, :reverse].flatten.shape)
+  end
+
   def test_argument_error_for_invalid_shape
     assert_raises(ArgumentError) { Numo::DFloat.new(1, 2, -3) }
   end
