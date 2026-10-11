@@ -1525,6 +1525,7 @@ class NArrayTest < NArrayTestBase
       assert_equal(dtype[1, 1, 1, 1], a**0)
       assert_raises(Numo::NArray::ValueError) { a**-1 }
       assert_raises(Numo::NArray::ValueError) { a**-2 }
+      assert_raises(Numo::NArray::ValueError) { a**Numo::Int32[2, -1, 2, 2] }
     end
   end
 
