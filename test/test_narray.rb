@@ -929,7 +929,7 @@ class NArrayTest < NArrayTestBase
   end
 
   def test_modf
-    # rubocop:disable Performance/CollectionLiteralInLoop
+    # rubocop:disable-next Performance/CollectionLiteralInLoop
     [Numo::DFloat, Numo::SFloat].each do |dtype|
       actual = dtype[1.5, -2.1, 3.0, -4.7, 5.9].modf
       assert_kind_of(Array, actual)
@@ -941,7 +941,6 @@ class NArrayTest < NArrayTestBase
       assert_kind_of(dtype, actual[1])
       assert_equal(dtype[1, -2, 3, -4, 5], actual[1])
     end
-    # rubocop:enable Performance/CollectionLiteralInLoop
   end
 
   def test_kahan_sum
