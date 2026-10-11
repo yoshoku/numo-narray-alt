@@ -41,3 +41,10 @@ jobs:
           model: ${{ vars.OPENCODE_MODEL || 'opencode-go/glm-5.3-flash' }}
           use_github_token: true
           share: false
+          prompt: |
+            Review this pull request:
+            - Check for code quality issues
+            - Look for potential bugs
+            - Suggest improvements
+
+            Write the entire review in English only. Do not use Chinese or any other language.
