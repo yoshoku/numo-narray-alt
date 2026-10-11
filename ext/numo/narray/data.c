@@ -524,6 +524,9 @@ na_flatten_dim(VALUE self, int sd) {
       // set index
       idx2 = ALLOC_N(size_t, (shape[sd] == 0) ? 1 : shape[sd]);
       SDX_SET_INDEX(na2->stridx[sd], idx2);
+      if (shape[sd] == 0) {
+        return view;
+      }
       // init for md-loop
       fd = nd - sd;
       c = ALLOCA_N(size_t, fd);
