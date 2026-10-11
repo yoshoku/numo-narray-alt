@@ -242,6 +242,23 @@ class NArrayBitTest < NArrayTestBase
     assert_equal([1, 0, 0, 1], d[true, 0].to_a)
   end
 
+  def test_write_to_an_empty_bit_array
+    assert_equal([0, 3], Numo::Bit.zeros(0, 3).shape)
+    assert_equal([0, 3], Numo::Bit.ones(0, 3).shape)
+    assert_equal([0, 3], Numo::Bit.new(0, 3).fill(1).shape)
+    assert_equal([0, 3], Numo::Bit.new(0, 3).dup.shape)
+    assert_equal([0, 3], Numo::Bit.new(0, 3).store(Numo::Bit.new(0, 3)).shape)
+    assert_equal([0, 3], Numo::Bit.new(0, 3).store([Numo::Bit[1, 0, 1]]).shape)
+
+    m = Numo::DFloat.new(5, 3).seq > 4
+    assert_equal([0, 3], m[3...3, true].dup.shape)
+    assert_equal([0, 3], Marshal.load(Marshal.dump(m[3...3, true])).shape)
+    m[3...3, true] = Numo::Bit.new(0, 3)
+    assert_equal(10, m.count_true)
+
+    assert_equal([0, 3, 4], Numo::Bit.new(2, 3, 4).fill(1)[1..0, [1, 1, 0], true].dup.shape)
+  end
+
   def test_swap_byte_on_a_bit_array_only_moves_the_endian_flag
     bits = [1, 0, 1, 1, 0, 0, 1, 0,
             1, 1, 0, 1, 0, 1, 1, 0,
