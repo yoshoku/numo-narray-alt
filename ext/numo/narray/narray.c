@@ -1261,6 +1261,9 @@ static VALUE nary_s_from_binary(int argc, VALUE* argv, VALUE type) {
   VALUE vstr, vshape, vna;
   VALUE velmsz;
 
+  if (RTEST(rb_class_inherited_p(type, numo_cRObject))) {
+    rb_raise(rb_eTypeError, "cannot restore %s from binary data", rb_class2name(type));
+  }
   narg = rb_scan_args(argc, argv, "11", &vstr, &vshape);
   Check_Type(vstr, T_STRING);
   str_len = RSTRING_LEN(vstr);
@@ -1340,6 +1343,9 @@ static VALUE nary_store_binary(int argc, VALUE* argv, VALUE self) {
   VALUE velmsz;
   narray_t* na;
 
+  if (RTEST(rb_obj_is_kind_of(self, numo_cRObject))) {
+    rb_raise(rb_eTypeError, "cannot store binary data to %s", rb_obj_classname(self));
+  }
   narg = rb_scan_args(argc, argv, "11", &vstr, &voffset);
   Check_Type(vstr, T_STRING);
   str_len = RSTRING_LEN(vstr);
@@ -1392,6 +1398,9 @@ static VALUE nary_to_binary(VALUE self) {
   narray_t* na;
   int offset_in_bits;
 
+  if (RTEST(rb_obj_is_kind_of(self, numo_cRObject))) {
+    rb_raise(rb_eTypeError, "cannot convert %s into binary data", rb_obj_classname(self));
+  }
   GetNArray(self, na);
   if (na->type == NARRAY_VIEW_T) {
     offset_in_bits = RTEST(rb_obj_is_kind_of(self, numo_cBit)) && NA_VIEW_OFFSET(na) != 0;
@@ -1420,7 +1429,7 @@ static VALUE nary_marshal_dump(VALUE self) {
   rb_ary_push(a, INT2FIX(1)); // version
   rb_ary_push(a, na_shape(self));
   rb_ary_push(a, INT2FIX(NA_FLAG0(self)));
-  if (rb_obj_class(self) == numo_cRObject) {
+  if (RTEST(rb_obj_is_kind_of(self, numo_cRObject))) {
     narray_t* na;
     VALUE* ptr;
     size_t offset = 0;
@@ -1474,7 +1483,7 @@ static VALUE nary_marshal_load(VALUE self, VALUE a) {
   na_initialize(self, RARRAY_AREF(a, 1));
   NA_FL0_SET(self, FIX2INT(RARRAY_AREF(a, 2)));
   v = RARRAY_AREF(a, 3);
-  if (rb_obj_class(self) == numo_cRObject) {
+  if (RTEST(rb_obj_is_kind_of(self, numo_cRObject))) {
     narray_t* na;
     char* ptr;
     if (TYPE(v) != T_ARRAY) {
