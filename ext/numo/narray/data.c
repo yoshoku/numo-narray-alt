@@ -8,6 +8,7 @@
 #include "numo/narray.h"
 #include "numo/template.h"
 
+static ID id_copy;
 static ID id_mulsum;
 static ID id_store;
 static ID id_swap_byte;
@@ -105,7 +106,11 @@ static VALUE nary_swap_byte(VALUE self) {
   ndfunc_arg_out_t aout[1] = { { INT2FIX(0), 0 } };
   ndfunc_t ndf = { iter_swap_byte, FULL_LOOP | NDF_ACCEPT_BYTESWAP, 1, 1, ain, aout };
 
-  v = na_ndloop(&ndf, 1, self);
+  if (rb_obj_is_kind_of(self, numo_cBit)) {
+    v = rb_funcall(self, id_copy, 0);
+  } else {
+    v = na_ndloop(&ndf, 1, self);
+  }
   if (self != v) {
     na_copy_flags(self, v);
   }
@@ -979,6 +984,7 @@ void Init_nary_data(void) {
 
   // rb_define_method(cNArray, "dot", numo_na_dot, 1);
 
+  id_copy = rb_intern("copy");
   id_mulsum = rb_intern("mulsum");
   id_store = rb_intern("store");
   id_swap_byte = rb_intern("swap_byte");
