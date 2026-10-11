@@ -280,20 +280,20 @@ class NArrayBitTest < NArrayTestBase
     RUBY
     includes = $LOAD_PATH.map { |p| "-I#{p}" }
     r, w = IO.pipe
-    pid = Process.spawn(RbConfig.ruby, *includes, "-e", script, out: w, err: File::NULL)
+    pid = Process.spawn(RbConfig.ruby, *includes, '-e', script, out: w, err: File::NULL)
     w.close
     reader = Thread.new { r.read }
     deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 60
     until Process.waitpid(pid, Process::WNOHANG)
       if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
-        Process.kill("KILL", pid)
+        Process.kill('KILL', pid)
         Process.waitpid(pid)
         reader.kill
-        flunk("swap_byte on a large bit array did not finish in 60 seconds")
+        flunk('swap_byte on a large bit array did not finish in 60 seconds')
       end
       sleep 0.05
     end
     assert_predicate(Process.last_status, :success?)
-    assert_equal("swap_byte,hton,to_network,to_swapped", reader.value)
+    assert_equal('swap_byte,hton,to_network,to_swapped', reader.value)
   end
 end
