@@ -1698,7 +1698,7 @@ static void iter_bit_copy(na_loop_t* const lp) {
     o1 = (int)(p1 - p3);
     l1 = NB + o1;
     r1 = NB - o1;
-    if (p3 > 0 || n < NB) {
+    if (n > 0 && (p3 > 0 || n < NB)) {
       len = (int)(NB - p3);
       if ((int)n < len) len = (int)n;
       if (o1 >= 0)
@@ -1792,7 +1792,7 @@ static void iter_bit_not(na_loop_t* const lp) {
     o1 = (int)(p1 - p3);
     l1 = NB + o1;
     r1 = NB - o1;
-    if (p3 > 0 || n < NB) {
+    if (n > 0 && (p3 > 0 || n < NB)) {
       len = (int)(NB - p3);
       if ((int)n < len) len = (int)n;
       if (o1 >= 0)
@@ -1892,7 +1892,7 @@ static void iter_bit_and(na_loop_t* const lp) {
     r1 = NB - o1;
     l2 = NB + o2;
     r2 = NB - o2;
-    if (p3 > 0 || n < NB) {
+    if (n > 0 && (p3 > 0 || n < NB)) {
       len = (int)(NB - p3);
       if ((int)n < len) len = (int)n;
       if (o1 >= 0)
@@ -2021,7 +2021,7 @@ static void iter_bit_or(na_loop_t* const lp) {
     r1 = NB - o1;
     l2 = NB + o2;
     r2 = NB - o2;
-    if (p3 > 0 || n < NB) {
+    if (n > 0 && (p3 > 0 || n < NB)) {
       len = (int)(NB - p3);
       if ((int)n < len) len = (int)n;
       if (o1 >= 0)
@@ -2150,7 +2150,7 @@ static void iter_bit_xor(na_loop_t* const lp) {
     r1 = NB - o1;
     l2 = NB + o2;
     r2 = NB - o2;
-    if (p3 > 0 || n < NB) {
+    if (n > 0 && (p3 > 0 || n < NB)) {
       len = (int)(NB - p3);
       if ((int)n < len) len = (int)n;
       if (o1 >= 0)
@@ -2279,7 +2279,7 @@ static void iter_bit_eq(na_loop_t* const lp) {
     r1 = NB - o1;
     l2 = NB + o2;
     r2 = NB - o2;
-    if (p3 > 0 || n < NB) {
+    if (n > 0 && (p3 > 0 || n < NB)) {
       len = (int)(NB - p3);
       if ((int)n < len) len = (int)n;
       if (o1 >= 0)
