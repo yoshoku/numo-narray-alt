@@ -241,4 +241,60 @@ class NArrayBitTest < NArrayTestBase
     assert_equal(22, d.count_true)
     assert_equal([1, 0, 0, 1], d[true, 0].to_a)
   end
+
+  def test_swap_byte_on_a_bit_array_only_moves_the_endian_flag
+    bits = [1, 0, 1, 1, 0, 0, 1, 0,
+            1, 1, 0, 1, 0, 1, 1, 0,
+            0, 0, 1, 1, 1, 0, 0, 1]
+    a = Numo::Bit.cast(bits).reshape(3, 8)
+    values = a.to_a
+
+    s = a.swap_byte
+    assert_equal(values, s.to_a)
+    assert_predicate(s, :byte_swapped?)
+    refute_predicate(s, :host_order?)
+    refute_predicate(a, :byte_swapped?)
+    refute_predicate(s.swap_byte, :byte_swapped?)
+    assert_equal(values, a.hton.to_a)
+    assert_equal(values, a.to_swapped.to_a)
+    assert_same(a, a.to_host)
+    assert_predicate(a.to_swapped.to_host, :host_order?)
+
+    view = a[true, 2...6]
+    assert_equal(view.to_a, view.swap_byte.to_a)
+    assert_equal(values, a.to_a)
+
+    x = a.inplace
+    assert_same(x, x.swap_byte)
+    assert_predicate(x, :byte_swapped?)
+    assert_equal(values, x.to_a)
+  end
+
+  def test_swap_byte_on_a_large_bit_array_does_not_run_past_the_buffer
+    script = <<~RUBY
+      require "numo/narray"
+      b = Numo::Bit.new(1 << 26).fill(1)
+      done = %i[swap_byte hton to_network to_swapped].select do |m|
+        Integer(b.send(m).count_true) == (1 << 26)
+      end
+      print done.join(",")
+    RUBY
+    includes = $LOAD_PATH.map { |p| "-I#{p}" }
+    r, w = IO.pipe
+    pid = Process.spawn(RbConfig.ruby, *includes, '-e', script, out: w, err: File::NULL)
+    w.close
+    reader = Thread.new { r.read }
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 60
+    until Process.waitpid(pid, Process::WNOHANG)
+      if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+        Process.kill('KILL', pid)
+        Process.waitpid(pid)
+        reader.kill
+        flunk('swap_byte on a large bit array did not finish in 60 seconds')
+      end
+      sleep 0.05
+    end
+    assert_predicate(Process.last_status, :success?)
+    assert_equal('swap_byte,hton,to_network,to_swapped', reader.value)
+  end
 end
