@@ -137,7 +137,7 @@ static void iter_bit_fill(na_loop_t* const lp) {
   } else {
     a3 += p3 / NB;
     p3 %= NB;
-    if (p3 > 0 || n < NB) {
+    if (n > 0 && (p3 > 0 || n < NB)) {
       len = (int)(NB - p3);
       if ((int)n < len) {
         len = (int)n;
@@ -583,7 +583,7 @@ static void iter_bit_store_bit(na_loop_t* const lp) {
     o1 = (int)(p1 - p3);
     l1 = NB + o1;
     r1 = NB - o1;
-    if (p3 > 0 || n < NB) {
+    if (n > 0 && (p3 > 0 || n < NB)) {
       len = (int)(NB - p3);
       if ((int)n < len) len = (int)n;
       if (o1 >= 0)
