@@ -1528,6 +1528,15 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_pow_with_a_negative_float_exponent_returns_dfloat
+    (INTEGER_TYPES + UNSIGNED_INTEGER_TYPES).each do |dtype|
+      b = dtype[1, 2, 3, 4]**-0.5
+
+      assert_kind_of(Numo::DFloat, b)
+      assert_equal(Numo::DFloat[1, 2, 3, 4]**-0.5, b)
+    end
+  end
+
   def test_eye
     TYPES.each do |dtype|
       assert_equal(dtype[[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype.new(3, 3).eye)
