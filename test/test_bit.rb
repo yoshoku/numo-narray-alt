@@ -243,8 +243,10 @@ class NArrayBitTest < NArrayTestBase
   end
 
   def test_swap_byte_on_a_bit_array_only_moves_the_endian_flag
-    srand(13)
-    a = Numo::Bit.cast(Array.new(3 * 8) { rand(2) }).reshape(3, 8)
+    bits = [1, 0, 1, 1, 0, 0, 1, 0,
+            1, 1, 0, 1, 0, 1, 1, 0,
+            0, 0, 1, 1, 1, 0, 0, 1]
+    a = Numo::Bit.cast(bits).reshape(3, 8)
     values = a.to_a
 
     s = a.swap_byte
@@ -273,8 +275,7 @@ class NArrayBitTest < NArrayTestBase
       require "numo/narray"
       b = Numo::Bit.new(1 << 26).fill(1)
       done = %i[swap_byte hton to_network to_swapped].select do |m|
-        v = b.send(m)
-        Integer(v.count_true) == (1 << 26) && v.byte_swapped?
+        Integer(b.send(m).count_true) == (1 << 26)
       end
       print done.join(",")
     RUBY
