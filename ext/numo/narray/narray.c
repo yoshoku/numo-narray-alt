@@ -1058,6 +1058,7 @@ static VALUE na_expand_dims(VALUE self, VALUE vdim) {
 
   GetNArray(self, na);
   nd = na->ndim;
+  na_check_ndim(nd + 1);
 
   dim = NUM2INT(vdim);
   if (dim < -nd - 1 || dim > nd) {
