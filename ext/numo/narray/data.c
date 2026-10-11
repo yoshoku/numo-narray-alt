@@ -106,8 +106,8 @@ static VALUE nary_swap_byte(VALUE self) {
   ndfunc_arg_out_t aout[1] = { { INT2FIX(0), 0 } };
   ndfunc_t ndf = { iter_swap_byte, FULL_LOOP | NDF_ACCEPT_BYTESWAP, 1, 1, ain, aout };
 
-  if (rb_obj_is_kind_of(self, numo_cBit)) {
-    v = rb_funcall(self, id_copy, 0);
+  if (RTEST(rb_obj_is_kind_of(self, numo_cBit))) {
+    v = TEST_INPLACE(self) ? self : rb_funcall(self, id_copy, 0);
   } else {
     v = na_ndloop(&ndf, 1, self);
   }
