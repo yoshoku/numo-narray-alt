@@ -808,6 +808,54 @@ class NArrayTest < NArrayTestBase
     assert_equal([[0.0], [1.0], [2.0], [3.0]], a[true, :new].to_a)
   end
 
+  def test_new_axis_in_front_of_an_index_backed_dimension
+    b = Numo::Int32.new(12, 3).seq
+    v = b[[3, 2, 1, 0], true]
+    assert_equal([[9, 10, 11], [6, 7, 8], [3, 4, 5], [0, 1, 2]], v.to_a)
+
+    assert_equal([1, 4, 3], v[:new, true, true].shape)
+    assert_equal([v.to_a], v[:new, true, true].to_a)
+    assert_equal([v.to_a], v[:new, false].to_a)
+    assert_equal([[v.to_a]], v[:new, :new, true, true].to_a)
+    assert_equal([[9, 10, 11]], v[:new, 0, true].to_a)
+    assert_equal([[10, 7, 4, 1]], v[:new, true, 1].to_a)
+    assert_equal([[[6, 7, 8], [3, 4, 5]]], v[:new, 1..2, true].to_a)
+
+    w = b[0..3, [2, 0]]
+    assert_equal(w.to_a.zip, w[true, :new, true].to_a)
+
+    x = b[[2, 0], [1, 2]]
+    assert_equal([x.to_a], x[:new, true, true].to_a)
+
+    u = Numo::Int32.new(16, 3).seq[7.step(0, -1).to_a, true]
+    assert_equal([u.to_a], u[:new, true, true].to_a)
+  end
+
+  def test_broadcast_through_a_new_axis_in_front_of_an_index_backed_dimension
+    x = Numo::DFloat.new(8, 2).seq
+    c = x[[3, 1], true]
+    assert_equal(x[true, :new, true] - c.dup[:new, true, true], x[true, :new, true] - c[:new, true, true])
+
+    a = Numo::Int32.new(4, 8).seq
+    u = Numo::Int32.new(16, 3).seq[7.step(0, -1).to_a, true]
+    assert_equal(a.dot(u.dup), a.dot(u))
+  end
+
+  def test_store_through_a_new_axis_in_front_of_an_index_backed_dimension
+    y = Numo::Int32.new(8, 3).seq
+    y[[3, 2, 1, 0], true][:new, true, true] = Numo::Int32.new(1, 4, 3).seq(100)
+    assert_equal([[109, 110, 111], [106, 107, 108], [103, 104, 105], [100, 101, 102]], y[0..3, true].to_a)
+    assert_equal([[12, 13, 14], [15, 16, 17], [18, 19, 20], [21, 22, 23]], y[4..7, true].to_a)
+  end
+
+  def test_new_axis_keeps_a_view_contiguous
+    b = Numo::Int32.new(4, 3).seq
+    assert_predicate(b[:new, 0, true], :contiguous?)
+    assert_predicate(b[:new, :new, true, true], :contiguous?)
+    assert_predicate(b[true, :new, :new, true], :contiguous?)
+    assert_predicate(b[1..2, true][:new, true, true], :contiguous?)
+  end
+
   def test_nearly_eq # rubocop:disable Metrics/AbcSize
     a = Numo::SFloat[1.0, 1.0, 1.0, 1.0]
     b = Numo::SFloat[1.0 + 1e-7, 1.0 - 1e-7, 1.0 + 1e-6, 1.0 - 1e-6]
