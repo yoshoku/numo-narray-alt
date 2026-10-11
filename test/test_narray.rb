@@ -1518,13 +1518,13 @@ class NArrayTest < NArrayTestBase
     end
   end
 
-  def test_pow_with_a_negative_exponent_is_zero
+  def test_pow_with_a_negative_integer_exponent_raises
     (INTEGER_TYPES + UNSIGNED_INTEGER_TYPES).each do |dtype|
       a = dtype[1, 2, 3, 4]
 
       assert_equal(dtype[1, 1, 1, 1], a**0)
-      assert_equal(dtype[0, 0, 0, 0], a**-1)
-      assert_equal(dtype[0, 0, 0, 0], a**-2)
+      assert_raises(Numo::NArray::ValueError) { a**-1 }
+      assert_raises(Numo::NArray::ValueError) { a**-2 }
     end
   end
 

@@ -34,7 +34,7 @@ static dtype pow_int(dtype x, int p) {
   case 3:
     return x * x * x;
   }
-  if (p < 0) return 0;
+  if (p < 0) rb_raise(nary_eValueError, "integers to negative integer powers are not allowed");
   while (p) {
     if (p & 1) r *= x;
     x *= x;
