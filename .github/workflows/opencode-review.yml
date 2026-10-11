@@ -28,6 +28,10 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
+      - name: Resolve latest opencode version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: echo "VERSION=$(gh release view --repo anomalyco/opencode --json tagName -q .tagName)" >> "$GITHUB_ENV"
       - name: Run OpenCode
         uses: anomalyco/opencode/github@latest
         env:
