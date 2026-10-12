@@ -439,7 +439,9 @@ static size_t na_index_parse_args(VALUE args, narray_t* na, na_index_arg_t* q, i
     }
     // new dimension
     else if (v == sym_new) {
-      na_index_parse_each(v, 1, k, &q[j]);
+      // Past the last dimension, which is how the aref functions below tell
+      // a new axis from a real one.
+      na_index_parse_each(v, 1, na->ndim, &q[j]);
       j++;
     }
     // other dimension
@@ -465,6 +467,25 @@ static void na_get_strides_nadata(const narray_data_t* na, ssize_t* strides, ssi
   }
 }
 
+// A new axis holds one element, so any stride addresses it. Give it the size of
+// the block below it, to keep the chain na_check_ladder() walks: a break there
+// costs contiguous?, and na_flatten_dim() takes the last dimension's stride as
+// the flat one on the strength of that same chain.
+static void na_index_set_newaxis_strides(
+  narray_view_t* na2, const int* newaxis, int n_newaxes, int ndim_new
+) {
+  int i, j;
+
+  for (i = n_newaxes - 1; i >= 0; i--) {
+    j = newaxis[i];
+    if (j + 1 < ndim_new && SDX_IS_STRIDE(na2->stridx[j + 1])) {
+      SDX_SET_STRIDE(
+        na2->stridx[j], SDX_GET_STRIDE(na2->stridx[j + 1]) * (ssize_t)na2->base.shape[j + 1]
+      );
+    }
+  }
+}
+
 static void na_index_aref_nadata(
   narray_data_t* na1, narray_view_t* na2, na_index_arg_t* q, ssize_t elmsz, int ndim,
   int keep_dim
@@ -475,8 +496,11 @@ static void na_index_aref_nadata(
   ssize_t* strides_na1;
   size_t* index;
   ssize_t beg, step;
+  int* newaxis;
+  int n_newaxes = 0;
   VALUE m;
 
+  newaxis = ALLOCA_N(int, ndim);
   strides_na1 = ALLOCA_N(ssize_t, na1->base.ndim);
   na_get_strides_nadata(na1, strides_na1, elmsz);
 
@@ -503,6 +527,7 @@ static void na_index_aref_nadata(
 
     if (qi_orig_dim >= na1->base.ndim) {
       // new dimension
+      newaxis[n_newaxes++] = j;
       SDX_SET_STRIDE(na2->stridx[j], elmsz);
     } else if (q[i].idx != NULL) {
       // array index
@@ -521,6 +546,7 @@ static void na_index_aref_nadata(
     j++;
     total *= size;
   }
+  na_index_set_newaxis_strides(na2, newaxis, n_newaxes, j);
   na2->base.size = total;
 }
 
@@ -530,6 +556,10 @@ static void na_index_aref_naview(
 ) {
   int i, j;
   ssize_t total = 1;
+  int* newaxis;
+  int n_newaxes = 0;
+
+  newaxis = ALLOCA_N(int, ndim);
 
   for (i = j = 0; i < ndim; i++) {
     stridx_t sdx1;
@@ -560,6 +590,7 @@ static void na_index_aref_naview(
 
     if (qi_orig_dim >= na1->base.ndim) {
       // new dimension
+      newaxis[n_newaxes++] = j;
       SDX_SET_STRIDE(na2->stridx[j], elmsz);
     } else if (q[i].idx != NULL && SDX_IS_INDEX(sdx1)) {
       // index <- index
@@ -618,6 +649,7 @@ static void na_index_aref_naview(
     j++;
     total *= size;
   }
+  na_index_set_newaxis_strides(na2, newaxis, n_newaxes, j);
   na2->base.size = total;
 }
 
