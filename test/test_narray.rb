@@ -679,6 +679,9 @@ class NArrayTest < NArrayTestBase
       actual = []
       a[[0, 3, 5]].each_with_index { |e, i| actual << [i, e] }
       assert_equal([[0, 1], [1, 5], [2, 11]], actual)
+      actual = []
+      dtype.cast(1).each_with_index { |e, i| actual << [i, e] }
+      assert_equal([[0, 1]], actual)
     end
   end
 
@@ -701,6 +704,12 @@ class NArrayTest < NArrayTestBase
       assert_kind_of(dtype, actual)
       assert_equal(dtype[0, 5, 22], actual)
       assert_equal(3, calls)
+      actual = []
+      dtype.cast(1).map_with_index do |e, i|
+        actual << [i, e]
+        e
+      end
+      assert_equal([[0, 1]], actual)
     end
   end
 
