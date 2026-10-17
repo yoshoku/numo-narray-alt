@@ -49,4 +49,7 @@ jobs:
             - Look for potential bugs
             - Suggest improvements
 
+            Do not run or attempt to run any linters or formatters (e.g. RuboCop, clang-format).
+            Linting and formatting are checked by separate workflows, so style issues are out of scope for this review.
+
             Write the entire review in English only. Do not use Chinese or any other language.
