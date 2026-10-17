@@ -857,6 +857,28 @@ class NArrayTest < NArrayTestBase
     assert_predicate(b[1..2, true][:new, true, true], :contiguous?)
   end
 
+  def test_rest_index_on_a_zero_dimensional_array
+    [Numo::DFloat, Numo::Int32, Numo::RObject, Numo::Bit].each do |dtype|
+      [dtype.cast(1), dtype[0, 0, 1][2, false]].each do |a|
+        assert_equal(1, a[false])
+        assert_equal(1, a[:rest])
+        assert_equal(1, a[:~])
+      end
+    end
+  end
+
+  def test_rest_index_assignment_on_a_zero_dimensional_array
+    c = Numo::DFloat.cast(5.0)
+    c[false] = 7
+    assert_equal(Numo::DFloat.cast(7.0), c)
+
+    [Numo::DFloat, Numo::RObject, Numo::Bit].each do |dtype|
+      b = dtype.zeros(3)
+      b[1, false][false] = 1
+      assert_equal(dtype[0, 1, 0], b)
+    end
+  end
+
   def test_nearly_eq # rubocop:disable Metrics/AbcSize
     a = Numo::SFloat[1.0, 1.0, 1.0, 1.0]
     b = Numo::SFloat[1.0 + 1e-7, 1.0 - 1e-7, 1.0 + 1e-6, 1.0 - 1e-6]
