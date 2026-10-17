@@ -305,8 +305,11 @@ static inline void yield_each_with_index(BIT_DIGIT x, size_t* c, VALUE* a, int n
 
 static void iter_bit_each_with_index(na_loop_t* const lp) {
   size_t* c = (size_t*)(lp->opt_ptr);
-  int nd = lp->ndim - 1;
-  int md = lp->ndim + 1;
+  int nd = lp->ndim;
+  if (nd > 0) {
+    nd--;
+  }
+  int md = nd + 2;
   VALUE* a = ALLOCA_N(VALUE, md);
   size_t n;
   BIT_DIGIT* a1;
