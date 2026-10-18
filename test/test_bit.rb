@@ -259,6 +259,29 @@ class NArrayBitTest < NArrayTestBase
     assert_equal([0, 3, 4], Numo::Bit.new(2, 3, 4).fill(1)[1..0, [1, 1, 0], true].dup.shape)
   end
 
+  def test_each_with_index
+    actual = []
+    Numo::Bit.cast(1).each_with_index { |x, *i| actual << [x, i] }
+    assert_equal([[1, [0]]], actual)
+
+    actual = []
+    (Numo::DFloat.cast(1.5) > 0).each_with_index { |x, *i| actual << [x, i] }
+    assert_equal([[1, [0]]], actual)
+
+    a = Numo::Bit[[1, 0, 1], [0, 1, 1]]
+    actual = []
+    a.each_with_index { |x, *i| actual << [x, i] }
+    assert_equal([[1, [0, 0]], [0, [0, 1]], [1, [0, 2]], [0, [1, 0]], [1, [1, 1]], [1, [1, 2]]], actual)
+
+    actual = []
+    a[true, 1..2].each_with_index { |x, *i| actual << [x, i] }
+    assert_equal([[0, [0, 0]], [1, [0, 1]], [1, [1, 0]], [1, [1, 1]]], actual)
+
+    actual = []
+    a[[1, 0], [2, 0]].each_with_index { |x, *i| actual << [x, i] }
+    assert_equal([[1, [0, 0]], [0, [0, 1]], [1, [1, 0]], [1, [1, 1]]], actual)
+  end
+
   def test_swap_byte_on_a_bit_array_only_moves_the_endian_flag
     bits = [1, 0, 1, 1, 0, 0, 1, 0,
             1, 1, 0, 1, 0, 1, 1, 0,
