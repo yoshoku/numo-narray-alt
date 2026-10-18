@@ -870,7 +870,10 @@ int na_get_result_dimension(
   }
 
   if (j != argc) {
-    return check_index_count(argc, na->ndim, count_new, count_rest);
+    int nd = check_index_count(argc, na->ndim, count_new, count_rest);
+    if (nd != 0) {
+      return nd;
+    }
   }
 
   switch (na->type) {
