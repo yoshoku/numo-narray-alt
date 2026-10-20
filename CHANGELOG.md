@@ -1,3 +1,68 @@
+## [[0.12.0](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.2...v0.12.0)] - 2026-xx-xx
+
+### Breaking changes
+
+- removed binary I/O from `Numo::RObject`, whose binary form is a list of raw object pointers:
+  [#30](https://github.com/yoshoku/numo-narray-alt/pull/30)
+  - `Numo::RObject.from_string`, `#to_string` and `#store_binary` are now undefined, in addition to the
+    already undefined `from_binary` and `to_binary`. Calling them through an `UnboundMethod` of
+    `Numo::NArray` raises `TypeError`.
+  - storing attacker-chosen bytes created arbitrary object references and crashed the GC, and
+    `to_string` exposed heap addresses.
+  - `Marshal.dump` of a `Numo::RObject` subclass now serializes elements instead of raw pointers.
+- changed integer `**` to raise `Numo::NArray::ValueError` for a negative integer exponent, following NumPy:
+  [#34](https://github.com/yoshoku/numo-narray-alt/pull/34)
+  - unsigned integer types previously never returned (e.g. `Numo::UInt8[1, 2] ** -2`), and signed types
+    returned 0 even for a base of 1 or -1. A float exponent still upcasts to `Numo::DFloat`.
+
+### Fixes
+
+- fixed a use-after-free, a heap buffer overflow and an uninitialized tail in `store_array`, reached by
+  `.cast(Array)`, `#store` and `#[]=`: [#19](https://github.com/yoshoku/numo-narray-alt/pull/19)
+- fixed out-of-bounds writes in `#bincount` from an overflowing output length and from a conversion
+  callback that changes the receiver after it is scanned; it now raises `RangeError` for the maximum
+  `size_t` item: [#20](https://github.com/yoshoku/numo-narray-alt/pull/20)
+- fixed out-of-bounds access from unchecked `size_t` multiplications in shape setup, the typed allocators,
+  `from_binary` and `store_binary`; an overflowing size now raises `RangeError` or `ArgumentError`:
+  [#21](https://github.com/yoshoku/numo-narray-alt/pull/21), [#22](https://github.com/yoshoku/numo-narray-alt/pull/22)
+- fixed crashes from an unvalidated `Marshal` payload in `#marshal_load`:
+  [#23](https://github.com/yoshoku/numo-narray-alt/pull/23)
+- fixed an interpreter abort (`[BUG] start_dim (0) out of range`) on views of a zero-dimensional array in
+  `#contiguous?`, `#to_binary`, `#marshal_dump` and `#reshape!`: [#24](https://github.com/yoshoku/numo-narray-alt/pull/24)
+- fixed out-of-bounds reads from the view offset of `Numo::Bit` in `#to_binary` and of `Numo::RObject`
+  in `#marshal_dump`: [#25](https://github.com/yoshoku/numo-narray-alt/pull/25)
+- fixed `#reshape!` and `#marshal_load` to validate their arguments before modifying the array:
+  [#26](https://github.com/yoshoku/numo-narray-alt/pull/26)
+  - a raise no longer leaves the array describing memory it does not own.
+  - both methods now raise on a frozen NArray, like other mutating methods.
+  - a large reshape argument list is no longer allocated on the machine stack.
+- fixed wrong values and out-of-bounds reads when storing a Ruby Array of NArrays:
+  [#27](https://github.com/yoshoku/numo-narray-alt/pull/27)
+- fixed `Numo::Bit#fill` corrupting bits outside a view that starts past the first word:
+  [#28](https://github.com/yoshoku/numo-narray-alt/pull/28)
+- fixed a heap buffer overflow and misplaced writes from `#store_binary` on a view:
+  [#31](https://github.com/yoshoku/numo-narray-alt/pull/31)
+  - the data is now written at the view's offset instead of the start of the base buffer.
+  - non-contiguous views and `Numo::Bit` views with a bit offset are now rejected.
+  - a frozen String is no longer used zero-copy for a view; the data is always copied.
+- fixed `#expand_dims` to raise `Numo::NArray::DimensionError` when the result exceeds the maximum
+  number of dimensions, which caused wrong reduction results: [#32](https://github.com/yoshoku/numo-narray-alt/pull/32)
+- fixed `Numo::RObject` subclasses storing the source array into every element:
+  [#33](https://github.com/yoshoku/numo-narray-alt/pull/33)
+- fixed `Numo::Bit#swap_byte`, `#hton`, `#to_network` and `#to_swapped` running past the packed buffer:
+  [#35](https://github.com/yoshoku/numo-narray-alt/pull/35)
+- fixed out-of-bounds access through a `:new` axis placed before an index-array dimension of a view,
+  which also affected broadcasting and `dot`: [#36](https://github.com/yoshoku/numo-narray-alt/pull/36)
+- fixed out-of-bounds access in `#flatten` of an empty view: [#37](https://github.com/yoshoku/numo-narray-alt/pull/37)
+- fixed a crash when writing to an empty `Numo::Bit` array, e.g. `Numo::Bit.zeros(0, 3)`:
+  [#38](https://github.com/yoshoku/numo-narray-alt/pull/38)
+- fixed a crash in `Numo::Bit#each_with_index` on a zero-dimensional array:
+  [#39](https://github.com/yoshoku/numo-narray-alt/pull/39)
+- fixed a crash when indexing a zero-dimensional array with `false`, `:rest` or `:~`; it now returns
+  the element, like `a[]`: [#40](https://github.com/yoshoku/numo-narray-alt/pull/40)
+
+Many thanks to [@Watson1978](https://github.com/Watson1978) for finding and fixing almost all of these issues.
+
 ## [[0.11.2](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.1...v0.11.2)] - 2026-08-12
 
 - fixed `Numo::NArray.parse` to stop evaluating its input as Ruby code:
