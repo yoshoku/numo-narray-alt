@@ -1,3 +1,9 @@
+## [[0.11.3](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.2...v0.11.3)] - 2026-xx-xx
+
+This is a maintenance release for the 0.11 series that backports the fixes in
+[v0.12.0](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.2...v0.12.0),
+excluding the breaking changes.
+
 ## [[0.11.2](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.1...v0.11.2)] - 2026-08-12
 
 - fixed `Numo::NArray.parse` to stop evaluating its input as Ruby code:
