@@ -1,4 +1,4 @@
-## [[0.12.0](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.2...v0.12.0)] - 2026-xx-xx
+## [[0.12.0](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.2...v0.12.0)] - 2026-10-20
 
 ### Breaking changes
 
@@ -63,6 +63,11 @@
 
 Many thanks to [@Watson1978](https://github.com/Watson1978) for finding and fixing almost all of these issues.
 
+## [[0.11.3](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.2...v0.11.3)] - 2026-10-20
+
+This is a maintenance release for the 0.11 series that backports the fixes in
+[v0.12.0](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.2...v0.12.0).
+
 ## [[0.11.2](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.1...v0.11.2)] - 2026-08-12
 
 - fixed `Numo::NArray.parse` to stop evaluating its input as Ruby code:
@@ -99,6 +104,11 @@ Many thanks to [@Watson1978](https://github.com/Watson1978) for finding and fixi
 - add AVX and NEON support for +, -, *, /, matmul, and sqrt methods in Numo::SFloat and Numo::DFloat.
 - add --with-no-simd option for disabling SIMD (SSE2, AVX, and NEON) implementations in Numo::SFloat and Numo::DFloat.
 - use RB_ALLOCV and RB_ALLOCV_END macros instead of rb_alloc_tmp_buffer and rb_free_tmp_buffer functions.
+
+## [[0.10.8](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.7...v0.10.8)] - 2026-10-20
+
+This is a maintenance release for the 0.10 series that backports the fixes in
+[v0.11.3](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.2...v0.11.3).
 
 ## [[0.10.7](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.6...v0.10.7)] - 2026-08-12
 
