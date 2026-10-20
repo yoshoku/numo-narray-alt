@@ -1,3 +1,8 @@
+## [[0.10.8](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.7...v0.10.8)] - 2026-10-20
+
+This is a maintenance release for the 0.10 series that backports the fixes in
+[v0.11.3](https://github.com/yoshoku/numo-narray-alt/compare/v0.11.2...v0.11.3).
+
 ## [[0.10.7](https://github.com/yoshoku/numo-narray-alt/compare/v0.10.6...v0.10.7)] - 2026-08-12
 
 This is a maintenance release for the 0.10 series that backports the fixes in
