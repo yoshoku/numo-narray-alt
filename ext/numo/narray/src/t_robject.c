@@ -410,6 +410,7 @@ void Init_numo_robject(void) {
   rb_undef_method(cT, "to_binary");
   rb_undef_method(cT, "to_string");
   rb_undef_method(cT, "swap_byte");
+  rb_undef_method(cT, "hton");
   rb_undef_method(cT, "to_network");
   rb_undef_method(cT, "to_vacs");
   rb_undef_method(cT, "to_host");
