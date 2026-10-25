@@ -2306,6 +2306,46 @@ class NArrayTest < NArrayTestBase
     assert_raises(ArgumentError) { Numo::DComplex.new(2**60).store_binary(('A' * 4096).freeze) }
   end
 
+  def test_free_keeps_a_buffer_it_does_not_own
+    script = <<~RUBY
+      require "numo/narray"
+      data = [1.0, 2.0, 3.0, 4.0].pack("d*") * 512
+      src = ([1.0, 2.0, 3.0, 4.0].pack("d*") * 512).freeze
+      dump = Marshal.dump(Numo::DFloat.from_binary(src))
+      20.times do
+        Numo::DFloat.from_binary(src).free
+        b = Numo::DFloat.new(2048)
+        b.store_binary(src)
+        b.free
+        Marshal.load(dump).free
+      end
+      GC.start
+      200.times { +"Y" * 16384 }
+      GC.start
+      a = Numo::DFloat.from_binary(src)
+      a.free
+      a.seq
+      print [src == data, a[2047]].inspect
+    RUBY
+    includes = $LOAD_PATH.map { |p| "-I#{p}" }
+    r, w = IO.pipe
+    pid = Process.spawn(RbConfig.ruby, *includes, '-e', script, out: w, err: File::NULL)
+    w.close
+    reader = Thread.new { r.read }
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 60
+    until Process.waitpid(pid, Process::WNOHANG)
+      if Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+        Process.kill('KILL', pid)
+        Process.waitpid(pid)
+        reader.kill
+        flunk('free of an array on a frozen String did not finish in 60 seconds')
+      end
+      sleep 0.05
+    end
+    assert_predicate(Process.last_status, :success?)
+    assert_equal('[true, 2047.0]', reader.value)
+  end
+
   def test_diagonal
     a = Numo::DFloat[[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     assert_equal(Numo::DFloat[1, 5, 9], a.diagonal)
