@@ -1129,7 +1129,7 @@ static VALUE ndloop_extract(VALUE results, ndfunc_t* nf) {
   case 0:
     return Qnil;
   case 1:
-    x = RARRAY_AREF(results, 0);
+    x = rb_ary_entry(results, 0);
     if (NDF_TEST(nf, NDF_EXTRACT)) {
       if (IsNArray(x)) {
         GetNArray(x, na);
