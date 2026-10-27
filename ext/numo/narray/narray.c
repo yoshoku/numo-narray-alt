@@ -781,7 +781,9 @@ static VALUE na_free(VALUE self) {
     ptr = NA_DATA_PTR(na);
     if (ptr != NULL) {
       NA_DATA_PTR(na) = NULL;
-      xfree(ptr);
+      if (NA_DATA_OWNED(na)) {
+        xfree(ptr);
+      }
     }
     break;
   case NARRAY_VIEW_T:
