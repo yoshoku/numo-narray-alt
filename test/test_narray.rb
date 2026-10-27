@@ -2215,6 +2215,19 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_robject_rejects_byte_swap
+    a = Numo::RObject[1, 2, 3]
+    b = RObjectSubclass.new(3).allocate
+
+    assert_raises(NoMethodError) { a.swap_byte }
+    assert_raises(NoMethodError) { a.hton }
+    assert_raises(NoMethodError) { b.hton }
+
+    assert_raises(TypeError) { Numo::NArray.instance_method(:swap_byte).bind_call(a) }
+    assert_raises(TypeError) { Numo::NArray.instance_method(:hton).bind_call(a) }
+    assert_raises(TypeError) { Numo::NArray.instance_method(:swap_byte).bind_call(b) }
+  end
+
   def test_marshal_load_rejects_a_non_array_shape
     [42, 'AAAAAAAAAAAAAAAA', nil, {}, 1.5, :abc, true, Object.new].each do |bad|
       assert_raises(ArgumentError) { Numo::DFloat.allocate.marshal_load([1, bad, 0, +'']) }
