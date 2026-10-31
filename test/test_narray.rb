@@ -553,6 +553,49 @@ class NArrayTest < NArrayTestBase
     assert_equal(rows[2].to_a, b[2, true].to_a)
   end
 
+  def test_store_does_not_reuse_the_outer_index_of_a_previous_sub_narray
+    zero_rows = [[0] * 8] * 2
+    TYPES.each do |dtype|
+      src = dtype.new(3, 8).seq
+      rows = [src[[2, 0, 1], true], dtype.new(1, 8).seq(100)]
+      d = dtype.new(2, 3, 8).fill(9).store(rows)
+      assert_equal(rows[0].to_a, d[0, true, true].to_a)
+      assert_equal(rows[1].to_a + zero_rows, d[1, true, true].to_a)
+    end
+
+    bits = Numo::Int32.new(3, 8).seq.gt(10)
+    brows = [bits[[2, 0, 1], true], Numo::Int32.new(1, 8).seq.gt(3)]
+    b = Numo::Bit.new(2, 3, 8).fill(1).store(brows)
+    assert_equal(brows[0].to_a, b[0, true, true].to_a)
+    assert_equal(brows[1].to_a + zero_rows, b[1, true, true].to_a)
+  end
+
+  def test_store_of_a_sub_narray_shorter_in_an_outer_axis
+    src = Numo::Int32.new(3, 4, 8).seq
+    [[0...2, true, true], [true, 0...2, true], [true, true, 0...5], [[0, 1], true, true]].each do |sel|
+      row = src[*sel]
+      want = Numo::Int32.zeros(3, 4, 8)
+      want[*row.shape.map { |n| 0...n }] = row
+      d = Numo::Int32.new(2, 3, 4, 8).fill(9).store([src, row])
+      assert_equal(src.to_a, d[0, true, true, true].to_a)
+      assert_equal(want.to_a, d[1, true, true, true].to_a)
+    end
+  end
+
+  def test_store_of_an_empty_sub_narray
+    TYPES.each do |dtype|
+      d = dtype.new(2, 3).fill(9).store([dtype[1, 2, 3], dtype.new(0)])
+      assert_equal([[1, 2, 3], [0, 0, 0]], d.to_a)
+      d = dtype.new(2, 2, 3).fill(9).store([dtype.new(2, 3).seq, dtype.new(2, 0)])
+      assert_equal([[[0, 1, 2], [3, 4, 5]], [[0, 0, 0], [0, 0, 0]]], d.to_a)
+      d = dtype.new(2, 2, 3).fill(9).store([dtype.new(2, 3).seq, dtype.new(0, 3)])
+      assert_equal([[[0, 1, 2], [3, 4, 5]], [[0, 0, 0], [0, 0, 0]]], d.to_a)
+    end
+
+    b = Numo::Bit.new(2, 3).fill(1).store([Numo::Bit[1, 0, 1], Numo::Bit.new(0)])
+    assert_equal([[1, 0, 1], [0, 0, 0]], b.to_a)
+  end
+
   def test_cast
     a = 10
     TYPES.each do |stype|

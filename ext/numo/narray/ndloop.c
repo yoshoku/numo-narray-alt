@@ -52,6 +52,7 @@ typedef struct NA_MD_LOOP {
   int init_aidx;            // index of initializer argument
   int reduce_dim;
   int* trans_map;
+  size_t sub_narray_len;
   VALUE vargs;
   VALUE reduce;
   VALUE loop_opt;
@@ -1518,6 +1519,7 @@ na_ndloop_inspect(VALUE nary, na_text_func_t func, VALUE opt) {
 static void loop_store_subnarray(ndfunc_t* nf, na_md_loop_t* lp, int i0, size_t* c, VALUE a) {
   int nd = lp->ndim;
   int i, j;
+  bool* reach;
   narray_t* na;
   int* dim_map;
   VALUE a_type;
@@ -1539,25 +1541,32 @@ static void loop_store_subnarray(ndfunc_t* nf, na_md_loop_t* lp, int i0, size_t*
   for (i = 0; i < na->ndim; i++) {
     dim_map[i] = lp->trans_map[i + i0];
   }
+  for (i = 0; i <= nd + lp->user.ndim; i++) {
+    LITER(lp, i, 1).pos = 0;
+    LITER(lp, i, 1).step = 0;
+    LITER(lp, i, 1).idx = NULL;
+  }
   ndloop_set_stepidx(lp, 1, a, dim_map, NDL_READ);
   LITER(lp, i0, 1).pos = LITER(lp, 0, 1).pos;
-  LARG(lp, 1).shape = &(na->shape[na->ndim - 1]);
+  LARG(lp, 1).shape = &(lp->sub_narray_len);
 
   // loop body
+  reach = ALLOCA_N(bool, nd + 1);
+  reach[i0] = true;
   for (i = i0;;) {
-    LARG(lp, 1).value = Qtrue;
     for (; i < nd; i++) {
+      reach[i + 1] = reach[i] && c[i] < na->shape[i - i0];
       for (j = 0; j < 2; j++) {
-        if (LITER(lp, i, j).idx) {
+        if (j == 1 && !reach[i + 1]) {
+          LITER(lp, i + 1, j).pos = LITER(lp, i, j).pos;
+        } else if (LITER(lp, i, j).idx) {
           LITER(lp, i + 1, j).pos = LITER(lp, i, j).pos + LITER(lp, i, j).idx[c[i]];
         } else {
           LITER(lp, i + 1, j).pos = LITER(lp, i, j).pos + LITER(lp, i, j).step * c[i];
         }
       }
-      if (c[i] >= na->shape[i - i0]) {
-        LARG(lp, 1).value = Qfalse;
-      }
     }
+    lp->sub_narray_len = reach[nd] ? na->shape[na->ndim - 1] : 0;
 
     (*(nf->func))(&(lp->user));
 
@@ -1570,6 +1579,7 @@ static void loop_store_subnarray(ndfunc_t* nf, na_md_loop_t* lp, int i0, size_t*
     }
   }
 loop_end:
+  LARG(lp, 1).value = Qnil;
   LARG(lp, 1).ptr = NULL;
 }
 
