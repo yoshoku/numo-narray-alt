@@ -163,20 +163,20 @@ static inline bool na_store_rary_fetch(VALUE ary, size_t i, VALUE* x) {
     INIT_PTR_IDX(lp, 0, p1, s1, idx1);                                                         \
     v1 = lp->args[1].value;                                                                    \
     i = 0;                                                                                     \
-    if (lp->args[1].ptr) {                                                                     \
-      if (v1 == Qtrue) {                                                                       \
-        i = lp->args[1].shape[0];                                                              \
-        if (i > n) {                                                                           \
-          i = n;                                                                               \
-        }                                                                                      \
+    if (IsNArray(v1)) {                                                                        \
+      i = lp->args[1].shape[0];                                                                \
+      if (i > n) {                                                                             \
+        i = n;                                                                                 \
+      }                                                                                        \
+      if (i > 0) {                                                                             \
         NDL_CNT(lp) = i;                                                                       \
         iter_##tDType##_store_##tDType(lp);                                                    \
         NDL_CNT(lp) = n;                                                                       \
-        if (idx1) {                                                                            \
-          idx1 += i;                                                                           \
-        } else {                                                                               \
-          p1 += s1 * i;                                                                        \
-        }                                                                                      \
+      }                                                                                        \
+      if (idx1) {                                                                              \
+        idx1 += i;                                                                             \
+      } else {                                                                                 \
+        p1 += s1 * i;                                                                          \
       }                                                                                        \
       goto loop_end;                                                                           \
     }                                                                                          \
