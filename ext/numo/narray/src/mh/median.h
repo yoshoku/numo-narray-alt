@@ -38,8 +38,8 @@
     char* p2 = NDL_PTR(lp, 1);                                                                 \
     tDType* buf = (tDType*)p1;                                                                 \
     tDType##_qsort_ignan(buf, n, sizeof(tDType));                                              \
-    for (size_t i = 0; i < n; i++) {                                                           \
-      if (!isnan(buf[i])) break;                                                               \
+    for (; n; n--) {                                                                           \
+      if (!isnan(buf[n - 1])) break;                                                           \
     }                                                                                          \
     if (n == 0) {                                                                              \
       *(tDType*)p2 = buf[0];                                                                   \
@@ -57,8 +57,8 @@
     char* p2 = NDL_PTR(lp, 1);                                                                 \
     tDType* buf = (tDType*)p1;                                                                 \
     tDType##_qsort_prnan(buf, n, sizeof(tDType));                                              \
-    for (size_t i = 0; i < n; i++) {                                                           \
-      if (!isnan(buf[i])) break;                                                               \
+    for (; n; n--) {                                                                           \
+      if (!isnan(buf[n - 1])) break;                                                           \
     }                                                                                          \
     if (n == 0) {                                                                              \
       *(tDType*)p2 = buf[0];                                                                   \

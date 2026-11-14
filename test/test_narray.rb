@@ -2008,6 +2008,20 @@ class NArrayTest < NArrayTestBase
     end
   end
 
+  def test_median_ignores_nan
+    nan = Float::NAN
+    [Numo::DFloat, Numo::SFloat].each do |dtype|
+      assert_in_delta(2.0, dtype[3, nan, 1, 2].median)
+      assert_in_delta(3.0, dtype[nan, 5, 1].median)
+      assert_in_delta(1.0, dtype[nan, 1].median)
+      assert_predicate(dtype[nan, nan].median, :nan?)
+      assert_in_delta(1.5, dtype[1, 2, nan].median(nan: true))
+
+      m = dtype[[nan, 1, 2], [4, nan, nan], [3, 1, 2]].median(axis: 1)
+      assert_equal([1.5, 4.0, 2.0], m.to_a)
+    end
+  end
+
   def test_comparison_gt
     a = Numo::DFloat[1, 2, 3, 4, 5]
     result = a.gt(3)
