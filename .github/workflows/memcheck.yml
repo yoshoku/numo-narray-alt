@@ -9,7 +9,7 @@ on:
 
 jobs:
   ruby-memcheck:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: ruby-memcheck
     env:
       BUNDLE_WITH: memcheck

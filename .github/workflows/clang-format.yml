@@ -24,9 +24,9 @@ jobs:
         echo "deb [signed-by=/etc/apt/trusted.gpg.d/apt.llvm.org.asc] https://apt.llvm.org/noble llvm-toolchain-noble-18 main" | sudo tee /etc/apt/sources.list.d/llvm-18.list > /dev/null
         sudo apt-get update
         sudo apt-get install -y clang-format-18
-        clang-format --version
+        clang-format-18 --version
     - name: Install zsh
       run: sudo apt-get install -y zsh
     - name: Run clang-format
       shell: zsh {0}
-      run: clang-format --style=file --Werror --dry-run ext/**/*.h ext/**/*.c
+      run: clang-format-18 --style=file --Werror --dry-run ext/**/*.h ext/**/*.c
