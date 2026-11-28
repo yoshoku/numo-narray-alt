@@ -15,8 +15,17 @@ jobs:
       BUNDLE_WITH: memcheck
     steps:
       - uses: actions/checkout@v7
+      - name: Install glibc debug symbols for valgrind
+        run: sudo apt-get update && sudo apt-get install -y libc6-dbg
       - name: Install valgrind
-        run: sudo apt-get update && sudo apt-get install valgrind
+        uses: jdx/mise-action@v5
+        with:
+          mise_toml: |
+            [settings]
+            experimental = true
+            [tools]
+            "conda:valgrind" = "3.25.1"
+      - run: valgrind --version
       - name: Set up Ruby 3.4
         uses: ruby/setup-ruby@v1
         with:
